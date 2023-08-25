@@ -54,14 +54,16 @@ class Style(autograder.question.Question):
     A question that can be added to assignments that checks style.
     """
 
-    def __init__(self, path, max_points = 5, replacement_name = 'assignment.py'):
+    def __init__(self, path, max_points = 5, fake_path = None, shorten_path = True):
         super().__init__("Style", max_points)
         self._path = path
-        self._replacement_name = replacement_name
+        self._fake_path = fake_path
+        self._shorten_paths = shorten_path
 
     def score_question(self, *args, **kwargs):
         error_count, style_output = check_path(self._path,
-                replace_output_path = self._replacement_name)
+                fake_path = self._fake_path,
+                shorten_path = self._shorten_paths)
 
         if (error_count == 0):
             self.full_credit(message = 'Style is clean!')
@@ -113,7 +115,7 @@ def check_paths(paths, **kwargs):
 
     return total_count, total_lines
 
-def _check_file(path, replace_output_path = None):
+def _check_file(path, fake_path = None, shorten_path = False):
     """
     Check the style of a file and return a two-item tuple of:
         - The number of style violations.
@@ -135,14 +137,19 @@ def _check_file(path, replace_output_path = None):
         with open(temp_path, 'w') as file:
             file.write(contents)
 
-        if (replace_output_path is None):
-            replace_output_path = path
-
         path = temp_path
     else:
         raise ValueError("Can only check style on .py or .ipynb files, got '%s'." % (path))
 
     path = os.path.realpath(path)
+
+    replacement_path = path
+
+    if (fake_path is not None):
+        replacement_path = fake_path
+
+    if (shorten_path):
+        replacement_path = os.path.basename(replacement_path)
 
     output_path = autograder.utils.get_temp_path(prefix = 'style_', suffix = '_output')
     cleanup_paths.append(output_path)
@@ -162,8 +169,8 @@ def _check_file(path, replace_output_path = None):
 
     lines = [line.rstrip() for line in lines]
 
-    if (replace_output_path is not None):
-        lines = [line.replace(path, replace_output_path) for line in lines]
+    if (path != replacement_path):
+        lines = [line.replace(path, replacement_path) for line in lines]
 
     for path in cleanup_paths:
         autograder.utils.remove_dirent(path)
