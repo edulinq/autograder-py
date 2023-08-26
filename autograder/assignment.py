@@ -6,27 +6,52 @@ import inspect
 
 import autograder.code
 import autograder.question
+import autograder.utils
 
 class Assignment(object):
     """
     A collection of questions to be scored.
     """
 
-    def __init__(self, name, questions,
+    def __init__(self,
+            name = None,
+            questions = [],
             submission_dir = '.', assignment_dir = '.',
+            prep_submission = True,
             additional_data = {},
             **kwargs):
+        """
+        Construct an assignment.
+
+        If prep_submission is True, then the default _prepare_submission()
+        implementation will prepare the submission directory.
+        """
+
         self._name = name
+        if (self._name is None):
+            self._name = type(self).__name__
+
         self._questions = questions
 
         self._assignment_dir = assignment_dir
         self._submission_dir = submission_dir
+        self._prep_submission = prep_submission
+
         self._additional_data = additional_data
 
         # Scoring artifact.
         self.result = None
 
-    def grade(self, submission, show_exceptions = False):
+    def grade(self, **kwargs):
+        return self._grade_submission(self._prepare_submission(), **kwargs)
+
+    def _grade_submission(self, submission, show_exceptions = False, **kwargs):
+        """
+        Grade an assignment by grading all the questions.
+
+        The submission argument is the result of _prepare_submission().
+        """
+
         self.result = GradedAssignment(name = self._name, questions = [])
         self.result.grading_start_time = autograder.utils.get_timestamp()
 
@@ -38,6 +63,21 @@ class Assignment(object):
         self.result.grading_end_time = autograder.utils.get_timestamp()
 
         return self.result
+
+    def _prepare_submission(self):
+        """
+        Prepare the submission directory for grading.
+        The result of this is what will be passed to grade().
+        Child classes may leave this default behavior or override.
+
+        This implementation will check the prep_submission argument passed in the constructor.
+        If true the submission directory will be prepared, otherwise None will be returned.
+        """
+
+        if (self._prep_submission):
+            return autograder.utils.prepare_submission(self._submission_dir)
+
+        return None
 
 class GradedAssignment(object):
     """

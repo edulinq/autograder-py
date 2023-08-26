@@ -82,7 +82,7 @@ def invoke_with_timeout(timeout, function):
     process.join(timeout)
 
     # Check to see if the process is still running.
-    if process.is_alive():
+    if (process.is_alive()):
         # Kill the long-running process.
         process.terminate()
 
@@ -240,7 +240,19 @@ def timestamp_to_string(timestamp, pretty = False):
 
     return timestamp.isoformat()
 
-def copy_contents(source, dest):
+def copy_dirent(source, dest):
+    """
+    Copy a file or directory into dest.
+    If source is a file, then dest can be a file or dir.
+    If source is a dir, then dest must be a non-existent dir.
+    """
+
+    if (os.path.isfile(source)):
+        shutil.copy2(source, dest)
+    else:
+        shutil.copytree(source, dest)
+
+def copy_dirent_contents(source, dest):
     """
     Copy a file or the contents of a directory (excluding the top-level directory) into dest.
     For a file: `cp source dest/`

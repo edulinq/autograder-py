@@ -12,14 +12,30 @@ import autograder.utils
 
 TEST_SUBMISSION_FILENAME = 'test-submission.json'
 
+ASSIGNMENT_CONFIG_KEY_STATIC_FILES = 'static-files'
+ASSIGNMENT_CONFIG_KEY_SUB_OPS = 'submission-operations'
+
+def do_submission_operation(operation, work_dir):
+    if (len(operation) == 0):
+        raise ValueError("Submission operation is empty.")
+
+    if  (operation[0] == 'mv'):
+        if (len(operation) != 3):
+            raise ValueError("Incorrect number of argument for 'mv' submission operation. Expected 2, found %d." % ((len(operation) - 1)))
+
+        shutil.move(os.path.join(work_dir, operation[1]), os.path.join(work_dir, operation[2]))
+    else:
+        raise ValueError("Unknown submission operation: '%s'." % (operation[0]))
+
 def setup_submission(work_dir, assignment_config_path, submission_base_dir):
     """
     Set up a submission directory for testing:
         1) Load the assignment config.
         2) Copy over the assignment's static files.
-        3) Load the assignment class.
-        4) Copy over the submission files.
-        5) Return the assignment class.
+        3) Copy over the submission files.
+        4) Perform submission operations defined in the config.
+        5) Load the assignment class.
+        6) Return the assignment class.
     """
 
     assignment_config_path = os.path.abspath(assignment_config_path)
@@ -36,14 +52,31 @@ def setup_submission(work_dir, assignment_config_path, submission_base_dir):
 
     # Copy over the assignment's static files.
     try:
-        static_files = assignment_config.get('static-files', [])
+        static_files = assignment_config.get(ASSIGNMENT_CONFIG_KEY_STATIC_FILES, [])
         for static_file in static_files:
             source_path = os.path.join(assignment_base_dir, static_file)
-            dest_path = os.path.join(work_dir, static_file)
+            dest_path = os.path.join(work_dir, os.path.basename(static_file))
 
-            shutil.copy2(source_path, dest_path)
+            autograder.utils.copy_dirent(source_path, dest_path)
     except Exception as ex:
         print("Failed to copy assignment's static files '%s': '%s'." % (assignment_config_path, ex))
+        traceback.print_exc()
+        return None
+
+    # Copy over the submission files.
+    try:
+        autograder.utils.copy_dirent_contents(submission_base_dir, work_dir)
+    except Exception as ex:
+        print("Failed to copy submission files from '%s': '%s'." % (submission_base_dir, ex))
+        traceback.print_exc()
+        return None
+
+    # Do submission operations.
+    try:
+        for submission_operation in assignment_config.get(ASSIGNMENT_CONFIG_KEY_SUB_OPS, []):
+            do_submission_operation(submission_operation, work_dir)
+    except Exception as ex:
+        print("Failed to perform submission operations from '%s': '%s'." % (assignment_config_path, ex))
         traceback.print_exc()
         return None
 
@@ -65,14 +98,6 @@ def setup_submission(work_dir, assignment_config_path, submission_base_dir):
 
     if (assignment_class is None):
         print("Could not find assignment class for '%s'." % (assignment_config_path))
-        return None
-
-    # Copy over the submission files.
-    try:
-        autograder.utils.copy_contents(submission_base_dir, work_dir)
-    except Exception as ex:
-        print("Failed to copy submission files from '%s': '%s'." % (submission_base_dir, ex))
-        traceback.print_exc()
         return None
 
     return assignment_class
@@ -137,11 +162,10 @@ def run_test_submission(assignment_config_path, submission_config_path, debug = 
 
 def run_submission(assignment_class, assignment_dir, submission_dir):
     try:
-        submission = autograder.utils.prepare_submission(submission_dir)
         assignment = assignment_class(submission_dir = submission_dir, assignment_dir = assignment_dir)
-        return assignment.grade(submission)
+        return assignment.grade()
     except Exception as ex:
-        print("Failed to run assignment (%s) on submission '%s': '%s'." % (assignment_class, submission_dir, ex))
+        print("Failed to run assignment (%s) on submission '%s': '%s'." % (assignment_class.__name__, submission_dir, ex))
         traceback.print_exc()
         return None
 

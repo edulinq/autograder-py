@@ -89,10 +89,9 @@ def sanitize_and_import_path(path, syspath = None, **kwargs):
     if (syspath is None):
         syspath = os.path.dirname(os.path.abspath(path))
 
-    filename = os.path.basename(path)
     source_code = extract_code(path)
 
-    return sanitize_and_import_code(source_code, filename, syspath = syspath, **kwargs)
+    return sanitize_and_import_code(source_code, path, syspath = syspath, **kwargs)
 
 def sanitize_and_import_code(source_code, filename, as_dict = False, syspath = None):
     """

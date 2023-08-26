@@ -54,14 +54,22 @@ class Style(autograder.question.Question):
     A question that can be added to assignments that checks style.
     """
 
-    def __init__(self, path, max_points = 5, fake_path = None, shorten_path = True):
-        super().__init__("Style", max_points)
-        self._path = path
+    def __init__(self, paths, max_points = 5, fake_path = None, shorten_path = True):
+        super().__init__(max_points)
+
+        if (isinstance(paths, str)):
+            paths = [paths]
+
+        if (not isinstance(paths, list)):
+            # Allow this to throw.
+            paths = list(paths)
+
+        self._paths = paths
         self._fake_path = fake_path
         self._shorten_paths = shorten_path
 
     def score_question(self, *args, **kwargs):
-        error_count, style_output = check_path(self._path,
+        error_count, style_output = check_paths(self._paths,
                 fake_path = self._fake_path,
                 shorten_path = self._shorten_paths)
 
