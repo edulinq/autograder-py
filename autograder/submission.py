@@ -11,96 +11,58 @@ import autograder.code
 import autograder.utils
 
 TEST_SUBMISSION_FILENAME = 'test-submission.json'
+GRADER_FILENAME = 'grader.py'
 
-ASSIGNMENT_CONFIG_KEY_STATIC_FILES = 'static-files'
-ASSIGNMENT_CONFIG_KEY_SUB_OPS = 'submission-operations'
+CONFIG_KEY_STATIC_FILES = 'static-files'
+CONFIG_KEY_GRADER_CONFIG = 'grader-config'
+CONFIG_KEY_PRE_STATIC_OPS = 'pre-static-files-ops'
+CONFIG_KEY_POST_STATIC_OPS = 'post-static-files-ops'
+CONFIG_KEY_PRE_SUB_OPS = 'pre-submission-files-ops'
+CONFIG_KEY_POST_SUB_OPS = 'post-submission-files-ops'
 
-def do_submission_operation(operation, work_dir):
+def do_file_operation(operation, op_dir):
     if (len(operation) == 0):
-        raise ValueError("Submission operation is empty.")
+        raise ValueError("File operation is empty.")
 
     if  (operation[0] == 'mv'):
         if (len(operation) != 3):
-            raise ValueError("Incorrect number of argument for 'mv' submission operation. Expected 2, found %d." % ((len(operation) - 1)))
+            raise ValueError("Incorrect number of argument for 'mv' file operation. Expected 2, found %d." % ((len(operation) - 1)))
 
-        shutil.move(os.path.join(work_dir, operation[1]), os.path.join(work_dir, operation[2]))
+        shutil.move(os.path.join(op_dir, operation[1]), os.path.join(op_dir, operation[2]))
+    elif  (operation[0] == 'cp'):
+        if (len(operation) != 3):
+            raise ValueError("Incorrect number of argument for 'cp' file operation. Expected 2, found %d." % ((len(operation) - 1)))
+
+        autograder.utils.copy_dirent(os.path.join(op_dir, operation[1]), os.path.join(op_dir, operation[2]))
     else:
-        raise ValueError("Unknown submission operation: '%s'." % (operation[0]))
+        raise ValueError("Unknown file operation: '%s'." % (operation[0]))
 
-def setup_submission(work_dir, assignment_config_path, submission_base_dir):
+def copy_assignment_files(source_dir, dest_dir, op_dir, files,
+        only_contents = False, pre_ops = [], post_ops = []):
     """
-    Set up a submission directory for testing:
-        1) Load the assignment config.
-        2) Copy over the assignment's static files.
-        3) Copy over the submission files.
-        4) Perform submission operations defined in the config.
-        5) Load the assignment class.
-        6) Return the assignment class.
+    Copy over assignment files:
+    1) Do pre-copy operations.
+    2) Copy.
+    3) Do post-copy operations.
     """
 
-    assignment_config_path = os.path.abspath(assignment_config_path)
-    assignment_base_dir = os.path.dirname(assignment_config_path)
-
-    # Load the assignment config.
-    try:
-        with open(assignment_config_path, 'r') as file:
-            assignment_config = json.load(file)
-    except Exception as ex:
-        print("Failed to load assignment config '%s': '%s'." % (assignment_config_path, ex))
-        traceback.print_exc()
-        return None
+    # Do pre operations.
+    for file_operation in pre_ops:
+        do_file_operation(file_operation, op_dir)
 
     # Copy over the assignment's static files.
-    try:
-        static_files = assignment_config.get(ASSIGNMENT_CONFIG_KEY_STATIC_FILES, [])
-        for static_file in static_files:
-            source_path = os.path.join(assignment_base_dir, static_file)
-            dest_path = os.path.join(work_dir, os.path.basename(static_file))
+    for filename in files:
+        source_path = os.path.join(source_dir, filename)
+        dest_path = os.path.join(dest_dir, os.path.basename(filename))
 
+        if (only_contents):
+            autograder.utils.copy_dirent_contents(source_path, dest_path)
+        else:
             autograder.utils.copy_dirent(source_path, dest_path)
-    except Exception as ex:
-        print("Failed to copy assignment's static files '%s': '%s'." % (assignment_config_path, ex))
-        traceback.print_exc()
-        return None
 
-    # Copy over the submission files.
-    try:
-        autograder.utils.copy_dirent_contents(submission_base_dir, work_dir)
-    except Exception as ex:
-        print("Failed to copy submission files from '%s': '%s'." % (submission_base_dir, ex))
-        traceback.print_exc()
-        return None
-
-    # Do submission operations.
-    try:
-        for submission_operation in assignment_config.get(ASSIGNMENT_CONFIG_KEY_SUB_OPS, []):
-            do_submission_operation(submission_operation, work_dir)
-    except Exception as ex:
-        print("Failed to perform submission operations from '%s': '%s'." % (assignment_config_path, ex))
-        traceback.print_exc()
-        return None
-
-    # Load the assignment class from the static files that were just copied.
-    assignment_class = None
-    try:
-        for dirent in os.listdir(work_dir):
-            path = os.path.join(work_dir, dirent)
-            if (os.path.splitext(dirent)[1] not in autograder.code.ALLOWED_EXTENSIONS):
-                continue
-
-        assignment_classes = autograder.assignment.load_assignments(path)
-        if (len(assignment_classes) == 1):
-            assignment_class = assignment_classes[0]
-    except Exception as ex:
-        print("Failed to load assignment class from '%s': '%s'." % (assignment_base_dir, ex))
-        traceback.print_exc()
-        return None
-
-    if (assignment_class is None):
-        print("Could not find assignment class for '%s'." % (assignment_config_path))
-        return None
-
-    return assignment_class
+    # Do post operations.
+    for file_operation in post_ops:
+        do_file_operation(file_operation, op_dir)
 
 def fetch_test_submissions(path):
     path = os.path.abspath(path)
@@ -117,6 +79,16 @@ def fetch_test_submissions(path):
     return test_submissions
 
 def prep_temp_work_dir(assignment_config_path, submission_dir, debug = False):
+    """
+    Create a directory for grading a submission.
+    1) Create a temp dir.
+    2) Create the three core directories (input/output/work) in the temp dir.
+    3) Copy over the static files (includng pre/post operations).
+    4) Copy over the submission files (includng pre/post operations).
+    5) Load the grader class.
+    6) Return the temp dir and grader class.
+    """
+
     temp_dir = autograder.utils.get_temp_path(prefix = 'autograder-submission-',
             rm = (not debug))
     os.makedirs(temp_dir)
@@ -124,20 +96,58 @@ def prep_temp_work_dir(assignment_config_path, submission_dir, debug = False):
     if (debug):
         print("Using temp/work dir: '%s'." % (temp_dir))
 
-    assignment_class = setup_submission(temp_dir, assignment_config_path, submission_dir)
+    # Make the three core directories.
 
-    return (temp_dir, assignment_class)
+    input_dir = os.path.join(temp_dir, 'input')
+    os.makedirs(input_dir)
+
+    output_dir = os.path.join(temp_dir, 'output')
+    os.makedirs(output_dir)
+
+    work_dir = os.path.join(temp_dir, 'work')
+    os.makedirs(work_dir)
+
+    # Load the assignment config.
+
+    assignment_config_path = os.path.abspath(assignment_config_path)
+    assignment_base_dir = os.path.dirname(assignment_config_path)
+    grader_path = os.path.join(work_dir, GRADER_FILENAME)
+
+    try:
+        with open(assignment_config_path, 'r') as file:
+            assignment_config = json.load(file)
+    except Exception as ex:
+        raise ValueError("Failed to load assignment config: " + assignment_config_path) from ex
+
+    grader_config = assignment_config.get(CONFIG_KEY_GRADER_CONFIG, {})
+
+    # Copy static files.
+    copy_assignment_files(assignment_base_dir, work_dir, temp_dir,
+            assignment_config.get(CONFIG_KEY_STATIC_FILES, []),
+            pre_ops = assignment_config.get(CONFIG_KEY_PRE_STATIC_OPS, []),
+            post_ops = assignment_config.get(CONFIG_KEY_POST_STATIC_OPS, []))
+
+    # Copy submission files.
+    copy_assignment_files(submission_dir, input_dir, temp_dir,
+            ['.'], only_contents = True,
+            pre_ops = grader_config.get(CONFIG_KEY_PRE_SUB_OPS, []),
+            post_ops = grader_config.get(CONFIG_KEY_POST_SUB_OPS, []))
+
+    assignment_class = autograder.assignment.fetch_assignment(grader_path)
+
+    return ((input_dir, output_dir, work_dir), assignment_class)
 
 def run_test_submission(assignment_config_path, submission_config_path, debug = False):
     print("Testing assignment '%s' and submission '%s'." % (assignment_config_path, submission_config_path))
 
-    temp_dir, assignment_class = prep_temp_work_dir(assignment_config_path,
+    dirs, assignment_class = prep_temp_work_dir(assignment_config_path,
         os.path.dirname(submission_config_path), debug = debug)
+    input_dir, output_dir, work_dir = dirs
 
     if (assignment_class is None):
         return False
 
-    actual_result = run_submission(assignment_class, temp_dir, temp_dir)
+    actual_result = run_submission(assignment_class, input_dir, output_dir, work_dir)
     if (actual_result is None):
         return False
 
@@ -160,12 +170,12 @@ def run_test_submission(assignment_config_path, submission_config_path, debug = 
 
     return False
 
-def run_submission(assignment_class, assignment_dir, submission_dir):
+def run_submission(assignment_class, input_dir, output_dir, work_dir):
     try:
-        assignment = assignment_class(submission_dir = submission_dir, assignment_dir = assignment_dir)
+        assignment = assignment_class(input_dir = input_dir, output_dir = output_dir, work_dir = work_dir)
         return assignment.grade()
     except Exception as ex:
-        print("Failed to run assignment (%s) on submission '%s': '%s'." % (assignment_class.__name__, submission_dir, ex))
+        print("Failed to run assignment (%s) on submission '%s': '%s'." % (assignment_class.__name__, input_dir, ex))
         traceback.print_exc()
         return None
 

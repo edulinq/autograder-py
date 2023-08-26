@@ -16,7 +16,7 @@ class Assignment(object):
     def __init__(self,
             name = None,
             questions = [],
-            submission_dir = '.', assignment_dir = '.',
+            input_dir = '.', output_dir = '.', work_dir = '.',
             prep_submission = True,
             additional_data = {},
             **kwargs):
@@ -24,7 +24,7 @@ class Assignment(object):
         Construct an assignment.
 
         If prep_submission is True, then the default _prepare_submission()
-        implementation will prepare the submission directory.
+        implementation will prepare the input directory.
         """
 
         self._name = name
@@ -33,8 +33,10 @@ class Assignment(object):
 
         self._questions = questions
 
-        self._assignment_dir = assignment_dir
-        self._submission_dir = submission_dir
+        self._input_dir = input_dir
+        self._output_dir = output_dir
+        self._work_dir = work_dir
+
         self._prep_submission = prep_submission
 
         self._additional_data = additional_data
@@ -66,16 +68,16 @@ class Assignment(object):
 
     def _prepare_submission(self):
         """
-        Prepare the submission directory for grading.
+        Prepare the submission in the input directory for grading.
         The result of this is what will be passed to grade().
         Child classes may leave this default behavior or override.
 
         This implementation will check the prep_submission argument passed in the constructor.
-        If true the submission directory will be prepared, otherwise None will be returned.
+        If true the input directory will be prepared, otherwise None will be returned.
         """
 
         if (self._prep_submission):
-            return autograder.utils.prepare_submission(self._submission_dir)
+            return autograder.utils.prepare_submission(self._input_dir)
 
         return None
 

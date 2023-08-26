@@ -16,19 +16,19 @@ def run(args):
         # The assignment is an assignment class.
         assignment_class = autograder.assignment.fetch_assignment(assignment_path)
 
-        assignment_dir = os.path.dirname(assignment_path)
-        submission_dir = submission_path
+        input_dir = submission_path
+        output_dir = submission_path
+        work_dir = os.path.dirname(assignment_path)
     elif (ext == '.json'):
-        temp_dir, assignment_class = autograder.submission.prep_temp_work_dir(assignment_path,
+        dirs, assignment_class = autograder.submission.prep_temp_work_dir(assignment_path,
             submission_path, debug = args.debug)
 
-        assignment_dir = temp_dir
-        submission_dir = temp_dir
+        input_dir, output_dir, work_dir = dirs
     else:
         print("Unknown assignment extension: '%s'." % (ext))
         return 1
 
-    result = autograder.submission.run_submission(assignment_class, assignment_dir, submission_dir)
+    result = autograder.submission.run_submission(assignment_class, input_dir, output_dir, work_dir)
     if (result is None):
         return 2
 
