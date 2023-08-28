@@ -14,7 +14,7 @@ TEST_SUBMISSION_FILENAME = 'test-submission.json'
 GRADER_FILENAME = 'grader.py'
 
 CONFIG_KEY_STATIC_FILES = 'static-files'
-CONFIG_KEY_GRADER_CONFIG = 'grader-config'
+CONFIG_KEY_GRADER_CONFIG = 'grader'
 CONFIG_KEY_PRE_STATIC_OPS = 'pre-static-files-ops'
 CONFIG_KEY_POST_STATIC_OPS = 'post-static-files-ops'
 CONFIG_KEY_PRE_SUB_OPS = 'pre-submission-files-ops'
