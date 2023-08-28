@@ -4,6 +4,7 @@ A single question (test case) for an assignment.
 
 import abc
 import functools
+import numbers
 import traceback
 
 import autograder.utils
@@ -21,6 +22,9 @@ class Question(object):
         self.name = name
         if (self.name is None):
             self.name = type(self).__name__
+
+        if ((not isinstance(max_points, numbers.Real)) or (max_points < 0)):
+            raise ValueError("max_points must be a real number, got '%s' (type: %s)." % (max_points, type(max_points)))
 
         self.max_points = max_points
         self._timeout = timeout
