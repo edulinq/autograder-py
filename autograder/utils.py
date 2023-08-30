@@ -256,7 +256,7 @@ def copy_dirent_contents(source, dest):
     """
     Copy a file or the contents of a directory (excluding the top-level directory) into dest.
     For a file: `cp source dest/`
-    For a dir: `cp source/* desc/`
+    For a dir: `cp -r source/* dest/`
     """
 
     source = os.path.abspath(source)

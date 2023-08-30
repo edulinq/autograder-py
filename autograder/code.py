@@ -93,7 +93,7 @@ def sanitize_and_import_path(path, syspath = None, **kwargs):
 
     return sanitize_and_import_code(source_code, path, syspath = syspath, **kwargs)
 
-def sanitize_and_import_code(source_code, filename, as_dict = False, syspath = None):
+def sanitize_and_import_code(source_code, path, as_dict = False, syspath = None):
     """
     See sanitize_and_import_path().
     """
@@ -107,7 +107,7 @@ def sanitize_and_import_code(source_code, filename, as_dict = False, syspath = N
 
     try:
         sys.path.append(syspath)
-        exec(compile(module_ast, filename = filename, mode = "exec"), globals_defs)
+        exec(compile(module_ast, filename = path, mode = "exec"), globals_defs)
     finally:
         sys.path.pop()
 

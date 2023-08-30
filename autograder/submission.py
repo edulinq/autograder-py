@@ -14,7 +14,6 @@ TEST_SUBMISSION_FILENAME = 'test-submission.json'
 GRADER_FILENAME = 'grader.py'
 
 CONFIG_KEY_STATIC_FILES = 'static-files'
-CONFIG_KEY_GRADER_CONFIG = 'grader'
 CONFIG_KEY_PRE_STATIC_OPS = 'pre-static-files-ops'
 CONFIG_KEY_POST_STATIC_OPS = 'post-static-files-ops'
 CONFIG_KEY_PRE_SUB_OPS = 'pre-submission-files-ops'
@@ -50,7 +49,7 @@ def copy_assignment_files(source_dir, dest_dir, op_dir, files,
     for file_operation in pre_ops:
         do_file_operation(file_operation, op_dir)
 
-    # Copy over the assignment's static files.
+    # Copy over the assignment's files.
     for filename in files:
         source_path = os.path.join(source_dir, filename)
         dest_path = os.path.join(dest_dir, os.path.basename(filename))
@@ -119,8 +118,6 @@ def prep_temp_work_dir(assignment_config_path, submission_dir, debug = False):
     except Exception as ex:
         raise ValueError("Failed to load assignment config: " + assignment_config_path) from ex
 
-    grader_config = assignment_config.get(CONFIG_KEY_GRADER_CONFIG, {})
-
     # Copy static files.
     copy_assignment_files(assignment_base_dir, work_dir, temp_dir,
             assignment_config.get(CONFIG_KEY_STATIC_FILES, []),
@@ -130,8 +127,8 @@ def prep_temp_work_dir(assignment_config_path, submission_dir, debug = False):
     # Copy submission files.
     copy_assignment_files(submission_dir, input_dir, temp_dir,
             ['.'], only_contents = True,
-            pre_ops = grader_config.get(CONFIG_KEY_PRE_SUB_OPS, []),
-            post_ops = grader_config.get(CONFIG_KEY_POST_SUB_OPS, []))
+            pre_ops = assignment_config.get(CONFIG_KEY_PRE_SUB_OPS, []),
+            post_ops = assignment_config.get(CONFIG_KEY_POST_SUB_OPS, []))
 
     assignment_class = autograder.assignment.fetch_assignment(grader_path)
 
