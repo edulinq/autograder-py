@@ -16,7 +16,6 @@ GRADER_FILENAME = 'grader.py'
 CONFIG_KEY_STATIC_FILES = 'static-files'
 CONFIG_KEY_PRE_STATIC_OPS = 'pre-static-files-ops'
 CONFIG_KEY_POST_STATIC_OPS = 'post-static-files-ops'
-CONFIG_KEY_PRE_SUB_OPS = 'pre-submission-files-ops'
 CONFIG_KEY_POST_SUB_OPS = 'post-submission-files-ops'
 
 def do_file_operation(operation, op_dir):
@@ -77,7 +76,7 @@ def fetch_test_submissions(path):
 
     return test_submissions
 
-def prep_temp_work_dir(assignment_config_path, submission_dir, debug = False):
+def prep_temp_grading_dir(assignment_config_path, submission_dir, debug = False):
     """
     Create a directory for grading a submission.
     1) Create a temp dir.
@@ -95,22 +94,36 @@ def prep_temp_work_dir(assignment_config_path, submission_dir, debug = False):
     if (debug):
         print("Using temp/work dir: '%s'." % (temp_dir))
 
-    # Make the three core directories.
+    input_dir, output_dir, work_dir = prep_grading_dir(assignment_config_path, temp_dir, submission_dir)
 
-    input_dir = os.path.join(temp_dir, 'input')
-    os.makedirs(input_dir)
+    grader_path = os.path.join(work_dir, GRADER_FILENAME)
+    assignment_class = autograder.assignment.fetch_assignment(grader_path)
 
-    output_dir = os.path.join(temp_dir, 'output')
-    os.makedirs(output_dir)
+    return ((input_dir, output_dir, work_dir), assignment_class)
 
-    work_dir = os.path.join(temp_dir, 'work')
-    os.makedirs(work_dir)
+def make_core_dirs(base_dir):
+    """
+    Make the three core directories.
+    """
+
+    input_dir = os.path.join(base_dir, 'input')
+    os.makedirs(input_dir, exist_ok = True)
+
+    output_dir = os.path.join(base_dir, 'output')
+    os.makedirs(output_dir, exist_ok = True)
+
+    work_dir = os.path.join(base_dir, 'work')
+    os.makedirs(work_dir, exist_ok = True)
+
+    return input_dir, output_dir, work_dir
+
+def prep_grading_dir(assignment_config_path, base_dir, submission_dir, skip_static = False):
+    input_dir, output_dir, work_dir = make_core_dirs(base_dir)
 
     # Load the assignment config.
 
     assignment_config_path = os.path.abspath(assignment_config_path)
     assignment_base_dir = os.path.dirname(assignment_config_path)
-    grader_path = os.path.join(work_dir, GRADER_FILENAME)
 
     try:
         with open(assignment_config_path, 'r') as file:
@@ -118,26 +131,25 @@ def prep_temp_work_dir(assignment_config_path, submission_dir, debug = False):
     except Exception as ex:
         raise ValueError("Failed to load assignment config: " + assignment_config_path) from ex
 
-    # Copy static files.
-    copy_assignment_files(assignment_base_dir, work_dir, temp_dir,
-            assignment_config.get(CONFIG_KEY_STATIC_FILES, []),
-            pre_ops = assignment_config.get(CONFIG_KEY_PRE_STATIC_OPS, []),
-            post_ops = assignment_config.get(CONFIG_KEY_POST_STATIC_OPS, []))
+    if (not skip_static):
+        # Copy static files.
+        copy_assignment_files(assignment_base_dir, work_dir, base_dir,
+                assignment_config.get(CONFIG_KEY_STATIC_FILES, []),
+                pre_ops = assignment_config.get(CONFIG_KEY_PRE_STATIC_OPS, []),
+                post_ops = assignment_config.get(CONFIG_KEY_POST_STATIC_OPS, []))
 
     # Copy submission files.
-    copy_assignment_files(submission_dir, input_dir, temp_dir,
+    copy_assignment_files(submission_dir, input_dir, base_dir,
             ['.'], only_contents = True,
-            pre_ops = assignment_config.get(CONFIG_KEY_PRE_SUB_OPS, []),
+            pre_ops = [],
             post_ops = assignment_config.get(CONFIG_KEY_POST_SUB_OPS, []))
 
-    assignment_class = autograder.assignment.fetch_assignment(grader_path)
-
-    return ((input_dir, output_dir, work_dir), assignment_class)
+    return input_dir, output_dir, work_dir
 
 def run_test_submission(assignment_config_path, submission_config_path, debug = False):
     print("Testing assignment '%s' and submission '%s'." % (assignment_config_path, submission_config_path))
 
-    dirs, assignment_class = prep_temp_work_dir(assignment_config_path,
+    dirs, assignment_class = prep_temp_grading_dir(assignment_config_path,
         os.path.dirname(submission_config_path), debug = debug)
     input_dir, output_dir, work_dir = dirs
 

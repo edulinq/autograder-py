@@ -46,10 +46,6 @@ def _load_args():
         action = 'store', type = str, required = True,
         help = 'The path to a Python file containing a single assignment class.')
 
-    parser.add_argument('-wd', '--workdir',
-        action = 'store', type = str, required = True,
-        help = 'The path to a submission to use for grading.')
-
     parser.add_argument('-id', '--inputdir',
         action = 'store', type = str, required = False, default = None,
         help = 'The path to the submission\'s input directory (will default to the work directory).')
@@ -57,6 +53,10 @@ def _load_args():
     parser.add_argument('-od', '--outputdir',
         action = 'store', type = str, required = False, default = None,
         help = 'The path to the submission\'s output directory (will default to the work directory).')
+
+    parser.add_argument('-wd', '--workdir',
+        action = 'store', type = str, required = True,
+        help = 'The path to a submission to use for grading.')
 
     parser.add_argument('-o', '--outpath',
         action = 'store', type = str, required = False, default = None,
