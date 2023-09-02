@@ -9,7 +9,7 @@ def run(args):
     assignment_path = os.path.abspath(args.assignment)
     submission_path = os.path.abspath(args.submission)
 
-    dirs, assignment_class = autograder.submission.prep_temp_work_dir(assignment_path,
+    dirs, assignment_class = autograder.submission.prep_temp_grading_dir(assignment_path,
         submission_path, debug = args.debug)
 
     input_dir, output_dir, work_dir = dirs

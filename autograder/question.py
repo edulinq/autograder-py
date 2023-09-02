@@ -97,6 +97,9 @@ class Question(object):
     def get_last_result(self):
         return self.result
 
+    def get_score(self):
+        return self.result.score
+
     # Grading functions.
 
     def check_not_implemented(self, value):
