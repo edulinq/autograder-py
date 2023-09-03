@@ -12,14 +12,13 @@ def get_description():
         return file.read()
 
 setuptools.setup(
-    name = 'autograder',
-    # TEST
-    url = 'https://github.com/TEST/TEST',
+    name = 'autograder-py',
+    url = 'https://github.com/eriq-augustine/autograder-py',
 
     version = '0.1.0',
     keywords = 'grading',
 
-    description = "TEST",
+    description = "The Python interface for the autograding server.",
     long_description = get_description(),
     long_description_content_type = 'text/markdown',
 
@@ -38,6 +37,7 @@ setuptools.setup(
 
     install_requires = [
         'flake8==6.0.0',
+        'requests==2.31.0',
     ],
 
     license_files = (LICENSE_PATH, ),
