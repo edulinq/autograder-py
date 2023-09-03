@@ -218,7 +218,6 @@ def fetch_assignment(path):
         raise ValueError(("Assignment file (%s) does not contain any instances of" +
             " autograder.assignment.Assignment.") % (path))
     elif (len(assignments) > 1):
-        # TODO(eriq): Add in assignment-class to disambiguate files with multiple assignments.
         raise ValueError(("Assignment file (%s) contains more than one (%d) instances of" +
             " autograder.assignment.Assignment.") % (path, len(assignments)))
 
