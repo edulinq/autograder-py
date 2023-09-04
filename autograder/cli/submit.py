@@ -43,6 +43,9 @@ def send_api_request(url, method = None, data = {}, files = []):
     for file in post_files.values():
         file.close()
 
+    if (raw_response.status_code == 401):
+        return None, "Request could not be authenticated. Ensure that your username, password, and course are properly set."
+
     if (raw_response.status_code != 200):
         return None, "Recieved a failure status from the autograding server: %d." % (raw_response.status_code)
 
