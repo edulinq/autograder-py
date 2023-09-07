@@ -86,7 +86,8 @@ class GradedAssignment(object):
     The result of an assignment being graded with a submission.
     """
 
-    def __init__(self, name = '', questions = [],
+    def __init__(self, name = '',
+            questions = [],
             grading_start_time = None, grading_end_time = None,
             **kwargs):
         self.name = name

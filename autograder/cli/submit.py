@@ -17,7 +17,7 @@ API_REQUEST_JSON_KEY = 'content'
 API_RESPONSE_KEY_SUCCESS = 'success'
 API_RESPONSE_KEY_CONTENT = 'content'
 
-API_SUBMIT_KEYS = ['user', 'pass', 'course', 'assignment']
+API_SUBMIT_KEYS = ['user', 'pass', 'course', 'assignment', 'message']
 
 def send_api_request(url, method = None, data = {}, files = []):
     post_files = {}
@@ -70,6 +70,7 @@ def parse_config(arguments):
         'pass': None,
         'course': None,
         'assignment': None,
+        'message': '',
     }
 
     if (arguments.config_path is not None):
@@ -103,7 +104,7 @@ def run(arguments):
         print('Message from the autograder: ' + message)
         return 10
 
-    result = autograder.assignment.GradedAssignment.from_dict(body)
+    result = autograder.assignment.GradedAssignment.from_dict(body['result'])
 
     print('The autograder successfully graded your assignment.')
     print(result.report())
@@ -135,6 +136,10 @@ def _load_args():
     parser.add_argument('--assignment', dest = 'assignment',
         action = 'store', type = str, default = None,
         help = 'assignment')
+
+    parser.add_argument('--message', dest = 'message',
+        action = 'store', type = str, default = '',
+        help = 'message')
 
     parser.add_argument('--server', dest = 'server',
         action = 'store', type = str, default = DEFAULT_AUTOGRADER_URL,
