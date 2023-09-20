@@ -78,7 +78,7 @@ class Style(autograder.question.Question):
             return
 
         self.add_message(("Code has %d style issues (shown below)."
-                + " Note that line numbers will be offset because of iPython notebooks.")
+                + " Note that line numbers may be offset in iPython notebooks.")
                 % (error_count))
         self.set_score(max(0, self.max_points - error_count))
 
