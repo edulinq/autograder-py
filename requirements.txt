@@ -1,6 +1,6 @@
-flake8==6.0.0
-requests==2.31.0
+flake8>=6.0.0
+requests>=2.31.0
 
 build
 twine
-packaging==21.3
+packaging>=21.3

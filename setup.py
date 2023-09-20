@@ -36,8 +36,8 @@ setuptools.setup(
     packages = setuptools.find_packages(),
 
     install_requires = [
-        'flake8==6.0.0',
-        'requests==2.31.0',
+        'flake8>=6.0.0',
+        'requests>=2.31.0',
     ],
 
     license_files = (LICENSE_PATH, ),
