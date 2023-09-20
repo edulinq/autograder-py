@@ -11,6 +11,8 @@ import autograder.code
 import autograder.submission
 import autograder.utils
 
+DEFAULT_ASSIGNMENT = 'assignment.json'
+
 def run(args):
     try:
         test_submissions = autograder.submission.fetch_test_submissions(args.submissions)
@@ -46,12 +48,12 @@ def _load_args():
         "Run a grader against multiple test assignments and ensure the output matched the expected output.")
 
     parser.add_argument('-a', '--assignment',
-        action = 'store', type = str, required = True,
-        help = 'The path to the json file (usually "assignment.json") describing an assignment.')
+        action = 'store', type = str, required = False, default = DEFAULT_ASSIGNMENT,
+        help = 'The path to a JSON file describing an assignment (default: %(default)s).')
 
     parser.add_argument('-s', '--submissions',
         action = 'store', type = str, required = True,
-        help = 'The path to a die containing test submissions.')
+        help = 'The path to a dir containing one or more test submissions.')
 
     parser.add_argument('-d', '--debug', dest = 'debug',
         action = 'store_true', default = False,

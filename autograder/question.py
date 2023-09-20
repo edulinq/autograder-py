@@ -18,7 +18,7 @@ class Question(object):
     Note that all scoring is in ints.
     """
 
-    def __init__(self, max_points, name = None, timeout = DEFAULT_TIMEOUT_SEC):
+    def __init__(self, max_points = 0, name = None, timeout = DEFAULT_TIMEOUT_SEC):
         self.name = name
         if (self.name is None):
             self.name = type(self).__name__
@@ -143,7 +143,7 @@ class Question(object):
         if (self.result.message != ''):
             self.result.message += "\n"
 
-        self.result.message += message
+        self.result.message += str(message)
         self.result.score += add_score
 
 class GradedQuestion(object):
