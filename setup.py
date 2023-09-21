@@ -15,7 +15,7 @@ setuptools.setup(
     name = 'autograder-py',
     url = 'https://github.com/eriq-augustine/autograder-py',
 
-    version = '0.1.1',
+    version = '0.1.2',
     keywords = 'grading',
 
     description = "The Python interface for the autograding server.",
@@ -38,6 +38,7 @@ setuptools.setup(
     install_requires = [
         'flake8>=6.0.0',
         'requests>=2.31.0',
+        'GitPython>=3.1.31',
     ],
 
     license_files = (LICENSE_PATH, ),

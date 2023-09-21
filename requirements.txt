@@ -1,5 +1,6 @@
 flake8>=6.0.0
 requests>=2.31.0
+GitPython>=3.1.31
 
 build
 twine

@@ -8,6 +8,7 @@ import traceback
 
 import autograder.assignment
 import autograder.code
+import autograder.git
 import autograder.utils
 
 TEST_SUBMISSION_FILENAME = 'test-submission.json'
@@ -17,6 +18,10 @@ CONFIG_KEY_STATIC_FILES = 'static-files'
 CONFIG_KEY_PRE_STATIC_OPS = 'pre-static-files-ops'
 CONFIG_KEY_POST_STATIC_OPS = 'post-static-files-ops'
 CONFIG_KEY_POST_SUB_OPS = 'post-submission-files-ops'
+
+FILESPEC_DELIM = '::'
+FILESPEC_GIT = 'git'
+FILESPEC_GIT_PREFIX = FILESPEC_GIT + FILESPEC_DELIM
 
 def do_file_operation(operation, op_dir):
     if ((operation is None) or (len(operation) == 0)):
@@ -35,6 +40,35 @@ def do_file_operation(operation, op_dir):
     else:
         raise ValueError("Unknown file operation: '%s'." % (operation[0]))
 
+def handle_git_static_file(filespec, dest_dir):
+    parts = filespec.split(FILESPEC_DELIM)
+
+    if ((len(parts) < 2) or (len(parts) > 4) or (parts[0] != FILESPEC_GIT)):
+        raise ValueError("Unknown git filespec: '%s'." % (filespec))
+
+    url = parts[1]
+
+    dirname = url.split('/')[-1].removesuffix('.git')
+    if (len(parts) >= 3):
+        dirname = parts[2]
+
+    ref = None
+    if (len(parts) >= 4):
+        ref = parts[3]
+
+    dest_path = os.path.join(dest_dir, dirname)
+
+    autograder.git.ensure_repo(url, dest_path, update = True, ref = ref)
+
+def copy_assignment_file(filename, source_dir, dest_dir, only_contents):
+    source_path = os.path.join(source_dir, filename)
+    dest_path = os.path.join(dest_dir, os.path.basename(filename))
+
+    if (only_contents):
+        autograder.utils.copy_dirent_contents(source_path, dest_path)
+    else:
+        autograder.utils.copy_dirent(source_path, dest_path)
+
 def copy_assignment_files(source_dir, dest_dir, op_dir, files,
         only_contents = False, pre_ops = [], post_ops = []):
     """
@@ -49,14 +83,11 @@ def copy_assignment_files(source_dir, dest_dir, op_dir, files,
         do_file_operation(file_operation, op_dir)
 
     # Copy over the assignment's files.
-    for filename in files:
-        source_path = os.path.join(source_dir, filename)
-        dest_path = os.path.join(dest_dir, os.path.basename(filename))
-
-        if (only_contents):
-            autograder.utils.copy_dirent_contents(source_path, dest_path)
+    for filespec in files:
+        if (filespec.startswith(FILESPEC_GIT_PREFIX)):
+            handle_git_static_file(filespec, dest_dir)
         else:
-            autograder.utils.copy_dirent(source_path, dest_path)
+            copy_assignment_file(filespec, source_dir, dest_dir, only_contents)
 
     # Do post operations.
     for file_operation in post_ops:
