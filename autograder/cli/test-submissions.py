@@ -1,15 +1,8 @@
 import argparse
-import glob
-import json
-import os
-import shutil
 import sys
 import traceback
 
-import autograder.assignment
-import autograder.code
 import autograder.submission
-import autograder.utils
 
 DEFAULT_ASSIGNMENT = 'assignment.json'
 

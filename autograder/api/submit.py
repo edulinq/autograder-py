@@ -5,7 +5,7 @@ import autograder.util.hash
 API_ENDPOINT = '/api/v01/submit'
 API_KEYS = ['user', 'pass', 'course', 'assignment', 'message']
 
-def send(server, config_data, files = []):
+def send(server, config_data, paths):
     """
     Take in a server address
     and config data (of the form produced by autograder.api.common.parse_config()),
@@ -26,7 +26,7 @@ def send(server, config_data, files = []):
     # Don't send cleartext passwords.
     data['pass'] = autograder.util.hash.sha256_hex(data['pass'])
 
-    body, message = autograder.api.common.send_api_request(url, data = data, files = files)
+    body, message = autograder.api.common.send_api_request(url, data = data, files = paths)
 
     if (body is None):
         response = "The autograder failed to grade your assignment."

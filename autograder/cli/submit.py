@@ -16,8 +16,17 @@ def run(arguments):
 
     return 0
 
+def _load_args():
+    parser = autograder.api.common.get_argument_parser(description = 'Submit an assignment.')
+
+    parser.add_argument('files', metavar = 'FILE',
+        action = 'store', type = str, nargs = '+',
+        help = 'The path to your submission file.')
+
+    return parser.parse_args()
+
 def main():
-    return run(autograder.api.common.get_argument_parser().parse_args())
+    return run(_load_args())
 
 if (__name__ == '__main__'):
     sys.exit(main())

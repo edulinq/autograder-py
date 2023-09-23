@@ -1,13 +1,10 @@
-import argparse
 import glob
 import json
 import os
 import shutil
-import sys
 import traceback
 
 import autograder.assignment
-import autograder.code
 import autograder.git
 import autograder.utils
 
@@ -191,24 +188,27 @@ def run_test_submission(assignment_config_path, submission_config_path, debug = 
     if (actual_result is None):
         return False
 
-    with open(submission_config_path, 'r') as file:
-        submission_config = json.load(file)
+    return compare_test_submission(submission_config_path, actual_result)
 
-    expected_result = autograder.assignment.GradedAssignment.from_dict(submission_config['result'])
-    ignore_messages = submission_config.get('ignore_messages', False)
+def compare_test_submission(test_config_path, actual_result, print_result = True):
+    with open(test_config_path, 'r') as file:
+        test_config = json.load(file)
 
-    if (actual_result.equals(expected_result, ignore_messages = ignore_messages)):
-        return True
+    expected_result = autograder.assignment.GradedAssignment.from_dict(test_config['result'])
+    ignore_messages = test_config.get('ignore_messages', False)
 
-    print("Submission does not match expected output: '%s'." % (submission_config_path))
-    print('Expected:')
-    print(expected_result.report(prefix = '    '))
-    print('---')
-    print('Actual:')
-    print(actual_result.report(prefix = '    '))
-    print('---')
+    match = actual_result.equals(expected_result, ignore_messages = ignore_messages)
 
-    return False
+    if ((not match) and print_result):
+        print("Submission does not match expected output: '%s'." % (submission_config_path))
+        print('Expected:')
+        print(expected_result.report(prefix = '    '))
+        print('---')
+        print('Actual:')
+        print(actual_result.report(prefix = '    '))
+        print('---')
+
+    return match
 
 def run_submission(assignment_class, input_dir, output_dir, work_dir):
     try:

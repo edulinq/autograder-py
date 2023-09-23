@@ -126,8 +126,4 @@ def get_argument_parser(
         action = 'store', type = str, default = DEFAULT_AUTOGRADER_URL,
         help = 'The URL of the server to submit to (default: %(default)s).')
 
-    parser.add_argument('files', metavar = 'FILE',
-        action = 'store', type = str, nargs = '+',
-        help = 'The path to your submission file.')
-
     return parser
