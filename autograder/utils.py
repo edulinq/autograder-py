@@ -236,7 +236,7 @@ def timestamp_to_string(timestamp, pretty = False):
         return None
 
     if (pretty):
-        return timestamp.strftime(PRETTY_TIMESTEMP_FORMAT),
+        return timestamp.astimezone().strftime(PRETTY_TIMESTEMP_FORMAT)
 
     return timestamp.isoformat()
 
