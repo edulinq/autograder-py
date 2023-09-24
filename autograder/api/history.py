@@ -1,16 +1,16 @@
 import autograder.api.common
 import autograder.assignment
 
-API_ENDPOINT = '/api/v01/submit'
-API_KEYS = ['user', 'pass', 'course', 'assignment', 'message']
+API_ENDPOINT = '/api/v01/history'
+API_KEYS = ['user', 'pass', 'course', 'assignment']
 
-def send(server, config_data, paths):
+def send(server, config_data):
     """
     Take in a server address
     and config data (of the form produced by autograder.api.common.parse_config()),
-    and make a subimt request.
+    and make a history request.
     Returns:
-        (success, <message or graded assignment>)
+        (success, <message or list of submission summaries>)
     """
 
     url = "%s%s" % (server, API_ENDPOINT)
@@ -22,13 +22,13 @@ def send(server, config_data, paths):
 
         data[key] = config_data[key]
 
-    body, message = autograder.api.common.send_api_request(url, data = data, files = paths)
+    body, message = autograder.api.common.send_api_request(url, data = data)
 
     if (body is None):
-        response = "The autograder failed to grade your assignment."
+        response = "The autograder failed to get a submission history."
         response += "\nMessage from the autograder: " + message
         return (False, response)
 
-    result = autograder.assignment.GradedAssignment.from_dict(body['result'])
+    result = body['history']
 
     return (True, result)

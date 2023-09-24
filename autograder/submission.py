@@ -220,3 +220,58 @@ def run_submission(assignment_class, input_dir, output_dir, work_dir):
         return None
 
     return result
+
+class SubmissionSummary(object):
+    """
+    A summary of a grading submission.
+    """
+
+    def __init__(self,
+            id = '',
+            max_points = 0, score = 0,
+            message = '',
+            grading_start_time = None,
+            **kwargs):
+        self.id = id
+
+        self.max_points = max_points
+        self.score = score
+
+        self.message = message
+
+        self.grading_start_time = None
+        if (grading_start_time is not None):
+            self.grading_start_time = autograder.utils.get_timestamp(grading_start_time)
+
+    def to_dict(self):
+        """
+        Convert to all simple structures that can be later converted to JSON.
+        """
+
+        return {
+            'id': self.id,
+            'max_points': self.max_points,
+            'score': self.score,
+            'message': self.message,
+            'grading_start_time': autograder.utils.timestamp_to_string(self.grading_start_time),
+        }
+
+    @staticmethod
+    def from_dict(data):
+        """
+        Partner to to_dict().
+        """
+
+        return SubmissionSummary(**data)
+
+    def __repr__(self):
+        """
+        Get a string that represents the summary.
+        """
+
+        short_id = self.id.split('::')[-1]
+
+        return "Submission %s -- %s / %s -- Graded at %s, Message '%s'" % (
+                short_id, self.score, self.max_points,
+                autograder.utils.timestamp_to_string(self.grading_start_time, pretty = True),
+                self.message)

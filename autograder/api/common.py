@@ -4,6 +4,8 @@ import os
 
 import requests
 
+import autograder.util.hash
+
 DEFAULT_CONFIG_PATH = 'config.json'
 DEFAULT_AUTOGRADER_URL = 'http://sozopol.soe.ucsc.edu:12345'
 
@@ -12,7 +14,7 @@ API_REQUEST_JSON_KEY = 'content'
 API_RESPONSE_KEY_SUCCESS = 'success'
 API_RESPONSE_KEY_CONTENT = 'content'
 
-def send_api_request(url, method = None, data = {}, files = []):
+def send_api_request(url, method = None, data = {}, files = [], clean = True):
     """
     Make an API request and respond with:
      - on success -- (the response body, None)
@@ -28,10 +30,15 @@ def send_api_request(url, method = None, data = {}, files = []):
         post_files[filename] = open(path, 'rb')
 
     if (method is None):
-        if (len(files) > 0):
+        if ((len(files) > 0) or (len(data) > 0)):
             method = 'POST'
         else:
             method = 'GET'
+
+    if (clean):
+        # Don't send cleartext passwords.
+        if ('pass' in data):
+            data['pass'] = autograder.util.hash.sha256_hex(data['pass'])
 
     raw_response = requests.request(
         method = method,
