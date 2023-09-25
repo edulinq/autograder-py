@@ -264,14 +264,18 @@ class SubmissionSummary(object):
 
         return SubmissionSummary(**data)
 
+    def short_id(self):
+        return self.id.split('::')[-1]
+
+    def pretty_time(self):
+        return autograder.utils.timestamp_to_string(self.grading_start_time, pretty = True)
+
     def __repr__(self):
         """
         Get a string that represents the summary.
         """
 
-        short_id = self.id.split('::')[-1]
-
         return "Submission %s -- %s / %s -- Graded at %s, Message '%s'" % (
-                short_id, self.score, self.max_points,
-                autograder.utils.timestamp_to_string(self.grading_start_time, pretty = True),
+                self.short_id(), self.score, self.max_points,
+                self.pretty_time(),
                 self.message)
