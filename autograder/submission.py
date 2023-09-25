@@ -275,7 +275,11 @@ class SubmissionSummary(object):
         Get a string that represents the summary.
         """
 
-        return "Submission %s -- %s / %s -- Graded at %s, Message '%s'" % (
+        message = '.'
+        if ((self.message is not None) and (self.message != '')):
+            message = ", Message: '%s'." % (self.message)
+
+        return "Submission %s -- %s / %s -- Graded at %s%s" % (
                 self.short_id(), self.score, self.max_points,
                 self.pretty_time(),
-                self.message)
+                message)
