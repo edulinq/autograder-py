@@ -10,8 +10,8 @@ def run(args):
     base_dir = os.path.abspath(args.dir)
 
     input_dir, output_dir, work_dir = autograder.submission.prep_grading_dir(
-            assignment_config_path, base_dir, submission_path,
-            skip_static = args.skip_static)
+        assignment_config_path, base_dir, submission_path,
+        skip_static = args.skip_static)
 
     return 0
 

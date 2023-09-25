@@ -26,14 +26,17 @@ def do_file_operation(operation, op_dir):
 
     if (operation[0] == 'mv'):
         if (len(operation) != 3):
-            raise ValueError("Incorrect number of argument for 'mv' file operation. Expected 2, found %d." % ((len(operation) - 1)))
+            raise ValueError("Incorrect number of argument for 'mv' file operation."
+                + " Expected 2, found %d." % ((len(operation) - 1)))
 
         shutil.move(os.path.join(op_dir, operation[1]), os.path.join(op_dir, operation[2]))
     elif (operation[0] == 'cp'):
         if (len(operation) != 3):
-            raise ValueError("Incorrect number of argument for 'cp' file operation. Expected 2, found %d." % ((len(operation) - 1)))
+            raise ValueError("Incorrect number of argument for 'cp' file operation."
+                + " Expected 2, found %d." % ((len(operation) - 1)))
 
-        autograder.utils.copy_dirent(os.path.join(op_dir, operation[1]), os.path.join(op_dir, operation[2]))
+        autograder.utils.copy_dirent(os.path.join(op_dir, operation[1]), os.path.join(op_dir,
+            operation[2]))
     else:
         raise ValueError("Unknown file operation: '%s'." % (operation[0]))
 
@@ -96,11 +99,13 @@ def fetch_test_submissions(path):
 
     if (os.path.isfile(path)):
         if (os.path.basename(path) != TEST_SUBMISSION_FILENAME):
-            raise ValueError("Passed in submission file is not named like a test submission ('%s')." % (TEST_SUBMISSION_FILENAME))
+            raise ValueError("Passed in submission is not named like a test submission ('%s')." % (
+                TEST_SUBMISSION_FILENAME))
 
         test_submissions.append(path)
     else:
-        test_submissions += glob.glob(os.path.join(path, '**', TEST_SUBMISSION_FILENAME), recursive = True)
+        test_submissions += glob.glob(os.path.join(path, '**', TEST_SUBMISSION_FILENAME),
+                recursive = True)
 
     return test_submissions
 
@@ -122,7 +127,8 @@ def prep_temp_grading_dir(assignment_config_path, submission_dir, debug = False)
     if (debug):
         print("Using temp/work dir: '%s'." % (temp_dir))
 
-    input_dir, output_dir, work_dir = prep_grading_dir(assignment_config_path, temp_dir, submission_dir)
+    input_dir, output_dir, work_dir = prep_grading_dir(assignment_config_path, temp_dir,
+        submission_dir)
 
     grader_path = os.path.join(work_dir, GRADER_FILENAME)
     assignment_class = autograder.assignment.fetch_assignment(grader_path)
@@ -168,14 +174,15 @@ def prep_grading_dir(assignment_config_path, base_dir, submission_dir, skip_stat
 
     # Copy submission files.
     copy_assignment_files(submission_dir, input_dir, base_dir,
-            ['.'], only_contents = True,
-            pre_ops = [],
-            post_ops = assignment_config.get(CONFIG_KEY_POST_SUB_OPS, []))
+        ['.'], only_contents = True,
+        pre_ops = [],
+        post_ops = assignment_config.get(CONFIG_KEY_POST_SUB_OPS, []))
 
     return input_dir, output_dir, work_dir
 
 def run_test_submission(assignment_config_path, submission_config_path, debug = False):
-    print("Testing assignment '%s' and submission '%s'." % (assignment_config_path, submission_config_path))
+    print("Testing assignment '%s' and submission '%s'." % (assignment_config_path,
+        submission_config_path))
 
     dirs, assignment_class = prep_temp_grading_dir(assignment_config_path,
         os.path.dirname(submission_config_path), debug = debug)
@@ -200,7 +207,7 @@ def compare_test_submission(test_config_path, actual_result, print_result = True
     match = actual_result.equals(expected_result, ignore_messages = ignore_messages)
 
     if ((not match) and print_result):
-        print("Submission does not match expected output: '%s'." % (submission_config_path))
+        print("Submission does not match expected output: '%s'." % (test_config_path))
         print('Expected:')
         print(expected_result.report(prefix = '    '))
         print('---')
@@ -212,14 +219,14 @@ def compare_test_submission(test_config_path, actual_result, print_result = True
 
 def run_submission(assignment_class, input_dir, output_dir, work_dir):
     try:
-        assignment = assignment_class(input_dir = input_dir, output_dir = output_dir, work_dir = work_dir)
+        assignment = assignment_class(input_dir = input_dir, output_dir = output_dir,
+                work_dir = work_dir)
         return assignment.grade()
     except Exception as ex:
-        print("Failed to run assignment (%s) on submission '%s': '%s'." % (assignment_class.__name__, input_dir, ex))
+        print("Failed to run assignment (%s) on submission '%s': '%s'." % (
+            assignment_class.__name__, input_dir, ex))
         traceback.print_exc()
         return None
-
-    return result
 
 class SubmissionSummary(object):
     """
@@ -280,6 +287,6 @@ class SubmissionSummary(object):
             message = ", Message: '%s'." % (self.message)
 
         return "Submission %s -- %s / %s -- Graded at %s%s" % (
-                self.short_id(), self.score, self.max_points,
-                self.pretty_time(),
-                message)
+            self.short_id(), self.score, self.max_points,
+            self.pretty_time(),
+            message)

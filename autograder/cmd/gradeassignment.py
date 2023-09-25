@@ -48,7 +48,7 @@ def _load_args():
 
     parser.add_argument('-d', '--debug', dest = 'debug',
         action = 'store_true', default = False,
-        help = 'Enable additional output and leave behind grading artifacts (default: %(default)s).')
+        help = 'Enable additional output and leave behind artifacts (default: %(default)s).')
 
     return parser.parse_args()
 

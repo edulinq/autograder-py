@@ -39,8 +39,10 @@ def run(args):
 
 def _load_args():
     parser = argparse.ArgumentParser(description =
-        'Grade a submission given an already prepared working (submission) directory and a grader file.' +
-        ' Use autograder.cli.grade-assignment if you have not already prepared your work directory.')
+        'Grade a submission given an already prepared working (submission) directory'
+        + ' and a grader file.'
+        + ' Use autograder.cli.grade-assignment if you have not already prepared'
+        + ' your work directory.')
 
     parser.add_argument('-g', '--grader',
         action = 'store', type = str, required = True,
@@ -48,11 +50,11 @@ def _load_args():
 
     parser.add_argument('-id', '--inputdir',
         action = 'store', type = str, required = False, default = None,
-        help = 'The path to the submission\'s input directory (will default to the work directory).')
+        help = 'The path to the submission\'s input directory (defaults to the work directory).')
 
     parser.add_argument('-od', '--outputdir',
         action = 'store', type = str, required = False, default = None,
-        help = 'The path to the submission\'s output directory (will default to the work directory).')
+        help = 'The path to the submission\'s output directory (defaults to the work directory).')
 
     parser.add_argument('-wd', '--workdir',
         action = 'store', type = str, required = True,
@@ -64,7 +66,7 @@ def _load_args():
 
     parser.add_argument('-d', '--debug', dest = 'debug',
         action = 'store_true', default = False,
-        help = 'Enable additional output and leave behind grading artifacts (default: %(default)s)')
+        help = 'Enable additional output and leave behind artifacts (default: %(default)s)')
 
     return parser.parse_args()
 

@@ -18,7 +18,7 @@ def run(arguments):
 
     print("Found %d submissions." % (len(result)))
     for entry in result:
-        print(autograder.submission.SubmissionSummary.from_dict(entry))
+        print("    " + str(autograder.submission.SubmissionSummary.from_dict(entry)))
 
     return 0
 

@@ -122,7 +122,10 @@ class GradedAssignment(object):
         data = dict(data)
 
         if ('questions' in data):
-            data['questions'] = [autograder.question.GradedQuestion(**question) for question in data['questions']]
+            data['questions'] = [
+                autograder.question.GradedQuestion(**question)
+                for question in data['questions']
+            ]
 
         return GradedAssignment(**data)
 
@@ -216,10 +219,10 @@ def fetch_assignment(path):
     assignments = load_assignments(path)
 
     if (len(assignments) == 0):
-        raise ValueError(("Assignment file (%s) does not contain any instances of" +
-            " autograder.assignment.Assignment.") % (path))
+        raise ValueError(("Assignment file (%s) does not contain any instances of"
+            + " autograder.assignment.Assignment.") % (path))
     elif (len(assignments) > 1):
-        raise ValueError(("Assignment file (%s) contains more than one (%d) instances of" +
-            " autograder.assignment.Assignment.") % (path, len(assignments)))
+        raise ValueError(("Assignment file (%s) contains more than one (%d) instances of"
+            + " autograder.assignment.Assignment.") % (path, len(assignments)))
 
     return assignments[0]

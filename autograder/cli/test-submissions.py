@@ -19,7 +19,8 @@ def run(args):
         success = False
 
         try:
-            success = autograder.submission.run_test_submission(args.assignment, test_submission, args.debug)
+            success = autograder.submission.run_test_submission(args.assignment,
+                test_submission, args.debug)
         except Exception as ex:
             print("Failed to run submission '%s': '%s'." % (test_submission, ex))
             traceback.print_exc()
@@ -38,7 +39,8 @@ def run(args):
 
 def _load_args():
     parser = argparse.ArgumentParser(description =
-        "Run a grader against multiple test assignments and ensure the output matched the expected output.")
+        'Run a grader against multiple test assignments and ensure the output'
+        + ' matches the expected output.')
 
     parser.add_argument('-a', '--assignment',
         action = 'store', type = str, required = False, default = DEFAULT_ASSIGNMENT,
