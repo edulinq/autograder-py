@@ -30,7 +30,7 @@ def run(args):
 
     return 0
 
-def _load_args():
+def _get_parser():
     parser = argparse.ArgumentParser(description =
         'Grade an assignment (specified by an assignment JSON file) using the given submission.')
 
@@ -50,10 +50,10 @@ def _load_args():
         action = 'store_true', default = False,
         help = 'Enable additional output and leave behind artifacts (default: %(default)s).')
 
-    return parser.parse_args()
+    return parser
 
 def main():
-    return run(_load_args())
+    return run(_get_parser().parse_args())
 
 if (__name__ == '__main__'):
     sys.exit(main())

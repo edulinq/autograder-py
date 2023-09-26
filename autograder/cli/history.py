@@ -13,7 +13,7 @@ def run(arguments):
         return 1
 
     if (len(result) == 0):
-        print("No submissions found.")
+        print("No past submission found for this assignment.")
         return 0
 
     print("Found %d submissions." % (len(result)))
@@ -22,14 +22,14 @@ def run(arguments):
 
     return 0
 
-def _load_args():
+def _get_parser():
     parser = autograder.api.common.get_argument_parser(description =
             'Get a history of past submission for this assignment.')
 
-    return parser.parse_args()
+    return parser
 
 def main():
-    return run(_load_args())
+    return run(_get_parser().parse_args())
 
 if (__name__ == '__main__'):
     sys.exit(main())

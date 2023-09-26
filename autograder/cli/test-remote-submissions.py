@@ -56,7 +56,7 @@ def run(arguments):
 
     return errors
 
-def _load_args():
+def _get_parser():
     parser = autograder.api.common.get_argument_parser(description =
         'Submit multiple assignments to an autograder and ensure the output is expected.')
 
@@ -64,10 +64,10 @@ def _load_args():
         action = 'store', type = str, required = True,
         help = 'The path to a dir containing one or more test submissions.')
 
-    return parser.parse_args()
+    return parser
 
 def main():
-    return run(_load_args())
+    return run(_get_parser().parse_args())
 
 if (__name__ == '__main__'):
     sys.exit(main())

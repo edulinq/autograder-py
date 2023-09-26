@@ -286,7 +286,7 @@ class SubmissionSummary(object):
         if ((self.message is not None) and (self.message != '')):
             message = ", Message: '%s'." % (self.message)
 
-        return "Submission %s -- %s / %s -- Graded at %s%s" % (
+        return "Submission ID: %s, Score: %s / %s, Time: %s%s" % (
             self.short_id(), self.score, self.max_points,
             self.pretty_time(),
             message)

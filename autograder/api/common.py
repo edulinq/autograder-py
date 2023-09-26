@@ -83,7 +83,6 @@ def parse_config(arguments):
         'pass': None,
         'course': None,
         'assignment': None,
-        'message': '',
     }
 
     if ((arguments.config_paths is not None) and (len(arguments.config_paths) > 0)):
@@ -135,10 +134,6 @@ def get_argument_parser(
     parser.add_argument('--assignment', dest = 'assignment',
         action = 'store', type = str, default = None,
         help = 'assignment')
-
-    parser.add_argument('--message', dest = 'message',
-        action = 'store', type = str, default = '',
-        help = 'message')
 
     parser.add_argument('--server', dest = 'server',
         action = 'store', type = str, default = DEFAULT_AUTOGRADER_URL,

@@ -16,7 +16,7 @@ def run(args):
 
     return count
 
-def _load_args():
+def _get_parser():
     parser = argparse.ArgumentParser(description =
         "Check the style of all '.py' and '.ipynb' files in the paths specificed (recursivley).")
 
@@ -24,10 +24,10 @@ def _load_args():
         type = str, nargs = '+',
         help = 'A path to check for style.')
 
-    return parser.parse_args()
+    return parser
 
 def main():
-    return run(_load_args())
+    return run(_get_parser().parse_args())
 
 if (__name__ == '__main__'):
     sys.exit(main())

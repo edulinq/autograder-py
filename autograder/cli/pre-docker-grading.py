@@ -34,7 +34,7 @@ def run(args):
 
     return 0
 
-def _load_args():
+def _get_parser():
     parser = argparse.ArgumentParser(description =
         'Take any necessary steps before performing a standard docker-based grading.')
 
@@ -58,10 +58,10 @@ def _load_args():
         action = 'store', type = str, default = DEFAULT_WORK_DIR,
         help = 'The path to the grading work directory (default: %(default)s).')
 
-    return parser.parse_args()
+    return parser
 
 def main():
-    return run(_load_args())
+    return run(_get_parser().parse_args())
 
 if (__name__ == '__main__'):
     sys.exit(main())
