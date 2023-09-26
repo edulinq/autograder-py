@@ -86,14 +86,18 @@ def parse_config(arguments):
         'message': '',
     }
 
-    if (arguments.config_path is not None):
-        with open(arguments.config_path, 'r') as file:
-            config.update(json.load(file))
+    if ((arguments.config_paths is not None) and (len(arguments.config_paths) > 0)):
+        for path in arguments.config_paths:
+            with open(path, 'r') as file:
+                config.update(json.load(file))
     elif (os.path.isfile(DEFAULT_CONFIG_PATH)):
-        with open(arguments.config_path, 'r') as file:
+        with open(DEFAULT_CONFIG_PATH, 'r') as file:
             config.update(json.load(file))
 
     for (key, value) in vars(arguments).items():
+        if (key == 'config_paths'):
+            continue
+
         if ((value is None) or (value == '')):
             continue
 
@@ -109,9 +113,10 @@ def get_argument_parser(
 
     parser = argparse.ArgumentParser(description = description)
 
-    parser.add_argument('--config', dest = 'config_path',
-        action = 'store', type = str, default = None,
+    parser.add_argument('--config', dest = 'config_paths',
+        action = 'append', type = str,
         help = 'A JSON config file with your submission/authentication details.'
+            + " Can be specified multiple times with later values overriding earlier ones."
             + " If not specified, '%s' will be checked." % (DEFAULT_CONFIG_PATH)
             + ' These options can be set directly using other CLI arguments.')
 
