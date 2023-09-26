@@ -74,7 +74,7 @@ python3 -m autograder.cli.submit my_first_file.py my_second_file.java some_dir/*
 
 The autograder will attempt to grade your assignment and will return some message about the result of grading.
 For example, a successful grading may look like:
-```sh
+```
 The autograder successfully graded your assignment.
 Autograder transcript for assignment: HO0.
 Grading started at 2023-09-26 08:35 and ended at 2023-09-26 08:35.
@@ -90,7 +90,7 @@ Total: 100 / 100
 On any successful grading (even if you got a zero), your result has been saved by the autograder and is in the system.
 On a submission failure, the autograder will tell you and you will not receive any grade for your submission.
 A failure may look like:
-```sh
+```
 The autograder failed to grade your assignment.
 Message from the autograder: Request could not be authenticated. Ensure that your username, password, and course are properly set.
 ```
@@ -105,7 +105,7 @@ python3 -m autograder.cli.peek
 ```
 
 The output may look like:
-```sh
+```
 Found a past submission for this assignment.
 Autograder transcript for assignment: HO0.
 Grading started at 2023-09-26 08:35 and ended at 2023-09-26 08:35.
@@ -119,7 +119,7 @@ Total: 100 / 100
 ```
 
 If you have made no past (successful) submissions, then your output may look like:
-```sh
+```
 No past submission found for this assignment.
 ```
 
@@ -132,14 +132,14 @@ python3 -m autograder.cli.history
 ```
 
 The output may look like:
-```sh
+```
 Found 2 submissions.
     Submission ID: 1695682455, Score: 24 / 100, Time: 2023-09-25 17:54.
     Submission ID: 1695735313, Score: 100 / 100, Time: 2023-09-26 08:35, Message: 'I did it!'
 ```
 
 If you have made no past (successful) submissions, then your output may look like:
-```sh
+```
 No past submission found for this assignment.
 ```
 
