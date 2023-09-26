@@ -21,6 +21,7 @@ def _get_files(test_submission):
 
 def run(arguments):
     config_data = autograder.api.common.parse_config(arguments)
+    config_data['message'] = ''
 
     try:
         test_submissions = autograder.submission.fetch_test_submissions(arguments.submissions)
