@@ -30,7 +30,7 @@ setuptools.setup(
     classifiers = [
         'Intended Audience :: Education',
         'License :: OSI Approved :: MIT License',
-        'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.10',
     ],
 
     packages = setuptools.find_packages(),
@@ -43,5 +43,5 @@ setuptools.setup(
 
     license_files = (LICENSE_PATH, ),
 
-    python_requires = '>=3.7'
+    python_requires = '>=3.10'
 )
