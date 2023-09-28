@@ -228,7 +228,11 @@ def get_timestamp(source = None):
         return source
 
     if (isinstance(source, str)):
+        # Parse out some cases that Python 3.10 cannot deal with.
+        # This will remove fractional seconds.
         source = re.sub(r'Z$', '+00:00', source)
+        source = re.sub(r'(\d\d:\d\d)(\.\d+)', r'\1', source)
+
         return datetime.datetime.fromisoformat(source)
 
     raise ValueError("Unknown type ('%s') for timestamp source." % (type(source)))
