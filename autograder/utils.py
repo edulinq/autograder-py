@@ -2,6 +2,7 @@ import atexit
 import datetime
 import multiprocessing
 import os
+import re
 import shutil
 import sys
 import tempfile
@@ -227,6 +228,7 @@ def get_timestamp(source = None):
         return source
 
     if (isinstance(source, str)):
+        source = re.sub(r'Z$', '+00:00', source)
         return datetime.datetime.fromisoformat(source)
 
     raise ValueError("Unknown type ('%s') for timestamp source." % (type(source)))
