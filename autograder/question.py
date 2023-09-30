@@ -4,6 +4,7 @@ A single question (test case) for an assignment.
 
 import abc
 import functools
+import json
 import numbers
 import traceback
 
@@ -206,6 +207,12 @@ class GradedQuestion(object):
                 lines.append(prefix + '   ' + line)
 
         return "\n".join(lines)
+
+    def string(self, indent = None):
+        return json.dumps(self.to_dict(), indent = indent)
+
+    def __repr__(self):
+        return self.string()
 
     def __eq__(self, other):
         return self.equals(other)

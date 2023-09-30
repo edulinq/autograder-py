@@ -3,6 +3,7 @@ What is necessary to grade a single assignment.
 """
 
 import inspect
+import json
 
 import autograder.code
 import autograder.question
@@ -174,6 +175,12 @@ class GradedAssignment(object):
 
     def __eq__(self, other):
         return self.equals(other)
+
+    def string(self, indent = None):
+        return json.dumps(self.to_dict(), indent = indent)
+
+    def __repr__(self):
+        return self.string()
 
     def equals(self, other, **kwargs):
         if (not isinstance(other, GradedAssignment)):
