@@ -1,17 +1,21 @@
 import http
 import http.server
 import multiprocessing
+import time
 import urllib.parse
 
-PORT = 54321
+PORT = 12345
 ENCODING = 'utf8'
 POST_CONTENT_KEY = 'content'
+
+SLEEP_TIME_SEC = 0.5
 REAP_TIME_SEC = 1
 
 def start():
-    # Note that we use processes instead of threads so they can be more completely killed.
     process = multiprocessing.Process(target = _run)
     process.start()
+
+    time.sleep(SLEEP_TIME_SEC)
 
     return process
 

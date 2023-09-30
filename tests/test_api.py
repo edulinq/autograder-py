@@ -1,4 +1,5 @@
 import unittest
+import sys
 
 import autograder.api.history
 import autograder.api.peek
@@ -16,6 +17,7 @@ TEST_CREDENTIALS = {
     'assignment': 'hw0',
 }
 
+@unittest.skipUnless(sys.platform.startswith('linux'), 'linux only (multiprocessing)')
 class TestAPI(unittest.TestCase):
     """
     Test API calls by mocking a server.
