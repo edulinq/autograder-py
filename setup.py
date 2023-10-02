@@ -39,6 +39,7 @@ setuptools.setup(
         'flake8>=6.0.0',
         'requests>=2.31.0',
         'GitPython>=3.1.31',
+        'platformdirs>=3.10.0',
     ],
 
     license_files = (LICENSE_PATH, ),

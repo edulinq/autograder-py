@@ -29,8 +29,9 @@ def run(arguments):
     return 0
 
 def _get_parser():
-    parser = autograder.api.common.get_argument_parser(description =
-            'Authenticate as a user in this course.')
+    parser = autograder.api.common.get_argument_parser(
+        description = 'Authenticate as a user in this course.',
+        include_assignment = False)
 
     parser.add_argument('email', metavar = 'EMAIL',
         action = 'store', type = str,

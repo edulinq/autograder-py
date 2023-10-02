@@ -26,8 +26,9 @@ def run(arguments):
     return 0
 
 def _get_parser():
-    parser = autograder.api.common.get_argument_parser(description =
-            'Get the users in this course.')
+    parser = autograder.api.common.get_argument_parser(
+        description = 'Get the users in this course.',
+        include_assignment = False)
 
     return parser
 

@@ -1,12 +1,14 @@
 import argparse
 import json
 import os
+import platformdirs
 
 import requests
 
 import autograder.util.hash
 
-DEFAULT_CONFIG_PATH = 'config.json'
+DEFAULT_CONFIG_FILENAME = 'config.json'
+DEFAULT_USER_CONFIG_PATH = platformdirs.user_config_dir('autograder.json')
 DEFAULT_AUTOGRADER_URL = 'http://lighthouse.soe.ucsc.edu'
 
 API_REQUEST_JSON_KEY = 'content'
@@ -72,7 +74,7 @@ def send_api_request(url, method = None, data = {}, files = [], clean = True):
 
     return response.get(API_RESPONSE_KEY_CONTENT, None), None
 
-def parse_config(arguments):
+def parse_config(arguments, skip_keys = ['config_paths']):
     """
     Given the standard CLI options (from get_argument_parser()),
     parse out the full API configuration.
@@ -82,19 +84,27 @@ def parse_config(arguments):
         'user': None,
         'pass': None,
         'course': None,
-        'assignment': None,
     }
 
+    # Check the current directory config.
+    if (os.path.isfile(DEFAULT_CONFIG_FILENAME)):
+        with open(DEFAULT_CONFIG_FILENAME, 'r') as file:
+            config.update(json.load(file))
+
+    # Check the user config file.
+    if (os.path.isfile(DEFAULT_USER_CONFIG_PATH)):
+        with open(DEFAULT_USER_CONFIG_PATH, 'r') as file:
+            config.update(json.load(file))
+
+    # Check the config files specified on the command-line.
     if ((arguments.config_paths is not None) and (len(arguments.config_paths) > 0)):
         for path in arguments.config_paths:
             with open(path, 'r') as file:
                 config.update(json.load(file))
-    elif (os.path.isfile(DEFAULT_CONFIG_PATH)):
-        with open(DEFAULT_CONFIG_PATH, 'r') as file:
-            config.update(json.load(file))
 
+    # Finally, any command-line options.
     for (key, value) in vars(arguments).items():
-        if (key == 'config_paths'):
+        if (key in skip_keys):
             continue
 
         if ((value is None) or (value == '')):
@@ -105,7 +115,8 @@ def parse_config(arguments):
     return config
 
 def get_argument_parser(
-        description = 'Send an API request to the autograder.'):
+        description = 'Send an API request to the autograder.',
+        include_assignment = True):
     """
     Create an argparse parser that has all the standard options for API requests.
     """
@@ -116,8 +127,12 @@ def get_argument_parser(
         action = 'append', type = str,
         help = 'A JSON config file with your submission/authentication details.'
             + " Can be specified multiple times with later values overriding earlier ones."
-            + " If not specified, '%s' will be checked." % (DEFAULT_CONFIG_PATH)
-            + ' These options can be set directly using other CLI arguments.')
+            + " Config values can be specified in multiple places"
+            + " (with later values overriding earlier values):"
+            + " First './%s'," % (DEFAULT_CONFIG_FILENAME)
+            + " then '%s'," % (DEFAULT_USER_CONFIG_PATH)
+            + " now any files specified using --config in the order they were specified,"
+            + " and finally any variables specified directly on the command line (like --user).")
 
     parser.add_argument('--user', dest = 'user',
         action = 'store', type = str, default = None,
@@ -131,9 +146,10 @@ def get_argument_parser(
         action = 'store', type = str, default = None,
         help = 'course')
 
-    parser.add_argument('--assignment', dest = 'assignment',
-        action = 'store', type = str, default = None,
-        help = 'assignment')
+    if (include_assignment):
+        parser.add_argument('--assignment', dest = 'assignment',
+            action = 'store', type = str, default = None,
+            help = 'assignment')
 
     parser.add_argument('--server', dest = 'server',
         action = 'store', type = str, default = DEFAULT_AUTOGRADER_URL,
