@@ -31,9 +31,16 @@ All these options can be set on the command line when invoking on of these tools
 python3 -m autograder.cli.submit --user sammy@ucsc.edu --pass pass123 my_file.py
 ```
 
-Additionally, a config file (usually `config.json`) is often distributed with assignments that contains most the settings you need.
+There are several other places that config options can be specified,
+with each later location overriding any earlier options.
+Here are the places options can be specified in the order that they are checked:
+ 1. `./config.json` -- If a `config.json` exists in the current directory, it is loaded.
+ 2. `<platform-specific user config location>/autograder.json` -- A directory which is considered the "proper" place to store user-related config for the platform you are using (according to [platformdirs](https://github.com/platformdirs/platformdirs)). Use `--help` to see the exact place in your specific case. This is a great place to store login credentials.
+ 3. Files specified by `--config` -- These files are loaded in the order they appear on the command-line.
+ 4. Bare Options -- Options specified directly like `--user` or `--pass`. These will override all previous options.
+
+A base config file (`config.json`) is often distributed with assignments that contains most the settings you need.
 You can modify this config to include your settings and use that for setting all your configuration options.
-By default, if no config file is specified `config.json` will be looked for in the current directory.
 
 Using the default config file (`config.json`):
 ```sh
