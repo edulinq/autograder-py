@@ -1,5 +1,5 @@
 """
-Commands to manage autograder users.
+Commands to bridge canvas and the autograder.
 """
 
 import os
@@ -11,7 +11,7 @@ THIS_DIR = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
 
 def run():
     print(__doc__.strip())
-    autograder.util.cli.list_dir(THIS_DIR, 'autograder.cli.user')
+    autograder.util.cli.list_dir(THIS_DIR, 'autograder.cli.canvas')
     return 0
 
 def main():
