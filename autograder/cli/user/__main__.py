@@ -1,5 +1,5 @@
 """
-General commands to work with autograder projects.
+Commands to manage autograder users.
 """
 
 import os
@@ -14,7 +14,7 @@ def run():
     print("The following is a non-exhaustive list of CLI tools.")
     print("Invoke each command with the `--help` option for more details.")
 
-    autograder.util.cli.list_dir(THIS_DIR, 'autograder.cli')
+    autograder.util.cli.list_dir(THIS_DIR, 'autograder.cli.user')
     return 0
 
 def main():

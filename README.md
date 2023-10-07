@@ -231,29 +231,29 @@ TAs can fetch the grades for an assignment in TSV format using the `autograder.c
 
 ### User Management
 
-The tools for user management all start with the `user-` prefix.
+The tools for user management all start live in the `autograder.cli.user` package.
 These tools generally require `admin` privileges.
 
 #### Add a User
 
-Use the `autograder.cli.user-add` command to add users to the course.
+Use the `autograder.cli.user.add` command to add users to the course.
 If a password is not specified, it will be generated on the server side and must be sent out to the user in an email
 (therefore `--send-email` is required when no password is specified).
 The `--force` parameter can also be used to update an existing user.
 
 #### Auth as a User
 
-You can use the `autograder.cli.user-auth` command to authenticate as the given user.
+You can use the `autograder.cli.user.auth` command to authenticate as the given user.
 This command is useful for checking a user's password.
 
 #### Get a User
 
-The `autograder.cli.user-get` command can be used to get basic information about a user.
+The `autograder.cli.user.get` command can be used to get basic information about a user.
 
 #### List all Users
 
-The `autograder.cli.user-list` command can be used to list all the users in the course.
+The `autograder.cli.user.list` command can be used to list all the users in the course.
 
 #### Remove a User
 
-To remove a user, use the `autograder.cli.user-remove` command.
+To remove a user, use the `autograder.cli.user.remove` command.
