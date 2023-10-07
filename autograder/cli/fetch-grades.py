@@ -41,6 +41,10 @@ def _get_parser():
     parser = autograder.api.common.get_argument_parser(description =
             'Get all the most recent submissions for this assignment.')
 
+    parser.add_argument('--role', dest = 'role',
+        action = 'store', type = str, default = 'unknown',
+        help = 'If specified, limits the results to only users of that role.')
+
     return parser
 
 def main():

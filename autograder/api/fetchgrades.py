@@ -2,7 +2,7 @@ import autograder.api.common
 import autograder.assignment
 
 API_ENDPOINT = '/api/v01/grades/fetch'
-API_KEYS = ['user', 'pass', 'course', 'assignment']
+API_KEYS = ['user', 'pass', 'course', 'assignment', 'role']
 
 def send(server, config_data):
     """
