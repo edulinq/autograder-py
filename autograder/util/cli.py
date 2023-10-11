@@ -36,7 +36,7 @@ def handle_dir(path, cmd):
     print()
     print(cmd + '.*')
     print(description)
-    print("See `python3 -m %s --help` for more information." % (cmd))
+    print("See `python3 -m %s` for more information." % (cmd))
 
 def list_dir(base_dir, command_prefix):
     for dirent in sorted(os.listdir(base_dir)):
