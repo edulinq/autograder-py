@@ -13,6 +13,7 @@ You can get al list of tools by invoking `autograder.cli` directly:
 python3 -m autograder.cli
 ```
 
+
 ### Server API Tools
 
 These set of tools interact with an autograding server's API and typically revolve around working with assignments.
@@ -150,6 +151,7 @@ If you have made no past (successful) submissions, then your output may look lik
 No past submission found for this assignment.
 ```
 
+
 ### General Tools
 
 This project also provides tools to use on local code and does not interact with an autograding server.
@@ -167,6 +169,7 @@ Multiple files and directories can be specified (directories will be recursively
 ```sh
 python3 -m autograder.cli.style my_first_file.py my_second_file.ipynb some_dir/*
 ```
+
 
 ### Utilities
 
@@ -186,6 +189,29 @@ python3 -m autograder.cli.util.extract-code path/to/some/code.ipynb
 
 Note that the code that is output is post-sanitization, so loose code and comments may be discarded.
 Additionally the code is rebuilt from an AST, so all style is ignored.
+
+
+### TA Tools
+
+This project also provides administrative tools for interacting with an autograding server.
+Test tools live in the `autograder.cli.ta` package.
+These tools typically require more permissions than a student has (so students can ignore this section).
+
+#### Fetch Grades for an Assignment
+
+TAs can fetch the grades for an assignment in TSV format using the `autograder.cli.ta.fetch-grades` command.
+
+#### Fetch Most Recent Submission for a User
+
+TAs can fetch the most recent submission for a user/assignment using the `autograder.cli.ta.fetch-submission` command.
+
+For example, you can fetch Sammy Slug's most recent submission for "HW1" using:
+```
+python3 -m autograder.cli.ta.fetch-submission sslug@ucsc.edu --assignment HW1
+```
+
+On success, this will write out a file called submission.zip (you can change where it writes out with `-o`) that contains a user's full submission and result.
+
 
 ### Testing Tools
 
@@ -239,14 +265,6 @@ It is recommended, but not required to run the server with the following options
  - `-c web.noauth=true` -- Do not authenticate API requests.
  - `-c grader.nostore=true` -- Do not store the result of grading.
 
-### TA Tools
-
-This project also provides administrative tools for interacting with an autograding server.
-These tools typically require more permissions than a student has (so students can ignore this section).
-
-#### Fetch Grades for an Assignment
-
-TAs can fetch the grades for an assignment in TSV format using the `autograder.cli.fetch-grades` command.
 
 ### User Management
 
