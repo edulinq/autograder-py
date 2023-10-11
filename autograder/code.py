@@ -138,3 +138,6 @@ def sanitize_code(source_code):
 
     module_ast.body = keep_nodes
     return module_ast
+
+def ast_to_source(module_ast):
+    return ast.unparse(module_ast)

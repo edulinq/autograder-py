@@ -168,6 +168,25 @@ Multiple files and directories can be specified (directories will be recursively
 python3 -m autograder.cli.style my_first_file.py my_second_file.ipynb some_dir/*
 ```
 
+### Utilities
+
+These commands are general utilities that students and graders may both find useful.
+
+#### Extracting Sanitized Code
+
+It may be difficult to view a student's code on the command line.
+Whether it is inside an iPython notebook or just messy,
+it can be hard to tell what code the autograder it actually going to look at.
+You can use `autograder.cli.util.extract-code` to pull Python code out of
+a vanilla Python (.py) file or iPython notebook (.ipynb) and either output it to the screen or write it out to another file.
+
+```sh
+python3 -m autograder.cli.util.extract-code path/to/some/code.ipynb
+```
+
+Note that the code that is output is post-sanitization, so loose code and comments may be discarded.
+Additionally the code is rebuilt from an AST, so all style is ignored.
+
 ### Testing Tools
 
 This project also provides several tools that are useful for testing assignments.
