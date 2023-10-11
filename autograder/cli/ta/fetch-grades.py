@@ -1,14 +1,14 @@
 import sys
 
 import autograder.api.common
-import autograder.api.fetchgrades
+import autograder.api.ta.fetchgrades
 import autograder.submission
 
 HEADERS = ['user', 'has_submission', 'score', 'max_points', 'id', 'time']
 
 def run(arguments):
     config_data = autograder.api.common.parse_config(arguments)
-    success, result = autograder.api.fetchgrades.send(arguments.server, config_data)
+    success, result = autograder.api.ta.fetchgrades.send(arguments.server, config_data)
 
     if (not success):
         print(result)

@@ -25,7 +25,7 @@ def send(server, config_data):
     body, message = autograder.api.common.send_api_request(url, data = data)
 
     if (body is None):
-        response = "The autograder failed to get a submission history."
+        response = "The autograder failed to get grades."
         response += "\nMessage from the autograder: " + message
         return (False, response)
 
