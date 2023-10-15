@@ -9,7 +9,6 @@ import autograder.util.hash
 
 DEFAULT_CONFIG_FILENAME = 'config.json'
 DEFAULT_USER_CONFIG_PATH = platformdirs.user_config_dir('autograder.json')
-DEFAULT_AUTOGRADER_URL = 'http://lighthouse.soe.ucsc.edu'
 
 API_REQUEST_JSON_KEY = 'content'
 
@@ -22,6 +21,9 @@ def send_api_request(url, method = None, data = {}, files = [], clean = True):
      - on success -- (the response body, None)
      - on failure -- (None, a failure message)
     """
+
+    if (url.startswith('None/') or url.startswith('/')):
+        raise ValueError("Server not set via 'server' field in config or --server.")
 
     post_files = {}
     for path in files:
@@ -74,10 +76,12 @@ def send_api_request(url, method = None, data = {}, files = [], clean = True):
 
     return response.get(API_RESPONSE_KEY_CONTENT, None), None
 
-def parse_config(arguments, skip_keys = ['config_paths']):
+def parse_config(arguments, skip_keys = ['config_paths'], show_sources = False):
     """
     Given the standard CLI options (from get_argument_parser()),
     parse out the full API configuration.
+    If |show_sources| is True, then an addition dict will be returned that shows each key,
+    and where that key came from.
     """
 
     config = {
@@ -86,21 +90,29 @@ def parse_config(arguments, skip_keys = ['config_paths']):
         'course': None,
     }
 
+    sources = {key: "<not set>" for key in config}
+
     # Check the current directory config.
     if (os.path.isfile(DEFAULT_CONFIG_FILENAME)):
         with open(DEFAULT_CONFIG_FILENAME, 'r') as file:
-            config.update(json.load(file))
+            for key, value in json.load(file).items():
+                config[key] = value
+                sources[key] = "<default config file>::" + DEFAULT_CONFIG_FILENAME
 
     # Check the user config file.
     if (os.path.isfile(DEFAULT_USER_CONFIG_PATH)):
         with open(DEFAULT_USER_CONFIG_PATH, 'r') as file:
-            config.update(json.load(file))
+            for key, value in json.load(file).items():
+                config[key] = value
+                sources[key] = "<user config file>::" + DEFAULT_USER_CONFIG_PATH
 
     # Check the config files specified on the command-line.
     if ((arguments.config_paths is not None) and (len(arguments.config_paths) > 0)):
         for path in arguments.config_paths:
             with open(path, 'r') as file:
-                config.update(json.load(file))
+                for key, value in json.load(file).items():
+                    config[key] = value
+                    sources[key] = "<cli config file>::" + path
 
     # Finally, any command-line options.
     for (key, value) in vars(arguments).items():
@@ -111,6 +123,10 @@ def parse_config(arguments, skip_keys = ['config_paths']):
             continue
 
         config[key] = value
+        sources[key] = "<cli argument>"
+
+    if (show_sources):
+        return config, sources
 
     return config
 
@@ -152,7 +168,7 @@ def get_argument_parser(
             help = 'assignment')
 
     parser.add_argument('--server', dest = 'server',
-        action = 'store', type = str, default = DEFAULT_AUTOGRADER_URL,
+        action = 'store', type = str, default = None,
         help = 'The URL of the server to submit to (default: %(default)s).')
 
     return parser
