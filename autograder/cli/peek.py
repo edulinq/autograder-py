@@ -6,7 +6,7 @@ import autograder.submission
 
 def run(arguments):
     config_data = autograder.api.common.parse_config(arguments)
-    success, result = autograder.api.peek.send(arguments.server, config_data)
+    success, result = autograder.api.peek.send(config_data.get("server"), config_data)
 
     if (not success):
         print(result)

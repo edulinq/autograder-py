@@ -7,7 +7,7 @@ HEADERS = ['email', 'name', 'role']
 
 def run(arguments):
     config_data = autograder.api.common.parse_config(arguments)
-    success, result = autograder.api.user.list.send(arguments.server, config_data)
+    success, result = autograder.api.user.list.send(config_data.get("server"), config_data)
 
     if (not success):
         print(result)

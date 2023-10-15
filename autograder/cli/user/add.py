@@ -20,7 +20,7 @@ def run(arguments):
         print("You must send an email if you do not specify a password.")
         return 1
 
-    success, result = autograder.api.user.add.send(arguments.server, config_data)
+    success, result = autograder.api.user.add.send(config_data.get("server"), config_data)
 
     if (not success):
         print(result)

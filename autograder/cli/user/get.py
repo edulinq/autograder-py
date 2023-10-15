@@ -9,7 +9,7 @@ def run(arguments):
     config_data = autograder.api.common.parse_config(arguments)
     config_data['email'] = arguments.email
 
-    success, result = autograder.api.user.get.send(arguments.server, config_data)
+    success, result = autograder.api.user.get.send(config_data.get("server"), config_data)
 
     if (not success):
         print(result)

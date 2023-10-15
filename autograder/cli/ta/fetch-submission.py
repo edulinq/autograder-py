@@ -10,7 +10,7 @@ def run(arguments):
         out_path += '.zip'
 
     config_data = autograder.api.common.parse_config(arguments)
-    success, result = autograder.api.ta.fetchsubmission.send(arguments.server, config_data)
+    success, result = autograder.api.ta.fetchsubmission.send(config_data.get("server"), config_data)
 
     if (not success):
         print(result)

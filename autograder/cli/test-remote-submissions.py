@@ -35,7 +35,8 @@ def run(arguments):
         paths = _get_files(test_submission)
 
         try:
-            success, result = autograder.api.submit.send(arguments.server, config_data, paths)
+            success, result = autograder.api.submit.send(config_data.get("server"),
+                    config_data, paths)
         except Exception as ex:
             print("Failed to run submission '%s': '%s'." % (test_submission, ex))
             traceback.print_exc()

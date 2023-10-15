@@ -7,7 +7,8 @@ def run(arguments):
     config_data = autograder.api.common.parse_config(arguments)
     config_data['message'] = arguments.message
 
-    success, result = autograder.api.submit.send(arguments.server, config_data, arguments.files)
+    success, result = autograder.api.submit.send(config_data.get("server"),
+            config_data, arguments.files)
 
     if (not success):
         print(result)

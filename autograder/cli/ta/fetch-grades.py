@@ -8,7 +8,7 @@ HEADERS = ['user', 'has_submission', 'score', 'max_points', 'id', 'time']
 
 def run(arguments):
     config_data = autograder.api.common.parse_config(arguments)
-    success, result = autograder.api.ta.fetchgrades.send(arguments.server, config_data)
+    success, result = autograder.api.ta.fetchgrades.send(config_data.get("server"), config_data)
 
     if (not success):
         print(result)

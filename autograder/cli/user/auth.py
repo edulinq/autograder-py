@@ -11,7 +11,7 @@ def run(arguments):
     config_data['email'] = arguments.email
     config_data['user-pass'] = arguments.userpass
 
-    success, result = autograder.api.user.auth.send(arguments.server, config_data)
+    success, result = autograder.api.user.auth.send(config_data.get("server"), config_data)
 
     if (not success):
         print(result)

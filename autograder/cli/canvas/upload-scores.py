@@ -9,7 +9,8 @@ def run(arguments):
     config_data = autograder.api.common.parse_config(arguments)
     config_data['scores'] = _load_scores(arguments.path)
 
-    success, result = autograder.api.canvas.uploadscores.send(arguments.server, config_data)
+    success, result = autograder.api.canvas.uploadscores.send(config_data.get("server"),
+            config_data)
 
     if (not success):
         print(result)
