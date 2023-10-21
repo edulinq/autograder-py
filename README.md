@@ -212,6 +212,17 @@ python3 -m autograder.cli.ta.fetch-submission sslug@ucsc.edu --assignment HW1
 
 On success, this will write out a file called submission.zip (you can change where it writes out with `-o`) that contains a user's full submission and result.
 
+#### Fetch All Most Recent Submission for an Assignment
+
+TAs can fetch all the most recent submission for an assignment using the `autograder.cli.ta.fetch-submissions` command.
+
+For example, you can fetch all the submissions for "HW1" using:
+```
+python3 -m autograder.cli.ta.fetch-submissions --assignment HW1
+```
+
+On success, this will write out a file called submissions.zip (you can change where it writes out with `-o`) that contains all the submissions.
+
 
 ### Testing Tools
 
