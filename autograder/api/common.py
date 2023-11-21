@@ -58,7 +58,8 @@ def send_api_request(endpoint, server = None, verbose = False, data = {}, files 
     for path in files:
         filename = os.path.basename(path)
         if (filename in post_files):
-            raise autograder.api.error.APIError("Cannot submit duplicate filenames ('%s')." % (filename))
+            raise autograder.api.error.APIError("Cannot submit duplicate filenames ('%s')." % (
+                filename))
 
         post_files[filename] = open(path, 'rb')
 
@@ -74,9 +75,9 @@ def send_api_request(endpoint, server = None, verbose = False, data = {}, files 
     try:
         response = raw_response.json()
     except Exception as ex:
-        raise autograder.api.error.APIError("Autograder response does not contain valid JSON." +
-            " Contact a server admin with the following. Response:\n---\n%s\n---" % (
-            raw_response.text)) from ex
+        raise autograder.api.error.APIError("Autograder response does not contain valid JSON."
+            + " Contact a server admin with the following. Response:\n---\n%s\n---" % (
+                raw_response.text)) from ex
 
     if (verbose):
         print("\nAutograder Reponse:\n---\n%s\n---\n" % (json.dumps(response, indent = 4)))

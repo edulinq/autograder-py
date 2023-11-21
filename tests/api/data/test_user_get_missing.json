@@ -1,5 +1,5 @@
 {
-    "api-method": "autograder.api.user.get.send",
+    "endpoint": "user/get",
     "arguments": {
         "target-email": "ZZZ@test.com"
     },

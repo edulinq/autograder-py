@@ -33,7 +33,10 @@ setuptools.setup(
         'Programming Language :: Python :: 3.10',
     ],
 
-    packages = setuptools.find_packages(),
+    packages = setuptools.find_packages(
+        include = ["autograder*"],
+        exclude = ["test"],
+    ),
 
     install_requires = [
         'flake8>=6.0.0',

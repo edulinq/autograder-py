@@ -1,0 +1,74 @@
+#!/usr/bin/env python3
+
+"""
+Verify that the API test data (responses) are correct by sending them to an online
+autograding server and verifying the responses.
+This script should also be run in the autograding server's CI.
+"""
+
+import glob
+import importlib
+import json
+import os
+import sys
+import traceback
+
+import autograder.api.config
+
+THIS_DIR = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
+ROOT_DIR = os.path.join(THIS_DIR, '..')
+TEST_DATA_DIR = os.path.join(ROOT_DIR, 'tests', 'api', 'data')
+
+# Add in the tests path.
+sys.path.append(ROOT_DIR)
+
+import tests.api.test_api
+
+def verify_test_case(cli_arguments, path):
+    import_module_name, arguments, expected = tests.api.test_api.get_api_test_info(path)
+
+    for key, value in vars(cli_arguments).items():
+        if ((value is not None) or (value)):
+            arguments[key] = value
+
+    api_module = importlib.import_module(import_module_name)
+
+    actual = api_module.send(arguments)
+
+    if (actual != expected):
+        expected_json = json.dumps(expected, indent = 4)
+        actual_json = json.dumps(actual, indent = 4)
+
+        print("ERROR: Test case does not have expected content: '%s'." % (path))
+        print(tests.api.test_api.FORMAT_STR % (expected_json, actual_json))
+
+        return 1
+
+    return 0
+
+def run(arguments):
+    error_count = 0
+
+    for path in glob.glob(os.path.join(TEST_DATA_DIR, '**', 'test_*.json'), recursive = True):
+        try:
+            error_count += verify_test_case(arguments, path)
+        except Exception as ex:
+            error_count += 1
+            print("Error verifying test '%s'." % (path))
+            traceback.print_exception(ex)
+
+    if (error_count > 0):
+        print("Found %d API test case issues." % (error_count))
+    else:
+        print("Found no API test case issues.")
+
+    return error_count
+
+def main():
+    parser = autograder.api.config.get_argument_parser(
+        description = 'Verify test API data against an autograder server.')
+
+    return run(parser.parse_args())
+
+if __name__ == '__main__':
+    sys.exit(main())

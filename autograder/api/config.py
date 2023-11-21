@@ -36,7 +36,8 @@ def parse_api_config(config, params,
         additional_optional_keys = ['verbose'],
         exit_on_error = False):
     """
-    Given a tiered config and api parameters, return a dict that can be directly sierialized and sent to the autograder.
+    Given a tiered config and api parameters,
+    return a dict that can be directly sierialized and sent to the autograder.
     Any hashed params will be hashed.
     If |exit_on_error| is true sys.exit() will be called on an error,
     otherwise an error will be raised on an error.
@@ -62,7 +63,8 @@ def _parse_api_config(config, params, additional_required_keys, additional_optio
     for param in params:
         if (param.config_key not in config):
             if (param.required):
-                raise autograder.api.error.APIError(f"Required parameter '{param.config_key}' not set.")
+                raise autograder.api.error.APIError(
+                    f"Required parameter '{param.config_key}' not set.")
 
             continue
 
@@ -165,7 +167,8 @@ def get_argument_parser(
 
     parser.add_argument('-v', '--verbose', dest = 'verbose',
         action = 'store_true', default = False,
-        help = 'Output detailed information about the API request and response (default: %(default)s).')
+        help = 'Output detailed information about the API request and response'
+            + " (default: %(default)s).")
 
     for param in params:
         parser.add_argument(f'--{param.config_key}', dest = param.config_key,

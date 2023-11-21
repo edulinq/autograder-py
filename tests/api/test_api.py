@@ -5,10 +5,6 @@ import os
 import unittest
 import sys
 
-import autograder.api.history
-import autograder.api.peek
-import autograder.assignment
-import autograder.question
 import tests.api.server
 
 THIS_DIR = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
@@ -61,26 +57,30 @@ def _discover_api_tests():
             raise ValueError("Failed to parse test case '%s'." % (path)) from ex
 
 def _add_api_test(path):
+    test_name = os.path.splitext(os.path.basename(path))[0]
+    setattr(APITest, test_name, _get_api_test_method(path))
+
+def get_api_test_info(path):
     with open(path, 'r') as file:
         data = json.load(file)
 
-    test_name = os.path.splitext(os.path.basename(path))[0]
-    setattr(APITest, test_name, _get_api_test_method(data))
-
-def _get_api_test_method(data):
-    import_module_name = '.'.join(data['api-method'].split('.')[0:-1])
+    import_module_name = '.'.join(['autograder', 'api'] + data['endpoint'].split('/'))
     expected = data['output']
-    arguments = data.get('arguments', {})
+
+    arguments = BASE_ARGUMENTS.copy()
+    for key, value in data.get('arguments', {}).items():
+        arguments[key] = value
+
+    return import_module_name, arguments, expected
+
+def _get_api_test_method(path):
+    import_module_name, arguments, expected = get_api_test_info(path)
 
     def __method(self):
         api_module = importlib.import_module(import_module_name)
 
-        args = BASE_ARGUMENTS.copy()
-        for key, value in arguments.items():
-            args[key] = value
-
         self._next_response_queue.put(expected)
-        actual = api_module.send(args)
+        actual = api_module.send(arguments)
 
         self.assertDictEqual(actual, expected)
 
