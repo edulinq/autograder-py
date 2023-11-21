@@ -25,6 +25,8 @@ sys.path.append(ROOT_DIR)
 import tests.api.test_api
 
 def verify_test_case(cli_arguments, path):
+    print("Verifying test case: '%s'." % (path))
+
     import_module_name, arguments, expected = tests.api.test_api.get_api_test_info(path)
 
     for key, value in vars(cli_arguments).items():
