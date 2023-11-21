@@ -1,0 +1,10 @@
+{
+    "api-method": "autograder.api.user.get.send",
+    "arguments": {
+        "target-email": "ZZZ@test.com"
+    },
+    "output": {
+        "found-user": false,
+        "user": null
+    }
+}

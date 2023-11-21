@@ -1,23 +1,28 @@
 import http
 import http.server
+import json
 import multiprocessing
 import time
 import urllib.parse
 
+import autograder.api.common
+import autograder.utils
+
 PORT = 12345
 ENCODING = 'utf8'
-POST_CONTENT_KEY = 'content'
 
 SLEEP_TIME_SEC = 0.5
 REAP_TIME_SEC = 1
 
 def start():
-    process = multiprocessing.Process(target = _run)
+    next_response_queue = multiprocessing.Queue()
+
+    process = multiprocessing.Process(target = _run, args = (next_response_queue,))
     process.start()
 
     time.sleep(SLEEP_TIME_SEC)
 
-    return process
+    return process, next_response_queue
 
 def stop(process):
     if (process.is_alive()):
@@ -30,19 +35,40 @@ def stop(process):
 
     process.close()
 
-def _run():
+def _run(next_response_queue):
+    Handler._next_response_queue = next_response_queue
     server = http.server.HTTPServer(('', PORT), Handler)
     server.serve_forever()
 
 class Handler(http.server.BaseHTTPRequestHandler):
+    _next_response_queue = None
+    
     def do_POST(self):
         length = int(self.headers['Content-Length'])
         raw_content = self.rfile.read(length).decode(ENCODING)
         content = urllib.parse.parse_qs(raw_content)
 
-        data = content[POST_CONTENT_KEY][0]
+        data = content[autograder.api.common.API_REQUEST_JSON_KEY][0]
 
-        code, headers, payload = self._route(self.path, data)
+        code = http.HTTPStatus.OK
+        headers = {}
+        content = Handler._next_response_queue.get()
+
+        now = autograder.utils.timestamp_to_string(autograder.utils.get_timestamp())
+
+        data = {
+            "id": "00000000-0000-0000-0000-000000000000",
+            "locator": "",
+            "server-version": "0.0.0",
+            "start-timestamp": now,
+            "end-timestamp": now,
+            "status": code,
+            autograder.api.common.API_RESPONSE_KEY_SUCCESS: (code == http.HTTPStatus.OK),
+            autograder.api.common.API_RESPONSE_KEY_MESSAGE: "",
+            autograder.api.common.API_RESPONSE_KEY_CONTENT: content,
+        }
+
+        payload = json.dumps(data)
 
         self.send_response(code)
 
@@ -51,52 +77,6 @@ class Handler(http.server.BaseHTTPRequestHandler):
         self.end_headers()
 
         self.wfile.write(payload.encode(ENCODING))
-
-    def _route(self, path, data):
-        """
-        Returns: (code, headers, payload)
-        """
-
-        if (path == '/api/v01/peek'):
-            return self._handle_peek(data)
-        elif (path == '/api/v01/history'):
-            return self._handle_history(data)
-        else:
-            return http.HTTPStatus.NOT_FOUND, {}, ''
-
-    def _handle_peek(self, data):
-        payload = """{
-            "success": true,
-            "status": 200,
-            "timestamp": "2023-09-30T11:47:27.841645832-07:00",
-            "content": {
-                "result": {
-                    "name": "HW0",
-                    "questions": [
-                        {
-                            "name": "Q1",
-                            "max_points": 1,
-                            "score": 1,
-                            "message": ""
-                        },
-                        {
-                            "name": "Q2",
-                            "max_points": 1,
-                            "score": 1,
-                            "message": ""
-                        },
-                        {
-                            "name": "Style",
-                            "max_points": 0,
-                            "score": 0,
-                            "message": "Style is clean!"
-                        }
-                    ]
-                }
-            }
-        }"""
-
-        return http.HTTPStatus.OK, {}, payload
 
     def _handle_history(self, data):
         payload = """{

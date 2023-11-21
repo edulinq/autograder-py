@@ -1,0 +1,15 @@
+{
+    "api-method": "autograder.api.user.get.send",
+    "arguments": {
+        "target-email": "student@test.com"
+    },
+    "output": {
+        "found-user": true,
+        "user": {
+            "email": "student@test.com",
+            "name": "student",
+            "role": "student",
+            "lms-id": ""
+        }
+    }
+}
