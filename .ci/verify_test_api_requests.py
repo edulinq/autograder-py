@@ -13,8 +13,6 @@ import os
 import sys
 import traceback
 
-import autograder.api.config
-
 THIS_DIR = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
 ROOT_DIR = os.path.join(THIS_DIR, '..')
 TEST_DATA_DIR = os.path.join(ROOT_DIR, 'tests', 'api', 'data')
@@ -22,6 +20,8 @@ TEST_DATA_DIR = os.path.join(ROOT_DIR, 'tests', 'api', 'data')
 # Add in the tests path.
 sys.path.append(ROOT_DIR)
 
+import autograder.api.config
+import autograder.api.admin.coursereload
 import tests.api.test_api
 
 def verify_test_case(cli_arguments, path):
@@ -48,6 +48,14 @@ def verify_test_case(cli_arguments, path):
 
     return 0
 
+def reset_course(cli_arguments):
+    arguments = tests.api.test_api.BASE_ARGUMENTS.copy()
+    for key, value in vars(cli_arguments).items():
+        if ((value is not None) or (value)):
+            arguments[key] = value
+
+    autograder.api.admin.coursereload.send(arguments)
+
 def run(arguments):
     error_count = 0
 
@@ -58,6 +66,9 @@ def run(arguments):
             error_count += 1
             print("Error verifying test '%s'." % (path))
             traceback.print_exception(ex)
+
+        # Reset the DB after every test.
+        reset_course(arguments)
 
     if (error_count > 0):
         print("Found %d API test case issues." % (error_count))

@@ -64,7 +64,11 @@ def get_api_test_info(path):
     with open(path, 'r') as file:
         data = json.load(file)
 
-    import_module_name = '.'.join(['autograder', 'api'] + data['endpoint'].split('/'))
+    parts = data['endpoint'].split('/')
+    prefix = parts[0]
+    suffix = ''.join(parts[1:])
+
+    import_module_name = '.'.join(['autograder', 'api', prefix, suffix])
     expected = data['output']
 
     arguments = BASE_ARGUMENTS.copy()
