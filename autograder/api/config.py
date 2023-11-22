@@ -15,7 +15,9 @@ CONFIG_PATHS_KEY = 'config_paths'
 
 class APIParam(object):
     def __init__(self, key, description,
-            config_key = None, required = True, hash = False):
+            config_key = None, required = True, cli_param = True,
+            parser_options = {'action': 'store', 'type': str},
+            hash = False):
         self.key = str(key)
         if ((key is None) or (self.key == '')):
             raise autograder.api.error.APIError("APIParam cannot have an empty key.")
@@ -29,6 +31,8 @@ class APIParam(object):
             self.config_key = key
 
         self.required = required
+        self.cli_param = cli_param
+        self.parser_options = parser_options
         self.hash = hash
 
 def parse_api_config(config, params,
@@ -171,17 +175,39 @@ def get_argument_parser(
             + " (default: %(default)s).")
 
     for param in params:
+        if (not param.cli_param):
+            continue
+
         parser.add_argument(f'--{param.config_key}', dest = param.config_key,
-            action = 'store', type = str,
-            help = param.description)
+            help = param.description,
+            **param.parser_options)
 
     return parser
 
 # Common API params.
 
+PARAM_ASSIGNMENT_ID = APIParam('assignment-id',
+        'The ID of the assignment to make this request to.',
+        config_key = 'assignment', required = True)
+
 PARAM_COURSE_ID = APIParam('course-id',
         'The ID of the course to make this request to.',
         config_key = 'course', required = True)
+
+PARAM_DRY_RUN = APIParam('dry-run',
+        'Do not commit/finalize the operation,'
+            + ' just do all the steps and state what the result would look like.',
+        required = False,
+        parser_options = {'action': 'store_true', 'default': False})
+
+PARAM_SKIP_EMAILS = APIParam('skip-emails',
+        'Skip sending any emails. Be aware that this may result in inaccessible information.',
+        required = False,
+        parser_options = {'action': 'store_true', 'default': False})
+
+PARAM_TARGET_EMAIL = APIParam('target-email',
+        'The email of the user that is the target of this request.',
+        required = True)
 
 PARAM_USER_EMAIL = APIParam('user-email',
         'The email of the user making this request.',
@@ -190,11 +216,3 @@ PARAM_USER_EMAIL = APIParam('user-email',
 PARAM_USER_PASS = APIParam('user-pass',
         'The password of the user making this request.',
         config_key = 'pass', required = True, hash = True)
-
-PARAM_ASSIGNMENT_ID = APIParam('assignment-id',
-        'The ID of the assignment to make this request to.',
-        config_key = 'assignment', required = True)
-
-PARAM_TARGET_EMAIL = APIParam('target-email',
-        'The email of the user that is the target of this request.',
-        required = True)

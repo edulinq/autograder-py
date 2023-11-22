@@ -1,20 +1,14 @@
+import ast
 import sys
 
-import autograder.api.common
-import autograder.api.canvas.uploadscores
-
-KEY_COUNT = 'count'
+import autograder.api.lms.uploadscores
+import autograder.cli.common
 
 def run(arguments):
-    config_data = autograder.api.common.parse_config(arguments)
-    config_data['scores'] = _load_scores(arguments.path)
+    arguments = vars(arguments)
+    arguments['scores'] = _load_scores(arguments['path'])
 
-    success, result = autograder.api.canvas.uploadscores.send(config_data.get("server"),
-            config_data)
-
-    if (not success):
-        print(result)
-        return 1
+    result = autograder.api.lms.uploadscores.send(arguments, exit_on_error = True)
 
     print("Upload complete.")
     print("    Grades Uploaded: %d" % (result['count']))
@@ -22,14 +16,16 @@ def run(arguments):
 
     check_lists = [
         ['Unrecognized Users', 'unrecognized-users'],
-        ['Users without Canvas IDs', 'no-canvas-id-users'],
-        ['Malformed Scores', 'bad-scores'],
+        ['Users without LMS IDs', 'no-lms-id-users'],
     ]
 
     for (name, key) in check_lists:
+        if ((key not in result) or (result[key] is None)):
+            continue
+
         print("        %s: %d" % (name, len(result[key])))
         for value in result[key]:
-            print("            %s" % (value))
+            print("            Row %d -- %s" % (value['row'], value['entry']))
 
     return 0
 
@@ -51,27 +47,31 @@ def _load_scores(path):
                     "File ('%s') line (%d) has the incorrect number of values." % (path, lineno)
                     + " Expecting 2, found %d." % (len(parts)))
 
-            scores.append(parts)
+            try:
+                parts[1] = ast.literal_eval(parts[1])
+            except Exception as ex:
+                raise ValueError(
+                    "File ('%s') line (%d) has a score that cannot be" % (path, lineno)
+                    + " converted to a number: '%s'." % (line)) from ex
+
+            scores.append({
+                'email': parts[0],
+                'score': parts[1],
+            })
 
     return scores
 
-def _get_parser():
-    parser = autograder.api.common.get_argument_parser(
-        description = 'Upload scores (from a TSV file) to Canvas for the specified assignment.',
-        include_assignment = False)
+def main():
+    return run(_get_parser().parse_args())
 
-    parser.add_argument('assignment-id', metavar = 'ASSIGNMENT_CANVAS_ID',
-        action = 'store', type = str,
-        help = 'The Canvas ID of the assignment to upload grades for.')
+def _get_parser():
+    parser = autograder.api.lms.uploadscores._get_parser()
 
     parser.add_argument('path', metavar = 'PATH',
         action = 'store', type = str,
         help = 'Path to a TSV file with two columns: email and score.')
 
     return parser
-
-def main():
-    return run(_get_parser().parse_args())
 
 if (__name__ == '__main__'):
     sys.exit(main())

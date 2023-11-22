@@ -1,0 +1,16 @@
+{
+    "endpoint": "lms/user/get",
+    "arguments": {
+        "target-email": "student@test.com"
+    },
+    "output": {
+        "found-autograder-user": true,
+        "found-lms-user": true,
+        "user": {
+            "email": "student@test.com",
+            "name": "student",
+            "role": "student",
+            "lms-id": "lms-student@test.com"
+        }
+    }
+}
