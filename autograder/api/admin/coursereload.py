@@ -6,6 +6,11 @@ API_PARAMS = [
     autograder.api.config.PARAM_COURSE_ID,
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
+
+    autograder.api.config.APIParam('clear',
+            'Clear the course database before reloading.',
+            required = False,
+            parser_options = {'action': 'store_true', 'default': False})
 ]
 
 DESCRIPTION = 'Reload a course from its config.'

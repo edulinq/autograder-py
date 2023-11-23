@@ -54,6 +54,8 @@ def reset_course(cli_arguments):
         if ((value is not None) or (value)):
             arguments[key] = value
 
+    arguments['clear'] = True
+
     autograder.api.admin.coursereload.send(arguments)
 
 def run(arguments):
