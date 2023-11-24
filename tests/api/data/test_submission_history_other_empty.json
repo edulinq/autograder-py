@@ -1,0 +1,10 @@
+{
+    "endpoint": "submission/history",
+    "arguments": {
+        "target-email": "other@test.com"
+    },
+    "output": {
+        "found-user": true,
+        "history": []
+    }
+}

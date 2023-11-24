@@ -1,0 +1,9 @@
+{
+    "endpoint": "submission/peek",
+    "arguments": {},
+    "output": {
+        "found-user": true,
+        "found-submission": false,
+        "submission-result": null
+    }
+}

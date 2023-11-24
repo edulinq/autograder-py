@@ -224,12 +224,16 @@ PARAM_TARGET_EMAIL = APIParam('target-email',
         required = True)
 
 PARAM_TARGET_EMAIL_OR_SELF = APIParam('target-email',
-        'The email of the user that is the target of this request (context user if unspecified).',
+        'The email of the user that is the target of this request (defaults to you).',
         required = False)
 
 PARAM_TARGET_PASS = APIParam('target-pass',
         'The password of the user that is the target of this request.',
         required = True, hash = True)
+
+PARAM_TARGET_SUBMISSION_OR_RECENT = APIParam('target-submission',
+        'The ID of the submission (default to the most recent submission).',
+        required = False)
 
 PARAM_USER_EMAIL = APIParam('user-email',
         'The email of the user making this request.',

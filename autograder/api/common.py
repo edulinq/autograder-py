@@ -15,7 +15,7 @@ API_RESPONSE_KEY_SUCCESS = 'success'
 API_RESPONSE_KEY_MESSAGE = 'message'
 API_RESPONSE_KEY_CONTENT = API_REQUEST_JSON_KEY
 
-def handle_api_request(arguments, params, endpoint, exit_on_error = False, **kwargs):
+def handle_api_request(arguments, params, endpoint, exit_on_error = False, files = []):
     """
     Given arguments (usually from argparse), API params, and an endpoint,
     make an API request.
@@ -23,7 +23,7 @@ def handle_api_request(arguments, params, endpoint, exit_on_error = False, **kwa
     """
 
     try:
-        return _handle_api_request(arguments, params, endpoint, exit_on_error)
+        return _handle_api_request(arguments, params, endpoint, exit_on_error, files)
     except autograder.api.error.APIError as ex:
         if (exit_on_error):
             print("ERROR: " + ex.args[0], file = sys.stderr)
@@ -31,12 +31,12 @@ def handle_api_request(arguments, params, endpoint, exit_on_error = False, **kwa
 
         raise ex
 
-def _handle_api_request(arguments, params, endpoint, exit_on_error):
+def _handle_api_request(arguments, params, endpoint, exit_on_error, files):
     config = autograder.api.config.get_tiered_config(arguments)
     data, extra = autograder.api.config.parse_api_config(config, params,
             exit_on_error = exit_on_error)
 
-    return send_api_request(endpoint, data = data, **extra)
+    return send_api_request(endpoint, data = data, files = files, **extra)
 
 def send_api_request(endpoint, server = None, verbose = False, data = {}, files = [], **kwargs):
     """
