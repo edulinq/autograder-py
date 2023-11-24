@@ -6,6 +6,7 @@ API_PARAMS = [
     autograder.api.config.PARAM_COURSE_ID,
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
+
     autograder.api.config.PARAM_TARGET_EMAIL,
 ]
 

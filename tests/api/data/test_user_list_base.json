@@ -1,44 +1,38 @@
 {
-    "endpoint": "lms/sync/users",
-    "arguments": {
-        "target-email": "student@test.com"
-    },
+    "endpoint": "user/list",
+    "arguments": {},
     "output": {
-        "add-users": [],
-        "mod-users": [
+        "users": [
             {
                 "email": "admin@test.com",
                 "name": "admin",
                 "role": "admin",
-                "lms-id": "lms-admin@test.com"
+                "lms-id": ""
             },
             {
                 "email": "grader@test.com",
                 "name": "grader",
                 "role": "grader",
-                "lms-id": "lms-grader@test.com"
+                "lms-id": ""
             },
             {
                 "email": "other@test.com",
                 "name": "other",
                 "role": "other",
-                "lms-id": "lms-other@test.com"
+                "lms-id": ""
             },
             {
                 "email": "owner@test.com",
                 "name": "owner",
                 "role": "owner",
-                "lms-id": "lms-owner@test.com"
+                "lms-id": ""
             },
             {
                 "email": "student@test.com",
                 "name": "student",
                 "role": "student",
-                "lms-id": "lms-student@test.com"
+                "lms-id": ""
             }
-        ],
-        "del-users": [],
-        "skip-users": [],
-        "unchanged-users": []
+        ]
     }
 }

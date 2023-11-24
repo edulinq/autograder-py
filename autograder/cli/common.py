@@ -59,3 +59,13 @@ def _list_sync_users_table(sync_users):
             user['operation'] = op
 
         _list_users_table(users, header = False, keys = SYNC_HEADERS)
+
+def list_add_users(result, table = False):
+    errors = result['errors']
+    if ((errors is not None) and (len(errors) > 0)):
+        print("Encounted %d errors." % (len(errors)))
+        for error in errors:
+            print("    Index: %d, Email: '%s', Message: '%s'." % (
+                error['index'], error['email'], error['message']))
+
+    list_sync_users(result, table = table)

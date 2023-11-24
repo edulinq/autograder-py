@@ -1,0 +1,83 @@
+{
+    "endpoint": "user/add",
+    "arguments": {
+        "force": false,
+        "new-users": [
+            {
+                "email": "a@test.com",
+                "pass": "ca978112ca1bbdcafac231b39a23dc4da786eff8147c4e72b9807785afee48bb",
+                "name": "aaa",
+                "role": "other",
+                "lms-id": "a-lms"
+            },
+            {
+                "email": "b@test.com",
+                "pass": "3e23e8160039594a33894f6564e1b1348bbd7a0088d42c4acb73eeaed59c009d",
+                "name": "bbb",
+                "role": "other",
+                "lms-id": ""
+            },
+            {
+                "email": "c@test.com",
+                "pass": "2e7d2c03a9507ae265ecf5b5356885a53393a2029d241394997265a1a25aefc6",
+                "name": "ccc",
+                "role": "student",
+                "lms-id": ""
+            },
+            {
+                "email": "d@test.com",
+                "pass": "18ac3e7343f016890c510e93f935261169d9e3f565436429830faf0934f4f8e4",
+                "name": "",
+                "role": "student",
+                "lms-id": ""
+            },
+            {
+                "email": "e@test.com",
+                "pass": "",
+                "name": "",
+                "role": "student",
+                "lms-id": ""
+            }
+        ]
+    },
+    "output": {
+        "add-users": [
+            {
+                "email": "a@test.com",
+                "name": "aaa",
+                "role": "other",
+                "lms-id": "lms-a@test.com"
+            },
+            {
+                "email": "b@test.com",
+                "name": "bbb",
+                "role": "other",
+                "lms-id": "lms-b@test.com"
+            },
+            {
+                "email": "c@test.com",
+                "name": "ccc",
+                "role": "student",
+                "lms-id": "lms-c@test.com"
+            },
+            {
+                "email": "d@test.com",
+                "name": "",
+                "role": "student",
+                "lms-id": "lms-d@test.com"
+            },
+            {
+                "email": "e@test.com",
+                "name": "",
+                "role": "student",
+                "lms-id": "lms-e@test.com"
+            }
+        ],
+        "mod-users": [],
+        "del-users": [],
+        "skip-users": [],
+        "unchanged-users": [],
+        "errors": [],
+        "LMSSyncCount": 10
+    }
+}

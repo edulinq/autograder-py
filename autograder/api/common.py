@@ -63,6 +63,9 @@ def send_api_request(endpoint, server = None, verbose = False, data = {}, files 
 
         post_files[filename] = open(path, 'rb')
 
+    if (verbose):
+        print("\nAutograder Request Data:\n---\n%s\n---\n" % (json.dumps(data, indent = 4)))
+
     raw_response = requests.request(
         method = 'POST',
         url = url,

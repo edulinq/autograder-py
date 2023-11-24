@@ -61,7 +61,10 @@ def reset_course(cli_arguments):
 def run(arguments):
     error_count = 0
 
-    for path in glob.glob(os.path.join(TEST_DATA_DIR, '**', 'test_*.json'), recursive = True):
+    # Do an initial reset of the DB.
+    reset_course(arguments)
+
+    for path in sorted(glob.glob(os.path.join(TEST_DATA_DIR, '**', 'test_*.json'), recursive = True)):
         try:
             error_count += verify_test_case(arguments, path)
         except Exception as ex:

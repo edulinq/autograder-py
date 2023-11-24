@@ -200,14 +200,28 @@ PARAM_DRY_RUN = APIParam('dry-run',
         required = False,
         parser_options = {'action': 'store_true', 'default': False})
 
+PARAM_FORCE = APIParam('force',
+        'Force the operation, overwriting and existing resources.',
+        required = False,
+        parser_options = {'action': 'store_true', 'default': False})
+
 PARAM_SKIP_EMAILS = APIParam('skip-emails',
         'Skip sending any emails. Be aware that this may result in inaccessible information.',
+        required = False,
+        parser_options = {'action': 'store_true', 'default': False})
+
+PARAM_SKIP_LMS_SYNC = APIParam('skip-lms-sync',
+        'Skip syncing with the LMS.',
         required = False,
         parser_options = {'action': 'store_true', 'default': False})
 
 PARAM_TARGET_EMAIL = APIParam('target-email',
         'The email of the user that is the target of this request.',
         required = True)
+
+PARAM_TARGET_PASS = APIParam('target-pass',
+        'The password of the user that is the target of this request.',
+        required = True, hash = True)
 
 PARAM_USER_EMAIL = APIParam('user-email',
         'The email of the user making this request.',

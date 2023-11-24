@@ -1,0 +1,11 @@
+{
+    "endpoint": "user/auth",
+    "arguments": {
+        "target-email": "student@test.com",
+        "target-pass": "student"
+    },
+    "output": {
+        "found-user": true,
+        "auth-success": true
+    }
+}

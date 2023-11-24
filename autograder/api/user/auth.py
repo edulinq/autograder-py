@@ -1,36 +1,24 @@
 import autograder.api.common
-import autograder.util.hash
+import autograder.api.config
 
-API_ENDPOINT = '/api/v01/user/auth'
-API_KEYS = ['user', 'pass', 'course', 'email', 'user-pass']
+API_ENDPOINT = 'user/auth'
+API_PARAMS = [
+    autograder.api.config.PARAM_COURSE_ID,
+    autograder.api.config.PARAM_USER_EMAIL,
+    autograder.api.config.PARAM_USER_PASS,
 
-def send(server, config_data):
-    """
-    Take in a server address
-    and config data (of the form produced by autograder.api.common.parse_config()),
-    and make a user auth request.
-    Returns:
-        (success, <message or graded assignment>)
-    """
+    autograder.api.config.PARAM_TARGET_EMAIL,
+    autograder.api.config.PARAM_TARGET_PASS,
+]
 
-    url = "%s%s" % (server, API_ENDPOINT)
+DESCRIPTION = 'Authenticate as a user.'
 
-    data = {}
-    for key in API_KEYS:
-        if (config_data.get(key) is None):
-            return (False, "No request made, missing required config '%s'." % (key))
+def send(arguments, **kwargs):
+    return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT, **kwargs)
 
-        data[key] = config_data[key]
+def _get_parser():
+    parser = autograder.api.config.get_argument_parser(
+        description = DESCRIPTION,
+        params = API_PARAMS)
 
-    data['user-pass'] = autograder.util.hash.sha256_hex(data['user-pass'])
-
-    body, message = autograder.api.common.send_api_request(url, data = data)
-
-    if (body is None):
-        response = "The autograder failed to try to auth the user."
-        response += "\nMessage from the autograder: " + message
-        return (False, response)
-
-    result = body
-
-    return (True, result)
+    return parser

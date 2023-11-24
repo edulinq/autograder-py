@@ -1,0 +1,31 @@
+{
+    "endpoint": "user/add",
+    "arguments": {
+        "force": false,
+        "new-users": [
+            {
+                "email": "foo@test.com",
+                "pass": "2c26b46b68ffc68ff99b453c1d30413413422d706483bfa0f98a5e886266e7ae",
+                "name": "foo",
+                "role": "student",
+                "lms-id": ""
+            }
+        ]
+    },
+    "output": {
+        "add-users": [
+            {
+                "email": "foo@test.com",
+                "name": "foo",
+                "role": "student",
+                "lms-id": "lms-foo@test.com"
+            }
+        ],
+        "mod-users": [],
+        "del-users": [],
+        "skip-users": [],
+        "unchanged-users": [],
+        "errors": [],
+        "LMSSyncCount": 6
+    }
+}
