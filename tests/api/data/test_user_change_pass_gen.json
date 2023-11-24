@@ -1,0 +1,10 @@
+{
+    "endpoint": "user/change/pass",
+    "arguments": {
+        "target-email": "student@test.com",
+        "new-pass": ""
+    },
+    "output": {
+        "found-user": true
+    }
+}

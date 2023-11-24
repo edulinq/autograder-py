@@ -42,7 +42,7 @@ def parse_api_config(config, params,
     """
     Given a tiered config and api parameters,
     return a dict that can be directly sierialized and sent to the autograder.
-    Any hashed params will be hashed.
+    Any hashed params that are not empty will be hashed.
     If |exit_on_error| is true sys.exit() will be called on an error,
     otherwise an error will be raised on an error.
     Any keys in |additional_*_keys| will be returned in a second dict.
@@ -73,7 +73,7 @@ def _parse_api_config(config, params, additional_required_keys, additional_optio
             continue
 
         value = config[param.config_key]
-        if (param.hash):
+        if (param.hash and (value != '')):
             value = autograder.util.hash.sha256_hex(value)
 
         data[param.key] = value
@@ -205,6 +205,10 @@ PARAM_FORCE = APIParam('force',
         required = False,
         parser_options = {'action': 'store_true', 'default': False})
 
+PARAM_NEW_PASS = APIParam('new-pass',
+        'The new password to set for the user that is the target of this request.',
+        required = False, hash = True)
+
 PARAM_SKIP_EMAILS = APIParam('skip-emails',
         'Skip sending any emails. Be aware that this may result in inaccessible information.',
         required = False,
@@ -218,6 +222,10 @@ PARAM_SKIP_LMS_SYNC = APIParam('skip-lms-sync',
 PARAM_TARGET_EMAIL = APIParam('target-email',
         'The email of the user that is the target of this request.',
         required = True)
+
+PARAM_TARGET_EMAIL_OR_SELF = APIParam('target-email',
+        'The email of the user that is the target of this request (context user if unspecified).',
+        required = False)
 
 PARAM_TARGET_PASS = APIParam('target-pass',
         'The password of the user that is the target of this request.',
