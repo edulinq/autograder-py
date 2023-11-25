@@ -1,5 +1,5 @@
 """
-Commands to manage autograder users.
+Commands to make, query, and manage submissions to the autograder.
 """
 
 import os
