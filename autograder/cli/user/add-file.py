@@ -1,7 +1,7 @@
 import sys
 
+import autograder.api.constants
 import autograder.api.user.add
-import autograder.api.user.common
 import autograder.cli.common
 import autograder.util.hash
 
@@ -48,7 +48,7 @@ def _load_users(path):
             if (len(parts) >= 4):
                 role = parts[3]
 
-            if (role not in autograder.api.user.common.ROLES):
+            if (role not in autograder.api.constants.ROLES):
                 raise ValueError(
                     "File ('%s') line (%d) has an invalid role '%s'." % (
                         path, lineno, role))

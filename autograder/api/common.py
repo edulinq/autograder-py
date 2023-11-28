@@ -5,15 +5,8 @@ import sys
 import requests
 
 import autograder.api.config
+import autograder.api.constants
 import autograder.api.error
-
-API_VERSION = 'v02'
-
-API_REQUEST_JSON_KEY = 'content'
-
-API_RESPONSE_KEY_SUCCESS = 'success'
-API_RESPONSE_KEY_MESSAGE = 'message'
-API_RESPONSE_KEY_CONTENT = API_REQUEST_JSON_KEY
 
 def handle_api_request(arguments, params, endpoint, exit_on_error = False, files = []):
     """
@@ -52,7 +45,7 @@ def send_api_request(endpoint, server = None, verbose = False, data = {}, files 
     server = server.rstrip('/')
     endpoint = endpoint.lstrip('/')
 
-    url = "%s/api/%s/%s" % (server, API_VERSION, endpoint)
+    url = "%s/api/%s/%s" % (server, autograder.api.constants.API_VERSION, endpoint)
 
     post_files = {}
     for path in files:
@@ -69,7 +62,7 @@ def send_api_request(endpoint, server = None, verbose = False, data = {}, files 
     raw_response = requests.request(
         method = 'POST',
         url = url,
-        data = {API_REQUEST_JSON_KEY: json.dumps(data)},
+        data = {autograder.api.constants.API_REQUEST_JSON_KEY: json.dumps(data)},
         files = post_files)
 
     for file in post_files.values():
@@ -85,11 +78,12 @@ def send_api_request(endpoint, server = None, verbose = False, data = {}, files 
     if (verbose):
         print("\nAutograder Reponse:\n---\n%s\n---\n" % (json.dumps(response, indent = 4)))
 
-    if (not response.get(API_RESPONSE_KEY_SUCCESS, False)):
+    if (not response.get(autograder.api.constants.API_RESPONSE_KEY_SUCCESS, False)):
         message = 'Request to the autograder failed.'
-        if (API_RESPONSE_KEY_MESSAGE in response):
-            message = "Failed to complete operation: %s" % response[API_RESPONSE_KEY_MESSAGE]
+        if (autograder.api.constants.API_RESPONSE_KEY_MESSAGE in response):
+            message = ("Failed to complete operation: %s" %
+                response[autograder.api.constants.API_RESPONSE_KEY_MESSAGE])
 
         raise autograder.api.error.APIError(message)
 
-    return response[API_RESPONSE_KEY_CONTENT]
+    return response[autograder.api.constants.API_RESPONSE_KEY_CONTENT]

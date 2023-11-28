@@ -5,6 +5,7 @@ import sys
 
 import platformdirs
 
+import autograder.api.constants
 import autograder.api.error
 import autograder.util.hash
 
@@ -199,6 +200,12 @@ PARAM_DRY_RUN = APIParam('dry-run',
             + ' just do all the steps and state what the result would look like.',
         required = False,
         parser_options = {'action': 'store_true', 'default': False})
+
+PARAM_FILTER_ROLE = APIParam('filter-role',
+        'Only show results from users with this role (all roles if unknown (default)).',
+        required = False,
+        parser_options = {'action': 'store', 'default': 'unknown',
+            'choices': autograder.api.constants.ROLES})
 
 PARAM_FORCE = APIParam('force',
         'Force the operation, overwriting and existing resources.',

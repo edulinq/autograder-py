@@ -5,7 +5,7 @@ import multiprocessing
 import time
 import urllib.parse
 
-import autograder.api.common
+import autograder.api.constants
 import autograder.utils
 
 PORT = 12345
@@ -42,13 +42,13 @@ def _run(next_response_queue):
 
 class Handler(http.server.BaseHTTPRequestHandler):
     _next_response_queue = None
-    
+
     def do_POST(self):
         length = int(self.headers['Content-Length'])
         raw_content = self.rfile.read(length).decode(ENCODING)
         content = urllib.parse.parse_qs(raw_content)
 
-        data = content[autograder.api.common.API_REQUEST_JSON_KEY][0]
+        data = content[autograder.api.constants.API_REQUEST_JSON_KEY][0]
 
         code = http.HTTPStatus.OK
         headers = {}
@@ -63,9 +63,9 @@ class Handler(http.server.BaseHTTPRequestHandler):
             "start-timestamp": now,
             "end-timestamp": now,
             "status": code,
-            autograder.api.common.API_RESPONSE_KEY_SUCCESS: (code == http.HTTPStatus.OK),
-            autograder.api.common.API_RESPONSE_KEY_MESSAGE: "",
-            autograder.api.common.API_RESPONSE_KEY_CONTENT: content,
+            autograder.api.constants.API_RESPONSE_KEY_SUCCESS: (code == http.HTTPStatus.OK),
+            autograder.api.constants.API_RESPONSE_KEY_MESSAGE: "",
+            autograder.api.constants.API_RESPONSE_KEY_CONTENT: content,
         }
 
         payload = json.dumps(data)

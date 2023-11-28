@@ -1,7 +1,7 @@
 import sys
 
+import autograder.api.constants
 import autograder.api.user.add
-import autograder.api.user.common
 import autograder.cli.common
 import autograder.util.hash
 
@@ -49,7 +49,7 @@ def _get_parser():
 
     parser.add_argument('--new-role', dest = 'new-role',
         action = 'store', type = str, default = 'unknown',
-        choices = autograder.api.user.common.ROLES,
+        choices = autograder.api.constants.ROLES,
         help = 'The role of the user to add (defaults to student).')
 
     parser.add_argument('--new-lms-id', dest = 'new-lms-id',
