@@ -1,7 +1,6 @@
 import sys
 
 import autograder.api.user.auth
-import autograder.cli.common
 
 def run(arguments):
     result = autograder.api.user.auth.send(arguments, exit_on_error = True)

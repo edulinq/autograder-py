@@ -2,7 +2,6 @@ import ast
 import sys
 
 import autograder.api.lms.uploadscores
-import autograder.cli.common
 
 def run(arguments):
     arguments = vars(arguments)

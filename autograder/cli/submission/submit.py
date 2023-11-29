@@ -2,7 +2,6 @@ import sys
 
 import autograder.api.submission.submit
 import autograder.assignment
-import autograder.cli.common
 
 def run(arguments):
     result = autograder.api.submission.submit.send(arguments, arguments.files, exit_on_error = True)

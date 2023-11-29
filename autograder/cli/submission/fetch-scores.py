@@ -1,8 +1,6 @@
 import sys
 
 import autograder.api.submission.fetchscores
-import autograder.submission
-import autograder.cli.common
 
 HEADER = [
     'email', 'has_submission', 'short-id', 'score', 'grading_start_time', 'message',

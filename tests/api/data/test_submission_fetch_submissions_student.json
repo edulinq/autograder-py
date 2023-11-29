@@ -1,0 +1,60 @@
+{
+    "endpoint": "submission/fetch/submissions",
+    "arguments": {
+        "filter-role": "student"
+    },
+    "output": {
+        "grading-results": {
+            "student@test.com": {
+                "info": {
+                    "id": "course101::hw0::student@test.com::1697406272",
+                    "short-id": "1697406272",
+                    "course-id": "course101",
+                    "assignment-id": "hw0",
+                    "user": "student@test.com",
+                    "message": "",
+                    "max_points": 2,
+                    "score": 2,
+                    "name": "HW0",
+                    "questions": [
+                        {
+                            "name": "Q1",
+                            "max_points": 1,
+                            "score": 1,
+                            "message": "",
+                            "grading_start_time": "2023-10-15T21:44:33Z",
+                            "grading_end_time": "2023-10-15T21:44:33Z"
+                        },
+                        {
+                            "name": "Q2",
+                            "max_points": 1,
+                            "score": 1,
+                            "message": "",
+                            "grading_start_time": "2023-10-15T21:44:33Z",
+                            "grading_end_time": "2023-10-15T21:44:33Z"
+                        },
+                        {
+                            "name": "Style",
+                            "max_points": 0,
+                            "score": 0,
+                            "message": "Style is clean!",
+                            "grading_start_time": "2023-10-15T21:44:33Z",
+                            "grading_end_time": "2023-10-15T21:44:33Z"
+                        }
+                    ],
+                    "grading_start_time": "2023-10-15T21:44:33Z",
+                    "grading_end_time": "2023-10-15T21:44:33Z",
+                    "additional-info": null
+                },
+                "input-files-gzip": {
+                    "submission.py": "H4sICAAAAAAA/3N1Ym1pc3Npb24ucHkASklNU0grzUsuyczPM9TQtOJSUFBQKEotKS3KUwgpKk3l4kJWYaRRlpiDqqgsMUdBW8GQCxAAAP//PpwmbkkAAAA="
+                },
+                "output-files-gzip": {
+                    "result.json": "H4sICAAAAAAA/3Jlc3VsdC5qc29uAMyTUUvDMBDH3/0UZ17d5O6ypC6fwFdR8EGkhC2UwJpqE0EZ++6yrBZXnaP0xT4d/+N+/fODbC8AAESwtRMGxO0jitkhen1zMfkmRGHgKUf7b9tPR3d31J31m9q+ly+ND2l/T4NlXDWt+yWvXYy2ysQhr2rt2oeqjMm2qUz+8F9GlnOiOdEDsyFpFnytliylukI0iKcoLqzPMgrqGD1iNzvrgf+TB8XTPSjWxXgP9+lj4/5UgSdUDPNvKjIUfITVxtlwOcXMDSuaZkZzoRX+MJOn5+4JjWmEtDhuNKLJkjV/Ndl9BgAA///7xmbx0gMAAA=="
+                },
+                "stdout": "",
+                "stderr": ""
+            }
+        }
+    }
+}

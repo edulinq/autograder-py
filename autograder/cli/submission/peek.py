@@ -2,7 +2,6 @@ import sys
 
 import autograder.api.submission.peek
 import autograder.assignment
-import autograder.cli.common
 
 def run(arguments):
     result = autograder.api.submission.peek.send(arguments, exit_on_error = True)
