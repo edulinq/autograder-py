@@ -11,8 +11,8 @@ import autograder.utils
 PORT = 12345
 ENCODING = 'utf8'
 
-SLEEP_TIME_SEC = 0.5
-REAP_TIME_SEC = 1
+SLEEP_TIME_SEC = 0.2
+REAP_TIME_SEC = 0.5
 
 def start():
     next_response_queue = multiprocessing.Queue()

@@ -6,33 +6,46 @@ import sys
 import autograder.submission
 
 DEFAULT_ASSIGNMENT = 'assignment.json'
+TEST_SUBMISSION_FILENAME = 'test-submission.json'
 
 def run(args):
     assignment_path = os.path.abspath(args.assignment)
     submission_path = os.path.abspath(args.submission)
 
-    dirs, assignment_class = autograder.submission.prep_temp_grading_dir(assignment_path,
+    grading_dir = autograder.submission.prep_grading_dir(assignment_path,
         submission_path, debug = args.debug)
 
-    input_dir, output_dir, work_dir = dirs
-
-    result = autograder.submission.run_submission(assignment_class, input_dir, output_dir, work_dir)
+    result = autograder.submission.run_submission(grading_dir)
     if (result is None):
         return 2
 
     print(result.report())
 
-    if (args.outpath is not None):
-        out_path = os.path.abspath(args.outpath)
+    if (args.out_path is not None):
+        out_path = os.path.abspath(args.out_path)
         os.makedirs(os.path.dirname(os.path.abspath(out_path)), exist_ok = True)
+
         with open(out_path, 'w') as file:
             json.dump(result.to_dict(), file, indent = 4)
 
+    if (args.test_submission_path is not None):
+        test_submission_path = os.path.abspath(args.test_submission_path)
+        if (os.path.isdir(test_submission_path)):
+            test_submission_path = os.path.join(test_submission_path, TEST_SUBMISSION_FILENAME)
+
+        os.makedirs(os.path.dirname(test_submission_path), exist_ok = True)
+
+        with open(test_submission_path, 'w') as file:
+            json.dump(result.to_test_submission(), file, indent = 4)
+
     return 0
+
+def _create_test_submission(result):
+    result = result.to_dict()
 
 def _get_parser():
     parser = argparse.ArgumentParser(description =
-        'Grade an assignment (specified by an assignment JSON file) using the given submission.')
+        'Grade an assignment (specified by an assignment JSON file) with the given submission.')
 
     parser.add_argument('-a', '--assignment',
         action = 'store', type = str, required = False, default = DEFAULT_ASSIGNMENT,
@@ -42,9 +55,15 @@ def _get_parser():
         action = 'store', type = str, required = True,
         help = 'The path to a submission to use for grading.')
 
-    parser.add_argument('-o', '--outpath',
+    parser.add_argument('-o', '--out-path', dest = 'out_path',
         action = 'store', type = str, required = False, default = None,
         help = 'The path to a output the JSON result.')
+
+    parser.add_argument('-t', '--test-submission-path', dest = 'test_submission_path',
+        action = 'store', type = str, required = False, default = None,
+        help = 'Create a test submission file at the specified path.'
+            + ' If an existing dir is provided,'
+            + ' a \'%s\' file will be created inside that dir.' % TEST_SUBMISSION_FILENAME)
 
     parser.add_argument('-d', '--debug', dest = 'debug',
         action = 'store_true', default = False,

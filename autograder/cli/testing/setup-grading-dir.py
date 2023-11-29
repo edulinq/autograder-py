@@ -7,37 +7,37 @@ import autograder.submission
 def run(args):
     assignment_config_path = os.path.abspath(args.assignment)
     submission_path = os.path.abspath(args.submission)
-    base_dir = os.path.abspath(args.dir)
 
-    input_dir, output_dir, work_dir = autograder.submission.prep_grading_dir(
-        assignment_config_path, base_dir, submission_path,
-        skip_static = args.skip_static)
+    grading_dir = autograder.submission.prep_grading_dir(
+        assignment_config_path, submission_path,
+        grading_dir = args.out_dir,
+        skip_static = args.skip_static,
+        debug = True)
+
+    print("Prepared grading directory: '%s'." % (grading_dir))
 
     return 0
 
 def _get_parser():
     parser = argparse.ArgumentParser(description =
-        'Setup a directory as if it is being graded.')
+        'Setup a directory as if it is being graded.'
+        + ' This is useful for seeing what the autograder will see right before grading begins.')
 
     parser.add_argument('-a', '--assignment',
         action = 'store', type = str, required = True,
-        help = 'The path to a JSON file describing an assignment.')
+        help = 'The path to an assignment JSON file.')
 
     parser.add_argument('-s', '--submission',
         action = 'store', type = str, required = True,
         help = 'The path to an input submission.')
 
-    parser.add_argument('--dir',
-        action = 'store', type = str, required = True,
-        help = 'The target directory to prepare.')
+    parser.add_argument('-o', '--out-dir', dest = 'out_dir',
+        action = 'store', type = str, default = None,
+        help = 'The base output directory. Will be a temp directory if not specified.')
 
     parser.add_argument('-ss', '--skip-static', dest = 'skip_static',
         action = 'store_true', default = False,
         help = 'Skip the static portion of the setup (copy and ops) (default: %(default)s)')
-
-    parser.add_argument('-d', '--debug', dest = 'debug',
-        action = 'store_true', default = False,
-        help = 'Enable additional output and leave behind grading artifacts (default: %(default)s)')
 
     return parser
 
