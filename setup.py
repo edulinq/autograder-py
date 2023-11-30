@@ -15,7 +15,7 @@ setuptools.setup(
     name = 'autograder-py',
     url = 'https://github.com/eriq-augustine/autograder-py',
 
-    version = '0.2.6',
+    version = '0.3.0',
     keywords = 'grading',
 
     description = "The Python interface for the autograding server.",
@@ -35,7 +35,7 @@ setuptools.setup(
 
     packages = setuptools.find_packages(
         include = ["autograder*"],
-        exclude = ["test"],
+        exclude = ["tests"],
     ),
 
     install_requires = [
