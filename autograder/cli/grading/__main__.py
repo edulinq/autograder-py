@@ -1,5 +1,5 @@
 """
-Commands to test, debug, and develop courses and assignments.
+Commands to grade submissions or help in the grading procedure.
 """
 
 import os

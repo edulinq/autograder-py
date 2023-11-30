@@ -28,7 +28,7 @@ def _get_parser():
         'Grade a submission given an already prepared grading directory'
         + ' (see autograder.cli.testing.setup-grading-dir)'
         + ' and a grader file.'
-        + ' Use autograder.cli.testing.grade if you have not already prepared'
+        + ' Use autograder.cli.grading.grade if you have not already prepared'
         + ' your grading directory.')
 
     parser.add_argument('-g', '--grader',

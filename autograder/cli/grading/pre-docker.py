@@ -36,7 +36,8 @@ def run(args):
 
 def _get_parser():
     parser = argparse.ArgumentParser(description =
-        'Take any necessary steps before performing a standard docker-based grading.')
+        'Take any necessary steps before performing a standard docker-based grading.'
+        + ' This script is used as part of the standard docker grading procedure for Python.')
 
     parser.add_argument('-c', '--config',
         action = 'store', type = str, default = DEFAULT_CONFIG_PATH,

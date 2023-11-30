@@ -2,9 +2,46 @@ import os
 import sys
 import traceback
 
-import autograder.api.common
-import autograder.api.submit
+import autograder.api.submission.submit
 import autograder.submission
+
+def run(arguments):
+    try:
+        test_submissions = autograder.submission.fetch_test_submissions(arguments.submissions)
+    except Exception as ex:
+        print("Failed to load submission(s) from '%s': '%s'." % (arguments.submissions, ex))
+        traceback.print_exc()
+        return 101
+
+    errors = 0
+    for test_submission in test_submissions:
+        paths = _get_files(test_submission)
+
+        try:
+            result = autograder.api.submission.submit.send(arguments, paths)
+        except Exception as ex:
+            print("Failed to run submission '%s': '%s'." % (test_submission, ex))
+            traceback.print_exc()
+            errors += 1
+            continue
+
+        if (not result['grading-success']):
+            print("Autograder failed to grade the submission.")
+            errors += 1
+            continue
+
+        result = autograder.assignment.GradedAssignment.from_dict(result['result'])
+        if (not autograder.submission.compare_test_submission(test_submission, result)):
+            errors += 1
+
+    print("Encountered %d error(s) while testing %d submissions." % (errors, len(test_submissions)))
+
+    if (errors > 0):
+        print("Faiure")
+    else:
+        print("Success")
+
+    return errors
 
 def _get_files(test_submission):
     paths = []
@@ -19,51 +56,14 @@ def _get_files(test_submission):
 
     return paths
 
-def run(arguments):
-    config_data = autograder.api.common.parse_config(arguments)
-    config_data['message'] = ''
-
-    try:
-        test_submissions = autograder.submission.fetch_test_submissions(arguments.submissions)
-    except Exception as ex:
-        print("Failed to load submission(s) from '%s': '%s'." % (arguments.submissions, ex))
-        traceback.print_exc()
-        return 101
-
-    errors = 0
-    for test_submission in test_submissions:
-        paths = _get_files(test_submission)
-
-        try:
-            success, result = autograder.api.submit.send(config_data.get("server"),
-                    config_data, paths)
-        except Exception as ex:
-            print("Failed to run submission '%s': '%s'." % (test_submission, ex))
-            traceback.print_exc()
-
-        if (not success):
-            print("Autograder failed to grade the submission: " + result)
-            errors += 1
-            continue
-
-        if (not autograder.submission.compare_test_submission(test_submission, result)):
-            errors += 1
-
-    print("Encountered %d error(s) while testing %d submissions." % (errors, len(test_submissions)))
-
-    if (errors > 0):
-        print("Faiure")
-    else:
-        print("Success")
-
-    return errors
-
 def _get_parser():
-    parser = autograder.api.common.get_argument_parser(description =
-        'Submit multiple assignments to an autograder and ensure the output is expected.')
+    parser = autograder.api.submission.submit._get_parser()
 
-    parser.add_argument('-s', '--submissions',
-        action = 'store', type = str, required = True,
+    parser.description = ('Submit multiple assignments to an autograder'
+        + ' and ensure the output is as expected.')
+
+    parser.add_argument('submissions', metavar = 'SUBMISSIONS_DIR',
+        action = 'store', type = str,
         help = 'The path to a dir containing one or more test submissions.')
 
     return parser
