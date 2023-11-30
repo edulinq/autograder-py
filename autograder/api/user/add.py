@@ -1,42 +1,31 @@
 import autograder.api.common
-import autograder.util.hash
+import autograder.api.config
 
-API_ENDPOINT = '/api/v01/user/add'
-API_KEYS = [
-    'user', 'pass', 'course',
-    'email', 'new-pass',
-    'name', 'role',
-    'force', 'send-email',
+API_ENDPOINT = 'user/add'
+API_PARAMS = [
+    autograder.api.config.PARAM_COURSE_ID,
+    autograder.api.config.PARAM_USER_EMAIL,
+    autograder.api.config.PARAM_USER_PASS,
+
+    autograder.api.config.PARAM_FORCE,
+    autograder.api.config.PARAM_DRY_RUN,
+    autograder.api.config.PARAM_SKIP_EMAILS,
+    autograder.api.config.PARAM_SKIP_LMS_SYNC,
+
+    autograder.api.config.APIParam('new-users',
+        'A list of users to add or modify.',
+        required = True, cli_param = False),
 ]
 
-def send(server, config_data):
-    """
-    Take in a server address
-    and config data (of the form produced by autograder.api.common.parse_config()),
-    and make a user add request.
-    Returns:
-        (success, <message or graded assignment>)
-    """
+DESCRIPTION = ('Add one or more users to the course.'
+        + ' When force is true, this becomes an upsert (update if exists, otherwise insert).')
 
-    url = "%s%s" % (server, API_ENDPOINT)
+def send(arguments, **kwargs):
+    return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT, **kwargs)
 
-    data = {}
-    for key in API_KEYS:
-        if (config_data.get(key) is None):
-            return (False, "No request made, missing required config '%s'." % (key))
+def _get_parser():
+    parser = autograder.api.config.get_argument_parser(
+        description = DESCRIPTION,
+        params = API_PARAMS)
 
-        data[key] = config_data[key]
-
-    if (data.get('new-pass', '') != ''):
-        data['new-pass'] = autograder.util.hash.sha256_hex(data['new-pass'])
-
-    body, message = autograder.api.common.send_api_request(url, data = data)
-
-    if (body is None):
-        response = "The autograder failed to try to add the user."
-        response += "\nMessage from the autograder: " + message
-        return (False, response)
-
-    result = body
-
-    return (True, result)
+    return parser

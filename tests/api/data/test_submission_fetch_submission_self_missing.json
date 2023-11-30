@@ -1,0 +1,9 @@
+{
+    "endpoint": "submission/fetch/submission",
+    "arguments": {},
+    "output": {
+        "found-user": true,
+        "found-submission": false,
+        "grading-result": null
+    }
+}

@@ -20,6 +20,10 @@ FILESPEC_DELIM = '::'
 FILESPEC_GIT = 'git'
 FILESPEC_GIT_PREFIX = FILESPEC_GIT + FILESPEC_DELIM
 
+INPUT_DIRNAME = 'input'
+OUTPUT_DIRNAME = 'output'
+WORK_DIRNAME = 'work'
+
 def do_file_operation(operation, op_dir):
     if ((operation is None) or (len(operation) == 0)):
         raise ValueError("File operation is empty.")
@@ -109,50 +113,24 @@ def fetch_test_submissions(path):
 
     return test_submissions
 
-def prep_temp_grading_dir(assignment_config_path, submission_dir, debug = False):
+def prep_grading_dir(assignment_config_path, submission_dir, grading_dir = None,
+        skip_static = False, debug = False):
     """
     Create a directory for grading a submission.
-    1) Create a temp dir.
-    2) Create the three core directories (input/output/work) in the temp dir.
+    1) If the base out dir is None, create a temp dir.
+    2) Create the three core directories (input/output/work) in the base dir.
     3) Copy over the static files (includng pre/post operations).
     4) Copy over the submission files (includng pre/post operations).
-    5) Load the grader class.
-    6) Return the temp dir and grader class.
+    5) Return the dirs.
     """
 
-    temp_dir = autograder.utils.get_temp_path(prefix = 'autograder-submission-',
-            rm = (not debug))
-    os.makedirs(temp_dir)
+    if (grading_dir is None):
+        grading_dir = autograder.utils.get_temp_path(prefix = 'autograder-submission-',
+                rm = (not debug))
 
-    if (debug):
-        print("Using temp/work dir: '%s'." % (temp_dir))
+    os.makedirs(grading_dir, exist_ok = True)
 
-    input_dir, output_dir, work_dir = prep_grading_dir(assignment_config_path, temp_dir,
-        submission_dir)
-
-    grader_path = os.path.join(work_dir, GRADER_FILENAME)
-    assignment_class = autograder.assignment.fetch_assignment(grader_path)
-
-    return ((input_dir, output_dir, work_dir), assignment_class)
-
-def make_core_dirs(base_dir):
-    """
-    Make the three core directories.
-    """
-
-    input_dir = os.path.join(base_dir, 'input')
-    os.makedirs(input_dir, exist_ok = True)
-
-    output_dir = os.path.join(base_dir, 'output')
-    os.makedirs(output_dir, exist_ok = True)
-
-    work_dir = os.path.join(base_dir, 'work')
-    os.makedirs(work_dir, exist_ok = True)
-
-    return input_dir, output_dir, work_dir
-
-def prep_grading_dir(assignment_config_path, base_dir, submission_dir, skip_static = False):
-    input_dir, output_dir, work_dir = make_core_dirs(base_dir)
+    input_dir, output_dir, work_dir = make_core_dirs(grading_dir)
 
     # Load the assignment config.
 
@@ -167,16 +145,32 @@ def prep_grading_dir(assignment_config_path, base_dir, submission_dir, skip_stat
 
     if (not skip_static):
         # Copy static files.
-        copy_assignment_files(assignment_base_dir, work_dir, base_dir,
+        copy_assignment_files(assignment_base_dir, work_dir, grading_dir,
                 assignment_config.get(CONFIG_KEY_STATIC_FILES, []),
                 pre_ops = assignment_config.get(CONFIG_KEY_PRE_STATIC_OPS, []),
                 post_ops = assignment_config.get(CONFIG_KEY_POST_STATIC_OPS, []))
 
     # Copy submission files.
-    copy_assignment_files(submission_dir, input_dir, base_dir,
+    copy_assignment_files(submission_dir, input_dir, grading_dir,
         ['.'], only_contents = True,
         pre_ops = [],
         post_ops = assignment_config.get(CONFIG_KEY_POST_SUB_OPS, []))
+
+    return grading_dir
+
+def make_core_dirs(base_dir):
+    """
+    Make the three core directories.
+    """
+
+    input_dir = os.path.join(base_dir, INPUT_DIRNAME)
+    os.makedirs(input_dir, exist_ok = True)
+
+    output_dir = os.path.join(base_dir, OUTPUT_DIRNAME)
+    os.makedirs(output_dir, exist_ok = True)
+
+    work_dir = os.path.join(base_dir, WORK_DIRNAME)
+    os.makedirs(work_dir, exist_ok = True)
 
     return input_dir, output_dir, work_dir
 
@@ -184,14 +178,10 @@ def run_test_submission(assignment_config_path, submission_config_path, debug = 
     print("Testing assignment '%s' and submission '%s'." % (assignment_config_path,
         submission_config_path))
 
-    dirs, assignment_class = prep_temp_grading_dir(assignment_config_path,
+    grading_dir = prep_grading_dir(assignment_config_path,
         os.path.dirname(submission_config_path), debug = debug)
-    input_dir, output_dir, work_dir = dirs
 
-    if (assignment_class is None):
-        return False
-
-    actual_result = run_submission(assignment_class, input_dir, output_dir, work_dir)
+    actual_result = run_submission(grading_dir)
     if (actual_result is None):
         return False
 
@@ -217,7 +207,19 @@ def compare_test_submission(test_config_path, actual_result, print_result = True
 
     return match
 
-def run_submission(assignment_class, input_dir, output_dir, work_dir):
+def run_submission(grading_dir, grader_path = None):
+    input_dir = os.path.join(grading_dir, INPUT_DIRNAME)
+    output_dir = os.path.join(grading_dir, OUTPUT_DIRNAME)
+    work_dir = os.path.join(grading_dir, WORK_DIRNAME)
+
+    if (grader_path is None):
+        grader_path = os.path.join(grading_dir, WORK_DIRNAME, GRADER_FILENAME)
+
+    assignment_class = autograder.assignment.fetch_assignment(grader_path)
+    if (assignment_class is None):
+        print("Failed to fetch assignment class from '%s'." % (grader_path))
+        return None
+
     try:
         assignment = assignment_class(input_dir = input_dir, output_dir = output_dir,
                 work_dir = work_dir)

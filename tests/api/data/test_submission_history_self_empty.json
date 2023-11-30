@@ -1,0 +1,8 @@
+{
+    "endpoint": "submission/history",
+    "arguments": {},
+    "output": {
+        "found-user": true,
+        "history": []
+    }
+}

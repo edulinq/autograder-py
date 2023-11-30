@@ -1,36 +1,21 @@
 import autograder.api.common
+import autograder.api.config
 
-API_ENDPOINT = '/api/v01/user/list'
-API_KEYS = ['user', 'pass', 'course']
+API_ENDPOINT = 'user/list'
+API_PARAMS = [
+    autograder.api.config.PARAM_COURSE_ID,
+    autograder.api.config.PARAM_USER_EMAIL,
+    autograder.api.config.PARAM_USER_PASS,
+]
 
-def send(server, config_data):
-    """
-    Take in a server address
-    and config data (of the form produced by autograder.api.common.parse_config()),
-    and make a user list request.
-    Returns:
-        (success, <message or graded assignment>)
-    """
+DESCRIPTION = 'List the users for a course.'
 
-    url = "%s%s" % (server, API_ENDPOINT)
+def send(arguments, **kwargs):
+    return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT, **kwargs)
 
-    data = {}
-    for key in API_KEYS:
-        if (config_data.get(key) is None):
-            return (False, "No request made, missing required config '%s'." % (key))
+def _get_parser():
+    parser = autograder.api.config.get_argument_parser(
+        description = DESCRIPTION,
+        params = API_PARAMS)
 
-        data[key] = config_data[key]
-
-    body, message = autograder.api.common.send_api_request(url, data = data)
-
-    if (body is None):
-        response = "The autograder failed to list users."
-        response += "\nMessage from the autograder: " + message
-        return (False, response)
-
-    if (body['result'] is None):
-        return (True, [])
-
-    result = body['result']
-
-    return (True, result)
+    return parser

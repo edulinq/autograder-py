@@ -15,7 +15,7 @@ function main() {
 
     local error_count=0
 
-    python3 -m autograder.cli.style "${BASE_DIR}"
+    python3 -m autograder.cli.util.style "${BASE_DIR}/autograder" "${BASE_DIR}/tests"
     ((error_count += $?))
 
     if [[ ${error_count} -gt 0 ]] ; then

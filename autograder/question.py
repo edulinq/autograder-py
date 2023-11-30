@@ -64,20 +64,20 @@ class Question(object):
             if (show_exceptions):
                 traceback.print_exc()
 
-            self.fail("Raised an exception: " + traceback.format_exc())
+            self.set_result(0, "Raised an exception: " + traceback.format_exc())
             return
 
         if (not success):
             if (value is None):
-                self.fail("Timeout (%d seconds)." % (self._timeout))
+                self.set_result(0, "Timeout (%d seconds)." % (self._timeout))
             else:
-                self.fail("Error during execution: " + value)
+                self.set_result(0, "Error during execution: " + value)
 
             return
 
         # Because we use the helper method, we can only get None back if there was an error.
         if (value is None):
-            self.fail("Error running scoring.")
+            self.set_result(0, "Error running scoring.")
             return
 
         self.result = value
@@ -91,7 +91,13 @@ class Question(object):
         self.result = GradedQuestion(name = self.name, max_points = self.max_points)
 
         self.result.grading_start_time = autograder.utils.get_timestamp()
-        self.score_question(submission, **additional_data)
+
+        try:
+            self.score_question(submission, **additional_data)
+        except AutograderFailError:
+            # The question has been failed, no additional output is required.
+            pass
+
         self.result.grading_end_time = autograder.utils.get_timestamp()
 
         return self.result
@@ -107,11 +113,9 @@ class Question(object):
     def check_not_implemented(self, value):
         if (value is None):
             self.fail("None returned.")
-            return True
 
         if (isinstance(value, type(NotImplemented))):
             self.fail("NotImplemented returned.")
-            return True
 
         return False
 
@@ -131,6 +135,7 @@ class Question(object):
         """
 
         self.set_result(0, message)
+        raise AutograderFailError()
 
     def full_credit(self, message = ''):
         self.set_score(self.max_points)
@@ -147,6 +152,21 @@ class Question(object):
 
         self.result.message += str(message)
         self.result.score += add_score
+
+    def cap_score(self):
+        """
+        Cap the score so it is in [0, self.max_points].
+        """
+
+        self.result.score = max(0, min(self.max_points, self.result.score))
+
+class AutograderFailError(RuntimeError):
+    """
+    This error indicates that fail() has been called on a question
+    and execution should be stopped.
+    """
+
+    pass
 
 class GradedQuestion(object):
     """

@@ -114,6 +114,28 @@ class GradedAssignment(object):
             'grading_end_time': autograder.utils.timestamp_to_string(self.grading_end_time),
         }
 
+    def to_test_submission(self, options = {}):
+        """
+        Output a dict that can be used as a test submission.
+        """
+
+        results = self.to_dict()
+
+        del results['grading_start_time']
+        del results['grading_end_time']
+
+        for question in results['questions']:
+            del question['grading_start_time']
+            del question['grading_end_time']
+
+        test_submission = {
+            'result': results,
+        }
+
+        test_submission.update(options)
+
+        return test_submission
+
     @staticmethod
     def from_dict(data):
         """

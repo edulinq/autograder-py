@@ -1,0 +1,9 @@
+{
+    "endpoint": "user/remove",
+    "arguments": {
+        "target-email": "student@test.com"
+    },
+    "output": {
+        "found-user": true
+    }
+}

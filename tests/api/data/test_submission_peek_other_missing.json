@@ -1,0 +1,11 @@
+{
+    "endpoint": "submission/peek",
+    "arguments": {
+        "target-email": "ZZZ"
+    },
+    "output": {
+        "found-user": false,
+        "found-submission": false,
+        "submission-result": null
+    }
+}

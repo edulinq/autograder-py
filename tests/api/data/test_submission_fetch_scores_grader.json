@@ -1,0 +1,11 @@
+{
+    "endpoint": "submission/fetch/scores",
+    "arguments": {
+        "filter-role": "grader"
+    },
+    "output": {
+        "submission-infos": {
+            "grader@test.com": null
+        }
+    }
+}
