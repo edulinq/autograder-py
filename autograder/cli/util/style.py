@@ -18,7 +18,7 @@ def run(args):
 
 def _get_parser():
     parser = argparse.ArgumentParser(description =
-        "Check the style of all '.py' and '.ipynb' files in the paths specificed (recursivley).")
+        "Check the style of all '.py' and '.ipynb' files in the paths specified (recursively).")
 
     parser.add_argument('paths', metavar = 'path',
         type = str, nargs = '+',

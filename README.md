@@ -2,6 +2,12 @@
 
 The Python interface for the autograding server.
 
+## Quick Links
+
+ - [Autograder Server](https://github.com/eriq-augustine/autograder-server)
+ - [Autograder Python Interface](https://github.com/eriq-augustine/autograder-py)
+ - [Autograder Sample Course](https://github.com/eriq-augustine/cse-cracks-course)
+
 ## The CLI
 
 This project contains several tools for interacting with an autograding server and

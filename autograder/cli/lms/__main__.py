@@ -1,5 +1,5 @@
 """
-Commands to bridge canvas and the autograder.
+Commands to bridge Learning Management Systems (LMSs) like Canvas and the autograder.
 """
 
 import os

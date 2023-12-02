@@ -17,7 +17,7 @@ def run(args):
 
 def _get_parser():
     parser = argparse.ArgumentParser(description =
-        "Pull the code from a file and output the sanatized version as if it was being graded.")
+        "Pull the code from a file and output the sanitized version as if it was being graded.")
 
     parser.add_argument('path', metavar = 'PATH',
         action = 'store', type = str,
