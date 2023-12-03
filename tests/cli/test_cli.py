@@ -42,7 +42,7 @@ def _add_cli_test(path):
 
 def _get_cli_test_method(path):
     def __method(self):
-        cli_module = autograder.code.import_path(path)
+        autograder.code.import_path(path)
 
     return __method
 
