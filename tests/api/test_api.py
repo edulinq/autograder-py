@@ -50,7 +50,7 @@ class APITest(unittest.TestCase):
         super().assertDictEqual(a, b, FORMAT_STR % (a_json, b_json))
 
 def _discover_api_tests():
-    for path in glob.glob(os.path.join(DATA_DIR, "**", "test_*.json"), recursive = True):
+    for path in sorted(glob.glob(os.path.join(DATA_DIR, "**", "test_*.json"), recursive = True)):
         try:
             _add_api_test(path)
         except Exception as ex:
