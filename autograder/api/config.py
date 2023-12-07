@@ -241,6 +241,10 @@ PARAM_TARGET_PASS = APIParam('target-pass',
 PARAM_TARGET_SUBMISSION_OR_RECENT = APIParam('target-submission',
         'The ID of the submission (default to the most recent submission).',
         required = False)
+        
+PARAM_TARGET_SUBMISSION = APIParam('target-submission',
+        'The ID of the submission that is the target of this request.',
+        required = True)
 
 PARAM_USER_EMAIL = APIParam('user-email',
         'The email of the user making this request.',
