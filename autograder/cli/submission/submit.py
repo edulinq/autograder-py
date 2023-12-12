@@ -6,9 +6,14 @@ import autograder.assignment
 def run(arguments):
     result = autograder.api.submission.submit.send(arguments, arguments.files, exit_on_error = True)
 
+    if (result['rejected']):
+        print("Submission was rejected by the autograder.")
+        print("Reason: ", result['reject-reason'])
+        return 1
+
     if (not result['grading-success']):
         print("Grading failed.")
-        return 1
+        return 2
 
     submission = autograder.assignment.GradedAssignment.from_dict(result['result'])
     print(submission.report())
