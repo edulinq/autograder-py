@@ -195,6 +195,10 @@ PARAM_COURSE_ID = APIParam('course-id',
         'The ID of the course to make this request to.',
         config_key = 'course', required = True)
 
+PARAM_COURSE_SOURCE = APIParam('source',
+        'The source to use for the course.',
+        required = False)
+
 PARAM_DRY_RUN = APIParam('dry-run',
         'Do not commit/finalize the operation,'
             + ' just do all the steps and state what the result would look like.',

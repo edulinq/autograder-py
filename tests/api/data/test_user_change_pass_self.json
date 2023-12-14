@@ -2,7 +2,7 @@
     "endpoint": "user/change/pass",
     "arguments": {
         "target-email": "",
-        "new-pass": "new-pass"
+        "new-pass": "admin"
     },
     "output": {
         "found-user": true

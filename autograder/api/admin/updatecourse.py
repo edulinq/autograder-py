@@ -7,6 +7,7 @@ API_PARAMS = [
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
 
+    autograder.api.config.PARAM_COURSE_SOURCE,
     autograder.api.config.APIParam('clear',
             'Clear the course database before updating.',
             required = False,
