@@ -1,9 +1,9 @@
 import sys
 
-import autograder.api.submission.removesubmission
+import autograder.api.submission.remove
 
 def run(arguments):
-    result = autograder.api.submission.removesubmission.send(arguments, exit_on_error = True)
+    result = autograder.api.submission.remove.send(arguments, exit_on_error = True)
 
     if (not result['found-user']):
         print("No matching user found.")
@@ -20,7 +20,7 @@ def main():
     return run(_get_parser().parse_args())
 
 def _get_parser():
-    parser = autograder.api.submission.removesubmission._get_parser()
+    parser = autograder.api.submission.remove._get_parser()
     return parser
 
 if (__name__ == '__main__'):
