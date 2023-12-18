@@ -1,5 +1,5 @@
 {
-    "endpoint": "submission/remove/submission",
+    "endpoint": "submission/remove",
     "arguments": {},
     "output": {
         "found-user": true,

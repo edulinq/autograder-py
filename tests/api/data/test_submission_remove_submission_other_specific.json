@@ -1,5 +1,5 @@
 {
-    "endpoint": "submission/remove/submission",
+    "endpoint": "submission/remove",
     "arguments": {
         "target-email": "student@test.com",
         "target-submission": "1697406265"
