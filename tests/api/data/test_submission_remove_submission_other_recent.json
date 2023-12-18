@@ -1,0 +1,10 @@
+{
+    "endpoint": "submission/remove",
+    "arguments": {
+        "target-email": "student@test.com"
+    },
+    "output": {
+        "found-user": true,
+        "found-submission": true
+    }
+}
