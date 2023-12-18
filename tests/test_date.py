@@ -19,6 +19,6 @@ class TestDate(unittest.TestCase):
             second_timestamp = autograder.utils.get_timestamp(string)
 
             if (expected_string is not None):
-                self.assertEquals(string, expected_string)
+                self.assertEqual(string, expected_string)
 
-            self.assertEquals(first_timestamp, second_timestamp)
+            self.assertEqual(first_timestamp, second_timestamp)
