@@ -18,11 +18,11 @@ class TestImport(unittest.TestCase):
 
             self.assertIn('__all__', dir(submission))
             self.assertIn('SOME_CONSTANT', dir(submission.__all__))
-            self.assertEquals(submission.__all__.SOME_CONSTANT, 1)
+            self.assertEqual(submission.__all__.SOME_CONSTANT, 1)
 
             self.assertIn('simple', dir(submission))
             self.assertIn('SOME_CONSTANT', dir(submission.simple))
-            self.assertEquals(submission.simple.SOME_CONSTANT, 1)
+            self.assertEqual(submission.simple.SOME_CONSTANT, 1)
 
     def test_nested(self):
         for ext in ['py', 'ipynb']:
@@ -31,10 +31,10 @@ class TestImport(unittest.TestCase):
 
             self.assertIn('__all__', dir(submission))
             self.assertIn('SOME_CONSTANT', dir(submission.__all__))
-            self.assertEquals(submission.__all__.SOME_CONSTANT, 1)
+            self.assertEqual(submission.__all__.SOME_CONSTANT, 1)
 
             self.assertIn('nested1', dir(submission))
             self.assertIn('nested2', dir(submission.nested1))
             self.assertIn('nested', dir(submission.nested1.nested2))
             self.assertIn('SOME_CONSTANT', dir(submission.nested1.nested2.nested))
-            self.assertEquals(submission.nested1.nested2.nested.SOME_CONSTANT, 1)
+            self.assertEqual(submission.nested1.nested2.nested.SOME_CONSTANT, 1)

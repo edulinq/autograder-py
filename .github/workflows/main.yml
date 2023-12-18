@@ -12,9 +12,10 @@ jobs:
   main:
 
     strategy:
+      fail-fast: true
       matrix:
-        python-version: ['3.10', '3.11']
-        os: ['ubuntu-22.04', 'macos-12', 'windows-2022']
+        python-version: ['3.8', '3.9', '3.10', '3.11', '3.12']
+        os: ['ubuntu-20.04', 'ubuntu-22.04', 'macos-11', 'macos-12', 'windows-2019', 'windows-2022']
 
     runs-on: ${{ matrix.os }}
 
@@ -36,6 +37,10 @@ jobs:
       - name: Install Dependencies
         shell: bash
         run: pip3 install -U -r requirements.txt
+
+      - name: Check Python Version Compatibility
+        shell: bash
+        run: vermin --no-tips --no-parse-comments --exclude ast.unparse --target=3.8- --violations autograder
 
       - name: Run Tests
         shell: bash

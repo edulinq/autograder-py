@@ -17,7 +17,8 @@ def run(args):
 
 def _get_parser():
     parser = argparse.ArgumentParser(description =
-        "Pull the code from a file and output the sanitized version as if it was being graded.")
+        "Pull the code from a file and output the sanitized version as if it was being graded."
+        + " Requires Python >= 3.9.")
 
     parser.add_argument('path', metavar = 'PATH',
         action = 'store', type = str,

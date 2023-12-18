@@ -140,4 +140,10 @@ def sanitize_code(source_code):
     return module_ast
 
 def ast_to_source(module_ast):
+    """
+    Get code from an AST.
+    Note that this function requires Python 3.9 (greater than our declared Python version,
+    and should not be used in any core functionality.
+    """
+
     return ast.unparse(module_ast)
