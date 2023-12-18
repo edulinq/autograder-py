@@ -1,0 +1,9 @@
+{
+    "endpoint": "admin/update/course",
+    "arguments": {
+        "course": "course-without-source"
+    },
+    "output": {
+        "course-updated": false
+    }
+}

@@ -21,7 +21,7 @@ TEST_DATA_DIR = os.path.join(ROOT_DIR, 'tests', 'api', 'data')
 sys.path.append(ROOT_DIR)
 
 import autograder.api.config
-import autograder.api.admin.coursereload
+import autograder.api.admin.updatecourse
 import tests.api.test_api
 
 def verify_test_case(cli_arguments, path):
@@ -56,7 +56,7 @@ def reset_course(cli_arguments):
 
     arguments['clear'] = True
 
-    autograder.api.admin.coursereload.send(arguments)
+    autograder.api.admin.updatecourse.send(arguments)
 
 def run(arguments):
     error_count = 0
