@@ -6,7 +6,7 @@ from flake8.api import legacy as flake8
 
 import autograder.code
 import autograder.question
-import autograder.utils
+import autograder.util.dirent
 
 # For codes, see:
 # flake8: https://flake8.pycqa.org/en/latest/user/error-codes.html
@@ -140,7 +140,7 @@ def _check_file(path, fake_path = None, shorten_path = False):
     elif (path.endswith('.ipynb')):
         contents = autograder.code.extract_notebook_code(path)
 
-        temp_path = autograder.utils.get_temp_path(prefix = 'style_', suffix = '_notebook')
+        temp_path = autograder.util.dirent.get_temp_path(prefix = 'style_', suffix = '_notebook')
         cleanup_paths.append(temp_path)
         with open(temp_path, 'w') as file:
             file.write(contents)
@@ -159,7 +159,7 @@ def _check_file(path, fake_path = None, shorten_path = False):
     if (shorten_path):
         replacement_path = os.path.basename(replacement_path)
 
-    output_path = autograder.utils.get_temp_path(prefix = 'style_', suffix = '_output')
+    output_path = autograder.util.dirent.get_temp_path(prefix = 'style_', suffix = '_output')
     cleanup_paths.append(output_path)
 
     # argparse (used by flake8) will look for a program name on sys.argv[0].
@@ -181,6 +181,6 @@ def _check_file(path, fake_path = None, shorten_path = False):
         lines = [line.replace(path, replacement_path) for line in lines]
 
     for path in cleanup_paths:
-        autograder.utils.remove_dirent(path)
+        autograder.util.dirent.remove(path)
 
     return (report._application.result_count, lines)

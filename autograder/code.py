@@ -10,7 +10,7 @@ import sys
 import types
 import uuid
 
-import autograder.utils
+import autograder.util.dirent
 
 ALLOWED_EXTENSIONS = ['.py', '.ipynb']
 AST_NODE_WHITELIST = [ast.Import, ast.ImportFrom, ast.FunctionDef, ast.ClassDef]
@@ -68,7 +68,7 @@ def import_path(path, module_name = None):
     # If it's a notebook, extract the code first and put it in a temp file.
     if (path.endswith('.ipynb')):
         source_code = extract_code(path)
-        path = autograder.utils.get_temp_path(suffix = '.py')
+        path = autograder.util.dirent.get_temp_path(suffix = '.py')
         with open(path, 'w') as file:
             file.write(source_code)
 

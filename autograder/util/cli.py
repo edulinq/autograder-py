@@ -9,9 +9,14 @@ import os
 import autograder.code
 
 def handle_file(path, cmd):
+    if (not path.endswith('.py')):
+        return
+
     try:
         module = autograder.code.import_path(path)
     except Exception:
+        print("ERROR Importing: ", path)
+
         return
 
     if ('_get_parser' not in dir(module)):
