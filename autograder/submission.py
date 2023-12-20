@@ -2,6 +2,7 @@ import glob
 import json
 import os
 import shutil
+import subprocess
 import traceback
 
 import autograder.assignment
@@ -11,6 +12,7 @@ import autograder.util.timestamp
 
 TEST_SUBMISSION_FILENAME = 'test-submission.json'
 GRADER_FILENAME = 'grader.py'
+GRADING_RESULT_FILENAME = 'result.json'
 
 CONFIG_KEY_STATIC_FILES = 'static-files'
 CONFIG_KEY_PRE_STATIC_OPS = 'pre-static-files-ops'
@@ -147,7 +149,7 @@ def run_test_submission(assignment_config_path, submission_config_path, debug = 
     grading_dir = prep_grading_dir(assignment_config_path,
         os.path.dirname(submission_config_path), debug = debug)
 
-    actual_result = run_submission(grading_dir)
+    actual_result = run_submission(assignment_config_path, grading_dir)
     if (actual_result is None):
         return False
 
@@ -173,13 +175,19 @@ def compare_test_submission(test_config_path, actual_result, print_result = True
 
     return match
 
-def run_submission(grading_dir, grader_path = None):
+def run_submission(assignment_config_path, grading_dir, grader_path = None):
+    if (grader_path is None):
+        grader_path = os.path.join(grading_dir, WORK_DIRNAME, GRADER_FILENAME)
+
+    if (os.path.exists(grader_path)):
+        return run_python_grader(grader_path, grading_dir)
+
+    return run_external_grader(assignment_config_path, grading_dir)
+
+def run_python_grader(grader_path, grading_dir):
     input_dir = os.path.join(grading_dir, INPUT_DIRNAME)
     output_dir = os.path.join(grading_dir, OUTPUT_DIRNAME)
     work_dir = os.path.join(grading_dir, WORK_DIRNAME)
-
-    if (grader_path is None):
-        grader_path = os.path.join(grading_dir, WORK_DIRNAME, GRADER_FILENAME)
 
     assignment_class = autograder.assignment.fetch_assignment(grader_path)
     if (assignment_class is None):
@@ -195,6 +203,35 @@ def run_submission(grading_dir, grader_path = None):
             assignment_class.__name__, input_dir, ex))
         traceback.print_exc()
         return None
+
+def run_external_grader(assignment_config_path, grading_dir):
+    work_dir = os.path.join(grading_dir, WORK_DIRNAME)
+    output_dir = os.path.join(grading_dir, OUTPUT_DIRNAME)
+
+    try:
+        with open(assignment_config_path, 'r') as file:
+            assignment_config = json.load(file)
+    except Exception as ex:
+        raise ValueError("Failed to load assignment config: " + assignment_config_path) from ex
+
+    invocation = assignment_config.get('invocation', [])
+    if (len(invocation) == 0):
+        raise ValueError(("External (any grader not using the standard Python setup)"
+            + " graders must have a non-empty 'invocation' key in their assignment config."))
+
+    subprocess.run(invocation, cwd = work_dir, check = True)
+
+    out_path = os.path.join(output_dir, GRADING_RESULT_FILENAME)
+    if (not os.path.isfile(out_path)):
+        raise ValueError("Could not find result after external grader ran: '%s'." % (out_path))
+
+    try:
+        with open(out_path, 'r') as file:
+            result = json.load(file)
+    except Exception as ex:
+        raise ValueError("Failed to grading result: " + out_path) from ex
+
+    return autograder.assignment.GradedAssignment.from_dict(result)
 
 class SubmissionSummary(object):
     """

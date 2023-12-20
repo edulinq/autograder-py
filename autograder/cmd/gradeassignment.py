@@ -9,13 +9,13 @@ DEFAULT_ASSIGNMENT = 'assignment.json'
 TEST_SUBMISSION_FILENAME = 'test-submission.json'
 
 def run(args):
-    assignment_path = os.path.abspath(args.assignment)
+    assignment_config_path = os.path.abspath(args.assignment)
     submission_path = os.path.abspath(args.submission)
 
-    grading_dir = autograder.submission.prep_grading_dir(assignment_path,
+    grading_dir = autograder.submission.prep_grading_dir(assignment_config_path,
         submission_path, debug = args.debug)
 
-    result = autograder.submission.run_submission(grading_dir)
+    result = autograder.submission.run_submission(assignment_config_path, grading_dir)
     if (result is None):
         return 2
 
@@ -45,7 +45,10 @@ def _create_test_submission(result):
 
 def _get_parser():
     parser = argparse.ArgumentParser(description =
-        'Grade an assignment (specified by an assignment JSON file) with the given submission.')
+        ('Grade an assignment (specified by an assignment JSON file) with the given submission.'
+        + ' Non-Python assignments can be graded, but they require an "invocation" field'
+        + ' in the assignment config, and the running machine must be configured to run them'
+        + ' (e.g. have all the required software installed).'))
 
     parser.add_argument('-a', '--assignment',
         action = 'store', type = str, required = False, default = DEFAULT_ASSIGNMENT,

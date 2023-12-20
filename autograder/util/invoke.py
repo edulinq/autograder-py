@@ -3,8 +3,6 @@ import sys
 import time
 import traceback
 
-import autograder.code
-
 REAP_TIME_SEC = 5
 
 # Return: (success, function return value)
