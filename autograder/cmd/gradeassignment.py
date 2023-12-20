@@ -15,7 +15,8 @@ def run(args):
     grading_dir = autograder.submission.prep_grading_dir(assignment_config_path,
         submission_path, debug = args.debug)
 
-    result = autograder.submission.run_submission(assignment_config_path, grading_dir)
+    result = autograder.submission.run_submission(grading_dir,
+            assignment_config_path = assignment_config_path)
     if (result is None):
         return 2
 

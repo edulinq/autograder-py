@@ -149,7 +149,7 @@ def run_test_submission(assignment_config_path, submission_config_path, debug = 
     grading_dir = prep_grading_dir(assignment_config_path,
         os.path.dirname(submission_config_path), debug = debug)
 
-    actual_result = run_submission(assignment_config_path, grading_dir)
+    actual_result = run_submission(grading_dir, assignment_config_path = assignment_config_path)
     if (actual_result is None):
         return False
 
@@ -175,7 +175,7 @@ def compare_test_submission(test_config_path, actual_result, print_result = True
 
     return match
 
-def run_submission(assignment_config_path, grading_dir, grader_path = None):
+def run_submission(grading_dir, assignment_config_path = None, grader_path = None):
     if (grader_path is None):
         grader_path = os.path.join(grading_dir, WORK_DIRNAME, GRADER_FILENAME)
 
