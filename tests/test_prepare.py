@@ -1,7 +1,7 @@
 import os
 import unittest
 
-import autograder.utils
+import autograder.util.submission
 
 THIS_DIR = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
 DATA_DIR = os.path.join(THIS_DIR, "data")
@@ -14,7 +14,7 @@ class TestImport(unittest.TestCase):
     def test_simple(self):
         for ext in ['py', 'ipynb']:
             path = os.path.join(DATA_DIR, 'simple.' + ext)
-            submission = autograder.utils.prepare_submission(path)
+            submission = autograder.util.submission.prepare(path)
 
             self.assertIn('__all__', dir(submission))
             self.assertIn('SOME_CONSTANT', dir(submission.__all__))
@@ -27,7 +27,7 @@ class TestImport(unittest.TestCase):
     def test_nested(self):
         for ext in ['py', 'ipynb']:
             path = os.path.join(DATA_DIR, 'nested')
-            submission = autograder.utils.prepare_submission(path)
+            submission = autograder.util.submission.prepare(path)
 
             self.assertIn('__all__', dir(submission))
             self.assertIn('SOME_CONSTANT', dir(submission.__all__))

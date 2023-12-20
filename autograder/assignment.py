@@ -7,8 +7,8 @@ import json
 
 import autograder.code
 import autograder.question
+import autograder.util.submission
 import autograder.util.timestamp
-import autograder.utils
 
 class Assignment(object):
     """
@@ -79,7 +79,7 @@ class Assignment(object):
         """
 
         if (self._prep_submission):
-            return autograder.utils.prepare_submission(self._input_dir)
+            return autograder.util.submission.prepare(self._input_dir)
 
         return None
 

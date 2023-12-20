@@ -8,8 +8,8 @@ import json
 import numbers
 import traceback
 
+import autograder.util.invoke
 import autograder.util.timestamp
-import autograder.utils
 
 DEFAULT_TIMEOUT_SEC = 60
 
@@ -60,7 +60,7 @@ class Question(object):
 
     def _internal_grade(self, helper, show_exceptions):
         try:
-            success, value = autograder.utils.invoke_with_timeout(self._timeout, helper)
+            success, value = autograder.util.invoke.with_timeout(self._timeout, helper)
         except Exception:
             if (show_exceptions):
                 traceback.print_exc()
