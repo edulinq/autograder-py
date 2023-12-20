@@ -1,6 +1,8 @@
 """
-Filespecs (File Specifications) are objects in assignment configs that describe files that need to exist.
-These files can come from local files (path FileSpec), URLs (url FileSpec), or git repos (git FileSpec).
+Filespecs (File Specifications) are objects in assignment configs that describe
+files that need to exist.
+These files can come from local files (path FileSpec), URLs (url FileSpec),
+or git repos (git FileSpec).
 """
 
 import os
@@ -36,12 +38,14 @@ def parse(data):
 
     if (not isinstance(data, dict)):
         raise FileSpecError("FileSpec is not the correct type (str ot dict): '%s' (%s)." % (
-                data, type(data)))
+            data, type(data)))
 
     if ('type' not in data):
         raise FileSpecError("FileSpec is missing 'type' field: '%s'." % (data))
 
-    spec_type = data['type'].strip().lower()
+    data['type'] = data['type'].strip().lower()
+
+    spec_type = data['type']
     if (spec_type == FILESPEC_TYPE_EMPTY):
         return get_empty()
     elif (spec_type == FILESPEC_TYPE_NIL):
@@ -93,11 +97,11 @@ def get_path(path, dest = ''):
 
 def get_git(path, dest = '', reference = '', username = '', token = ''):
     if (dest == ''):
-        dest = os.path.basename(path).splitext()[0]
+        dest = os.path.splitext(os.path.basename(path))[0]
 
     if ((username != '') and (token == '')):
         raise FileSpecError(("If username is specified on a Git FileSpec,"
-            + " then token must also be specified.")
+            + " then token must also be specified."))
 
     return {
         "type": FILESPEC_TYPE_GIT,
@@ -120,7 +124,8 @@ def get_url(path, dest = ''):
     }
 
 def copy(filespec, base_dir, dest_dir, only_contents):
-    if (filespec['type'] in []):
+    spec_type = filespec['type']
+    if (spec_type in [FILESPEC_TYPE_EMPTY, FILESPEC_TYPE_NIL]):
         # no-op.
         return
     elif (spec_type == FILESPEC_TYPE_PATH):
@@ -133,7 +138,7 @@ def copy(filespec, base_dir, dest_dir, only_contents):
     elif (spec_type == FILESPEC_TYPE_URL):
         _copy_url(filespec['path'], filespec['dest'], dest_dir)
     else:
-        raise FileSpecError("FileSpec has unkown type ('%s'): '%s'." % (spec_type, data))
+        raise FileSpecError("FileSpec has unkown type ('%s'): '%s'." % (spec_type, filespec))
 
 def _copy_path(path, dest, base_dir, dest_dir, only_contents):
     source_path = path
@@ -166,8 +171,10 @@ def _copy_git(path, dest, dest_dir, reference = '', username = '', token = ''):
 
     if (token == ''):
         token = None
-    
-    autograder.util.git.ensure_repo(url, dest_path, update = True,
+
+    dest_path = os.path.join(dest_dir, dest)
+
+    autograder.util.git.ensure_repo(path, dest_path, update = True,
         ref = reference, username = username, token = token)
 
 def _copy_url(path, dest, dest_dir):

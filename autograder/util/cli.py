@@ -16,7 +16,6 @@ def handle_file(path, cmd):
         module = autograder.code.import_path(path)
     except Exception:
         print("ERROR Importing: ", path)
-
         return
 
     if ('_get_parser' not in dir(module)):
