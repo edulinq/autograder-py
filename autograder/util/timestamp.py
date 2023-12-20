@@ -11,7 +11,7 @@ PRETTY_TIMESTAMP_FORMAT = '%Y-%m-%d %H:%M'
 UNKNOWN_TIMESTAMP = "<Unknown Time (%s)>"
 MISSING_TIMESTAMP = "<Missing Time>"
 
-def get(source = None, pretty = False):
+def get(source = None, pretty = False, adjust_tz = True):
     if (source == MISSING_TIMESTAMP):
         return source
 
@@ -22,7 +22,7 @@ def get(source = None, pretty = False):
     if (instance is None):
         return UNKNOWN_TIMESTAMP % (clean_source)
 
-    return _to_string(instance, pretty = pretty)
+    return _to_string(instance, pretty = pretty, adjust_tz = adjust_tz)
 
 def _get_as_datetime(source = None):
     if (source is None):
@@ -49,8 +49,11 @@ def _get_as_datetime(source = None):
 
     return None, source
 
-def _to_string(instance, pretty = False):
+def _to_string(instance, pretty = False, adjust_tz = True):
     if (pretty):
-        return instance.astimezone().strftime(PRETTY_TIMESTAMP_FORMAT)
+        if (adjust_tz):
+            return instance.astimezone().strftime(PRETTY_TIMESTAMP_FORMAT)
+        else:
+            return instance.strftime(PRETTY_TIMESTAMP_FORMAT)
 
     return instance.isoformat()
