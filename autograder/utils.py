@@ -1,8 +1,6 @@
 import atexit
-import datetime
 import multiprocessing
 import os
-import re
 import shutil
 import sys
 import tempfile
@@ -16,8 +14,6 @@ import autograder.code
 REAP_TIME_SEC = 5
 
 ALL_SUBMISSION_KEY = '__all__'
-
-PRETTY_TIMESTEMP_FORMAT = '%Y-%m-%d %H:%M'
 
 class Mock(object):
     def __init__(self):
@@ -219,32 +215,6 @@ def remove_dirent(path):
         shutil.rmtree(path)
     else:
         raise ValueError("Unknown type of dirent: '%s'." % (path))
-
-def get_timestamp(source = None):
-    if (source is None):
-        return datetime.datetime.now(datetime.timezone.utc)
-
-    if (isinstance(source, datetime.datetime)):
-        return source
-
-    if (isinstance(source, str)):
-        # Parse out some cases that Python 3.10 cannot deal with.
-        # This will remove fractional seconds.
-        source = re.sub(r'Z$', '+00:00', source)
-        source = re.sub(r'(\d\d:\d\d)(\.\d+)', r'\1', source)
-
-        return datetime.datetime.fromisoformat(source)
-
-    raise ValueError("Unknown type ('%s') for timestamp source." % (type(source)))
-
-def timestamp_to_string(timestamp, pretty = False):
-    if (timestamp is None):
-        return None
-
-    if (pretty):
-        return timestamp.astimezone().strftime(PRETTY_TIMESTEMP_FORMAT)
-
-    return timestamp.isoformat()
 
 def copy_dirent(source, dest):
     """

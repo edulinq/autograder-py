@@ -6,6 +6,7 @@ import traceback
 
 import autograder.assignment
 import autograder.git
+import autograder.util.timestamp
 import autograder.utils
 
 TEST_SUBMISSION_FILENAME = 'test-submission.json'
@@ -248,9 +249,9 @@ class SubmissionSummary(object):
 
         self.message = message
 
-        self.grading_start_time = None
+        self.grading_start_time = autograder.util.timestamp.MISSING_TIMESTAMP
         if (grading_start_time is not None):
-            self.grading_start_time = autograder.utils.get_timestamp(grading_start_time)
+            self.grading_start_time = autograder.util.timestamp.get(grading_start_time)
 
     def to_dict(self):
         """
@@ -262,7 +263,7 @@ class SubmissionSummary(object):
             'max_points': self.max_points,
             'score': self.score,
             'message': self.message,
-            'grading_start_time': autograder.utils.timestamp_to_string(self.grading_start_time),
+            'grading_start_time': self.grading_start_time,
         }
 
     @staticmethod
@@ -277,7 +278,7 @@ class SubmissionSummary(object):
         return self.id.split('::')[-1]
 
     def pretty_time(self):
-        return autograder.utils.timestamp_to_string(self.grading_start_time, pretty = True)
+        return autograder.util.timestamp.get(self.grading_start_time, pretty = True)
 
     def __repr__(self):
         """

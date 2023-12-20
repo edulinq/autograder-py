@@ -7,6 +7,7 @@ import json
 
 import autograder.code
 import autograder.question
+import autograder.util.timestamp
 import autograder.utils
 
 class Assignment(object):
@@ -56,14 +57,14 @@ class Assignment(object):
         """
 
         self.result = GradedAssignment(name = self._name, questions = [])
-        self.result.grading_start_time = autograder.utils.get_timestamp()
+        self.result.grading_start_time = autograder.util.timestamp.get()
 
         for question in self._questions:
             self.result.questions.append(question.grade(submission,
                 additional_data = self._additional_data,
                 show_exceptions = show_exceptions))
 
-        self.result.grading_end_time = autograder.utils.get_timestamp()
+        self.result.grading_end_time = autograder.util.timestamp.get()
 
         return self.result
 
@@ -94,13 +95,13 @@ class GradedAssignment(object):
         self.name = name
         self.questions = questions
 
-        self.grading_start_time = None
+        self.grading_start_time = autograder.util.timestamp.MISSING_TIMESTAMP
         if (grading_start_time is not None):
-            self.grading_start_time = autograder.utils.get_timestamp(grading_start_time)
+            self.grading_start_time = autograder.util.timestamp.get(grading_start_time)
 
-        self.grading_end_time = None
+        self.grading_end_time = autograder.util.timestamp.MISSING_TIMESTAMP
         if (grading_end_time is not None):
-            self.grading_end_time = autograder.utils.get_timestamp(grading_end_time)
+            self.grading_end_time = autograder.util.timestamp.get(grading_end_time)
 
     def to_dict(self):
         """
@@ -110,8 +111,8 @@ class GradedAssignment(object):
         return {
             'name': self.name,
             'questions': [question.to_dict() for question in self.questions],
-            'grading_start_time': autograder.utils.timestamp_to_string(self.grading_start_time),
-            'grading_end_time': autograder.utils.timestamp_to_string(self.grading_end_time),
+            'grading_start_time': self.grading_start_time,
+            'grading_end_time': self.grading_end_time,
         }
 
     def to_test_submission(self, options = {}):
@@ -177,8 +178,8 @@ class GradedAssignment(object):
         output = [
             prefix + "Autograder transcript for assignment: %s." % (self.name),
             prefix + "Grading started at %s and ended at %s." % (
-                autograder.utils.timestamp_to_string(self.grading_start_time, pretty = True),
-                autograder.utils.timestamp_to_string(self.grading_end_time, pretty = True))
+                autograder.util.timestamp.get(self.grading_start_time, pretty = True),
+                autograder.util.timestamp.get(self.grading_end_time, pretty = True))
         ]
 
         total_score = 0

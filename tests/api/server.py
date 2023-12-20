@@ -6,7 +6,7 @@ import time
 import urllib.parse
 
 import autograder.api.constants
-import autograder.utils
+import autograder.util.timestamp
 
 PORT = 12345
 ENCODING = 'utf8'
@@ -54,7 +54,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
         headers = {}
         content = Handler._next_response_queue.get()
 
-        now = autograder.utils.timestamp_to_string(autograder.utils.get_timestamp())
+        now = autograder.util.timestamp.get()
 
         data = {
             "id": "00000000-0000-0000-0000-000000000000",
@@ -77,30 +77,3 @@ class Handler(http.server.BaseHTTPRequestHandler):
         self.end_headers()
 
         self.wfile.write(payload.encode(ENCODING))
-
-    def _handle_history(self, data):
-        payload = """{
-            "success": true,
-            "status": 200,
-            "timestamp": "2023-09-30T12:22:41.091853098-07:00",
-            "content": {
-                "history": [
-                    {
-                        "id": "COURSE101::hw0::user@test.com::1",
-                        "message": "",
-                        "max_points": 2,
-                        "score": 1,
-                        "grading_start_time": "2023-09-25T22:50:54.225052Z"
-                    },
-                    {
-                        "id": "COURSE101::hw0::user@test.com::2",
-                        "message": "",
-                        "max_points": 2,
-                        "score": 1,
-                        "grading_start_time": "2023-09-25T22:51:54.225052Z"
-                    }
-                ]
-            }
-        }"""
-
-        return http.HTTPStatus.OK, {}, payload
