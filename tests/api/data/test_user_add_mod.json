@@ -78,6 +78,6 @@
                 "message": "Cannot modify a user with a higher role (owner) than your role (admin)."
             }
         ],
-        "LMSSyncCount": 5
+        "LMSSyncCount": 4
     }
 }
