@@ -1,7 +1,7 @@
 import autograder.api.common
 import autograder.api.config
 
-API_ENDPOINT = 'lms/sync/users'
+API_ENDPOINT = 'lms/sync'
 API_PARAMS = [
     autograder.api.config.PARAM_COURSE_ID,
     autograder.api.config.PARAM_USER_EMAIL,
@@ -10,7 +10,7 @@ API_PARAMS = [
     autograder.api.config.PARAM_SKIP_EMAILS,
 ]
 
-DESCRIPTION = 'Sync autograder users with LMS users.'
+DESCRIPTION = 'Sync autograder information with the course\' LMS.'
 
 def send(arguments, **kwargs):
     return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT, **kwargs)
