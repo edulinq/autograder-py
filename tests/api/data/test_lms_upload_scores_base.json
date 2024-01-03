@@ -14,19 +14,14 @@
         ]
     },
     "output": {
-        "count": 0,
-        "error-count": 2,
+        "count": 1,
+        "error-count": 1,
         "unrecognized-users": [
             {
                 "row": 1,
                 "entry": "zzz@test.com"
             }
         ],
-        "no-lms-id-users": [
-            {
-                "row": 0,
-                "entry": "student@test.com"
-            }
-        ]
+        "no-lms-id-users": []
     }
 }

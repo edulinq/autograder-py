@@ -9,7 +9,7 @@
             "email": "student@test.com",
             "name": "student",
             "role": "student",
-            "lms-id": ""
+            "lms-id": "lms-student@test.com"
         }
     }
 }
