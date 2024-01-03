@@ -2,6 +2,7 @@
     "endpoint": "lms/sync",
     "arguments": {},
     "output": {
+        "sync-available": true,
         "users": {
             "add-users": [],
             "mod-users": [
