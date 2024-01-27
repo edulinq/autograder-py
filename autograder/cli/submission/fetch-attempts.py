@@ -11,6 +11,10 @@ def run(arguments):
         print("No matching user found.")
         return 1
 
+    if (len(result['grading-results']) == 0):
+        print("No attempts found.")
+        return 1
+
     out_dir = os.path.join(arguments.out_dir, result['grading-results'][0]['info']['user'])
     count = 0
     for grading_result in result['grading-results']:
