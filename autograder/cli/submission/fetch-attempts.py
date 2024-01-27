@@ -18,9 +18,6 @@ def run(arguments):
     out_dir = os.path.join(arguments.out_dir, result['grading-results'][0]['info']['user'])
     count = 0
     for grading_result in result['grading-results']:
-        if (grading_result is None):
-            continue
-
         autograder.cli.submission.common.output_grading_result(grading_result, out_dir)
         count += 1
 
