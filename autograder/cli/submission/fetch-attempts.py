@@ -15,7 +15,7 @@ def run(arguments):
         print("No attempts found.")
         return 2
 
-    out_dir = os.path.join(arguments.out_dir, result['grading-results'][0]['info']['user'])
+    out_dir = os.path.join(arguments.out_dir, arguments.assignment, result['grading-results'][0]['info']['user'])
 
     for grading_result in result['grading-results']:
         autograder.cli.submission.common.output_grading_result(grading_result, out_dir, True)
