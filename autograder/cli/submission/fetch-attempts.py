@@ -13,15 +13,14 @@ def run(arguments):
 
     if (len(result['grading-results']) == 0):
         print("No attempts found.")
-        return 1
+        return 2
 
     out_dir = os.path.join(arguments.out_dir, result['grading-results'][0]['info']['user'])
-    count = 0
+
     for grading_result in result['grading-results']:
         autograder.cli.submission.common.output_grading_result(grading_result, out_dir, True)
-        count += 1
 
-    print("Wrote %d attempts to '%s'." % (count, out_dir))
+    print("Wrote %d attempts to '%s'." % (len(result['grading-results']), out_dir))
 
     return 0
 
@@ -33,7 +32,7 @@ def _get_parser():
 
     parser.add_argument('-o', '--out-dir', dest = 'out_dir',
         action = 'store', type = str, default = '.',
-        help = ('Where to create a new directory that contains the submission information.'
+        help = ('Where to create a new directory that will contain submission attempts.'
             + ' An existing subdirectory will be removed.'
             + ' Defaults to the current directory.'))
 

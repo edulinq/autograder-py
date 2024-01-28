@@ -11,7 +11,7 @@ API_PARAMS = [
     autograder.api.config.PARAM_TARGET_EMAIL_OR_SELF,
 ]
 
-DESCRIPTION = 'Get all attempts made by a user along with all grading information.'
+DESCRIPTION = 'Get all submission attempts made by a user along with all grading information.'
 
 def send(arguments, **kwargs):
     return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT, **kwargs)
