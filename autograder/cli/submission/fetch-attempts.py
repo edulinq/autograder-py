@@ -18,7 +18,7 @@ def run(arguments):
     out_dir = os.path.join(arguments.out_dir, result['grading-results'][0]['info']['user'])
     count = 0
     for grading_result in result['grading-results']:
-        autograder.cli.submission.common.output_grading_result(grading_result, out_dir)
+        autograder.cli.submission.common.output_grading_result(grading_result, out_dir, True)
         count += 1
 
     print("Wrote %d attempts to '%s'." % (count, out_dir))
