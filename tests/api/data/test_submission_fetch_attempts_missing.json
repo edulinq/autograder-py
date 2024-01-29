@@ -1,7 +1,7 @@
 {
     "endpoint": "submission/fetch/attempts",
     "arguments": {
-        "target-email": "grader@test.com"
+        "target-email": "ZZZ@test.com"
     },
     "output": {
         "found-user": false,
