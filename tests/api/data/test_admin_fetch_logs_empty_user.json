@@ -1,0 +1,14 @@
+{
+    "endpoint": "admin/fetch/logs",
+    "arguments": {
+        "course": "course-without-source",
+        "level": "INFO",
+        "target-email": "other@test.com"
+    },
+    "output-modifier": "clean_output_logs",
+    "output": {
+        "success": true,
+        "error-messages": null,
+        "results": []
+    }
+}

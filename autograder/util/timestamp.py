@@ -15,7 +15,7 @@ def get(source = None, pretty = False, adjust_tz = True):
     if (source == MISSING_TIMESTAMP):
         return source
 
-    if ((source is not None) and ('Unknown Time' in source)):
+    if (isinstance(source, str) and ('Unknown Time' in source)):
         return source
 
     instance, clean_source = _get_as_datetime(source)
@@ -33,6 +33,10 @@ def _get_as_datetime(source = None):
 
     if (source == ''):
         return None, ''
+
+    if (isinstance(source, (int, float))):
+        # Unix timestamp.
+        return datetime.datetime.fromtimestamp(source), None
 
     if (not isinstance(source, str)):
         raise ValueError("Unknown type ('%s') for timestamp source." % (type(source)))

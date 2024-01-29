@@ -27,7 +27,7 @@ import tests.api.test_api
 def verify_test_case(cli_arguments, path):
     print("Verifying test case: '%s'." % (path))
 
-    import_module_name, arguments, expected = tests.api.test_api.get_api_test_info(path)
+    import_module_name, arguments, expected, output_modifier = tests.api.test_api.get_api_test_info(path)
 
     for key, value in vars(cli_arguments).items():
         if ((value is not None) or (value)):
@@ -36,6 +36,8 @@ def verify_test_case(cli_arguments, path):
     api_module = importlib.import_module(import_module_name)
 
     actual = api_module.send(arguments)
+
+    actual = output_modifier(actual)
 
     if (actual != expected):
         expected_json = json.dumps(expected, indent = 4)
