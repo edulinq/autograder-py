@@ -5,8 +5,12 @@ import autograder.util.dirent
 import autograder.util.file
 import autograder.util.gzip
 
-def output_grading_result(result, base_dir = '.'):
-    out_dir = os.path.join(base_dir, result['info']['id'])
+def output_grading_result(result, base_dir = '.', short_id = False):
+    if short_id:
+        out_dir = os.path.join(base_dir, result['info']['short-id'])
+    else:
+        out_dir = os.path.join(base_dir, result['info']['id'])
+
     if (os.path.exists(out_dir)):
         autograder.util.dirent.remove(out_dir)
 
