@@ -43,6 +43,9 @@ def _run(next_response_queue):
 class Handler(http.server.BaseHTTPRequestHandler):
     _next_response_queue = None
 
+    def log_message(self, format, *args):
+        return
+
     def do_POST(self):
         length = int(self.headers['Content-Length'])
         raw_content = self.rfile.read(length).decode(ENCODING)
