@@ -9,7 +9,7 @@
     "output": {
         "success": false,
         "error-messages": [
-            "Unknown assignment given for 'assignment' componet of log query ('ZZZ')."
+            "Unknown assignment given for 'assignment' component of log query ('ZZZ')."
         ],
         "results": null
     }
