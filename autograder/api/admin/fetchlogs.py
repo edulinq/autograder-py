@@ -16,7 +16,8 @@ API_PARAMS = [
             required = False),
 
     autograder.api.config.APIParam('past',
-            'If supplied, only return log records in this duration (using "h", "m", or "s" suffixes) (e.g., "24h", "10m", or "1h10m10s").',
+            ('If supplied, only return log records in this duration'
+                + ' (using "h", "m", or "s" suffixes) (e.g., "24h", "10m", or "1h10m10s").'),
             required = False),
 
     autograder.api.config.APIParam('assignment-id',
