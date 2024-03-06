@@ -4,6 +4,7 @@ What is necessary to grade a single assignment.
 
 import inspect
 import json
+import traceback
 
 import autograder.code
 import autograder.question
@@ -47,7 +48,27 @@ class Assignment(object):
         self.result = None
 
     def grade(self, **kwargs):
-        return self._grade_submission(self._prepare_submission(), **kwargs)
+        try:
+            return self._grade_submission(self._prepare_submission(), **kwargs)
+        except Exception:
+            now = autograder.util.timestamp.get()
+
+            questions = []
+            for question in self._questions:
+                questions.append(autograder.question.GradedQuestion(
+                    name = question.name,
+                    max_points = question.max_points, score = 0,
+                    message = "Submission could not be graded.",
+                    grading_start_time = now, grading_end_time = now))
+
+            epilogue = ("\nSubmission could not be graded because of the following error:"
+                    + "\n---\n%s---" % (traceback.format_exc()))
+
+            return GradedAssignment(
+                name = self._name,
+                questions = questions,
+                grading_start_time = now, grading_end_time = now,
+                epilogue = epilogue)
 
     def _grade_submission(self, submission, show_exceptions = False, **kwargs):
         """
@@ -91,9 +112,13 @@ class GradedAssignment(object):
     def __init__(self, name = '',
             questions = [],
             grading_start_time = None, grading_end_time = None,
+            prologue = None, epilogue = None,
             **kwargs):
         self.name = name
         self.questions = questions
+
+        self.prologue = prologue
+        self.epilogue = epilogue
 
         self.grading_start_time = autograder.util.timestamp.MISSING_TIMESTAMP
         if (grading_start_time is not None):
@@ -175,7 +200,11 @@ class GradedAssignment(object):
         if ((prefix != '') and (not prefix.endswith(' '))):
             prefix += ' '
 
-        output = [
+        output = []
+
+        output += self._format_logue(self.prologue, prefix)
+
+        output += [
             prefix + "Autograder transcript for assignment: %s." % (self.name),
             prefix + "Grading started at %s and ended at %s." % (
                 autograder.util.timestamp.get(self.grading_start_time, pretty = True),
@@ -194,7 +223,16 @@ class GradedAssignment(object):
         output.append('')
         output.append(prefix + "Total: %d / %d" % (total_score, max_score))
 
+        output += self._format_logue(self.epilogue, prefix)
+
         return "\n".join(output)
+
+    def _format_logue(self, text, prefix):
+        if ((text is None) or (text == '')):
+            return []
+
+        lines = text.splitlines()
+        return [prefix + line.rstrip() for line in lines]
 
     def __eq__(self, other):
         return self.equals(other)
