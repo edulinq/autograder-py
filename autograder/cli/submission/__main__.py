@@ -1,5 +1,6 @@
 """
-The `autograder.cli.submission` package contains tools to make, query, and manage submissions to the autograder.
+The `autograder.cli.submission` package contains tools to
+make, query, and manage submissions to the autograder.
 """
 
 import sys

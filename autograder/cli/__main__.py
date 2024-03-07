@@ -1,7 +1,7 @@
 """
-The `autograder.cli` package contains several tools for interacting with the autograder.
+The `autograder.cli` package contains tools for interacting with the autograder.
 Each package can be invoked to list the tools (or subpackages) it contains.
-Each tool includes a help prompt that can be accessed with the `-h`/`--help` flag.
+Each tool includes a help prompt that accessed with the `-h`/`--help` flag.
 """
 
 import sys

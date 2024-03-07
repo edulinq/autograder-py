@@ -1,9 +1,10 @@
 """
-Look in a package for modules that look like CLI tools and list their information.
+Look in a package for CLI tools and list their information.
 A package looks like a CLI package if it has a __main__.py file.
 A module looks like a CLI tool if it either
 has a _get_parser() method that returns an argparse parser,
-or has a _modify_parser() method that takes a copy of the default (passed in) argparse parser.
+or has a _modify_parser() method that takes a copy of the default (passed in)
+argparse parser.
 """
 
 import argparse
@@ -29,7 +30,8 @@ def list_dir(base_dir, command_prefix, default_parser):
 def auto_list(default_parser = None):
     """
     Will print the caller's prompt and call list_dir() on it,
-    but will figure out the package's prompt (doc string), base_dir, and command_prefix automatially.
+    but will figure out the package's prompt (doc string), base_dir,
+    and command_prefix automatially.
     This will use the inspect library, so only use in places that use code normally.
     """
 

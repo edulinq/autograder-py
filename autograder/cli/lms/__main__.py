@@ -1,5 +1,6 @@
 """
-The `autograder.cli.lms` package contains tools to bridge Learning Management Systems (LMSs) like Canvas and the autograder.
+The `autograder.cli.lms` package contains tools to bridge
+Learning Management Systems (LMSs) like Canvas and the autograder.
 """
 
 import sys
