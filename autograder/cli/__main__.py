@@ -1,27 +1,16 @@
 """
-The autograder CLI package contains several tools for interacting with the autograder.
-The following is a non-exhaustive list of CLI tools.
-Invoke each command with the `--help` option for more details.
+The `autograder.cli` package contains several tools for interacting with the autograder.
+Each package can be invoked to list the tools (or subpackages) it contains.
+Each tool includes a help prompt that can be accessed with the `-h`/`--help` flag.
 """
 
-import os
 import sys
 
 import autograder.util.cli
 
-THIS_DIR = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
-ROOT_DIR = os.path.join(THIS_DIR, '..', '..')
-
-def run():
-    relpath = os.path.relpath(THIS_DIR, start = ROOT_DIR)
-    package = '.'.join(relpath.split(os.sep))
-
-    print(__doc__.strip())
-    autograder.util.cli.list_dir(THIS_DIR, package)
-    return 0
-
 def main():
-    return run()
+    autograder.util.cli.auto_list()
+    return 0
 
 if (__name__ == '__main__'):
     sys.exit(main())
