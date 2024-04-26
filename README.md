@@ -142,7 +142,7 @@ Total: 100 / 100
 
 If you have made no past (successful) submissions, then your output may look like:
 ```
-No past submission found for this assignment.
+No matching submission found.
 ```
 
 #### Getting a History of All Past Submissions
@@ -162,7 +162,7 @@ Found 2 submissions.
 
 If you have made no past (successful) submissions, then your output may look like:
 ```
-No past submission found for this assignment.
+No matching submission found.
 ```
 
 ### Commands for TAs and Instructors
