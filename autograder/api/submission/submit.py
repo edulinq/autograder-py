@@ -8,6 +8,7 @@ API_PARAMS = [
     autograder.api.config.PARAM_USER_PASS,
     autograder.api.config.PARAM_ASSIGNMENT_ID,
 
+    autograder.api.config.APIParam('late-acknowledgment', 'Acknowledge that the late policy will be applied.', required = False),
     autograder.api.config.APIParam('message',
         'An optional message to attatch to the submission.',
         required = False)

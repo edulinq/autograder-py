@@ -2,6 +2,7 @@ import sys
 
 import autograder.api.submission.submit
 import autograder.assignment
+from autograder.util.confirm import confirm
 
 def run(arguments):
     result = autograder.api.submission.submit.send(arguments, arguments.files, exit_on_error = True)
@@ -13,6 +14,10 @@ def run(arguments):
         print("-------------------------------")
 
     if (result['rejected']):
+        if result['require-late-acknowledgment']:
+            if confirm("This assignment is past the due date and the late policy will be applied. Do you want to continue?"):
+                setattr(arguments, "late-acknowledgment", True)
+                return run(arguments)
         print("Submission was rejected by the autograder.")
         return 1
 
