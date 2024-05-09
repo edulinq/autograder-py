@@ -7,7 +7,9 @@ def run(arguments):
 
     if (not result['course-report']):
         print("No matching course report found.")
-        return 1
+        return 1 
+      
+    return 0
 
 def main():
     return run(_get_parser().parse_args())
