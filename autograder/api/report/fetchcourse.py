@@ -10,7 +10,7 @@ API_PARAMS = [
 
 DESCRIPTION = 'Send submissions reports of a specified course'
 
-def send(arguments,**kwargs):
+def send(arguments, **kwargs):
     return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT, **kwargs)
 
 def _get_parser():
