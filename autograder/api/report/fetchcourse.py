@@ -1,7 +1,7 @@
 import autograder.api.common
 import autograder.api.config
 
-API_ENDPOINT = 'report/submissions/fetch'
+API_ENDPOINT = 'report/fetchcourse'
 API_PARAMS = [
     autograder.api.config.PARAM_COURSE_ID,
     autograder.api.config.PARAM_USER_EMAIL,
