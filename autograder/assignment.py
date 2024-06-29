@@ -4,10 +4,12 @@ What is necessary to grade a single assignment.
 
 import inspect
 import json
+import traceback
 
 import autograder.code
 import autograder.question
-import autograder.utils
+import autograder.util.submission
+import autograder.util.timestamp
 
 class Assignment(object):
     """
@@ -46,7 +48,27 @@ class Assignment(object):
         self.result = None
 
     def grade(self, **kwargs):
-        return self._grade_submission(self._prepare_submission(), **kwargs)
+        try:
+            return self._grade_submission(self._prepare_submission(), **kwargs)
+        except Exception:
+            now = autograder.util.timestamp.get()
+
+            questions = []
+            for question in self._questions:
+                questions.append(autograder.question.GradedQuestion(
+                    name = question.name,
+                    max_points = question.max_points, score = 0,
+                    message = "Submission could not be graded.",
+                    grading_start_time = now, grading_end_time = now))
+
+            epilogue = ("\nSubmission could not be graded because of the following error:"
+                    + "\n---\n%s---" % (traceback.format_exc()))
+
+            return GradedAssignment(
+                name = self._name,
+                questions = questions,
+                grading_start_time = now, grading_end_time = now,
+                epilogue = epilogue)
 
     def _grade_submission(self, submission, show_exceptions = False, **kwargs):
         """
@@ -56,14 +78,14 @@ class Assignment(object):
         """
 
         self.result = GradedAssignment(name = self._name, questions = [])
-        self.result.grading_start_time = autograder.utils.get_timestamp()
+        self.result.grading_start_time = autograder.util.timestamp.get()
 
         for question in self._questions:
             self.result.questions.append(question.grade(submission,
                 additional_data = self._additional_data,
                 show_exceptions = show_exceptions))
 
-        self.result.grading_end_time = autograder.utils.get_timestamp()
+        self.result.grading_end_time = autograder.util.timestamp.get()
 
         return self.result
 
@@ -78,7 +100,7 @@ class Assignment(object):
         """
 
         if (self._prep_submission):
-            return autograder.utils.prepare_submission(self._input_dir)
+            return autograder.util.submission.prepare(self._input_dir)
 
         return None
 
@@ -90,17 +112,21 @@ class GradedAssignment(object):
     def __init__(self, name = '',
             questions = [],
             grading_start_time = None, grading_end_time = None,
+            prologue = None, epilogue = None,
             **kwargs):
         self.name = name
         self.questions = questions
 
-        self.grading_start_time = None
-        if (grading_start_time is not None):
-            self.grading_start_time = autograder.utils.get_timestamp(grading_start_time)
+        self.prologue = prologue
+        self.epilogue = epilogue
 
-        self.grading_end_time = None
+        self.grading_start_time = autograder.util.timestamp.MISSING_TIMESTAMP
+        if (grading_start_time is not None):
+            self.grading_start_time = autograder.util.timestamp.get(grading_start_time)
+
+        self.grading_end_time = autograder.util.timestamp.MISSING_TIMESTAMP
         if (grading_end_time is not None):
-            self.grading_end_time = autograder.utils.get_timestamp(grading_end_time)
+            self.grading_end_time = autograder.util.timestamp.get(grading_end_time)
 
     def to_dict(self):
         """
@@ -110,8 +136,8 @@ class GradedAssignment(object):
         return {
             'name': self.name,
             'questions': [question.to_dict() for question in self.questions],
-            'grading_start_time': autograder.utils.timestamp_to_string(self.grading_start_time),
-            'grading_end_time': autograder.utils.timestamp_to_string(self.grading_end_time),
+            'grading_start_time': self.grading_start_time,
+            'grading_end_time': self.grading_end_time,
         }
 
     def to_test_submission(self, options = {}):
@@ -174,11 +200,15 @@ class GradedAssignment(object):
         if ((prefix != '') and (not prefix.endswith(' '))):
             prefix += ' '
 
-        output = [
+        output = []
+
+        output += self._format_logue(self.prologue, prefix)
+
+        output += [
             prefix + "Autograder transcript for assignment: %s." % (self.name),
             prefix + "Grading started at %s and ended at %s." % (
-                autograder.utils.timestamp_to_string(self.grading_start_time, pretty = True),
-                autograder.utils.timestamp_to_string(self.grading_end_time, pretty = True))
+                autograder.util.timestamp.get(self.grading_start_time, pretty = True),
+                autograder.util.timestamp.get(self.grading_end_time, pretty = True))
         ]
 
         total_score = 0
@@ -193,7 +223,16 @@ class GradedAssignment(object):
         output.append('')
         output.append(prefix + "Total: %d / %d" % (total_score, max_score))
 
+        output += self._format_logue(self.epilogue, prefix)
+
         return "\n".join(output)
+
+    def _format_logue(self, text, prefix):
+        if ((text is None) or (text == '')):
+            return []
+
+        lines = text.splitlines()
+        return [prefix + line.rstrip() for line in lines]
 
     def __eq__(self, other):
         return self.equals(other)

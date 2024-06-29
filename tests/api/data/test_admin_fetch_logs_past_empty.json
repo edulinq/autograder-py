@@ -1,0 +1,15 @@
+{
+    "endpoint": "admin/fetch/logs",
+    "arguments": {
+        "course": "course-without-source",
+        "level": "ERROR",
+        "past": "24h"
+    },
+    "output-modifier": "clean_output_logs",
+    "output": {
+        "success": true,
+        "error-messages": null,
+        "results": [
+        ]
+    }
+}

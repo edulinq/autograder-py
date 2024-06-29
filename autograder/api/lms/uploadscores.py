@@ -16,7 +16,8 @@ API_PARAMS = [
         required = True, cli_param = False),
 ]
 
-DESCRIPTION = 'Get the information for an LMS user.'
+DESCRIPTION = ("Upload scores from a tab-separated file to the course's LMS."
+        + " The file should not have headers, and should have two columns: email and score.")
 
 def send(arguments, **kwargs):
     return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT, **kwargs)

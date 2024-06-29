@@ -1,0 +1,14 @@
+{
+    "endpoint": "admin/fetch/logs",
+    "arguments": {
+        "course": "course101",
+        "level": "INFO",
+        "assignment-id": "HW0"
+    },
+    "output-modifier": "clean_output_logs",
+    "output": {
+        "success": true,
+        "error-messages": null,
+        "results": []
+    }
+}

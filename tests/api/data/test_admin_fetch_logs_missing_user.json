@@ -1,0 +1,16 @@
+{
+    "endpoint": "admin/fetch/logs",
+    "arguments": {
+        "course": "course-without-source",
+        "level": "INFO",
+        "target-email": "ZZZ"
+    },
+    "output-modifier": "clean_output_logs",
+    "output": {
+        "success": false,
+        "error-messages": [
+            "Could not find user: 'ZZZ'."
+        ],
+        "results": null
+    }
+}

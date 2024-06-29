@@ -1,0 +1,31 @@
+{
+    "endpoint": "admin/fetch/logs",
+    "arguments": {
+        "course": "course-without-source",
+        "level": "INFO",
+        "after": "1970-01-01T00:00:00+00:00"
+    },
+    "output-modifier": "clean_output_logs",
+    "output": {
+        "success": true,
+        "error-messages": null,
+        "results": [
+            {
+                "level": 0,
+                "message": "Loaded course.",
+                "unix-time": 0,
+                "course": "course-without-source",
+                "attributes": {
+                    "num-assignments": 0,
+                    "path": "/some/path/course.json"
+                }
+            },
+            {
+                "level": 0,
+                "message": "Loaded course.",
+                "unix-time": 0,
+                "course": "course-without-source"
+            }
+        ]
+    }
+}

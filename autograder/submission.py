@@ -2,23 +2,22 @@ import glob
 import json
 import os
 import shutil
+import subprocess
 import traceback
 
 import autograder.assignment
-import autograder.git
-import autograder.utils
+import autograder.filespec
+import autograder.util.dirent
+import autograder.util.timestamp
 
 TEST_SUBMISSION_FILENAME = 'test-submission.json'
 GRADER_FILENAME = 'grader.py'
+GRADING_RESULT_FILENAME = 'result.json'
 
 CONFIG_KEY_STATIC_FILES = 'static-files'
 CONFIG_KEY_PRE_STATIC_OPS = 'pre-static-files-ops'
 CONFIG_KEY_POST_STATIC_OPS = 'post-static-files-ops'
 CONFIG_KEY_POST_SUB_OPS = 'post-submission-files-ops'
-
-FILESPEC_DELIM = '::'
-FILESPEC_GIT = 'git'
-FILESPEC_GIT_PREFIX = FILESPEC_GIT + FILESPEC_DELIM
 
 INPUT_DIRNAME = 'input'
 OUTPUT_DIRNAME = 'output'
@@ -39,39 +38,10 @@ def do_file_operation(operation, op_dir):
             raise ValueError("Incorrect number of argument for 'cp' file operation."
                 + " Expected 2, found %d." % ((len(operation) - 1)))
 
-        autograder.utils.copy_dirent(os.path.join(op_dir, operation[1]), os.path.join(op_dir,
+        autograder.util.dirent.copy(os.path.join(op_dir, operation[1]), os.path.join(op_dir,
             operation[2]))
     else:
         raise ValueError("Unknown file operation: '%s'." % (operation[0]))
-
-def handle_git_static_file(filespec, dest_dir):
-    parts = filespec.split(FILESPEC_DELIM)
-
-    if ((len(parts) < 2) or (len(parts) > 4) or (parts[0] != FILESPEC_GIT)):
-        raise ValueError("Unknown git filespec: '%s'." % (filespec))
-
-    url = parts[1]
-
-    dirname = url.split('/')[-1].removesuffix('.git')
-    if (len(parts) >= 3):
-        dirname = parts[2]
-
-    ref = None
-    if (len(parts) >= 4):
-        ref = parts[3]
-
-    dest_path = os.path.join(dest_dir, dirname)
-
-    autograder.git.ensure_repo(url, dest_path, update = True, ref = ref)
-
-def copy_assignment_file(filename, source_dir, dest_dir, only_contents):
-    source_path = os.path.join(source_dir, filename)
-    dest_path = os.path.join(dest_dir, os.path.basename(filename))
-
-    if (only_contents):
-        autograder.utils.copy_dirent_contents(source_path, dest_path)
-    else:
-        autograder.utils.copy_dirent(source_path, dest_path)
 
 def copy_assignment_files(source_dir, dest_dir, op_dir, files,
         only_contents = False, pre_ops = [], post_ops = []):
@@ -87,11 +57,9 @@ def copy_assignment_files(source_dir, dest_dir, op_dir, files,
         do_file_operation(file_operation, op_dir)
 
     # Copy over the assignment's files.
-    for filespec in files:
-        if (filespec.startswith(FILESPEC_GIT_PREFIX)):
-            handle_git_static_file(filespec, dest_dir)
-        else:
-            copy_assignment_file(filespec, source_dir, dest_dir, only_contents)
+    for filespec_text in files:
+        spec = autograder.filespec.parse(filespec_text)
+        autograder.filespec.copy(spec, source_dir, dest_dir, only_contents)
 
     # Do post operations.
     for file_operation in post_ops:
@@ -125,7 +93,7 @@ def prep_grading_dir(assignment_config_path, submission_dir, grading_dir = None,
     """
 
     if (grading_dir is None):
-        grading_dir = autograder.utils.get_temp_path(prefix = 'autograder-submission-',
+        grading_dir = autograder.util.dirent.get_temp_path(prefix = 'autograder-submission-',
                 rm = (not debug))
 
     os.makedirs(grading_dir, exist_ok = True)
@@ -181,7 +149,7 @@ def run_test_submission(assignment_config_path, submission_config_path, debug = 
     grading_dir = prep_grading_dir(assignment_config_path,
         os.path.dirname(submission_config_path), debug = debug)
 
-    actual_result = run_submission(grading_dir)
+    actual_result = run_submission(grading_dir, assignment_config_path = assignment_config_path)
     if (actual_result is None):
         return False
 
@@ -207,13 +175,19 @@ def compare_test_submission(test_config_path, actual_result, print_result = True
 
     return match
 
-def run_submission(grading_dir, grader_path = None):
+def run_submission(grading_dir, assignment_config_path = None, grader_path = None):
+    if (grader_path is None):
+        grader_path = os.path.join(grading_dir, WORK_DIRNAME, GRADER_FILENAME)
+
+    if (os.path.exists(grader_path)):
+        return run_python_grader(grader_path, grading_dir)
+
+    return run_external_grader(assignment_config_path, grading_dir)
+
+def run_python_grader(grader_path, grading_dir):
     input_dir = os.path.join(grading_dir, INPUT_DIRNAME)
     output_dir = os.path.join(grading_dir, OUTPUT_DIRNAME)
     work_dir = os.path.join(grading_dir, WORK_DIRNAME)
-
-    if (grader_path is None):
-        grader_path = os.path.join(grading_dir, WORK_DIRNAME, GRADER_FILENAME)
 
     assignment_class = autograder.assignment.fetch_assignment(grader_path)
     if (assignment_class is None):
@@ -229,6 +203,35 @@ def run_submission(grading_dir, grader_path = None):
             assignment_class.__name__, input_dir, ex))
         traceback.print_exc()
         return None
+
+def run_external_grader(assignment_config_path, grading_dir):
+    work_dir = os.path.join(grading_dir, WORK_DIRNAME)
+    output_dir = os.path.join(grading_dir, OUTPUT_DIRNAME)
+
+    try:
+        with open(assignment_config_path, 'r') as file:
+            assignment_config = json.load(file)
+    except Exception as ex:
+        raise ValueError("Failed to load assignment config: " + assignment_config_path) from ex
+
+    invocation = assignment_config.get('invocation', [])
+    if (len(invocation) == 0):
+        raise ValueError(("External (any grader not using the standard Python setup)"
+            + " graders must have a non-empty 'invocation' key in their assignment config."))
+
+    subprocess.run(invocation, cwd = work_dir, check = True)
+
+    out_path = os.path.join(output_dir, GRADING_RESULT_FILENAME)
+    if (not os.path.isfile(out_path)):
+        raise ValueError("Could not find result after external grader ran: '%s'." % (out_path))
+
+    try:
+        with open(out_path, 'r') as file:
+            result = json.load(file)
+    except Exception as ex:
+        raise ValueError("Failed to grading result: " + out_path) from ex
+
+    return autograder.assignment.GradedAssignment.from_dict(result)
 
 class SubmissionSummary(object):
     """
@@ -248,9 +251,9 @@ class SubmissionSummary(object):
 
         self.message = message
 
-        self.grading_start_time = None
+        self.grading_start_time = autograder.util.timestamp.MISSING_TIMESTAMP
         if (grading_start_time is not None):
-            self.grading_start_time = autograder.utils.get_timestamp(grading_start_time)
+            self.grading_start_time = autograder.util.timestamp.get(grading_start_time)
 
     def to_dict(self):
         """
@@ -262,7 +265,7 @@ class SubmissionSummary(object):
             'max_points': self.max_points,
             'score': self.score,
             'message': self.message,
-            'grading_start_time': autograder.utils.timestamp_to_string(self.grading_start_time),
+            'grading_start_time': self.grading_start_time,
         }
 
     @staticmethod
@@ -277,7 +280,7 @@ class SubmissionSummary(object):
         return self.id.split('::')[-1]
 
     def pretty_time(self):
-        return autograder.utils.timestamp_to_string(self.grading_start_time, pretty = True)
+        return autograder.util.timestamp.get(self.grading_start_time, pretty = True)
 
     def __repr__(self):
         """

@@ -75,10 +75,19 @@ def get_api_test_info(path):
     for key, value in data.get('arguments', {}).items():
         arguments[key] = value
 
-    return import_module_name, arguments, expected
+    output_modifier = clean_output_noop
+    if ('output-modifier' in data):
+        modifier_name = data['output-modifier']
+
+        if (modifier_name not in globals()):
+            raise ValueError("Could not find API output modifier function: '%s'." % (modifier_name))
+
+        output_modifier = globals()[modifier_name]
+
+    return import_module_name, arguments, expected, output_modifier
 
 def _get_api_test_method(path):
-    import_module_name, arguments, expected = get_api_test_info(path)
+    import_module_name, arguments, expected, output_modifier = get_api_test_info(path)
 
     def __method(self):
         api_module = importlib.import_module(import_module_name)
@@ -86,8 +95,37 @@ def _get_api_test_method(path):
         self._next_response_queue.put(expected)
         actual = api_module.send(arguments)
 
+        actual = output_modifier(actual)
+
         self.assertDictEqual(actual, expected)
 
     return __method
+
+def clean_output_noop(output):
+    return output
+
+def clean_output_logs(output):
+    record_set_values = {
+        'unix-time': 0,
+    }
+
+    attribute_set_values = {
+        'path': '/some/path/course.json'
+    }
+
+    if (output.get('results') is None):
+        return output
+
+    for record in output['results']:
+        for (key, value) in record_set_values.items():
+            record[key] = value
+
+        if ('attributes' not in record):
+            continue
+
+        for (key, value) in attribute_set_values.items():
+            record['attributes'][key] = value
+
+    return output
 
 _discover_api_tests()

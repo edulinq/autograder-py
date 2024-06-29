@@ -1,0 +1,16 @@
+{
+    "endpoint": "admin/fetch/logs",
+    "arguments": {
+        "course": "course-without-source",
+        "level": "INFO",
+        "assignment-id": "ZZZ"
+    },
+    "output-modifier": "clean_output_logs",
+    "output": {
+        "success": false,
+        "error-messages": [
+            "Unknown assignment given for 'assignment' component of log query ('ZZZ')."
+        ],
+        "results": null
+    }
+}

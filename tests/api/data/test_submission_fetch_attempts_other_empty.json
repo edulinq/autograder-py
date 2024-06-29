@@ -1,0 +1,10 @@
+{
+    "endpoint": "submission/fetch/attempts",
+    "arguments": {
+        "target-email": "grader@test.com"
+    },
+    "output": {
+        "found-user": true,
+        "grading-results": []
+    }
+}

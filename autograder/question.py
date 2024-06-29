@@ -8,7 +8,8 @@ import json
 import numbers
 import traceback
 
-import autograder.utils
+import autograder.util.invoke
+import autograder.util.timestamp
 
 DEFAULT_TIMEOUT_SEC = 60
 
@@ -59,7 +60,7 @@ class Question(object):
 
     def _internal_grade(self, helper, show_exceptions):
         try:
-            success, value = autograder.utils.invoke_with_timeout(self._timeout, helper)
+            success, value = autograder.util.invoke.with_timeout(self._timeout, helper)
         except Exception:
             if (show_exceptions):
                 traceback.print_exc()
@@ -90,7 +91,7 @@ class Question(object):
 
         self.result = GradedQuestion(name = self.name, max_points = self.max_points)
 
-        self.result.grading_start_time = autograder.utils.get_timestamp()
+        self.result.grading_start_time = autograder.util.timestamp.get()
 
         try:
             self.score_question(submission, **additional_data)
@@ -98,7 +99,7 @@ class Question(object):
             # The question has been failed, no additional output is required.
             pass
 
-        self.result.grading_end_time = autograder.utils.get_timestamp()
+        self.result.grading_end_time = autograder.util.timestamp.get()
 
         return self.result
 
@@ -183,13 +184,13 @@ class GradedQuestion(object):
         self.score = score
         self.message = message
 
-        self.grading_start_time = None
+        self.grading_start_time = autograder.util.timestamp.MISSING_TIMESTAMP
         if (grading_start_time is not None):
-            self.grading_start_time = autograder.utils.get_timestamp(grading_start_time)
+            self.grading_start_time = autograder.util.timestamp.get(grading_start_time)
 
-        self.grading_end_time = None
+        self.grading_end_time = autograder.util.timestamp.MISSING_TIMESTAMP
         if (grading_end_time is not None):
-            self.grading_end_time = autograder.utils.get_timestamp(grading_end_time)
+            self.grading_end_time = autograder.util.timestamp.get(grading_end_time)
 
     def to_dict(self):
         """
@@ -201,8 +202,8 @@ class GradedQuestion(object):
             'max_points': self.max_points,
             'score': self.score,
             'message': self.message,
-            'grading_start_time': autograder.utils.timestamp_to_string(self.grading_start_time),
-            'grading_end_time': autograder.utils.timestamp_to_string(self.grading_end_time),
+            'grading_start_time': self.grading_start_time,
+            'grading_end_time': self.grading_end_time,
         }
 
     @staticmethod
