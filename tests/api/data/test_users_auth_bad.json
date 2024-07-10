@@ -1,0 +1,10 @@
+{
+    "endpoint": "users/auth",
+    "arguments": {
+        "user-email": "student@test.com",
+        "user-pass": "foo"
+    },
+    "output": {
+        "success": false
+    }
+}
