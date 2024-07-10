@@ -2,6 +2,7 @@
     "endpoint": "users/tokens/create",
     "module": "autograder.api.users.tokens.create",
     "arguments": {},
+    "output-modifier": "clean_token",
     "output": {
         "token-id": "<TOKEN_ID>",
         "token-cleartext": "<TOKEN_CLEARTEXT>"

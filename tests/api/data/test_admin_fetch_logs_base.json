@@ -23,6 +23,16 @@
                 "level": 0,
                 "message": "Loaded course.",
                 "unix-time": 0,
+                "course": "course-without-source",
+                "attributes": {
+                    "num-assignments": 0,
+                    "path": "/some/path/course.json"
+                }
+            },
+            {
+                "level": 0,
+                "message": "Loaded course.",
+                "unix-time": 0,
                 "course": "course-without-source"
             }
         ]
