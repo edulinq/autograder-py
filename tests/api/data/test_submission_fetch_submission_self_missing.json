@@ -1,5 +1,5 @@
 {
-    "endpoint": "submission/fetch/submission",
+    "endpoint": "submissions/fetch/submission",
     "arguments": {},
     "output": {
         "found-user": true,

@@ -1,10 +1,11 @@
 import sys
 
-import autograder.api.submission.submit
+import autograder.api.submissions.submit
 import autograder.assignment
 
 def run(arguments):
-    result = autograder.api.submission.submit.send(arguments, arguments.files, exit_on_error = True)
+    result = autograder.api.submissions.submit.send(arguments, arguments.files,
+            exit_on_error = True)
 
     message = result['message']
     if (message != ''):
@@ -28,7 +29,7 @@ def main():
     return run(_get_parser().parse_args())
 
 def _get_parser():
-    parser = autograder.api.submission.submit._get_parser()
+    parser = autograder.api.submissions.submit._get_parser()
 
     parser.add_argument('files', metavar = 'FILE',
         action = 'store', type = str, nargs = '+',

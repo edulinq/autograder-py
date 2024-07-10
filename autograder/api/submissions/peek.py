@@ -1,7 +1,7 @@
 import autograder.api.common
 import autograder.api.config
 
-API_ENDPOINT = 'submission/remove'
+API_ENDPOINT = 'submissions/peek'
 API_PARAMS = [
     autograder.api.config.PARAM_COURSE_ID,
     autograder.api.config.PARAM_USER_EMAIL,
@@ -12,7 +12,8 @@ API_PARAMS = [
     autograder.api.config.PARAM_TARGET_SUBMISSION_OR_RECENT,
 ]
 
-DESCRIPTION = 'Remove a specified submission. Defaults to the most recent submission.'
+DESCRIPTION = ('Get a copy of the grading report for the specified submission.'
+    + ' Does not submit a new submission.')
 
 def send(arguments, **kwargs):
     return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT, **kwargs)

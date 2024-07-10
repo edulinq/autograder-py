@@ -1,23 +1,20 @@
 import autograder.api.common
 import autograder.api.config
 
-API_ENDPOINT = 'submission/submit'
+API_ENDPOINT = 'submissions/fetch/submissions'
 API_PARAMS = [
     autograder.api.config.PARAM_COURSE_ID,
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
     autograder.api.config.PARAM_ASSIGNMENT_ID,
 
-    autograder.api.config.APIParam('message',
-        'An optional message to attatch to the submission.',
-        required = False)
+    autograder.api.config.PARAM_FILTER_ROLE,
 ]
 
-DESCRIPTION = 'Submit an assignment submission to the autograder.'
+DESCRIPTION = 'Get all recent submissions and grading information for this assignment.'
 
-def send(arguments, files, **kwargs):
-    return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT,
-        files = files, **kwargs)
+def send(arguments, **kwargs):
+    return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT, **kwargs)
 
 def _get_parser():
     parser = autograder.api.config.get_argument_parser(

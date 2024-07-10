@@ -1,5 +1,5 @@
 {
-    "endpoint": "submission/peek",
+    "endpoint": "submissions/peek",
     "arguments": {
         "target-email": "student@test.com",
         "target-submission": "1697406265"

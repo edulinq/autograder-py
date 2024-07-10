@@ -1,10 +1,10 @@
 import sys
 
-import autograder.api.submission.fetchsubmission
-import autograder.cli.submission.common
+import autograder.api.submissions.fetchsubmission
+import autograder.cli.submissions.common
 
 def run(arguments):
-    result = autograder.api.submission.fetchsubmission.send(arguments, exit_on_error = True)
+    result = autograder.api.submissions.fetchsubmission.send(arguments, exit_on_error = True)
 
     if (not result['found-user']):
         print("No matching user found.")
@@ -14,7 +14,7 @@ def run(arguments):
         print("No matching submission found.")
         return 2
 
-    autograder.cli.submission.common.output_grading_result(
+    autograder.cli.submissions.common.output_grading_result(
         result['grading-result'], arguments.out_dir)
 
     return 0
@@ -23,7 +23,7 @@ def main():
     return run(_get_parser().parse_args())
 
 def _get_parser():
-    parser = autograder.api.submission.fetchsubmission._get_parser()
+    parser = autograder.api.submissions.fetchsubmission._get_parser()
 
     parser.add_argument('-o', '--out-dir', dest = 'out_dir',
         action = 'store', type = str, default = '.',

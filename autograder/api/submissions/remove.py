@@ -1,17 +1,18 @@
 import autograder.api.common
 import autograder.api.config
 
-API_ENDPOINT = 'submission/fetch/submissions'
+API_ENDPOINT = 'submissions/remove'
 API_PARAMS = [
     autograder.api.config.PARAM_COURSE_ID,
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
     autograder.api.config.PARAM_ASSIGNMENT_ID,
 
-    autograder.api.config.PARAM_FILTER_ROLE,
+    autograder.api.config.PARAM_TARGET_EMAIL_OR_SELF,
+    autograder.api.config.PARAM_TARGET_SUBMISSION_OR_RECENT,
 ]
 
-DESCRIPTION = 'Get all recent submissions and grading information for this assignment.'
+DESCRIPTION = 'Remove a specified submission. Defaults to the most recent submission.'
 
 def send(arguments, **kwargs):
     return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT, **kwargs)

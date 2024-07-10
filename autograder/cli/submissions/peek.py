@@ -1,10 +1,10 @@
 import sys
 
-import autograder.api.submission.peek
+import autograder.api.submissions.peek
 import autograder.assignment
 
 def run(arguments):
-    result = autograder.api.submission.peek.send(arguments, exit_on_error = True)
+    result = autograder.api.submissions.peek.send(arguments, exit_on_error = True)
 
     if (not result['found-user']):
         print("No matching user found.")
@@ -22,7 +22,7 @@ def main():
     return run(_get_parser().parse_args())
 
 def _get_parser():
-    parser = autograder.api.submission.peek._get_parser()
+    parser = autograder.api.submissions.peek._get_parser()
     return parser
 
 if (__name__ == '__main__'):

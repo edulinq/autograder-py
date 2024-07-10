@@ -1,19 +1,17 @@
 import autograder.api.common
 import autograder.api.config
 
-API_ENDPOINT = 'submission/peek'
+API_ENDPOINT = 'submissions/fetch/scores'
 API_PARAMS = [
     autograder.api.config.PARAM_COURSE_ID,
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
     autograder.api.config.PARAM_ASSIGNMENT_ID,
 
-    autograder.api.config.PARAM_TARGET_EMAIL_OR_SELF,
-    autograder.api.config.PARAM_TARGET_SUBMISSION_OR_RECENT,
+    autograder.api.config.PARAM_FILTER_ROLE,
 ]
 
-DESCRIPTION = ('Get a copy of the grading report for the specified submission.'
-    + ' Does not submit a new submission.')
+DESCRIPTION = 'Get a summary of the most recent scores for this assignment.'
 
 def send(arguments, **kwargs):
     return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT, **kwargs)

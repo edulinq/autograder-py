@@ -1,10 +1,10 @@
 import sys
 
-import autograder.api.submission.history
+import autograder.api.submissions.history
 import autograder.submission
 
 def run(arguments):
-    result = autograder.api.submission.history.send(arguments, exit_on_error = True)
+    result = autograder.api.submissions.history.send(arguments, exit_on_error = True)
 
     if (not result['found-user']):
         print("No matching user found.")
@@ -39,7 +39,7 @@ def main():
     return run(_get_parser().parse_args())
 
 def _get_parser():
-    parser = autograder.api.submission.history._get_parser()
+    parser = autograder.api.submissions.history._get_parser()
 
     parser.add_argument('--table', dest = 'table',
         action = 'store_true', default = False,

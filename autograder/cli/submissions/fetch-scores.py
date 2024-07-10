@@ -1,13 +1,13 @@
 import sys
 
-import autograder.api.submission.fetchscores
+import autograder.api.submissions.fetchscores
 
 HEADER = [
     'email', 'has_submission', 'short-id', 'score', 'grading_start_time', 'message',
 ]
 
 def run(arguments):
-    result = autograder.api.submission.fetchscores.send(arguments, exit_on_error = True)
+    result = autograder.api.submissions.fetchscores.send(arguments, exit_on_error = True)
 
     print("\t".join(HEADER))
 
@@ -27,7 +27,7 @@ def main():
     return run(_get_parser().parse_args())
 
 def _get_parser():
-    parser = autograder.api.submission.fetchscores._get_parser()
+    parser = autograder.api.submissions.fetchscores._get_parser()
     return parser
 
 if (__name__ == '__main__'):
