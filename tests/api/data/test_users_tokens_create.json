@@ -1,0 +1,9 @@
+{
+    "endpoint": "users/tokens/create",
+    "module": "autograder.api.users.tokens.create",
+    "arguments": {},
+    "output": {
+        "token-id": "<TOKEN_ID>",
+        "token-cleartext": "<TOKEN_CLEARTEXT>"
+    }
+}
