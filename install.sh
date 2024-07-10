@@ -18,7 +18,7 @@ function main() {
 
     rm -rf dist
     python3 setup.py sdist
-    pip3 install dist/autograder-* --upgrade --force-reinstall
+    pip3 install dist/autograder* --upgrade --force-reinstall
 }
 
 [[ "${BASH_SOURCE[0]}" == "${0}" ]] && main "$@"
