@@ -79,6 +79,8 @@ def get_api_test_info(path):
     for key, value in data.get('arguments', {}).items():
         arguments[key] = value
 
+    is_error = data.get('error', False)
+
     output_modifier = clean_output_noop
     if ('output-modifier' in data):
         modifier_name = data['output-modifier']
@@ -88,10 +90,10 @@ def get_api_test_info(path):
 
         output_modifier = globals()[modifier_name]
 
-    return import_module_name, arguments, data['output'], output_modifier
+    return import_module_name, arguments, data['output'], is_error, output_modifier
 
 def _get_api_test_method(path):
-    import_module_name, arguments, expected, output_modifier = get_api_test_info(path)
+    import_module_name, arguments, expected, is_error, output_modifier = get_api_test_info(path)
 
     def __method(self):
         api_module = importlib.import_module(import_module_name)

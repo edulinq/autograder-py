@@ -27,7 +27,7 @@ import tests.api.test_api
 def verify_test_case(cli_arguments, path):
     print("Verifying test case: '%s'." % (path))
 
-    import_module_name, arguments, expected, output_modifier = tests.api.test_api.get_api_test_info(path)
+    import_module_name, arguments, expected, is_error, output_modifier = tests.api.test_api.get_api_test_info(path)
 
     for key, value in vars(cli_arguments).items():
         if ((value is not None) or (value)):
@@ -35,7 +35,32 @@ def verify_test_case(cli_arguments, path):
 
     api_module = importlib.import_module(import_module_name)
 
-    actual = api_module.send(arguments)
+    try:
+        actual = api_module.send(arguments)
+
+        if (is_error):
+            expected_json = json.dumps(expected, indent = 4)
+            actual_json = json.dumps(actual, indent = 4)
+
+            print("ERROR: Test case does not raise error was raised when one was expected: '%s'." % (path))
+            print(tests.api.test_api.FORMAT_STR % (expected_json, actual_json))
+
+            return 1
+    except Exception as ex:
+        if (not is_error):
+            raise ex
+
+        expected = expected.get('expected', '')
+        if (expected != str(ex)):
+            expected_json = json.dumps(expected, indent = 4)
+            actual_json = json.dumps(actual, indent = 4)
+
+            print("ERROR: Test case does not raise error was raised when one was expected: '%s'." % (path))
+            print(tests.api.test_api.FORMAT_STR % (expected_json, actual_json))
+
+            return 1
+
+        return 0
 
     actual = output_modifier(actual)
 

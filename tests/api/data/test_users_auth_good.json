@@ -1,8 +1,6 @@
 {
     "endpoint": "users/auth",
     "arguments": {
-        "user-email": "student@test.com",
-        "user-pass": "student"
     },
     "output": {
         "success": true
