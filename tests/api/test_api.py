@@ -13,6 +13,9 @@ DATA_DIR = os.path.join(THIS_DIR, "data")
 SERVER_URL = "http://127.0.0.1:%s" % (tests.api.server.PORT)
 FORMAT_STR = "\n--- Expected ---\n%s\n--- Actual ---\n%s\n---\n"
 
+REWRITE_TOKEN_ID = '<TOKEN_ID>'
+REWRITE_TOKEN_CLEARTEXT = '<TOKEN_CLEARTEXT>'
+
 BASE_ARGUMENTS = {
     'user': 'admin@test.com',
     'pass': 'admin',
@@ -64,12 +67,13 @@ def get_api_test_info(path):
     with open(path, 'r') as file:
         data = json.load(file)
 
-    parts = data['endpoint'].split('/')
-    prefix = parts[0]
-    suffix = ''.join(parts[1:])
+    import_module_name = data.get('module', None)
+    if (import_module_name is None):
+        parts = data['endpoint'].split('/')
+        prefix = parts[0]
+        suffix = ''.join(parts[1:])
 
-    import_module_name = '.'.join(['autograder', 'api', prefix, suffix])
-    expected = data['output']
+        import_module_name = '.'.join(['autograder', 'api', prefix, suffix])
 
     arguments = BASE_ARGUMENTS.copy()
     for key, value in data.get('arguments', {}).items():
@@ -84,7 +88,7 @@ def get_api_test_info(path):
 
         output_modifier = globals()[modifier_name]
 
-    return import_module_name, arguments, expected, output_modifier
+    return import_module_name, arguments, data['output'], output_modifier
 
 def _get_api_test_method(path):
     import_module_name, arguments, expected, output_modifier = get_api_test_info(path)
@@ -102,6 +106,12 @@ def _get_api_test_method(path):
     return __method
 
 def clean_output_noop(output):
+    return output
+
+def clean_token(output):
+    output['token-id'] = REWRITE_TOKEN_ID
+    output['token-cleartext'] = REWRITE_TOKEN_CLEARTEXT
+
     return output
 
 def clean_output_logs(output):

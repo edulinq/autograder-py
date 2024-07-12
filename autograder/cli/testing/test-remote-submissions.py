@@ -2,7 +2,7 @@ import os
 import sys
 import traceback
 
-import autograder.api.submission.submit
+import autograder.api.submissions.submit
 import autograder.submission
 
 def run(arguments):
@@ -18,7 +18,7 @@ def run(arguments):
         paths = _get_files(test_submission)
 
         try:
-            result = autograder.api.submission.submit.send(arguments, paths)
+            result = autograder.api.submissions.submit.send(arguments, paths)
         except Exception as ex:
             print("Failed to run submission '%s': '%s'." % (test_submission, ex))
             traceback.print_exc()
@@ -57,7 +57,7 @@ def _get_files(test_submission):
     return paths
 
 def _get_parser():
-    parser = autograder.api.submission.submit._get_parser()
+    parser = autograder.api.submissions.submit._get_parser()
 
     parser.description = ('Submit multiple assignments to an autograder'
         + ' and ensure the output is as expected.')

@@ -1,5 +1,5 @@
 {
-    "endpoint": "submission/fetch/attempts",
+    "endpoint": "submissions/fetch/attempts",
     "arguments": {
         "target-email": "student@test.com"
     },

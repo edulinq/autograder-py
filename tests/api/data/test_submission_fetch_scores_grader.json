@@ -1,5 +1,5 @@
 {
-    "endpoint": "submission/fetch/scores",
+    "endpoint": "submissions/fetch/scores",
     "arguments": {
         "filter-role": "grader"
     },

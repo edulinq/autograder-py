@@ -183,7 +183,7 @@ will give a more in-depth description of the command and available options.
  - `autograder.submission.fetch-scores` -- Get all the most recent scores for an assignment.
  - `autograder.submission.fetch-submission` -- Get a student's submission (code) and grading output.
  - `autograder.submission.fetch-submissions` -- Get all the most recent submissions (code and grading output) for an assignment.
- - `autograder.user.*` -- Several different tools for managing users (adding, removing, changing passwords, etc).
+ - `autograder.users.*` -- Several different tools for managing users (adding, removing, changing passwords, etc).
 
 ### Commands for Course Builders
 

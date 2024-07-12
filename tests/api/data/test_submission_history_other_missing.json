@@ -1,5 +1,5 @@
 {
-    "endpoint": "submission/history",
+    "endpoint": "submissions/history",
     "arguments": {
         "target-email": "ZZZ"
     },

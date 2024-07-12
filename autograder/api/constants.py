@@ -1,4 +1,4 @@
-API_VERSION = 'v02'
+API_VERSION = 'v03'
 
 API_REQUEST_JSON_KEY = 'content'
 
