@@ -12,6 +12,7 @@ DATA_DIR = os.path.join(THIS_DIR, "data")
 
 SERVER_URL = "http://127.0.0.1:%s" % (tests.api.server.PORT)
 FORMAT_STR = "\n--- Expected ---\n%s\n--- Actual ---\n%s\n---\n"
+PYTHON_ERROR_PREFIX = "Failed to complete operation: "
 
 REWRITE_TOKEN_ID = '<TOKEN_ID>'
 REWRITE_TOKEN_CLEARTEXT = '<TOKEN_CLEARTEXT>'
@@ -79,7 +80,8 @@ def get_api_test_info(path):
     for key, value in data.get('arguments', {}).items():
         arguments[key] = value
 
-    is_error = data.get('error', False)
+    output = data['output']
+    is_error = output.get('error', False)
 
     output_modifier = clean_output_noop
     if ('output-modifier' in data):
@@ -99,13 +101,30 @@ def _get_api_test_method(path):
         api_module = importlib.import_module(import_module_name)
 
         self._next_response_queue.put(expected)
-        actual = api_module.send(arguments)
+        try:
+            actual = api_module.send(arguments)
+        except Exception as ex:
+            if (not is_error):
+                raise ex
+
+            message = _unpack_expected_error_message(expected)
+            assert (message == str(ex))
+            return
+
+        if (is_error):
+            message = _unpack_expected_error_message(expected)
+            raise ValueError("No error was raised when one was expected ('%s')." % (str(message)))
 
         actual = output_modifier(actual)
 
         self.assertDictEqual(actual, expected)
 
     return __method
+
+def _unpack_expected_error_message(output):
+    message = output.get('message', "")
+    message = PYTHON_ERROR_PREFIX + message
+    return message
 
 def clean_output_noop(output):
     return output
