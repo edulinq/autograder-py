@@ -4,7 +4,8 @@
         "user": "ZZZ"
     },
     "output": {
-        "expected": "Failed to complete operation: Authentication failure, check email and password."
-    },
-    "error": true
+        "code": 401,
+        "error": true,
+        "message": "Authentication failure, check email and password."
+    }
 }
