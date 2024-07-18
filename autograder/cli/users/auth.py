@@ -3,7 +3,14 @@ import sys
 import autograder.api.users.auth
 
 def run(arguments):
-    result = autograder.api.users.auth.send(arguments, exit_on_error = True)
+    try:
+        result = autograder.api.users.auth.send(arguments, exit_on_error = False)
+    except Exception as ex:
+        if ex.code != 401:
+            raise ex
+
+        print("Authentication failed.")
+        return 0
 
     print("Authentication successful.")
     return 0

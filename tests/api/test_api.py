@@ -80,7 +80,6 @@ def get_api_test_info(path):
         arguments[key] = value
 
     is_error = data.get('error', False)
-    python_message = data.get('python-message', "")
 
     output_modifier = clean_output_noop
     if ('output-modifier' in data):
@@ -91,21 +90,32 @@ def get_api_test_info(path):
 
         output_modifier = globals()[modifier_name]
 
-    return import_module_name, arguments, data['output'], is_error, python_message, output_modifier
+    return import_module_name, arguments, data['output'], is_error, output_modifier
 
 def _get_api_test_method(path):
-    import_module_name, arguments, expected, is_error, python_message, output_modifier = get_api_test_info(path)
+    import_module_name, arguments, expected, is_error, output_modifier = get_api_test_info(path)
 
     def __method(self):
         api_module = importlib.import_module(import_module_name)
 
         self._next_response_queue.put(expected)
 
-        if (is_error):
-            self.assertRaisesRegex(Exception, python_message, api_module.send, arguments)
+        try:
+            actual = api_module.send(arguments)
+        except Exception as ex:
+            if (not is_error):
+                raise ex
+
+            python_message = expected.get('python-message', "")
+            self.assertEqual(python_message, str(ex))
+
+            code = expected.get('code', 0)
+            self.assertEqual(code, ex.code)
             return
 
-        actual = api_module.send(arguments)
+        if (is_error):
+            self.fail("Test case does not raise an error when one was expected: '%s'." % (path))
+            return
 
         actual = output_modifier(actual)
 

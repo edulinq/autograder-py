@@ -27,7 +27,7 @@ import tests.api.test_api
 def verify_test_case(cli_arguments, path):
     print("Verifying test case: '%s'." % (path))
 
-    import_module_name, arguments, expected, is_error, python_message, output_modifier = tests.api.test_api.get_api_test_info(path)
+    import_module_name, arguments, expected, is_error, output_modifier = tests.api.test_api.get_api_test_info(path)
 
     for key, value in vars(cli_arguments).items():
         if ((value is not None) or (value)):
@@ -45,9 +45,16 @@ def verify_test_case(cli_arguments, path):
         if (not is_error):
             raise ex
 
+        python_message = expected.get("python-message", "")
         if (python_message != str(ex)):
             print("ERROR: Test case does not raise the expected error: '%s'." % (path))
             print(tests.api.test_api.FORMAT_STR % (python_message, str(ex)))
+            return 1
+
+        code = expected.get("code", 0)
+        if (code != ex.code):
+            print("ERROR: Test case has an unexpected error code: '%s'." % (path))
+            print(tests.api.test_api.FORMAT_STR % (code, ex.code))
             return 1
 
         return 0
