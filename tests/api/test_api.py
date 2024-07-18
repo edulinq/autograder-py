@@ -12,7 +12,6 @@ DATA_DIR = os.path.join(THIS_DIR, "data")
 
 SERVER_URL = "http://127.0.0.1:%s" % (tests.api.server.PORT)
 FORMAT_STR = "\n--- Expected ---\n%s\n--- Actual ---\n%s\n---\n"
-PYTHON_ERROR_PREFIX = "Failed to complete operation: "
 
 REWRITE_TOKEN_ID = '<TOKEN_ID>'
 REWRITE_TOKEN_CLEARTEXT = '<TOKEN_CLEARTEXT>'
@@ -80,8 +79,8 @@ def get_api_test_info(path):
     for key, value in data.get('arguments', {}).items():
         arguments[key] = value
 
-    output = data['output']
-    is_error = output.get('error', False)
+    is_error = data.get('error', False)
+    python_message = data.get('python-message', "")
 
     output_modifier = clean_output_noop
     if ('output-modifier' in data):
@@ -92,39 +91,27 @@ def get_api_test_info(path):
 
         output_modifier = globals()[modifier_name]
 
-    return import_module_name, arguments, data['output'], is_error, output_modifier
+    return import_module_name, arguments, data['output'], is_error, python_message, output_modifier
 
 def _get_api_test_method(path):
-    import_module_name, arguments, expected, is_error, output_modifier = get_api_test_info(path)
+    import_module_name, arguments, expected, is_error, python_message, output_modifier = get_api_test_info(path)
 
     def __method(self):
         api_module = importlib.import_module(import_module_name)
 
         self._next_response_queue.put(expected)
-        try:
-            actual = api_module.send(arguments)
-        except Exception as ex:
-            if (not is_error):
-                raise ex
-
-            message = _unpack_expected_error_message(expected)
-            assert (message == str(ex))
-            return
 
         if (is_error):
-            message = _unpack_expected_error_message(expected)
-            raise ValueError("No error was raised when one was expected ('%s')." % (str(message)))
+            self.assertRaisesRegex(Exception, python_message, api_module.send, arguments)
+            return
+
+        actual = api_module.send(arguments)
 
         actual = output_modifier(actual)
 
         self.assertDictEqual(actual, expected)
 
     return __method
-
-def _unpack_expected_error_message(output):
-    message = output.get('message', "")
-    message = PYTHON_ERROR_PREFIX + message
-    return message
 
 def clean_output_noop(output):
     return output

@@ -5,7 +5,8 @@
     },
     "output": {
         "code": 401,
-        "error": true,
         "message": "Authentication failure, check email and password."
-    }
+    },
+    "error": true,
+    "python-message": "Failed to complete operation: Authentication failure, check email and password."
 }

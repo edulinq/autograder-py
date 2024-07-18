@@ -27,7 +27,7 @@ import tests.api.test_api
 def verify_test_case(cli_arguments, path):
     print("Verifying test case: '%s'." % (path))
 
-    import_module_name, arguments, expected, is_error, output_modifier = tests.api.test_api.get_api_test_info(path)
+    import_module_name, arguments, expected, is_error, python_message, output_modifier = tests.api.test_api.get_api_test_info(path)
 
     for key, value in vars(cli_arguments).items():
         if ((value is not None) or (value)):
@@ -39,18 +39,15 @@ def verify_test_case(cli_arguments, path):
         actual = api_module.send(arguments)
 
         if (is_error):
-            _format_error(expected, actual, path, "Test case does not raise an error when one was expected")
-
+            print("ERROR: Test case does not raise an error when one was expected: '%s'." % (path))
             return 1
     except Exception as ex:
         if (not is_error):
             raise ex
 
-        expected = expected.get('message', '')
-        expected = tests.api.test_api.PYTHON_ERROR_PREFIX + expected
-        if (expected != str(ex)):
-            _format_error(expected, str(ex), path, "Test case does not raise the expected error")
-
+        if (python_message != str(ex)):
+            print("ERROR: Test case does not raise the expected error: '%s'." % (path))
+            print(tests.api.test_api.FORMAT_STR % (python_message, str(ex)))
             return 1
 
         return 0
@@ -58,18 +55,14 @@ def verify_test_case(cli_arguments, path):
     actual = output_modifier(actual)
 
     if (actual != expected):
-        _format_error(expected, actual, path, "Test case does not have expected content")
+        expected_json = json.dumps(expected, indent = 4)
+        actual_json = json.dumps(actual, indent = 4)
 
+        print("ERROR: Test case does not have expected content: '%s'." % (path))
+        print(tests.api.test_api.FORMAT_STR % (expected_json, actual_json))
         return 1
 
     return 0
-
-def _format_error(expected, actual, path, message):
-    expected_json = json.dumps(expected, indent = 4)
-    actual_json = json.dumps(actual, indent = 4)
-
-    print("ERROR: %s: '%s'." % (message, path))
-    print(tests.api.test_api.FORMAT_STR % (expected_json, actual_json))
 
 def reset_course(cli_arguments):
     arguments = tests.api.test_api.BASE_ARGUMENTS.copy()

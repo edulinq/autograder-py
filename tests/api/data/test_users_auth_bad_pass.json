@@ -4,8 +4,9 @@
         "pass": "foo"
     },
     "output": {
-        "error": true,
         "code": 401,
         "message": "Authentication failure, check email and password."
-    }
+    },
+    "error": true,
+    "python-message": "Failed to complete operation: Authentication failure, check email and password."
 }

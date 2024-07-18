@@ -5,10 +5,6 @@ import autograder.api.users.auth
 def run(arguments):
     result = autograder.api.users.auth.send(arguments, exit_on_error = True)
 
-    if (not result['success']):
-        print("Authentication failed.")
-        return 0
-
     print("Authentication successful.")
     return 0
 

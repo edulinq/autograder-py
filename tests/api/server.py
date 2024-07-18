@@ -53,15 +53,10 @@ class Handler(http.server.BaseHTTPRequestHandler):
 
         data = content[autograder.api.constants.API_REQUEST_JSON_KEY][0]
 
-        code = http.HTTPStatus.OK
         headers = {}
         content = Handler._next_response_queue.get()
-        is_error = content.get('error', False)
-        message = ""
-
-        if (is_error):
-            code = content.get('code', 200)
-            message = content.get('message', "")
+        message = content.get('message', "")
+        code = content.get('code', 200)
 
         now = autograder.util.timestamp.get()
 
