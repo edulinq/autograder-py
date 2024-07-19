@@ -1,0 +1,51 @@
+{
+    "endpoint": "report/fetchcourse",
+    "arguments": {},
+    "output": {
+        "course-report": {
+            "course-name": "Course 101",
+            "assignments": [
+                {
+                    "assignment-name": "Homework 0",
+                    "number-of-submissions": 1,
+                    "latest-submission": "2023-10-15T21:44:33Z",
+                    "questions": [
+                        {
+                            "question-name": "Q1",
+                            "min": 1,
+                            "max": 1,
+                            "median": 1,
+                            "mean": 1,
+                            "standard-deviation": -1
+                        },
+                        {
+                            "question-name": "Q2",
+                            "min": 1,
+                            "max": 1,
+                            "median": 1,
+                            "mean": 1,
+                            "standard-deviation": -1
+                        },
+                        {
+                            "question-name": "Style",
+                            "min": 0,
+                            "max": 0,
+                            "median": 0,
+                            "mean": 0,
+                            "standard-deviation": -1
+                        },
+                        {
+                            "question-name": "<Overall>",
+                            "min": 1,
+                            "max": 1,
+                            "median": 1,
+                            "mean": 1,
+                            "standard-deviation": -1
+                        }
+                    ]
+                }
+            ]
+        }
+    }
+}
+
