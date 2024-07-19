@@ -53,9 +53,10 @@ class Handler(http.server.BaseHTTPRequestHandler):
 
         data = content[autograder.api.constants.API_REQUEST_JSON_KEY][0]
 
-        code = http.HTTPStatus.OK
         headers = {}
         content = Handler._next_response_queue.get()
+        message = content.get('message', "")
+        code = content.get('code', http.HTTPStatus.OK)
 
         now = autograder.util.timestamp.get()
 
@@ -67,7 +68,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
             "end-timestamp": now,
             "status": code,
             autograder.api.constants.API_RESPONSE_KEY_SUCCESS: (code == http.HTTPStatus.OK),
-            autograder.api.constants.API_RESPONSE_KEY_MESSAGE: "",
+            autograder.api.constants.API_RESPONSE_KEY_MESSAGE: message,
             autograder.api.constants.API_RESPONSE_KEY_CONTENT: content,
         }
 
