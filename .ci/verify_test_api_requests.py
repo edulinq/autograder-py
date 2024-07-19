@@ -51,7 +51,7 @@ def verify_test_case(cli_arguments, path):
             print(tests.api.test_api.FORMAT_STR % (python_message, str(ex)))
             return 1
 
-        code = expected.get("code", 0)
+        code = expected.get("code", None)
         if (code != ex.code):
             print("ERROR: Test case has an unexpected error code: '%s'." % (path))
             print(tests.api.test_api.FORMAT_STR % (code, ex.code))

@@ -56,7 +56,7 @@ class Handler(http.server.BaseHTTPRequestHandler):
         headers = {}
         content = Handler._next_response_queue.get()
         message = content.get('message', "")
-        code = content.get('code', 200)
+        code = content.get('code', http.HTTPStatus.OK)
 
         now = autograder.util.timestamp.get()
 

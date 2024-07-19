@@ -109,8 +109,9 @@ def _get_api_test_method(path):
             python_message = expected.get('python-message', "")
             self.assertEqual(python_message, str(ex))
 
-            code = expected.get('code', 0)
+            code = expected.get('code', None)
             self.assertEqual(code, ex.code)
+
             return
 
         if (is_error):
