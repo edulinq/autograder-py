@@ -1,4 +1,5 @@
-HEADERS = ['email', 'name', 'role', 'lms-id']
+HEADERS = ['email', 'name', 'role']
+COURSE_HEADERS = ['id', 'name', 'role']
 SYNC_HEADERS = HEADERS + ['operation']
 
 SYNC_USERS_KEYS = [
@@ -14,20 +15,29 @@ def list_users(users, table = False):
     else:
         _list_users(users)
 
-def _list_users(users, indent = ''):
+def _list_users(users, indent = '', course_indent = '  '):
     for user in users:
         print(indent + "Email:", user['email'])
         print(indent + "Name:", user['name'])
         print(indent + "Role:", user['role'])
-        print(indent + "LMS ID:", user['lms-id'])
+        print(indent + "Courses:")
+        for course in user['courses']:
+            print(indent + course_indent + "ID:", user['courses'][course]['id'])
+            print(indent + course_indent + "Name:", user['courses'][course]['name'])
+            print(indent + course_indent + "Role:", user['courses'][course]['role'])
+            print()
         print()
 
-def _list_users_table(users, header = True, keys = HEADERS):
+def _list_users_table(users, header = True, keys = HEADERS, course_keys = COURSE_HEADERS):
     if (header):
-        print("\t".join(keys))
+        all_keys = keys + ["course-" + course_key for course_key in course_keys]
+        print("\t".join(all_keys))
 
     for user in users:
         row = [user[key] for key in keys]
+        for course in user['courses']:
+            row.extend([user['courses'][course][course_key] for course_key in course_keys])
+
         print("\t".join([str(value) for value in row]))
 
 def list_sync_users(sync_users, table = False):
