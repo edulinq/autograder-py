@@ -1,9 +1,11 @@
 {
     "endpoint": "server/users/list",
+    "module": "autograder.api.server.users.list",
     "arguments": {},
     "output": {
         "users": [
             {
+                "type": "ServerType",
                 "email": "admin@test.com",
                 "name": "admin",
                 "role": "admin",
@@ -36,6 +38,7 @@
                 }
             },
             {
+                "type": "ServerType",
                 "email": "grader@test.com",
                 "name": "grader",
                 "role": "creator",
@@ -68,6 +71,7 @@
                 }
             },
             {
+                "type": "ServerType",
                 "email": "no-lms-id@test.com",
                 "name": "no-lms-id",
                 "role": "user",
@@ -90,6 +94,7 @@
                 }
             },
             {
+                "type": "ServerType",
                 "email": "other@test.com",
                 "name": "other",
                 "role": "user",
@@ -122,6 +127,7 @@
                 }
             },
             {
+                "type": "ServerType",
                 "email": "owner@test.com",
                 "name": "owner",
                 "role": "owner",
@@ -154,30 +160,35 @@
                 }
             },
             {
+                "type": "ServerType",
                 "email": "server-admin@test.com",
                 "name": "server-admin",
                 "role": "admin",
                 "courses": {}
             },
             {
+                "type": "ServerType",
                 "email": "server-creator@test.com",
                 "name": "server-creator",
                 "role": "creator",
                 "courses": {}
             },
             {
+                "type": "ServerType",
                 "email": "server-owner@test.com",
                 "name": "server-owner",
                 "role": "owner",
                 "courses": {}
             },
             {
+                "type": "ServerType",
                 "email": "server-user@test.com",
                 "name": "server-user",
                 "role": "user",
                 "courses": {}
             },
             {
+                "type": "ServerType",
                 "email": "student@test.com",
                 "name": "student",
                 "role": "user",

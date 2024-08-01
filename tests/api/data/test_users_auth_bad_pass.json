@@ -1,5 +1,6 @@
 {
     "endpoint": "server/users/auth",
+    "module": "autograder.api.server.users.auth",
     "arguments": {
         "pass": "foo"
     },
