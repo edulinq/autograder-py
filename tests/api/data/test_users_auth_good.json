@@ -1,5 +1,5 @@
 {
-    "endpoint": "users/auth",
+    "endpoint": "server/users/auth",
     "arguments": {
     },
     "output": {

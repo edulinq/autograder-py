@@ -7,6 +7,7 @@
         "found-autograder-user": true,
         "found-lms-user": true,
         "user": {
+            "type": "CourseType",
             "email": "student@test.com",
             "name": "student",
             "role": "student",

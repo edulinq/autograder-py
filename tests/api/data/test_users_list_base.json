@@ -1,5 +1,5 @@
 {
-    "endpoint": "users/list",
+    "endpoint": "server/users/list",
     "arguments": {},
     "output": {
         "users": [

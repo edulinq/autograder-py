@@ -85,6 +85,6 @@ def send_api_request(endpoint, server = None, verbose = False, data = {}, files 
                 response[autograder.api.constants.API_RESPONSE_KEY_MESSAGE])
 
         code = response.get("status", None)
-        raise autograder.api.error.APIError(code, message)
+        raise autograder.api.error.APIError(message, code)
 
     return response[autograder.api.constants.API_RESPONSE_KEY_CONTENT]

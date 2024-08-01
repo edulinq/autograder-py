@@ -2,6 +2,8 @@ HEADERS = ['email', 'name', 'role']
 COURSE_HEADERS = ['id', 'name', 'role']
 SYNC_HEADERS = HEADERS + ['operation']
 
+INDENT = '    '
+
 SYNC_USERS_KEYS = [
     ('add-users', 'Added', 'add'),
     ('mod-users', 'Modified', 'mod'),
@@ -9,22 +11,23 @@ SYNC_USERS_KEYS = [
     ('skip-users', 'Skipped', 'skip'),
 ]
 
+# TODO: Add a param for user type.
 def list_users(users, table = False):
     if (table):
         _list_users_table(users)
     else:
         _list_users(users)
 
-def _list_users(users, indent = '', course_indent = '  '):
+def _list_users(users, indent = ''):
     for user in users:
         print(indent + "Email:", user['email'])
         print(indent + "Name:", user['name'])
         print(indent + "Role:", user['role'])
         print(indent + "Courses:")
         for course in user['courses']:
-            print(indent + course_indent + "ID:", user['courses'][course]['id'])
-            print(indent + course_indent + "Name:", user['courses'][course]['name'])
-            print(indent + course_indent + "Role:", user['courses'][course]['role'])
+            print(indent + INDENT + "ID:", user['courses'][course]['id'])
+            print(indent + INDENT + "Name:", user['courses'][course]['name'])
+            print(indent + INDENT + "Role:", user['courses'][course]['role'])
             print()
         print()
 
@@ -58,7 +61,7 @@ def _list_sync_users(sync_users):
             continue
 
         print("%s Users:" % (label))
-        _list_users(users, indent = '    ')
+        _list_users(users, indent = INDENT)
 
 def _list_sync_users_table(sync_users):
     print("\t".join(SYNC_HEADERS))
