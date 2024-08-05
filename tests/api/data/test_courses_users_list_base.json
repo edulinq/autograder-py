@@ -1,0 +1,8 @@
+{
+    "endpoint": "courses/users/list",
+    "module": "autograder.api.courses.users.list",
+    "arguments": {},
+    "output": {
+
+    }
+}

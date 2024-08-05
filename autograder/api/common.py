@@ -40,7 +40,7 @@ def send_api_request(endpoint, server = None, verbose = False, data = {}, files 
     """
 
     if ((server is None) or (server == '')):
-        raise autograder.api.error.APIError("No server provided.")
+        raise autograder.api.error.APIError(None, "No server provided.")
 
     server = server.rstrip('/')
     endpoint = endpoint.lstrip('/')
@@ -51,8 +51,8 @@ def send_api_request(endpoint, server = None, verbose = False, data = {}, files 
     for path in files:
         filename = os.path.basename(path)
         if (filename in post_files):
-            raise autograder.api.error.APIError("Cannot submit duplicate filenames ('%s')." % (
-                filename))
+            raise autograder.api.error.APIError(None, "Cannot submit duplicate filenames ('%s')."
+                % (filename))
 
         post_files[filename] = open(path, 'rb')
 
@@ -71,7 +71,7 @@ def send_api_request(endpoint, server = None, verbose = False, data = {}, files 
     try:
         response = raw_response.json()
     except Exception as ex:
-        raise autograder.api.error.APIError("Autograder response does not contain valid JSON."
+        raise autograder.api.error.APIError(None, "Autograder response does not contain valid JSON."
             + " Contact a server admin with the following. Response:\n---\n%s\n---" % (
                 raw_response.text)) from ex
 
@@ -85,6 +85,6 @@ def send_api_request(endpoint, server = None, verbose = False, data = {}, files 
                 response[autograder.api.constants.API_RESPONSE_KEY_MESSAGE])
 
         code = response.get("status", None)
-        raise autograder.api.error.APIError(message, code)
+        raise autograder.api.error.APIError(code, message)
 
     return response[autograder.api.constants.API_RESPONSE_KEY_CONTENT]
