@@ -36,6 +36,30 @@ class APIParam(object):
         self.parser_options = parser_options
         self.hash = hash
 
+class CoupledAction(argparse.Action):
+    def __init__(self, option_strings, dest, coupled_arg, action='store_true', **kwargs):
+        self.coupled_arg = coupled_arg
+        action_class = {
+            'store_true': argparse._StoreTrueAction,
+            'store': argparse._StoreAction,
+            'store_const': argparse._StoreConstAction,
+            'append': argparse._AppendAction,
+            'append_const': argparse._AppendConstAction,
+            'count': argparse._CountAction
+        }.get(action)
+
+        if action_class is None:
+            raise ValueError(f"Unsupported action type: {action}")
+
+        self._original_action = action_class(option_strings, dest, **kwargs)
+        super(CoupledAction, self).__init__(option_strings, dest, **kwargs)
+
+    def __call__(self, parser, namespace, values, option_string=None):
+        if not getattr(namespace, self.coupled_arg):
+            parser.error(f"{option_string} can only be used if "
+                f"--{self.coupled_arg.replace('_', '-')} is set.")
+        self._original_action(parser, namespace, values, option_string)
+
 def parse_api_config(config, params,
         additional_required_keys = ['server'],
         additional_optional_keys = ['verbose'],

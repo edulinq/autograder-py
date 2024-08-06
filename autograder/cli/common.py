@@ -1,8 +1,8 @@
 USER_HEADERS = ['email', 'name']
 COURSE_USER_HEADERS = USER_HEADERS + ['role', 'lms-id']
-SERVER_USER_HEADERS = USER_HEADERS + ['role', 'courses']
+BASE_SERVER_USER_HEADERS = USER_HEADERS + ['role']
+SERVER_USER_HEADERS = BASE_SERVER_USER_HEADERS + ['courses']
 COURSE_HEADERS = ['id', 'name', 'role']
-EXPANDED_SERVER_USER_HEADERS = USER_HEADERS + ['role'] + COURSE_HEADERS
 SYNC_HEADERS = COURSE_USER_HEADERS + ['operation']
 
 INDENT = '    '
@@ -15,12 +15,15 @@ SYNC_USERS_KEYS = [
 ]
 
 # TODO: Add a param for expanding table.
-def list_users(users, course_users, table = False):
+def list_users(users, course_users, table = False, expanded = False):
     if (table):
         if course_users:
             _list_course_users_table(users)
         else:
-            _list_server_users_table(users)
+            if expanded:
+                _list_server_users_table_expanded(users)
+            else:
+                _list_server_users_table(users)
     else:
         if course_users:
             _list_course_users(users)
@@ -65,7 +68,6 @@ def _list_server_users(users, indent = ''):
             print()
         print()
 
-# TODO: Fix extending the column to a better type.
 def _list_server_users_table(users, header = True, keys = SERVER_USER_HEADERS):
     if (header):
         print("\t".join(keys))
@@ -75,10 +77,24 @@ def _list_server_users_table(users, header = True, keys = SERVER_USER_HEADERS):
             raise ValueError("Invalid user type for listing server users: '%s'.", user['type'])
 
         row = [user[key] for key in keys]
-        # for course in user['courses']:
-        #     row.extend([user['courses'][course][course_key] for course_key in course_keys])
-
         print("\t".join([str(value) for value in row]))
+
+def _list_server_users_table_expanded(users, header = True, keys = BASE_SERVER_USER_HEADERS):
+    if (header):
+        header_keys = keys + ["course-" + course_key for course_key in COURSE_HEADERS]
+        print("\t".join(header_keys))
+
+    for user in users:
+        if user['type'] != "ServerType":
+            raise ValueError("Invalid user type for listing server users: '%s'.", user['type'])
+
+        row = [user[key] for key in keys]
+        if user.get('courses') is None or not user['courses']:
+            print("\t".join([str(value) for value in row]))
+        else:
+            for course in user['courses']:
+                course_row = row + [user['courses'][course][key] for key in COURSE_HEADERS]
+                print("\t".join([str(value) for value in course_row]))
 
 def list_sync_users(sync_users, table = False):
     if (table):
