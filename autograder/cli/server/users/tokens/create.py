@@ -1,9 +1,9 @@
 import sys
 
-import autograder.api.users.tokens.create
+import autograder.api.server.users.tokens.create
 
 def run(arguments):
-    result = autograder.api.users.tokens.create.send(arguments, exit_on_error = True)
+    result = autograder.api.server.users.tokens.create.send(arguments, exit_on_error = True)
 
     print("Token ID: " + result['token-id'])
     print("Token Text: " + result['token-cleartext'])
@@ -16,7 +16,7 @@ def main():
     return run(_get_parser().parse_args())
 
 def _get_parser():
-    parser = autograder.api.users.tokens.create._get_parser()
+    parser = autograder.api.server.users.tokens.create._get_parser()
 
     return parser
 

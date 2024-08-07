@@ -1,5 +1,5 @@
 """
-The `autograder.cli.users.tokens` package contains tools to manage user tokens.
+The `autograder.cli.server.users` package contains tools to manage autograder server users.
 """
 
 import sys

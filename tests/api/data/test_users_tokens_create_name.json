@@ -1,6 +1,6 @@
 {
-    "endpoint": "users/tokens/create",
-    "module": "autograder.api.users.tokens.create",
+    "endpoint": "server/users/tokens/create",
+    "module": "autograder.api.server.users.tokens.create",
     "arguments": {
         "name": "foo"
     },

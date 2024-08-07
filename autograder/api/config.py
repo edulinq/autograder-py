@@ -21,11 +21,11 @@ class APIParam(object):
             hash = False):
         self.key = str(key)
         if ((key is None) or (self.key == '')):
-            raise autograder.api.error.APIError("APIParam cannot have an empty key.")
+            raise autograder.api.error.APIError(None, "APIParam cannot have an empty key.")
 
         self.description = str(description)
         if ((description is None) or (self.description == '')):
-            raise autograder.api.error.APIError("APIParam cannot have an empty description.")
+            raise autograder.api.error.APIError(None, "APIParam cannot have an empty description.")
 
         self.config_key = config_key
         if (self.config_key is None):
@@ -68,7 +68,7 @@ def _parse_api_config(config, params, additional_required_keys, additional_optio
     for param in params:
         if (param.config_key not in config):
             if (param.required):
-                raise autograder.api.error.APIError(
+                raise autograder.api.error.APIError(None,
                     f"Required parameter '{param.config_key}' not set.")
 
             continue
@@ -81,7 +81,7 @@ def _parse_api_config(config, params, additional_required_keys, additional_optio
 
     for key in additional_required_keys:
         if (key not in config):
-            raise autograder.api.error.APIError(f"Required parameter '{key}' not set.")
+            raise autograder.api.error.APIError(None, f"Required parameter '{key}' not set.")
 
         extra[key] = config[key]
 
