@@ -20,13 +20,13 @@ SYNC_USERS_KEYS = [
 # An error will be raised if a user of a different type is found.
 def list_users(users, course_users, table = False, normalize = False):
     if (course_users):
-        if table:
+        if (table):
             _list_course_users_table(users)
         else:
             _list_course_users(users)
     else:
-        if table:
-            if normalize:
+        if (table):
+            if (normalize):
                 _list_server_users_table_normalize(users)
             else:
                 _list_server_users_table(users)
@@ -35,7 +35,7 @@ def list_users(users, course_users, table = False, normalize = False):
 
 def _list_course_users(users, indent = ''):
     for user in users:
-        if user['type'] != "CourseType":
+        if (user['type'] != "CourseType"):
             raise ValueError("Invalid user type for listing course users: '%s'.", user['type'])
 
         print(indent + "Email:", user['email'])
@@ -47,7 +47,7 @@ def _list_course_users(users, indent = ''):
 def _list_course_users_table(users, header = True, keys = COURSE_USER_HEADERS):
     rows = []
     for user in users:
-        if user['type'] != "CourseType":
+        if (user['type'] != "CourseType"):
             raise ValueError("Invalid user type for listing course users: '%s'.", user['type'])
 
         row = [user[key] for key in keys]
@@ -57,7 +57,7 @@ def _list_course_users_table(users, header = True, keys = COURSE_USER_HEADERS):
 
 def _list_server_users(users, indent = ''):
     for user in users:
-        if user['type'] != "ServerType":
+        if (user['type'] != "ServerType"):
             raise ValueError("Invalid user type for listing server users: '%s'.", user['type'])
 
         print(indent + "Email:", user['email'])
@@ -74,7 +74,7 @@ def _list_server_users(users, indent = ''):
 def _list_server_users_table(users, header = True, keys = SERVER_USER_HEADERS):
     rows = []
     for user in users:
-        if user['type'] != "ServerType":
+        if (user['type'] != "ServerType"):
             raise ValueError("Invalid user type for listing server users: '%s'.", user['type'])
 
         row = [user[key] for key in keys]
@@ -85,11 +85,11 @@ def _list_server_users_table(users, header = True, keys = SERVER_USER_HEADERS):
 def _list_server_users_table_normalize(users, header = True, keys = BASE_SERVER_USER_HEADERS):
     rows = []
     for user in users:
-        if user['type'] != "ServerType":
+        if (user['type'] != "ServerType"):
             raise ValueError("Invalid user type for listing server users: '%s'.", user['type'])
 
         row = [user[key] for key in keys]
-        if user.get('courses') is None or not user['courses']:
+        if ((user.get('courses') is None) or (not user['courses'])):
             row = row + ['' for key in COURSE_INFO_HEADERS]
             rows.append(row)
         else:
