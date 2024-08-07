@@ -7,7 +7,7 @@ import autograder.cli.common
 def run(arguments):
     result = autograder.api.server.users.list.send(arguments, exit_on_error = True)
     autograder.cli.common.list_users(result['users'], False, table = arguments.table,
-        expanded = arguments.expand)
+        normalize = arguments.normalize)
     return 0
 
 def main():
@@ -20,10 +20,10 @@ def _get_parser():
         action = 'store_true', default = False,
         help = 'Output the results as a TSV table with a header (default: %(default)s).')
 
-    parser.add_argument('--expand', dest = 'expand',
-        action = autograder.api.config.CoupledAction, coupled_arg = 'table', default = False,
-        help = 'Expand the TSV table for each course a user is enrolled in (default: %(default)s). \
-                    Can only be used if --%(coupled_arg)s is set.')
+    parser.add_argument('--normalize', dest = 'normalize',
+        action = 'store_true', default = False,
+        help = 'Normalize the TSV table for each course a user is enrolled in (default: \
+                %(default)s). Can only be used if --table is set.')
 
     return parser
 

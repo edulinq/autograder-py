@@ -14,14 +14,13 @@ SYNC_USERS_KEYS = [
     ('skip-users', 'Skipped', 'skip'),
 ]
 
-# TODO: Add a param for expanding table.
-def list_users(users, course_users, table = False, expanded = False):
+def list_users(users, course_users, table = False, normalize = False):
     if (table):
         if course_users:
             _list_course_users_table(users)
         else:
-            if expanded:
-                _list_server_users_table_expanded(users)
+            if normalize:
+                _list_server_users_table_normalize(users)
             else:
                 _list_server_users_table(users)
     else:
@@ -42,15 +41,15 @@ def _list_course_users(users, indent = ''):
         print()
 
 def _list_course_users_table(users, header = True, keys = COURSE_USER_HEADERS):
-    if (header):
-        print("\t".join(keys))
-
+    rows = []
     for user in users:
         if user['type'] != "CourseType":
             raise ValueError("Invalid user type for listing course users: '%s'.", user['type'])
 
         row = [user[key] for key in keys]
-        print("\t".join([str(value) for value in row]))
+        rows.append(row)
+
+    _print_tsv(rows, header, keys)
 
 def _list_server_users(users, indent = ''):
     for user in users:
@@ -69,32 +68,34 @@ def _list_server_users(users, indent = ''):
         print()
 
 def _list_server_users_table(users, header = True, keys = SERVER_USER_HEADERS):
-    if (header):
-        print("\t".join(keys))
-
+    rows = []
     for user in users:
         if user['type'] != "ServerType":
             raise ValueError("Invalid user type for listing server users: '%s'.", user['type'])
 
         row = [user[key] for key in keys]
-        print("\t".join([str(value) for value in row]))
+        rows.append(row)
 
-def _list_server_users_table_expanded(users, header = True, keys = BASE_SERVER_USER_HEADERS):
-    if (header):
-        header_keys = keys + ["course-" + course_key for course_key in COURSE_HEADERS]
-        print("\t".join(header_keys))
+    _print_tsv(rows, header, keys)
 
+def _list_server_users_table_normalize(users, header = True, keys = BASE_SERVER_USER_HEADERS):
+    header_keys = keys + ["course-" + course_key for course_key in COURSE_HEADERS]
+
+    rows = []
     for user in users:
         if user['type'] != "ServerType":
             raise ValueError("Invalid user type for listing server users: '%s'.", user['type'])
 
         row = [user[key] for key in keys]
         if user.get('courses') is None or not user['courses']:
-            print("\t".join([str(value) for value in row]))
+            row = row + ['' for key in COURSE_HEADERS]
+            rows.append(row)
         else:
             for course in user['courses']:
                 course_row = row + [user['courses'][course][key] for key in COURSE_HEADERS]
-                print("\t".join([str(value) for value in course_row]))
+                rows.append(course_row)
+
+    _print_tsv(rows, header, header_keys)
 
 def list_sync_users(sync_users, table = False):
     if (table):
@@ -135,3 +136,13 @@ def list_add_users(result, table = False):
                 error['index'], error['email'], error['message']))
 
     list_sync_users(result, table = table)
+
+def _print_tsv(rows, header, header_keys):
+    lines = []
+    if (header):
+        lines.append("\t".join(header_keys))
+
+    for row in rows:
+        lines.append("\t".join([str(value) for value in row]))
+
+    print("\n".join(lines))
