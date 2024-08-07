@@ -1,9 +1,11 @@
 USER_HEADERS = ['email', 'name']
+
 COURSE_USER_HEADERS = USER_HEADERS + ['role', 'lms-id']
+SYNC_HEADERS = COURSE_USER_HEADERS + ['operation']
+
 BASE_SERVER_USER_HEADERS = USER_HEADERS + ['role']
 SERVER_USER_HEADERS = BASE_SERVER_USER_HEADERS + ['courses']
-COURSE_HEADERS = ['id', 'name', 'role']
-SYNC_HEADERS = COURSE_USER_HEADERS + ['operation']
+COURSE_INFO_HEADERS = ['id', 'name', 'role']
 
 INDENT = '    '
 
@@ -14,18 +16,20 @@ SYNC_USERS_KEYS = [
     ('skip-users', 'Skipped', 'skip'),
 ]
 
+# Set course_users to True if listing course users, false for server users.
+# An error will be raised if a user of a different type is found.
 def list_users(users, course_users, table = False, normalize = False):
-    if (table):
-        if course_users:
+    if (course_users):
+        if table:
             _list_course_users_table(users)
         else:
+            _list_course_users(users)
+    else:
+        if table:
             if normalize:
                 _list_server_users_table_normalize(users)
             else:
                 _list_server_users_table(users)
-    else:
-        if course_users:
-            _list_course_users(users)
         else:
             _list_server_users(users)
 
@@ -79,8 +83,6 @@ def _list_server_users_table(users, header = True, keys = SERVER_USER_HEADERS):
     _print_tsv(rows, header, keys)
 
 def _list_server_users_table_normalize(users, header = True, keys = BASE_SERVER_USER_HEADERS):
-    header_keys = keys + ["course-" + course_key for course_key in COURSE_HEADERS]
-
     rows = []
     for user in users:
         if user['type'] != "ServerType":
@@ -88,13 +90,14 @@ def _list_server_users_table_normalize(users, header = True, keys = BASE_SERVER_
 
         row = [user[key] for key in keys]
         if user.get('courses') is None or not user['courses']:
-            row = row + ['' for key in COURSE_HEADERS]
+            row = row + ['' for key in COURSE_INFO_HEADERS]
             rows.append(row)
         else:
             for course in user['courses']:
-                course_row = row + [user['courses'][course][key] for key in COURSE_HEADERS]
+                course_row = row + [user['courses'][course][key] for key in COURSE_INFO_HEADERS]
                 rows.append(course_row)
 
+    header_keys = keys + ["course-" + course_key for course_key in COURSE_INFO_HEADERS]
     _print_tsv(rows, header, header_keys)
 
 def list_sync_users(sync_users, table = False):

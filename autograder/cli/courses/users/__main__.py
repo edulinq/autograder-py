@@ -1,5 +1,5 @@
 """
-The `autograder.cli.courses.users` package contains tools to manage autograder course users.
+The `autograder.cli.courses.users` package contains tools to manage course users.
 """
 
 import sys

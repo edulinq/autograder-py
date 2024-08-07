@@ -1,5 +1,5 @@
 """
-The `autograder.cli.server` package contains tools to manage the server.
+The `autograder.cli.server` package contains tools to manage the autograder server.
 """
 
 import sys

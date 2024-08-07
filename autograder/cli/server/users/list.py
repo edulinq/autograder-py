@@ -1,7 +1,7 @@
 import sys
 
-import autograder.api.server.users.list
 import autograder.api.config
+import autograder.api.server.users.list
 import autograder.cli.common
 
 def run(arguments):
