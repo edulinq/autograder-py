@@ -1,6 +1,5 @@
 {
-    "endpoint": "server/users/list",
-    "module": "autograder.api.server.users.list",
+    "endpoint": "users/list",
     "arguments": {},
     "output": {
         "users": [
@@ -12,7 +11,7 @@
                 "courses": {
                     "course-languages": {
                         "id": "course-languages",
-                        "name": "Course Using Different Languages",
+                        "name": "Course Using Different Languages.",
                         "role": "admin"
                     },
                     "course-with-lms": {
@@ -45,7 +44,7 @@
                 "courses": {
                     "course-languages": {
                         "id": "course-languages",
-                        "name": "Course Using Different Languages",
+                        "name": "Course Using Different Languages.",
                         "role": "grader"
                     },
                     "course-with-lms": {
@@ -78,7 +77,7 @@
                 "courses": {
                     "course-languages": {
                         "id": "course-languages",
-                        "name": "Course Using Different Languages",
+                        "name": "Course Using Different Languages.",
                         "role": "admin"
                     },
                     "course-with-lms": {
@@ -101,7 +100,7 @@
                 "courses": {
                     "course-languages": {
                         "id": "course-languages",
-                        "name": "Course Using Different Languages",
+                        "name": "Course Using Different Languages.",
                         "role": "other"
                     },
                     "course-with-lms": {
@@ -134,7 +133,7 @@
                 "courses": {
                     "course-languages": {
                         "id": "course-languages",
-                        "name": "Course Using Different Languages",
+                        "name": "Course Using Different Languages.",
                         "role": "owner"
                     },
                     "course-with-lms": {
@@ -195,7 +194,7 @@
                 "courses": {
                     "course-languages": {
                         "id": "course-languages",
-                        "name": "Course Using Different Languages",
+                        "name": "Course Using Different Languages.",
                         "role": "student"
                     },
                     "course-with-lms": {

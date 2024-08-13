@@ -1,13 +1,13 @@
 import autograder.api.common
 import autograder.api.config
 
-API_ENDPOINT = 'server/users/auth'
+API_ENDPOINT = 'users/list'
 API_PARAMS = [
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
 ]
 
-DESCRIPTION = 'Authenticate as a user.'
+DESCRIPTION = 'List the users on the server.'
 
 def send(arguments, **kwargs):
     return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT, **kwargs)

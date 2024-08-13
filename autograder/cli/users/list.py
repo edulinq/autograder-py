@@ -1,11 +1,11 @@
 import sys
 
 import autograder.api.config
-import autograder.api.server.users.list
+import autograder.api.users.list
 import autograder.cli.common
 
 def run(arguments):
-    result = autograder.api.server.users.list.send(arguments, exit_on_error = True)
+    result = autograder.api.users.list.send(arguments, exit_on_error = True)
     autograder.cli.common.list_users(result['users'], False, table = arguments.table,
         normalize = arguments.normalize)
     return 0
@@ -14,7 +14,7 @@ def main():
     return run(_get_parser().parse_args())
 
 def _get_parser():
-    parser = autograder.api.server.users.list._get_parser()
+    parser = autograder.api.users.list._get_parser()
 
     parser.add_argument('--table', dest = 'table',
         action = 'store_true', default = False,
