@@ -1,0 +1,44 @@
+{
+    "endpoint": "courses/users/list",
+    "module": "autograder.api.courses.users.list",
+    "arguments": {},
+    "output": {
+   		"users": [
+        	{
+            	"type": "CourseType",
+            	"email": "admin@test.com",
+            	"name": "admin",
+            	"role": "admin",
+            	"lms-id": ""
+        	},
+        	{
+            	"type": "CourseType",
+            	"email": "grader@test.com",
+            	"name": "grader",
+            	"role": "grader",
+            	"lms-id": ""
+        	},
+        	{
+            	"type": "CourseType",
+            	"email": "other@test.com",
+            	"name": "other",
+            	"role": "other",
+            	"lms-id": ""
+        	},
+        	{
+            	"type": "CourseType",
+            	"email": "owner@test.com",
+            	"name": "owner",
+            	"role": "owner",
+            	"lms-id": ""
+        	},
+        	{
+            	"type": "CourseType",
+            	"email": "student@test.com",
+            	"name": "student",
+            	"role": "student",
+            	"lms-id": ""
+        	}
+    	]
+    }
+}
