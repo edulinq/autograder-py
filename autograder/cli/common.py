@@ -16,7 +16,7 @@ SYNC_USERS_KEYS = [
     ('skip-users', 'Skipped', 'skip'),
 ]
 
-# Set course_users to True if listing course users, false for server users.
+# Set course_users to True if listing course users, False for server users.
 # An error will be raised if a user of a different type is found.
 def list_users(users, course_users, table = False, normalize = False):
     if (course_users):

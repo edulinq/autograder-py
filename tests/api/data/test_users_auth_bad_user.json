@@ -1,6 +1,5 @@
 {
-    "endpoint": "server/users/auth",
-    "module": "autograder.api.server.users.auth",
+    "endpoint": "users/auth",
     "arguments": {
         "user": "ZZZ"
     },

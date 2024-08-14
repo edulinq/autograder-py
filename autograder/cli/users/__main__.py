@@ -1,5 +1,5 @@
 """
-The `autograder.cli.server.users` package contains tools to manage autograder server users.
+The `autograder.cli.users` package contains tools to manage autograder users.
 """
 
 import sys
