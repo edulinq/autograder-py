@@ -3,6 +3,7 @@ import json
 import os
 import shutil
 import subprocess
+import sys
 import traceback
 
 import autograder.assignment
@@ -149,7 +150,19 @@ def run_test_submission(assignment_config_path, submission_config_path, debug = 
     grading_dir = prep_grading_dir(assignment_config_path,
         os.path.dirname(submission_config_path), debug = debug)
 
-    actual_result = run_submission(grading_dir, assignment_config_path = assignment_config_path)
+    try:
+        # Keep track of new top-level keys in sys.modules (imports) after the submission runs.
+        # This is to prevent any import of submission code that gets cached.
+        # This is in no way a complete solution, but also does not matter when run in Docker.
+        old_module_keys = set(sys.modules.keys())
+
+        actual_result = run_submission(grading_dir, assignment_config_path = assignment_config_path)
+    finally:
+        new_module_keys = set(sys.modules.keys())
+        for new_module_key in (new_module_keys - old_module_keys):
+            if (new_module_key in sys.modules):
+                del sys.modules[new_module_key]
+
     if (actual_result is None):
         return False
 
