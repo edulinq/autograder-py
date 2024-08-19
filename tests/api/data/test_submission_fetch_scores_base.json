@@ -9,6 +9,7 @@
             "grader@test.com": null,
             "other@test.com": null,
             "owner@test.com": null,
+            "root": null,
             "student@test.com": {
                 "id": "course101::hw0::student@test.com::1697406272",
                 "short-id": "1697406272",
