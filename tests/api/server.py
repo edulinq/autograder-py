@@ -8,7 +8,7 @@ import urllib.parse
 import autograder.api.constants
 import autograder.util.timestamp
 
-PORT = 12345
+PORT = 8080
 ENCODING = 'utf8'
 
 SLEEP_TIME_SEC = 0.2
