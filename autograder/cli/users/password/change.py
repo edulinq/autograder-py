@@ -1,16 +1,15 @@
 import sys
 
-import autograder.api.error
 import autograder.api.users.password.change
 
 def run(arguments):
     result = autograder.api.users.password.change.send(arguments, exit_on_error = True)
 
-    if result['duplicate']:
+    if (result['duplicate']):
         print("Your new password must be different from your previous password.")
         return 0
 
-    if result['success']:
+    if (result['success']):
         print("You have successfully changed your password.")
         return 0
 
