@@ -17,8 +17,8 @@ REWRITE_TOKEN_ID = '<TOKEN_ID>'
 REWRITE_TOKEN_CLEARTEXT = '<TOKEN_CLEARTEXT>'
 
 BASE_ARGUMENTS = {
-    'user': 'admin@test.com',
-    'pass': 'admin',
+    'user': 'server-admin@test.edulinq.org',
+    'pass': 'server-admin',
     'course': 'COURSE101',
     'assignment': 'hw0',
 
