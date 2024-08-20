@@ -1,8 +1,0 @@
-{
-    "endpoint": "submissions/fetch/attempts",
-    "arguments": {},
-    "output": {
-        "found-user": true,
-        "grading-results": []
-    }
-}

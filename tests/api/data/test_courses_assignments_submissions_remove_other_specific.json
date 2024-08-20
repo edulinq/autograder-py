@@ -1,0 +1,11 @@
+{
+    "module": "autograder.api.courses.assignments.submissions.remove",
+    "arguments": {
+        "target-email": "student@test.com",
+        "target-submission": "1697406265"
+    },
+    "output": {
+        "found-user": true,
+        "found-submission": true
+    }
+}

@@ -1,0 +1,11 @@
+{
+    "module": "autograder.api.courses.assignments.submissions.fetch.course.attempts",
+    "arguments": {
+        "filter-role": "grader"
+    },
+    "output": {
+        "grading-results": {
+            "grader@test.com": null
+        }
+    }
+}
