@@ -1,5 +1,5 @@
 """
-The `autograder.cli.courses` package contains tools to acess and manage course information.
+The `autograder.cli.courses` package contains tools to access and manage course information.
 """
 
 import sys
