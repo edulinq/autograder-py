@@ -1,0 +1,10 @@
+{
+    "module": "autograder.api.courses.assignments.submissions.fetch.user.attempts",
+    "arguments": {
+        "target-email": "grader@test.com"
+    },
+    "output": {
+        "found-user": true,
+        "grading-results": []
+    }
+}

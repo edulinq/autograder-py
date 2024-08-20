@@ -1,0 +1,9 @@
+{
+    "module": "autograder.api.courses.assignments.submissions.fetch.user.peek",
+    "arguments": {},
+    "output": {
+        "found-user": true,
+        "found-submission": false,
+        "submission-result": null
+    }
+}
