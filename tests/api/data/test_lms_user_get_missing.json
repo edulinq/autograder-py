@@ -1,7 +1,7 @@
 {
     "endpoint": "lms/user/get",
     "arguments": {
-        "target-email": "ZZZ@test.com"
+        "target-email": "ZZZ@test.edulinq.org"
     },
     "output": {
         "found-autograder-user": false,

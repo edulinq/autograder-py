@@ -1,39 +1,39 @@
 {
     "module": "autograder.api.courses.assignments.submissions.fetch.user.history",
     "arguments": {
-        "target-email": "student@test.com"
+        "target-email": "course-student@test.edulinq.org"
     },
     "output": {
         "found-user": true,
         "history": [
             {
-                "id": "course101::hw0::student@test.com::1697406256",
+                "id": "course101::hw0::student@test.edulinq.org::1697406256",
                 "short-id": "1697406256",
                 "course-id": "course101",
                 "assignment-id": "hw0",
-                "user": "student@test.com",
+                "user": "course-student@test.edulinq.org",
                 "message": "",
                 "max_points": 2,
                 "score": 0,
                 "grading_start_time": "2023-10-15T21:44:16Z"
             },
             {
-                "id": "course101::hw0::student@test.com::1697406265",
+                "id": "course101::hw0::student@test.edulinq.org::1697406265",
                 "short-id": "1697406265",
                 "course-id": "course101",
                 "assignment-id": "hw0",
-                "user": "student@test.com",
+                "user": "course-student@test.edulinq.org",
                 "message": "",
                 "max_points": 2,
                 "score": 1,
                 "grading_start_time": "2023-10-15T21:44:26Z"
             },
             {
-                "id": "course101::hw0::student@test.com::1697406272",
+                "id": "course101::hw0::student@test.edulinq.org::1697406272",
                 "short-id": "1697406272",
                 "course-id": "course101",
                 "assignment-id": "hw0",
-                "user": "student@test.com",
+                "user": "course-student@test.edulinq.org",
                 "message": "",
                 "max_points": 2,
                 "score": 2,
