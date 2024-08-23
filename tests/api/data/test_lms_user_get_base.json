@@ -8,7 +8,7 @@
         "found-lms-user": true,
         "user": {
             "email": "course-student@test.edulinq.org",
-            "name": "student",
+            "name": "course-student",
             "role": "student",
             "lms-id": "lms-course-student@test.edulinq.org"
         }
