@@ -4,11 +4,11 @@
         "assignment-lms-id": "12345",
         "scores": [
             {
-                "email": "student@test.com",
+                "email": "course-student@test.edulinq.org",
                 "score": 10
             },
             {
-                "email": "zzz@test.com",
+                "email": "zzz@test.edulinq.org",
                 "score": 10
             }
         ]
@@ -19,13 +19,13 @@
         "unrecognized-users": [
             {
                 "row": 1,
-                "entry": "zzz@test.com"
+                "entry": "zzz@test.edulinq.org"
             }
         ],
         "no-lms-id-users": [
             {
                 "row": 0,
-                "entry": "student@test.com"
+                "entry": "course-student@test.edulinq.org"
             }
         ]
     }

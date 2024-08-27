@@ -5,16 +5,16 @@
     },
     "output": {
         "submission-infos": {
-            "admin@test.com": null,
-            "grader@test.com": null,
-            "other@test.com": null,
-            "owner@test.com": null,
-            "student@test.com": {
-                "id": "course101::hw0::student@test.com::1697406272",
+            "course-admin@test.edulinq.org": null,
+            "course-grader@test.edulinq.org": null,
+            "course-other@test.edulinq.org": null,
+            "course-owner@test.edulinq.org": null,
+            "course-student@test.edulinq.org": {
+                "id": "course101::hw0::course-student@test.edulinq.org::1697406272",
                 "short-id": "1697406272",
                 "course-id": "course101",
                 "assignment-id": "hw0",
-                "user": "student@test.com",
+                "user": "course-student@test.edulinq.org",
                 "message": "",
                 "max_points": 2,
                 "score": 2,

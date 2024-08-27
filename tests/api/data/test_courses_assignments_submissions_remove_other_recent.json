@@ -1,7 +1,7 @@
 {
     "module": "autograder.api.courses.assignments.submissions.remove",
     "arguments": {
-        "target-email": "student@test.com"
+        "target-email": "course-student@test.edulinq.org"
     },
     "output": {
         "found-user": true,

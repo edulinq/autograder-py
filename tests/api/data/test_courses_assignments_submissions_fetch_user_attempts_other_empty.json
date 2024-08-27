@@ -1,7 +1,7 @@
 {
     "module": "autograder.api.courses.assignments.submissions.fetch.user.attempts",
     "arguments": {
-        "target-email": "grader@test.com"
+        "target-email": "course-grader@test.edulinq.org"
     },
     "output": {
         "found-user": true,

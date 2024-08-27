@@ -1,7 +1,7 @@
 {
     "module": "autograder.api.courses.assignments.submissions.fetch.user.history",
     "arguments": {
-        "target-email": "other@test.com"
+        "target-email": "course-other@test.edulinq.org"
     },
     "output": {
         "found-user": true,

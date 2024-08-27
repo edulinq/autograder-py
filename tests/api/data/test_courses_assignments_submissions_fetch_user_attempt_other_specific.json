@@ -1,7 +1,7 @@
 {
     "module": "autograder.api.courses.assignments.submissions.fetch.user.attempt",
     "arguments": {
-        "target-email": "student@test.com",
+        "target-email": "course-student@test.edulinq.org",
         "target-submission": "1697406265"
     },
     "output": {
@@ -9,11 +9,11 @@
         "found-submission": true,
         "grading-result": {
             "info": {
-                "id": "course101::hw0::student@test.com::1697406265",
+                "id": "course101::hw0::course-student@test.edulinq.org::1697406265",
                 "short-id": "1697406265",
                 "course-id": "course101",
                 "assignment-id": "hw0",
-                "user": "student@test.com",
+                "user": "course-student@test.edulinq.org",
                 "message": "",
                 "max_points": 2,
                 "score": 1,
