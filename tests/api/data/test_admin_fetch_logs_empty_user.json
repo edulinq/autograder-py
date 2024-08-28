@@ -3,7 +3,7 @@
     "arguments": {
         "course": "course-without-source",
         "level": "INFO",
-        "target-email": "other@test.com"
+        "target-email": "course-other@test.edulinq.org"
     },
     "output-modifier": "clean_output_logs",
     "output": {

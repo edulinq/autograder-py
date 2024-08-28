@@ -1,17 +1,17 @@
 {
     "endpoint": "lms/user/get",
     "arguments": {
-        "target-email": "student@test.com"
+        "target-email": "course-student@test.edulinq.org"
     },
     "output": {
         "found-autograder-user": true,
         "found-lms-user": true,
         "user": {
             "type": "CourseType",
-            "email": "student@test.com",
-            "name": "student",
+            "email": "course-student@test.edulinq.org",
+            "name": "course-student",
             "role": "student",
-            "lms-id": "lms-student@test.com"
+            "lms-id": "lms-course-student@test.edulinq.org"
         }
     }
 }

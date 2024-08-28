@@ -1,0 +1,11 @@
+{
+    "module": "autograder.api.courses.assignments.submissions.fetch.course.scores",
+    "arguments": {
+        "filter-role": "grader"
+    },
+    "output": {
+        "submission-infos": {
+            "course-grader@test.edulinq.org": null
+        }
+    }
+}

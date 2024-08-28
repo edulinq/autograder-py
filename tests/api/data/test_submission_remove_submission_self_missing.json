@@ -1,8 +1,0 @@
-{
-    "endpoint": "submissions/remove",
-    "arguments": {},
-    "output": {
-        "found-user": true,
-        "found-submission": false
-    }
-}

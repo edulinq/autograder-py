@@ -1,0 +1,10 @@
+{
+    "module": "autograder.api.courses.assignments.submissions.fetch.user.attempts",
+    "arguments": {
+        "target-email": "course-grader@test.edulinq.org"
+    },
+    "output": {
+        "found-user": true,
+        "grading-results": []
+    }
+}
