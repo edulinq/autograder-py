@@ -1,78 +1,15 @@
 {
     "endpoint": "users/list",
-    "arguments": {},
+    "arguments": {
+        "user": "server-admin@test.edulinq.org",
+        "pass": "server-admin"
+    },
     "output": {
         "users": [
             {
                 "type": "ServerType",
-                "email": "admin@test.com",
-                "name": "admin",
-                "role": "admin",
-                "courses": {
-                    "course-languages": {
-                        "id": "course-languages",
-                        "name": "Course Using Different Languages.",
-                        "role": "admin"
-                    },
-                    "course-with-lms": {
-                        "id": "course-with-lms",
-                        "name": "Course With LMS",
-                        "role": "admin"
-                    },
-                    "course-without-source": {
-                        "id": "course-without-source",
-                        "name": "Course Without Source",
-                        "role": "admin"
-                    },
-                    "course101": {
-                        "id": "course101",
-                        "name": "Course 101",
-                        "role": "admin"
-                    },
-                    "course101-with-zero-limit": {
-                        "id": "course101-with-zero-limit",
-                        "name": "Course 101 - With Zero Limit",
-                        "role": "admin"
-                    }
-                }
-            },
-            {
-                "type": "ServerType",
-                "email": "grader@test.com",
-                "name": "grader",
-                "role": "creator",
-                "courses": {
-                    "course-languages": {
-                        "id": "course-languages",
-                        "name": "Course Using Different Languages.",
-                        "role": "grader"
-                    },
-                    "course-with-lms": {
-                        "id": "course-with-lms",
-                        "name": "Course With LMS",
-                        "role": "grader"
-                    },
-                    "course-without-source": {
-                        "id": "course-without-source",
-                        "name": "Course Without Source",
-                        "role": "grader"
-                    },
-                    "course101": {
-                        "id": "course101",
-                        "name": "Course 101",
-                        "role": "grader"
-                    },
-                    "course101-with-zero-limit": {
-                        "id": "course101-with-zero-limit",
-                        "name": "Course 101 - With Zero Limit",
-                        "role": "grader"
-                    }
-                }
-            },
-            {
-                "type": "ServerType",
-                "email": "no-lms-id@test.com",
-                "name": "no-lms-id",
+                "email": "course-admin@test.edulinq.org",
+                "name": "course-admin",
                 "role": "user",
                 "courses": {
                     "course-languages": {
@@ -89,13 +26,56 @@
                         "id": "course-without-source",
                         "name": "Course Without Source",
                         "role": "admin"
+                    },
+                    "course101": {
+                        "id": "course101",
+                        "name": "Course 101",
+                        "role": "admin"
+                    },
+                    "course101-with-zero-limit": {
+                        "id": "course101-with-zero-limit",
+                        "name": "Course 101 - With Zero Limit",
+                        "role": "admin"
                     }
                 }
             },
             {
                 "type": "ServerType",
-                "email": "other@test.com",
-                "name": "other",
+                "email": "course-grader@test.edulinq.org",
+                "name": "course-grader",
+                "role": "user",
+                "courses": {
+                    "course-languages": {
+                        "id": "course-languages",
+                        "name": "Course Using Different Languages.",
+                        "role": "grader"
+                    },
+                    "course-with-lms": {
+                        "id": "course-with-lms",
+                        "name": "Course With LMS",
+                        "role": "grader"
+                    },
+                    "course-without-source": {
+                        "id": "course-without-source",
+                        "name": "Course Without Source",
+                        "role": "grader"
+                    },
+                    "course101": {
+                        "id": "course101",
+                        "name": "Course 101",
+                        "role": "grader"
+                    },
+                    "course101-with-zero-limit": {
+                        "id": "course101-with-zero-limit",
+                        "name": "Course 101 - With Zero Limit",
+                        "role": "grader"
+                    }
+                }
+            },
+            {
+                "type": "ServerType",
+                "email": "course-other@test.edulinq.org",
+                "name": "course-other",
                 "role": "user",
                 "courses": {
                     "course-languages": {
@@ -127,9 +107,9 @@
             },
             {
                 "type": "ServerType",
-                "email": "owner@test.com",
-                "name": "owner",
-                "role": "owner",
+                "email": "course-owner@test.edulinq.org",
+                "name": "course-owner",
+                "role": "user",
                 "courses": {
                     "course-languages": {
                         "id": "course-languages",
@@ -160,64 +140,64 @@
             },
             {
                 "type": "ServerType",
-                "email": "server-admin@test.com",
+                "email": "course-student@test.edulinq.org",
+                "name": "course-student",
+                "role": "user",
+                "courses": {
+                    "course-languages": {
+                        "id": "course-languages",
+                        "name": "Course Using Different Languages.",
+                        "role": "student"
+                    },
+                    "course-with-lms": {
+                        "id": "course-with-lms",
+                        "name": "Course With LMS",
+                        "role": "student"
+                    },
+                    "course-without-source": {
+                        "id": "course-without-source",
+                        "name": "Course Without Source",
+                        "role": "student"
+                    },
+                    "course101": {
+                        "id": "course101",
+                        "name": "Course 101",
+                        "role": "student"
+                    },
+                    "course101-with-zero-limit": {
+                        "id": "course101-with-zero-limit",
+                        "name": "Course 101 - With Zero Limit",
+                        "role": "student"
+                    }
+                }
+            },
+            {
+                "type": "ServerType",
+                "email": "server-admin@test.edulinq.org",
                 "name": "server-admin",
                 "role": "admin",
                 "courses": {}
             },
             {
                 "type": "ServerType",
-                "email": "server-creator@test.com",
+                "email": "server-creator@test.edulinq.org",
                 "name": "server-creator",
                 "role": "creator",
                 "courses": {}
             },
             {
                 "type": "ServerType",
-                "email": "server-owner@test.com",
+                "email": "server-owner@test.edulinq.org",
                 "name": "server-owner",
                 "role": "owner",
                 "courses": {}
             },
             {
                 "type": "ServerType",
-                "email": "server-user@test.com",
+                "email": "server-user@test.edulinq.org",
                 "name": "server-user",
                 "role": "user",
                 "courses": {}
-            },
-            {
-                "type": "ServerType",
-                "email": "student@test.com",
-                "name": "student",
-                "role": "user",
-                "courses": {
-                    "course-languages": {
-                        "id": "course-languages",
-                        "name": "Course Using Different Languages.",
-                        "role": "student"
-                    },
-                    "course-with-lms": {
-                        "id": "course-with-lms",
-                        "name": "Course With LMS",
-                        "role": "student"
-                    },
-                    "course-without-source": {
-                        "id": "course-without-source",
-                        "name": "Course Without Source",
-                        "role": "student"
-                    },
-                    "course101": {
-                        "id": "course101",
-                        "name": "Course 101",
-                        "role": "student"
-                    },
-                    "course101-with-zero-limit": {
-                        "id": "course101-with-zero-limit",
-                        "name": "Course 101 - With Zero Limit",
-                        "role": "student"
-                    }
-                }
             }
         ]
     }
