@@ -48,7 +48,8 @@ def _list_course_users_table(users, header = True, keys = COURSE_USER_HEADERS):
     rows = []
     for user in users:
         if (user['type'] != "CourseType"):
-            raise ValueError("Invalid user type for listing course users: '%s'.", user['type'])
+            raise ValueError("Invalid user type for listing course users table: '%s'.",
+                    user['type'])
 
         row = [user[key] for key in keys]
         rows.append(row)
@@ -75,7 +76,8 @@ def _list_server_users_table(users, header = True, keys = SERVER_USER_HEADERS):
     rows = []
     for user in users:
         if (user['type'] != "ServerType"):
-            raise ValueError("Invalid user type for listing server users: '%s'.", user['type'])
+            raise ValueError("Invalid user type for listing server users table: '%s'.",
+                    user['type'])
 
         row = [user[key] for key in keys]
         rows.append(row)
