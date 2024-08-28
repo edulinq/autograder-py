@@ -1,0 +1,10 @@
+{
+    "module": "autograder.api.courses.assignments.submissions.fetch.user.history",
+    "arguments": {
+        "target-email": "ZZZ"
+    },
+    "output": {
+        "found-user": false,
+        "history": []
+    }
+}

@@ -1,5 +1,6 @@
 """
-The `autograder.cli.courses` package contains tools to access and manage course information.
+The `autograder.cli.courses.assignments` package contains tools to access and
+manage assignment information.
 """
 
 import sys

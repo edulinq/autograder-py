@@ -218,7 +218,7 @@ PARAM_FORCE = APIParam('force',
 
 PARAM_NEW_PASS = APIParam('new-pass',
         'The new password to set for the user that is the target of this request.',
-        required = False, hash = True)
+        required = True, hash = True)
 
 PARAM_SKIP_EMAILS = APIParam('skip-emails',
         'Skip sending any emails. Be aware that this may result in inaccessible information.',

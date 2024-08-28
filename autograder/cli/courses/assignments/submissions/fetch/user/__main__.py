@@ -1,5 +1,6 @@
 """
-The `autograder.cli.courses` package contains tools to access and manage course information.
+The `autograder.cli.courses.assignment.submissions.fetch.user` package contains tools to
+query submissions to the autograder at a user level.
 """
 
 import sys
