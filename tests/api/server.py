@@ -1,28 +1,32 @@
+import errno
 import http
 import http.server
 import json
 import multiprocessing
+import socket
 import time
 import urllib.parse
 
 import autograder.api.constants
 import autograder.util.timestamp
 
-PORT = 12345
+START_PORT = 30000
+END_PORT = 40000
 ENCODING = 'utf8'
 
 SLEEP_TIME_SEC = 0.2
 REAP_TIME_SEC = 0.5
 
 def start():
+    port = _find_open_port()
     next_response_queue = multiprocessing.Queue()
 
-    process = multiprocessing.Process(target = _run, args = (next_response_queue,))
+    process = multiprocessing.Process(target = _run, args = (next_response_queue, port))
     process.start()
 
     time.sleep(SLEEP_TIME_SEC)
 
-    return process, next_response_queue
+    return process, next_response_queue, port
 
 def stop(process):
     if (process.is_alive()):
@@ -35,9 +39,34 @@ def stop(process):
 
     process.close()
 
-def _run(next_response_queue):
+def _find_open_port():
+    for port in range(START_PORT, END_PORT + 1):
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+            sock.bind(('127.0.0.1', port))
+
+            # Explicitly close the port and wait a short amount of time for the port to clear.
+            # This should not be required because of the socket option above,
+            # but the cost is small.
+            sock.close()
+            time.sleep(SLEEP_TIME_SEC)
+
+            return port
+        except socket.error as ex:
+            sock.close()
+
+            if (ex.errno == errno.EADDRINUSE):
+                continue
+
+            # Unknown error.
+            raise ex
+
+    raise ValueError("Could not find open port in [%d, %d]." % (START_PORT, END_PORT))
+
+def _run(next_response_queue, port):
     Handler._next_response_queue = next_response_queue
-    server = http.server.HTTPServer(('', PORT), Handler)
+    server = http.server.HTTPServer(('', port), Handler)
     server.serve_forever()
 
 class Handler(http.server.BaseHTTPRequestHandler):

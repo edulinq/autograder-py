@@ -10,7 +10,7 @@ import tests.api.server
 THIS_DIR = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
 DATA_DIR = os.path.join(THIS_DIR, "data")
 
-SERVER_URL = "http://127.0.0.1:%s" % (tests.api.server.PORT)
+SERVER_URL_FORMAT = "http://127.0.0.1:%s"
 FORMAT_STR = "\n--- Expected ---\n%s\n--- Actual ---\n%s\n---\n"
 
 REWRITE_TOKEN_ID = '<TOKEN_ID>'
@@ -22,7 +22,8 @@ BASE_ARGUMENTS = {
     'course': 'COURSE101',
     'assignment': 'hw0',
 
-    'server': SERVER_URL,
+    # Will be set with the correct port when the test is run.
+    'server': None,
 }
 
 @unittest.skipUnless(sys.platform.startswith('linux'), 'linux only (multiprocessing)')
@@ -35,16 +36,18 @@ class APITest(unittest.TestCase):
     However, the autograder server will verify that the output is correct in it's own test suite.
     """
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self._server_process = None
+    _server_process = None
+    _port = None
+    _next_response_queue = None
 
-    def setUp(self):
-        self._server_process, self._next_response_queue = tests.api.server.start()
+    @classmethod
+    def setUpClass(cls):
+        cls._server_process, cls._next_response_queue, cls._port = tests.api.server.start()
 
-    def tearDown(self):
-        tests.api.server.stop(self._server_process)
-        self._server_process = None
+    @classmethod
+    def tearDownClass(cls):
+        tests.api.server.stop(cls._server_process)
+        cls._server_process = None
 
     def assertDictEqual(self, a, b):
         a_json = json.dumps(a, indent = 4)
@@ -98,7 +101,10 @@ def _get_api_test_method(path):
     def __method(self):
         api_module = importlib.import_module(import_module_name)
 
-        self._next_response_queue.put(expected)
+        APITest._next_response_queue.put(expected)
+
+        # Set the destination server after the test server has started (and chosen a port).
+        arguments['server'] = SERVER_URL_FORMAT % APITest._port
 
         try:
             actual = api_module.send(arguments)
