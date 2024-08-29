@@ -13,6 +13,8 @@ import os
 import sys
 import traceback
 
+DEFAULT_PORT = 8080
+
 THIS_DIR = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
 ROOT_DIR = os.path.join(THIS_DIR, '..')
 TEST_DATA_DIR = os.path.join(ROOT_DIR, 'tests', 'api', 'data')
@@ -82,6 +84,9 @@ def reset_course(cli_arguments):
     autograder.api.admin.updatecourse.send(arguments)
 
 def run(arguments):
+    # Override the server with the local server.
+    arguments.server = "http://127.0.0.1:%d" % (arguments.port)
+
     error_count = 0
 
     # Do an initial reset of the DB.
@@ -107,7 +112,13 @@ def run(arguments):
 
 def main():
     parser = autograder.api.config.get_argument_parser(
-        description = 'Verify test API data against an autograder server.')
+        description = ('Verify test API data against an autograder server.'
+            + ' We will always try to connect to a local server (127.0.0.1),'
+            + ' but the target port can be chosen with --port'))
+
+    parser.add_argument('--port', dest = 'port',
+        action = 'store', type = int, default = DEFAULT_PORT,
+        help = 'The default local port to connect to (default: %(default)s).')
 
     return run(parser.parse_args())
 
