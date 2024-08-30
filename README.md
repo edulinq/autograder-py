@@ -1,6 +1,6 @@
 # Python Interface for Autograder
 
-The Python interface for the autograding server.
+The canonical Python interface for the autograding server.
 
 ## Quick Links
 
@@ -17,6 +17,12 @@ All tools will show their usage if given the `--help` options.
 You can get a list of the package for each set of tools by invoking `autograder.cli` directly:
 ```sh
 python3 -m autograder.cli
+```
+
+If you want to see every tool a package (and all its subpackages) have available in one output,
+you can use the `-r`/`--recursive` flag:
+```sh
+python3 -m autograder.cli --recursive
 ```
 
 There are many available tools and instead of discussing each one here,
