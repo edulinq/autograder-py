@@ -171,6 +171,10 @@ def _create_request_lookup_key(api_module_info, arguments, normalize_args = Fals
         full_arguments = INITIAL_BASE_ARGUMENTS.copy()
         full_arguments.update(arguments)
 
+        # Fill in a dummy server so it passed validation.
+        # This is not part of the formal arguments and will get stripped.
+        full_arguments['server'] = 'dummy'
+
         # Pass the arguments through the same infrastructure as the API.
         config = autograder.api.config.get_tiered_config(full_arguments)
         arguments, _ = autograder.api.config.parse_api_config(config, api_module_info['params'])
