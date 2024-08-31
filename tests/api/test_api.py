@@ -21,34 +21,36 @@ class APITest(tests.server.base.ServerBaseTest):
     """
 
     def _get_test_info(self, path):
-        with open(path, 'r') as file:
-            data = json.load(file)
+        return _get_api_test_info(path, self.get_base_arguments())
 
-        import_module_name = data.get('module', None)
-        if (import_module_name is None):
-            parts = data['endpoint'].split('/')
-            prefix = parts[0]
-            suffix = ''.join(parts[1:])
+def _get_api_test_info(path, arguments):
+    with open(path, 'r') as file:
+        data = json.load(file)
 
-            import_module_name = '.'.join(['autograder', 'api', prefix, suffix])
+    import_module_name = data.get('module', None)
+    if (import_module_name is None):
+        parts = data['endpoint'].split('/')
+        prefix = parts[0]
+        suffix = ''.join(parts[1:])
 
-        arguments = self.get_base_arguments()
-        for key, value in data.get('arguments', {}).items():
-            arguments[key] = value
+        import_module_name = '.'.join(['autograder', 'api', prefix, suffix])
 
-        is_error = data.get('error', False)
+    for key, value in data.get('arguments', {}).items():
+        arguments[key] = value
 
-        output_modifier = clean_output_noop
-        if ('output-modifier' in data):
-            modifier_name = data['output-modifier']
+    is_error = data.get('error', False)
 
-            if (modifier_name not in globals()):
-                raise ValueError("Could not find API output modifier function: '%s'." % (
-                    modifier_name))
+    output_modifier = clean_output_noop
+    if ('output-modifier' in data):
+        modifier_name = data['output-modifier']
 
-            output_modifier = globals()[modifier_name]
+        if (modifier_name not in globals()):
+            raise ValueError("Could not find API output modifier function: '%s'." % (
+                modifier_name))
 
-        return import_module_name, arguments, data['output'], is_error, output_modifier
+        output_modifier = globals()[modifier_name]
+
+    return import_module_name, arguments, data['output'], is_error, output_modifier
 
 def _discover_api_tests():
     for path in sorted(glob.glob(os.path.join(DATA_DIR, "**", "*.json"), recursive = True)):
