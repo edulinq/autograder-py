@@ -36,7 +36,7 @@ def _add_cli_test(base_dir, path):
     relpath = os.path.relpath(path, base_dir)
     test_basename = '.'.join(os.path.splitext(relpath)[0].split('/'))
 
-    test_name = 'test_cli_import_%s' % (test_basename)
+    test_name = 'test_cli_import__%s' % (test_basename)
 
     cli_module = autograder.code.import_path(path)
     if ('_get_parser' not in dir(cli_module)):

@@ -45,21 +45,7 @@ class CLITest(tests.server.base.ServerBaseTest):
         if (is_error):
             expected_output = expected_output.strip()
 
-        arguments = self.get_base_arguments()
-        for key, value in options.get('overrides', {}).items():
-            arguments[key] = value
-
-        cli_arguments = []
-
-        # Start with the base arguments
-        # (note that later arguments override earlier ones).
-        for (key, value) in self.get_base_arguments().items():
-            cli_arguments += ['--' + str(key), str(value)]
-
-        for key, value in arguments.items():
-            cli_arguments += ["--%s" % (str(key)), str(value)]
-
-        cli_arguments += options.get('arguments', [])
+        cli_arguments = self._build_arguments(options)
 
         # Make any substitutions.
         expected_output = _prepare_string(expected_output, temp_dir)
@@ -67,6 +53,48 @@ class CLITest(tests.server.base.ServerBaseTest):
             cli_arguments[i] = _prepare_string(cli_arguments[i], temp_dir)
 
         return module_name, cli_arguments, expected_output, output_check, exit_status, is_error
+
+    def _build_arguments(self, options):
+        # Start with the base arguments
+        # (note that later arguments override earlier ones).
+        base_arguments = self.get_base_arguments()
+
+        # Remove any base arguments that are not allowed by the parser
+        # (e.g. a course where one is not expected).
+        allowed_arg_keys = set(self._load_allowed_arg_keys(options['cli']))
+        for base_arg_key in list(base_arguments.keys()):
+            if (('--' + base_arg_key) not in allowed_arg_keys):
+                del base_arguments[base_arg_key]
+
+        # Process overrides.
+        for key, value in options.get('overrides', {}).items():
+            base_arguments[key] = value
+
+        cli_arguments = []
+        for key, value in base_arguments.items():
+            cli_arguments += ["--%s" % (str(key)), str(value)]
+
+        cli_arguments += options.get('arguments', [])
+
+        return cli_arguments
+
+    def _load_allowed_arg_keys(self, module_name):
+        # argparse will look (without checks) for argv when constructing a parser (which is dumb).
+        clear_argv = False
+        if (len(sys.argv) == 0):
+            clear_argv = True
+            sys.argv.append('autograder_cli_test')
+
+        module = importlib.import_module(module_name)
+
+        keys = []
+        for action in module._get_parser()._actions:
+            keys += action.option_strings
+
+        if (clear_argv):
+            sys.argv.clear()
+
+        return keys
 
 def _prepare_string(text, temp_dir):
     replacements = [

@@ -59,7 +59,7 @@ def _discover_api_tests():
 
 def _add_api_test(path):
     test_name = os.path.splitext(os.path.basename(path))[0]
-    setattr(APITest, 'test_' + test_name, _get_api_test_method(path))
+    setattr(APITest, 'test_api__' + test_name, _get_api_test_method(path))
 
 def _get_api_test_method(path):
     def __method(self):
