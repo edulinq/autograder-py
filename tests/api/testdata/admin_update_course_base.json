@@ -1,5 +1,5 @@
 {
-    "endpoint": "admin/update/course",
+    "module": "autograder.api.admin.updatecourse",
     "arguments": {},
     "output": {
         "course-updated": true

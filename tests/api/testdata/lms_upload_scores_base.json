@@ -1,5 +1,5 @@
 {
-    "endpoint": "lms/upload/scores",
+    "module": "autograder.api.lms.uploadscores",
     "arguments": {
         "assignment-lms-id": "12345",
         "scores": [

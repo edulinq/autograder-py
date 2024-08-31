@@ -2,32 +2,16 @@ import glob
 import json
 import importlib
 import os
-import unittest
-import sys
 
-import tests.api.server
+import tests.server.base
 
 THIS_DIR = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
-DATA_DIR = os.path.join(THIS_DIR, "data")
-
-SERVER_URL_FORMAT = "http://127.0.0.1:%s"
-FORMAT_STR = "\n--- Expected ---\n%s\n--- Actual ---\n%s\n---\n"
+DATA_DIR = os.path.join(THIS_DIR, "testdata")
 
 REWRITE_TOKEN_ID = '<TOKEN_ID>'
 REWRITE_TOKEN_CLEARTEXT = '<TOKEN_CLEARTEXT>'
 
-BASE_ARGUMENTS = {
-    'user': 'course-admin@test.edulinq.org',
-    'pass': 'course-admin',
-    'course': 'COURSE101',
-    'assignment': 'hw0',
-
-    # Will be set with the correct port when the test is run.
-    'server': None,
-}
-
-@unittest.skipUnless(sys.platform.startswith('linux'), 'linux only (multiprocessing)')
-class APITest(unittest.TestCase):
+class APITest(tests.server.base.ServerBaseTest):
     """
     Test API calls by mocking a server.
 
@@ -36,27 +20,38 @@ class APITest(unittest.TestCase):
     However, the autograder server will verify that the output is correct in it's own test suite.
     """
 
-    _server_process = None
-    _port = None
-    _next_response_queue = None
+    def _get_test_info(self, path):
+        with open(path, 'r') as file:
+            data = json.load(file)
 
-    @classmethod
-    def setUpClass(cls):
-        cls._server_process, cls._next_response_queue, cls._port = tests.api.server.start()
+        import_module_name = data.get('module', None)
+        if (import_module_name is None):
+            parts = data['endpoint'].split('/')
+            prefix = parts[0]
+            suffix = ''.join(parts[1:])
 
-    @classmethod
-    def tearDownClass(cls):
-        tests.api.server.stop(cls._server_process)
-        cls._server_process = None
+            import_module_name = '.'.join(['autograder', 'api', prefix, suffix])
 
-    def assertDictEqual(self, a, b):
-        a_json = json.dumps(a, indent = 4)
-        b_json = json.dumps(b, indent = 4)
+        arguments = self.get_base_arguments()
+        for key, value in data.get('arguments', {}).items():
+            arguments[key] = value
 
-        super().assertDictEqual(a, b, FORMAT_STR % (a_json, b_json))
+        is_error = data.get('error', False)
+
+        output_modifier = clean_output_noop
+        if ('output-modifier' in data):
+            modifier_name = data['output-modifier']
+
+            if (modifier_name not in globals()):
+                raise ValueError("Could not find API output modifier function: '%s'." % (
+                    modifier_name))
+
+            output_modifier = globals()[modifier_name]
+
+        return import_module_name, arguments, data['output'], is_error, output_modifier
 
 def _discover_api_tests():
-    for path in sorted(glob.glob(os.path.join(DATA_DIR, "**", "test_*.json"), recursive = True)):
+    for path in sorted(glob.glob(os.path.join(DATA_DIR, "**", "*.json"), recursive = True)):
         try:
             _add_api_test(path)
         except Exception as ex:
@@ -64,47 +59,13 @@ def _discover_api_tests():
 
 def _add_api_test(path):
     test_name = os.path.splitext(os.path.basename(path))[0]
-    setattr(APITest, test_name, _get_api_test_method(path))
-
-def get_api_test_info(path):
-    with open(path, 'r') as file:
-        data = json.load(file)
-
-    import_module_name = data.get('module', None)
-    if (import_module_name is None):
-        parts = data['endpoint'].split('/')
-        prefix = parts[0]
-        suffix = ''.join(parts[1:])
-
-        import_module_name = '.'.join(['autograder', 'api', prefix, suffix])
-
-    arguments = BASE_ARGUMENTS.copy()
-    for key, value in data.get('arguments', {}).items():
-        arguments[key] = value
-
-    is_error = data.get('error', False)
-
-    output_modifier = clean_output_noop
-    if ('output-modifier' in data):
-        modifier_name = data['output-modifier']
-
-        if (modifier_name not in globals()):
-            raise ValueError("Could not find API output modifier function: '%s'." % (modifier_name))
-
-        output_modifier = globals()[modifier_name]
-
-    return import_module_name, arguments, data['output'], is_error, output_modifier
+    setattr(APITest, 'test_' + test_name, _get_api_test_method(path))
 
 def _get_api_test_method(path):
-    import_module_name, arguments, expected, is_error, output_modifier = get_api_test_info(path)
-
     def __method(self):
-        api_module = importlib.import_module(import_module_name)
+        module_name, arguments, expected, is_error, output_modifier = self._get_test_info(path)
 
-        APITest._next_response_queue.put(expected)
-
-        # Set the destination server after the test server has started (and chosen a port).
-        arguments['server'] = SERVER_URL_FORMAT % APITest._port
+        api_module = importlib.import_module(module_name)
 
         try:
             actual = api_module.send(arguments)

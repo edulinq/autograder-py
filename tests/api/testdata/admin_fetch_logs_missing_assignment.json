@@ -1,15 +1,15 @@
 {
-    "endpoint": "admin/fetch/logs",
+    "module": "autograder.api.admin.fetchlogs",
     "arguments": {
         "course": "course-without-source",
         "level": "INFO",
-        "target-email": "ZZZ"
+        "assignment-id": "ZZZ"
     },
     "output-modifier": "clean_output_logs",
     "output": {
         "success": false,
         "error-messages": [
-            "Could not find user: 'ZZZ'."
+            "Unknown assignment given for 'assignment' component of log query ('ZZZ')."
         ],
         "results": null
     }

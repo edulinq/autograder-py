@@ -1,5 +1,5 @@
 {
-    "endpoint": "admin/fetch/logs",
+    "module": "autograder.api.admin.fetchlogs",
     "arguments": {
         "course": "course-without-source",
         "level": "INFO",

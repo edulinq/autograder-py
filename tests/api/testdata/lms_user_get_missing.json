@@ -1,5 +1,5 @@
 {
-    "endpoint": "lms/user/get",
+    "module": "autograder.api.lms.userget",
     "arguments": {
         "target-email": "ZZZ@test.edulinq.org"
     },

@@ -1,9 +1,9 @@
 {
-    "endpoint": "admin/fetch/logs",
+    "module": "autograder.api.admin.fetchlogs",
     "arguments": {
-        "course": "course-without-source",
+        "course": "course101",
         "level": "INFO",
-        "target-email": "course-other@test.edulinq.org"
+        "assignment-id": "HW0"
     },
     "output-modifier": "clean_output_logs",
     "output": {

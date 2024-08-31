@@ -1,5 +1,4 @@
 {
-    "endpoint": "users/tokens/create",
     "module": "autograder.api.users.tokens.create",
     "arguments": {
         "name": "foo"
