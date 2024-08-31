@@ -21,6 +21,9 @@ TEMP_DIR_ID = '__TEMP_DIR__'
 
 DEFAULT_OUTPUT_CHECK = 'content_equals'
 
+TIME_REGEX = r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}'
+TIME_REPLACEMENT = '<TIME>'
+
 class CLITest(tests.server.base.ServerBaseTest):
     """
     Test CLI tools.
@@ -37,7 +40,7 @@ class CLITest(tests.server.base.ServerBaseTest):
         exit_status = options.get('exit_status', 0)
         is_error = options.get('error', False)
 
-        output_check_name = options.get('output-check', DEFAULT_OUTPUT_CHECK)
+        output_check_name = options.get('output_check', DEFAULT_OUTPUT_CHECK)
         if (output_check_name not in globals()):
             raise ValueError("Could not find output check function: '%s'." % (output_check_name))
         output_check = globals()[output_check_name]
@@ -196,6 +199,16 @@ def content_equals(test_case, expected, actual, **kwargs):
 
 def has_content_100(test_case, expected, actual, **kwargs):
     return has_content(test_case, expected, actual, min_length = 100)
+
+def content_equals_ignore_time(test_case, expected, actual, **kwargs):
+    """
+    Replace anything that looks like a time.
+    """
+
+    expected = re.sub(TIME_REGEX, TIME_REPLACEMENT, expected)
+    actual = re.sub(TIME_REGEX, TIME_REPLACEMENT, actual)
+
+    return content_equals(test_case, expected, actual)
 
 # Ensure that the output has content.
 def has_content(test_case, expected, actual, min_length = 100):
