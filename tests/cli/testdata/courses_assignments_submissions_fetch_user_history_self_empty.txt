@@ -1,0 +1,7 @@
+{
+    "cli": "autograder.cli.courses.assignments.submissions.fetch.user.history",
+    "arguments": [
+    ]
+}
+---
+Found 0 submissions.

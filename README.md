@@ -1,12 +1,73 @@
 # Python Interface for Autograder
 
-The Python interface for the autograding server.
+The canonical Python interface for the autograding server.
 
 ## Quick Links
 
  - [Autograder Server](https://github.com/eriq-augustine/autograder-server)
  - [Autograder Python Interface](https://github.com/eriq-augustine/autograder-py)
  - [Autograder Sample Course](https://github.com/eriq-augustine/cse-cracks-course)
+
+## Quickstart
+
+To provide easy access to a limited number of commands,
+we provide the `autograder.run` suite of shortcuts.
+These are just a small number of the most commonly used commands.
+For a more in-depth look at the available commands,
+see the [cli section](#the-cli) of this document.
+
+### `autograder.run.submit`
+
+This command sends an assignment submission to the server.
+This is a shortcut for [`autograder.cli.courses.assignments.submissions.submit`](#submitting-an-assignment).
+
+```sh
+python3 -m autograder.run.submit my_file.py
+```
+
+### `autograder.run.history`
+
+This command gets a summary of all your past submissions for an assignment.
+This is a shortcut for [`autograder.cli.courses.assignments.submissions.user.history`](#getting-a-history-of-all-past-submissions).
+
+```sh
+python3 -m autograder.run.history
+```
+
+### `autograder.run.peek`
+
+This command shows you your most recent (or a specific) submission for an assignment.
+This is a shortcut for [`autograder.cli.courses.assignments.submissions.user.peek`](#checking-your-last-submission).
+
+```sh
+python3 -m autograder.run.peek
+```
+
+To get a specific submission, just pass the submission ID (as shown in `autograder.run.history`).
+
+```sh
+python3 -m autograder.run.peek 123456789
+```
+
+### `autograder.run.change-pass`
+
+This command lets your change your password to whatever you want.
+This is a shortcut for [`autograder.cli.users.pass.change`](#managing-your-password).
+
+```sh
+python3 -m autograder.run.change-pass
+```
+
+You will then be prompted to enter (and re-enter) your new password.
+
+### `autograder.run.reset-pass`
+
+This command will reset your password by sending an email to your registered email address.
+This is a shortcut for [`autograder.cli.users.pass.reset`](#managing-your-password).
+
+```sh
+python3 -m autograder.run.reset-pass
+```
 
 ## The CLI
 
@@ -17,6 +78,12 @@ All tools will show their usage if given the `--help` options.
 You can get a list of the package for each set of tools by invoking `autograder.cli` directly:
 ```sh
 python3 -m autograder.cli
+```
+
+If you want to see every tool a package (and all its subpackages) have available in one output,
+you can use the `-r`/`--recursive` flag:
+```sh
+python3 -m autograder.cli --recursive
 ```
 
 There are many available tools and instead of discussing each one here,
@@ -164,6 +231,10 @@ If you have made no past (successful) submissions, then your output may look lik
 ```
 No matching submission found.
 ```
+
+#### Managing your Password
+
+# TODO
 
 ### Commands for TAs and Instructors
 

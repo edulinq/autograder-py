@@ -1,0 +1,34 @@
+{
+    "module": "autograder.api.admin.fetchlogs",
+    "arguments": {
+        "course": "course-without-source",
+        "level": "DEBUG"
+    },
+    "output-modifier": "clean_output_logs",
+    "output": {
+        "success": true,
+        "error-messages": null,
+        "results": [
+            {
+                "level": -10,
+                "message": "Loaded course.",
+                "unix-time": 0,
+                "course": "course-without-source",
+                "attributes": {
+                    "num-assignments": 0,
+                    "path": "/some/path/course.json"
+                }
+            },
+            {
+                "level": -10,
+                "message": "Loaded course.",
+                "unix-time": 0,
+                "course": "course-without-source",
+                "attributes": {
+                    "num-assignments": 0,
+                    "path": "/some/path/course.json"
+                }
+            }
+        ]
+    }
+}

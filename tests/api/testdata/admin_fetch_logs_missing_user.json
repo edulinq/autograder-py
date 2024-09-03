@@ -1,0 +1,16 @@
+{
+    "module": "autograder.api.admin.fetchlogs",
+    "arguments": {
+        "course": "course-without-source",
+        "level": "DEBUG",
+        "target-email": "ZZZ"
+    },
+    "output-modifier": "clean_output_logs",
+    "output": {
+        "success": false,
+        "error-messages": [
+            "Could not find user: 'ZZZ'."
+        ],
+        "results": null
+    }
+}

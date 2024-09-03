@@ -1,0 +1,32 @@
+{
+    "module": "autograder.api.lms.uploadscores",
+    "arguments": {
+        "assignment-lms-id": "12345",
+        "scores": [
+            {
+                "email": "course-student@test.edulinq.org",
+                "score": 10
+            },
+            {
+                "email": "zzz@test.edulinq.org",
+                "score": 10
+            }
+        ]
+    },
+    "output": {
+        "count": 0,
+        "error-count": 2,
+        "unrecognized-users": [
+            {
+                "row": 1,
+                "entry": "zzz@test.edulinq.org"
+            }
+        ],
+        "no-lms-id-users": [
+            {
+                "row": 0,
+                "entry": "course-student@test.edulinq.org"
+            }
+        ]
+    }
+}
