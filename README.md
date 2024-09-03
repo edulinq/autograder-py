@@ -99,7 +99,7 @@ To know who you are and what you are working on the autograder needs a few confi
  - `course` -- The ID for the course you are enrolled in.
  - `assignment` -- The current assignment you are working on (does not always apply)..
  - `user` -- Your username (which is also your email).
- - `pass` -- You password (probably sent to you by a TA or the autograding server in an email).
+ - `pass` -- Your password (probably sent to you by the autograding server in an email).
 
 All these options can be set on the command line when invoking on of these tools, e.g.,:
 ```sh
@@ -234,7 +234,7 @@ No matching submission found.
 
 #### Managing your Password
 
-You password is the same throughout a single instance of the autograding server.
+Your password is the same throughout a single instance of the autograding server.
 This means that multiple courses that run on the same server will all use your same account
 (and therefore password).
 

@@ -60,7 +60,7 @@ def _get_parser():
         + ' Use `-s`/`--stdin` to suppress the prompt (and confirmation),'
         + ' and just read the password from stdin.'
         + ' Space will be stripped off of password read through stdin'
-        + ' (with of without `--stdin`.'
+        + ' (with or without `--stdin`.'
         + ' Empty passwords are not allowed.')
 
     parser.description += "\n\n" + addendum
