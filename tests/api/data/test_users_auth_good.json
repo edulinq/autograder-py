@@ -1,7 +1,0 @@
-{
-    "endpoint": "users/auth",
-    "arguments": {},
-    "output": {
-        "success": true
-    }
-}

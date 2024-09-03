@@ -14,29 +14,26 @@ import inspect
 import os
 import uuid
 
-def list_dir(base_dir, command_prefix, default_parser):
-    for dirent in sorted(os.listdir(base_dir)):
-        path = os.path.join(base_dir, dirent)
-        cmd = command_prefix + '.' + os.path.splitext(dirent)[0]
+def main():
+    """
+    Run as if this process has been called as a executable.
+    This will parse the command line and list the caller's dir.
+    """
 
-        if (dirent.startswith('__')):
-            continue
+    args = _get_parser().parse_args()
+    auto_list(recursive = args.recursive, callers_stack_index = 2)
+    return 0
 
-        if (os.path.isfile(path)):
-            _handle_file(path, cmd, default_parser)
-        else:
-            _handle_dir(path, cmd)
-
-def auto_list(default_parser = None):
+def auto_list(recursive = False, default_parser = None, callers_stack_index = 1):
     """
     Will print the caller's prompt and call list_dir() on it,
     but will figure out the package's prompt (doc string), base_dir,
-    and command_prefix automatially.
+    and command_prefix automatically.
     This will use the inspect library, so only use in places that use code normally.
     """
 
     try:
-        frameInfo = inspect.stack()[1]
+        frameInfo = inspect.stack()[callers_stack_index]
 
         path = frameInfo.filename
         base_dir = os.path.dirname(path)
@@ -50,7 +47,23 @@ def auto_list(default_parser = None):
         default_parser = argparse.ArgumentParser()
 
     print(module.__doc__.strip())
-    list_dir(base_dir, package, default_parser)
+    list_dir(base_dir, package, default_parser, recursive)
+
+def list_dir(base_dir, command_prefix, default_parser, recursive):
+    for dirent in sorted(os.listdir(base_dir)):
+        path = os.path.join(base_dir, dirent)
+        cmd = command_prefix + '.' + os.path.splitext(dirent)[0]
+
+        if (dirent.startswith('__')):
+            continue
+
+        if (os.path.isfile(path)):
+            _handle_file(path, cmd, default_parser)
+        else:
+            _handle_dir(path, cmd)
+
+            if (recursive):
+                list_dir(path, cmd, default_parser, recursive)
 
 def _handle_file(path, cmd, default_parser):
     if (not path.endswith('.py')):
@@ -100,3 +113,15 @@ def _import_path(path, module_name = None):
     spec.loader.exec_module(module)
 
     return module
+
+def _get_parser():
+    parser = argparse.ArgumentParser(
+        description = 'Show the tools available in this package.',
+        epilog = ("Note that you don't need to provide a package as an argument,"
+            + " since you already called this on the target package."))
+
+    parser.add_argument('-r', '--recursive', dest = 'recursive',
+        action = 'store_true', default = False,
+        help = 'Recur into each package to look for tools and subpackages (default: %(default)s).')
+
+    return parser
