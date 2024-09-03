@@ -34,14 +34,6 @@ def main():
 def _get_parser():
     parser = autograder.api.users.upsert._get_parser()
 
-    parser.add_argument('--skip-inserts', dest = 'skip-inserts',
-        action = 'store_true', default = False,
-        help = 'Skip inserts (default: %(default)s).')
-
-    parser.add_argument('--skip-updates', dest = 'skip-updates',
-        action = 'store_true', default = False,
-        help = 'Skip updates (default: %(default)s).')
-
     parser.add_argument('--new-email', dest = 'new-email',
         action = 'store', type = str, required = True,
         help = 'The email of the user to upsert.')
