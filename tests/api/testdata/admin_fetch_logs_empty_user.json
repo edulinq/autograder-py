@@ -2,7 +2,7 @@
     "module": "autograder.api.admin.fetchlogs",
     "arguments": {
         "course": "course-without-source",
-        "level": "INFO",
+        "level": "DEBUG",
         "target-email": "course-other@test.edulinq.org"
     },
     "output-modifier": "clean_output_logs",

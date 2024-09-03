@@ -2,7 +2,7 @@
     "module": "autograder.api.admin.fetchlogs",
     "arguments": {
         "course": "course-without-source",
-        "level": "INFO",
+        "level": "DEBUG",
         "assignment-id": "ZZZ"
     },
     "output-modifier": "clean_output_logs",
