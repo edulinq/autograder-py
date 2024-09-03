@@ -6,7 +6,15 @@ API_RESPONSE_KEY_SUCCESS = 'success'
 API_RESPONSE_KEY_MESSAGE = 'message'
 API_RESPONSE_KEY_CONTENT = API_REQUEST_JSON_KEY
 
-ROLES = [
+SERVER_ROLES = [
+    'unknown',
+    'user',
+    'creator',
+    'admin',
+    'owner',
+]
+
+COURSE_ROLES = [
     'unknown',
     'other',
     'student',

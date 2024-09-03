@@ -69,3 +69,6 @@ def list_add_users(result, table = False):
                 error['index'], error['email'], error['message']))
 
     list_sync_users(result, table = table)
+
+def list_user_op_results(result, table = False):
+    print(result)

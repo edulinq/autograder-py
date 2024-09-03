@@ -209,7 +209,7 @@ PARAM_FILTER_ROLE = APIParam('filter-role',
         'Only show results from users with this role (all roles if unknown (default)).',
         required = False,
         parser_options = {'action': 'store', 'default': 'unknown',
-            'choices': autograder.api.constants.ROLES})
+            'choices': autograder.api.constants.COURSE_ROLES})
 
 PARAM_FORCE = APIParam('force',
         'Force the operation, overwriting and existing resources.',
