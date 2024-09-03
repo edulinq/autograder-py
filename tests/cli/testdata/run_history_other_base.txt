@@ -1,0 +1,12 @@
+{
+    "cli": "autograder.run.history",
+    "output_check": "content_equals_ignore_time",
+    "arguments": [
+        "--target-email", "course-student@test.edulinq.org"
+    ]
+}
+---
+Found 3 submissions.
+    Submission ID: 1697406256, Score: 0 / 2, Time: 2023-10-16 06:44.
+    Submission ID: 1697406265, Score: 1 / 2, Time: 2023-10-16 06:44.
+    Submission ID: 1697406272, Score: 2 / 2, Time: 2023-10-16 06:44.

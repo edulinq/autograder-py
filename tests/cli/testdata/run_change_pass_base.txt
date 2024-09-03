@@ -1,0 +1,10 @@
+{
+    "cli": "autograder.run.change-pass",
+    "arguments": [
+        "--user", "course-student@test.edulinq.org",
+        "--pass", "course-student",
+        "--new-pass", "spooky"
+    ]
+}
+---
+You have successfully changed your password.

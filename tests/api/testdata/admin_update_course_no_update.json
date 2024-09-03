@@ -1,0 +1,9 @@
+{
+    "module": "autograder.api.admin.updatecourse",
+    "arguments": {
+        "course": "course-without-source"
+    },
+    "output": {
+        "course-updated": false
+    }
+}
