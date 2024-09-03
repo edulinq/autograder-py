@@ -234,7 +234,32 @@ No matching submission found.
 
 #### Managing your Password
 
-# TODO
+You password is the same throughout a single instance of the autograding server.
+This means that multiple courses that run on the same server will all use your same account
+(and therefore password).
+
+Your initial password should have been emailed to the email associated with your account
+(typically your school email address).
+
+To reset your password,
+use the `autograder.run.reset-pass` (aka `autograder.cli.users.pass.reset`) command:
+
+```sh
+python3 -m autograder.run.reset-pass
+```
+
+This will email you a new random password to your account's email.
+Once your password is reset, it is recommended to change it to whatever you want.
+
+To change your password, you can use the
+`autograder.run.change-pass` (aka `autograder.cli.users.pass.change`) command:
+
+```sh
+python3 -m autograder.run.change-pass
+```
+
+You will then be prompted to enter (and re-enter) your new password.
+See the command's help prompt (`--help`) for additional ways you can supply your password.
 
 ### Commands for TAs and Instructors
 
