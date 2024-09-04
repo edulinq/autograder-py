@@ -1,9 +1,8 @@
 {
     "cli": "autograder.cli.courses.assignments.submissions.fetch.user.peek",
     "arguments": [
-        "--target-email", "ZZZ"
     ],
-    "exit_status": 1
+    "exit-status": 2
 }
 ---
-No matching user found.
+No matching submission found.

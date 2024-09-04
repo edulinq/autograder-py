@@ -37,7 +37,7 @@ class CLITest(tests.server.base.ServerBaseTest):
         temp_dir = os.path.join(CLITest._base_temp_dir, test_name)
 
         module_name = options['cli']
-        exit_status = options.get('exit_status', 0)
+        exit_status = options.get('exit-status', 0)
         is_error = options.get('error', False)
 
         output_check_name = options.get('output_check', DEFAULT_OUTPUT_CHECK)
@@ -115,7 +115,7 @@ def _replace_path(text, key, base_dir):
     if (match is not None):
         filename = match.group(1)
 
-        # Normalize any path seperators.
+        # Normalize any path separators.
         filename = os.path.join(*filename.split('/'))
 
         if (filename == ''):
@@ -183,12 +183,12 @@ def _get_test_method(test_name, path):
 
                 ex = ex.__context__
 
-            self.assertEqual(expected_output, str(ex))
+            self.assertEqual(expected_output, str(ex), msg = "error output")
             return
         finally:
             sys.argv = old_args
 
-        self.assertEqual(expected_exit_status, actual_exit_status)
+        self.assertEqual(expected_exit_status, actual_exit_status, msg = "exit status")
 
         output_check(self, expected_output, actual_output)
 
@@ -208,7 +208,21 @@ def content_equals_ignore_time(test_case, expected, actual, **kwargs):
     expected = re.sub(TIME_REGEX, TIME_REPLACEMENT, expected)
     actual = re.sub(TIME_REGEX, TIME_REPLACEMENT, actual)
 
-    return content_equals(test_case, expected, actual)
+    content_equals(test_case, expected, actual)
+
+def json_logs_equal(test_case, expected, actual, **kwargs):
+    """
+    A special function for JSON logs that understands the log fields.
+    """
+
+    expected = json.loads(expected)
+    actual = json.loads(actual)
+
+    for records in [expected, actual]:
+        for record in records:
+            record['unix-time'] = -1
+
+    test_case.assertListEqual(expected, actual)
 
 # Ensure that the output has content.
 def has_content(test_case, expected, actual, min_length = 100):

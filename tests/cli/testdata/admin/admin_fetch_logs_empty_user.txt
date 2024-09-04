@@ -1,0 +1,12 @@
+{
+    "cli": "autograder.cli.admin.fetch-logs",
+    "output_check": "json_logs_equal",
+    "arguments": [
+        "--course", "course-without-source",
+        "--target-email", "course-other@test.edulinq.org",
+        "--level", "DEBUG",
+        "--json"
+    ]
+}
+---
+[]
