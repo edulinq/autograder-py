@@ -1,0 +1,12 @@
+{
+    "cli": "autograder.cli.users.upsert",
+    "arguments": [
+        "--user", "server-admin@test.edulinq.org",
+        "--pass", "server-admin",
+        "--new-email", "server-user@test.edulinq.org",
+        "--new-role", "owner"
+    ]
+}
+---
+Encountered 1 validation errors while operating on user: 'server-user@test.edulinq.org'.
+    Index: 0, Message: 'You have insufficient permissions for the requested operation.'.
