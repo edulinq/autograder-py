@@ -1,12 +1,34 @@
 HEADERS = ['email', 'name', 'role', 'lms-id']
 SYNC_HEADERS = HEADERS + ['operation']
 
+INDENT = '    '
+
 SYNC_USERS_KEYS = [
     ('add-users', 'Added', 'add'),
     ('mod-users', 'Modified', 'mod'),
     ('del-users', 'Deleted', 'delete'),
     ('skip-users', 'Skipped', 'skip'),
 ]
+
+USER_OP_KEYS = [
+    ('added', 'Added'),
+    ('modified', 'Modified'),
+    ('removed', 'Removed'),
+    ('skipped', 'Skipped'),
+    ('not-exists', 'Not Exists'),
+    ('emailed', 'Emailed'),
+    ('enrolled', 'Enrolled'),
+    ('dopped', 'Dropped'),
+]
+
+USER_OP_ERROR_KEYS = [
+    ('validation-errors', 'Validation Errors'),
+    ('system-errors', 'System Errors'),
+]
+
+ALL_USER_OP_KEYS = [
+    ('email', 'Email'),
+] + USER_OP_KEYS + USER_OP_ERROR_KEYS
 
 def list_users(users, table = False):
     if (table):
@@ -48,7 +70,7 @@ def _list_sync_users(sync_users):
             continue
 
         print("%s Users:" % (label))
-        _list_users(users, indent = '    ')
+        _list_users(users, indent = INDENT)
 
 def _list_sync_users_table(sync_users):
     print("\t".join(SYNC_HEADERS))
@@ -70,5 +92,70 @@ def list_add_users(result, table = False):
 
     list_sync_users(result, table = table)
 
-def list_user_op_results(result, table = False):
-    print(result)
+def _list_user_op_results(results):
+    op_results = {}
+    for (key, label) in USER_OP_KEYS:
+        emails = []
+        for result in results:
+            if (result.get(key, None) is not None):
+                emails.append(result['email'])
+
+        if (len(emails) > 0):
+            op_results[label] = emails
+
+    _print_user_op_results_from_dict(op_results)
+
+    # Print all errors last so users can easily see them.
+    for result in results:
+        val_errors = result.get('validation-errors', None)
+        if ((val_errors is not None) and (len(val_errors) > 0)):
+            print("Encountered %d validation errors while operating on user: '%s'." % (
+                len(val_errors), result['email']))
+
+            for i in range(len(val_errors)):
+                print(INDENT + "Index: %d, Message: '%s'." % (i, val_errors[i]['external-message']))
+
+        sys_errors = result.get('system-errors', None)
+        if ((sys_errors is not None) and (len(sys_errors) > 0)):
+            print("Encountered %d system errors while operating on user: '%s'." % (
+                len(sys_errors), result['email']))
+
+            for i in range(len(sys_errors)):
+                print(INDENT + "Index: %d, Message: '%s'." % (i, sys_errors[i]['external-message']))
+
+def _list_user_op_results_table(results, header = True, keys = ALL_USER_OP_KEYS):
+    rows = []
+    for result in results:
+        # Clean the error messages into a better format.
+        for error_key, _ in USER_OP_ERROR_KEYS:
+            if (result.get(error_key, None) is not None):
+                result[error_key] = [error['external-message'] for error in result[error_key]]
+
+        rows.append([result.get(key, '') for key, _ in keys])
+
+    _print_tsv(rows, header, [header_key for _, header_key in keys])
+
+def list_user_op_results(results, table = False):
+    if (table):
+        _list_user_op_results_table(results)
+    else:
+        _list_user_op_results(results)
+
+def _print_user_op_results_from_dict(result):
+    lines = []
+    for label, emails in result.items():
+        lines.append(label)
+        for email in emails:
+            lines.append(INDENT + email)
+
+    print("\n".join(lines))
+
+def _print_tsv(rows, header, header_keys):
+    lines = []
+    if (header):
+        lines.append("\t".join(header_keys))
+
+    for row in rows:
+        lines.append("\t".join([str(value) for value in row]))
+
+    print("\n".join(lines))

@@ -7,7 +7,6 @@ API_RESPONSE_KEY_MESSAGE = 'message'
 API_RESPONSE_KEY_CONTENT = API_REQUEST_JSON_KEY
 
 SERVER_ROLES = [
-    'unknown',
     'user',
     'creator',
     'admin',

@@ -21,11 +21,11 @@ def run(arguments):
         'course-lms-id': arguments['new-lms-id'],
     }]
 
-    arguments['send-emails'] = ~arguments['skip-emails']
+    arguments['send-emails'] = not arguments['skip-emails']
 
     result = autograder.api.users.upsert.send(arguments, exit_on_error = True)
 
-    autograder.cli.common.list_user_op_results(result, table = arguments['table'])
+    autograder.cli.common.list_user_op_results(result['results'], table = arguments['table'])
     return 0
 
 def main():
@@ -33,6 +33,11 @@ def main():
 
 def _get_parser():
     parser = autograder.api.users.upsert._get_parser()
+
+    parser.add_argument('--skip-emails', dest = 'skip-emails',
+        action = 'store_true', default = False,
+        help = 'Skip sending any emails. Be aware that this may result in inaccessible\
+                information.')
 
     parser.add_argument('--new-email', dest = 'new-email',
         action = 'store', type = str, required = True,

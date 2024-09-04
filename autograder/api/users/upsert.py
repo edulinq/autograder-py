@@ -7,7 +7,6 @@ API_PARAMS = [
     autograder.api.config.PARAM_USER_PASS,
 
     autograder.api.config.PARAM_DRY_RUN,
-    autograder.api.config.PARAM_SKIP_EMAILS,
 
     autograder.api.config.APIParam('skip-inserts',
         'Skip inserts (default: False).',
