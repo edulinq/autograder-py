@@ -18,6 +18,8 @@ def run(arguments):
     autograder.cli.courses.assignments.submissions.common.output_grading_result(
         result['grading-result'], arguments.out_dir)
 
+    print("Wrote submission to '%s'." % (arguments.out_dir))
+
     return 0
 
 def main():

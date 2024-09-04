@@ -1,0 +1,14 @@
+{
+    "cli": "autograder.cli.courses.assignments.submissions.fetch.course.scores",
+    "output_check": "content_equals_ignore_time",
+    "arguments": [
+        "--filter-role", "unknown"
+    ]
+}
+---
+email	has_submission	short-id	score	grading_start_time	message
+course-admin@test.edulinq.org	False				
+course-grader@test.edulinq.org	False				
+course-other@test.edulinq.org	False				
+course-owner@test.edulinq.org	False				
+course-student@test.edulinq.org	True	1697406272	2	2023-10-15T21:44:33Z	

@@ -1,0 +1,9 @@
+{
+    "cli": "autograder.cli.courses.assignments.submissions.fetch.user.attempt",
+    "arguments": [
+        "--target-email", "ZZZ"
+    ],
+    "exit-status": 1
+}
+---
+No matching user found.

@@ -24,7 +24,7 @@ def run(arguments):
         autograder.cli.courses.assignments.submissions.common.output_grading_result(grading_result,
                 out_dir, True)
 
-    print("Wrote %d attempts to '%s'." % (len(result['grading-results']), out_dir))
+    print("Wrote %d attempts to '%s'." % (len(result['grading-results']), arguments.out_dir))
 
     return 0
 

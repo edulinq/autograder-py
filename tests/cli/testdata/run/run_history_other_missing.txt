@@ -3,7 +3,7 @@
     "arguments": [
         "--target-email", "ZZZ"
     ],
-    "exit_status": 1
+    "exit-status": 1
 }
 ---
 No matching user found.

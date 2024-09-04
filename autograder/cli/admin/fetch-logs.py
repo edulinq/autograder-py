@@ -37,7 +37,7 @@ def _log_record_str(record):
     if (record['level'] in LEVEL_TO_STRING):
         level = LEVEL_TO_STRING[record['level']]
 
-    timestamp = autograder.util.timestamp.get(record['unix-time'] / 1000000)
+    timestamp = autograder.util.timestamp.get(record['unix-time'] / 1000000, pretty = True)
 
     message = record['message']
 

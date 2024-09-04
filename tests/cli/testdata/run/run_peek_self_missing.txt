@@ -2,7 +2,7 @@
     "cli": "autograder.run.peek",
     "arguments": [
     ],
-    "exit_status": 2
+    "exit-status": 2
 }
 ---
 No matching submission found.

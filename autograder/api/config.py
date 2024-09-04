@@ -153,7 +153,9 @@ def get_argument_parser(
     Create an argparse parser that has all the standard options for API requests.
     """
 
-    parser = argparse.ArgumentParser(description = description)
+    parser = argparse.ArgumentParser(
+        description = description,
+        formatter_class = argparse.RawDescriptionHelpFormatter)
 
     parser.add_argument('--config', dest = CONFIG_PATHS_KEY,
         action = 'append', type = str,
