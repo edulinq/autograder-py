@@ -1,0 +1,12 @@
+{
+    "module": "autograder.api.users.auth",
+    "arguments": {
+        "pass": "foo"
+    },
+    "output": {
+        "code": 401,
+        "message": "Authentication failure, check email and password.",
+        "python-message": "Failed to complete operation: Authentication failure, check email and password."
+    },
+    "error": true
+}

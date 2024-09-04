@@ -9,8 +9,7 @@ import sys
 import autograder.util.cli
 
 def main():
-    autograder.util.cli.auto_list()
-    return 0
+    return autograder.util.cli.main()
 
 if (__name__ == '__main__'):
     sys.exit(main())

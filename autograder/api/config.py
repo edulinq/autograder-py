@@ -21,11 +21,11 @@ class APIParam(object):
             hash = False):
         self.key = str(key)
         if ((key is None) or (self.key == '')):
-            raise autograder.api.error.APIError("APIParam cannot have an empty key.")
+            raise autograder.api.error.APIError(None, "APIParam cannot have an empty key.")
 
         self.description = str(description)
         if ((description is None) or (self.description == '')):
-            raise autograder.api.error.APIError("APIParam cannot have an empty description.")
+            raise autograder.api.error.APIError(None, "APIParam cannot have an empty description.")
 
         self.config_key = config_key
         if (self.config_key is None):
@@ -68,7 +68,7 @@ def _parse_api_config(config, params, additional_required_keys, additional_optio
     for param in params:
         if (param.config_key not in config):
             if (param.required):
-                raise autograder.api.error.APIError(
+                raise autograder.api.error.APIError(None,
                     f"Required parameter '{param.config_key}' not set.")
 
             continue
@@ -81,7 +81,7 @@ def _parse_api_config(config, params, additional_required_keys, additional_optio
 
     for key in additional_required_keys:
         if (key not in config):
-            raise autograder.api.error.APIError(f"Required parameter '{key}' not set.")
+            raise autograder.api.error.APIError(None, f"Required parameter '{key}' not set.")
 
         extra[key] = config[key]
 
@@ -153,7 +153,9 @@ def get_argument_parser(
     Create an argparse parser that has all the standard options for API requests.
     """
 
-    parser = argparse.ArgumentParser(description = description)
+    parser = argparse.ArgumentParser(
+        description = description,
+        formatter_class = argparse.RawDescriptionHelpFormatter)
 
     parser.add_argument('--config', dest = CONFIG_PATHS_KEY,
         action = 'append', type = str,
@@ -218,7 +220,7 @@ PARAM_FORCE = APIParam('force',
 
 PARAM_NEW_PASS = APIParam('new-pass',
         'The new password to set for the user that is the target of this request.',
-        required = False, hash = True)
+        required = True, hash = True)
 
 PARAM_SKIP_EMAILS = APIParam('skip-emails',
         'Skip sending any emails. Be aware that this may result in inaccessible information.',

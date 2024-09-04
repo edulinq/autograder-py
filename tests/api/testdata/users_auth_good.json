@@ -1,0 +1,8 @@
+{
+    "module": "autograder.api.users.auth",
+    "arguments": {
+    },
+    "output": {
+        "success": true
+    }
+}

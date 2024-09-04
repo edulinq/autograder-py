@@ -1,7 +1,0 @@
-{
-    "endpoint": "admin/update/course",
-    "arguments": {},
-    "output": {
-        "course-updated": true
-    }
-}
