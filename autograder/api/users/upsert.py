@@ -20,12 +20,12 @@ API_PARAMS = [
         parser_options = {'action': 'store_true', 'default': False}
     ),
 
-    autograder.api.config.APIParam('raw-users',
-        'A list of users to upsert.',
-        required = True, cli_param = False),
-
     autograder.api.config.APIParam('send-emails',
         'Send any emails.',
+        required = True, cli_param = False),
+
+    autograder.api.config.APIParam('raw-users',
+        'A list of users to upsert.',
         required = True, cli_param = False),
 ]
 

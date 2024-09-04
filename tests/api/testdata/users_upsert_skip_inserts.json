@@ -1,0 +1,28 @@
+{
+    "module": "autograder.api.users.upsert",
+    "arguments": {
+        "user": "server-admin@test.edulinq.org",
+        "pass": "server-admin",
+        "send-emails": true,
+        "raw-users": [
+            {
+                "email": "alt-new-user@test.edulinq.org",
+                "name": "",
+                "role": "user",
+                "pass": "",
+                "course": "",
+                "course-role": "student",
+                "course-lms-id": ""
+            }
+        ],
+        "skip-inserts": true
+    },
+    "output": {
+		"results": [
+            {
+                "email": "alt-new-user@test.edulinq.org",
+                "skipped": true
+            }
+        ]
+    }
+}

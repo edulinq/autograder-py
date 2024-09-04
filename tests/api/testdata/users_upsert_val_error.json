@@ -1,0 +1,31 @@
+{
+    "module": "autograder.api.users.upsert",
+    "arguments": {
+        "user": "server-admin@test.edulinq.org",
+        "pass": "server-admin",
+        "send-emails": true,
+        "raw-users": [
+			{
+				"email": "server-user@test.edulinq.org",
+				"name": "",
+				"role": "owner",
+				"pass": "",
+				"course": "",
+				"course-role": "student",
+				"course-lms-id": ""
+			}
+        ]
+    },
+    "output": {
+		"results": [
+            {
+                "email": "server-user@test.edulinq.org",
+				"validation-errors": [
+                    {
+                        "external-message": "You have insufficient permissions for the requested operation."
+                    }
+                ]
+            }
+        ]
+    }
+}
