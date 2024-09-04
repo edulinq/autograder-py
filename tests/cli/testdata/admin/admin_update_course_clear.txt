@@ -1,0 +1,8 @@
+{
+    "cli": "autograder.cli.admin.update-course",
+    "arguments": [
+        "--clear"
+    ]
+}
+---
+Course updated.

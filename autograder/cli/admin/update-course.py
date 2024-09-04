@@ -8,7 +8,9 @@ def run(arguments):
     if (result['course-updated']):
         print("Course updated.")
     else:
-        print("Course not updated. The request was successful, does the course have a source?")
+        print("Course not updated.")
+        print("The request to the server was successful, no errors were encountered.")
+        print("Does the course have a source?")
 
     return 0
 
