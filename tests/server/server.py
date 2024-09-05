@@ -246,6 +246,31 @@ class Handler(http.server.BaseHTTPRequestHandler):
 
         key = _create_request_lookup_key(api_module_info, data, normalize_args = False)
         if (key not in Handler._static_responses):
-            raise ValueError("Could not find API response for '%s'." % (key))
+            raise ResponseKeyError(key)
 
         return Handler._static_responses[key]['output']
+
+class ResponseKeyError(ValueError):
+    def __init__(self, key):
+        super().__init__("Could not find API response for key '%s'." % (key))
+        self._key = key
+
+    def __str__(self):
+        lines = []
+
+        key_str = json.dumps(json.loads(self._key), indent = 4)
+
+        known_keys = list(sorted(Handler._static_responses.keys()))
+        known_keys = [json.loads(known_key) for known_key in known_keys]
+
+        known_keys = sorted(known_keys, key = lambda key: key['endpoint'])
+
+        lines.append("Could not find API response for key:\n%s\n" % (key_str))
+        lines.append("All known keys are below (sorted by endpoint).")
+        lines.append("All fields must match for the server to find the proper response.")
+        lines.append("Ensure that the proper API test case exists for your desired response.")
+        lines.append("--- BEGIN Known Keys ---")
+        lines.append(json.dumps(known_keys, indent = 4))
+        lines.append("--- END Known Keys ---")
+
+        return "\n".join(lines)
