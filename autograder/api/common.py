@@ -20,7 +20,7 @@ def handle_api_request(arguments, params, endpoint, exit_on_error = False, files
     except autograder.api.error.AutograderError as ex:
         if (exit_on_error):
             print("ERROR: " + ex.args[0], file = sys.stderr)
-            sys.exit(1)
+            autograder.api.error.exit_from_error(1)
 
         raise ex
 
