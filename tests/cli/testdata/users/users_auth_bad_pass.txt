@@ -1,0 +1,8 @@
+{
+    "cli": "autograder.cli.users.auth",
+    "arguments": [
+        "--pass", "foo"
+    ]
+}
+---
+Authentication failed.
