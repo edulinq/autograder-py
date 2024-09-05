@@ -4,6 +4,7 @@
         "--user", "server-admin@test.edulinq.org",
         "--pass", "server-admin",
         "--new-email", "server-user@test.edulinq.org",
+        "--new-role", "creator",
         "--skip-updates"
     ]
 }

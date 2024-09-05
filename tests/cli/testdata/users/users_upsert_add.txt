@@ -3,11 +3,12 @@
     "arguments": [
         "--user", "server-admin@test.edulinq.org",
         "--pass", "server-admin",
-        "--new-email", "cli-new-user@test.edulinq.org"
+        "--new-email", "new-user@test.edulinq.org",
+        "--skip-emails", false
     ]
 }
 ---
 Added
-    cli-new-user@test.edulinq.org
+    new-user@test.edulinq.org
 Emailed
-    cli-new-user@test.edulinq.org
+    new-user@test.edulinq.org

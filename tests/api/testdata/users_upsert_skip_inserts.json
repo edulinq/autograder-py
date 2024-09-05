@@ -3,7 +3,6 @@
     "arguments": {
         "user": "server-admin@test.edulinq.org",
         "pass": "server-admin",
-        "send-emails": true,
         "raw-users": [
             {
                 "email": "alt-new-user@test.edulinq.org",

@@ -22,11 +22,13 @@ API_PARAMS = [
 
     autograder.api.config.APIParam('send-emails',
         'Send any emails.',
-        required = True, cli_param = False),
+        required = False, cli_param = False
+    ),
 
     autograder.api.config.APIParam('raw-users',
         'A list of users to upsert.',
-        required = True, cli_param = False),
+        required = True, cli_param = False
+    ),
 ]
 
 DESCRIPTION = 'Upsert one or more users to the server (Update if exists, otherwise insert).'

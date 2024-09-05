@@ -3,10 +3,10 @@
     "arguments": [
         "--user", "server-admin@test.edulinq.org",
         "--pass", "server-admin",
-        "--new-email", "alt-cli-user@test.edulinq.org",
+        "--new-email", "alt-new-user@test.edulinq.org",
         "--skip-inserts"
     ]
 }
 ---
 Skipped
-    alt-cli-user@test.edulinq.org
+    alt-new-user@test.edulinq.org
