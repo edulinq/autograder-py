@@ -17,7 +17,7 @@ def handle_api_request(arguments, params, endpoint, exit_on_error = False, files
 
     try:
         return _handle_api_request(arguments, params, endpoint, exit_on_error, files)
-    except autograder.api.error.APIError as ex:
+    except autograder.api.error.AutograderError as ex:
         if (exit_on_error):
             print("ERROR: " + ex.args[0], file = sys.stderr)
             sys.exit(1)
@@ -59,11 +59,18 @@ def send_api_request(endpoint, server = None, verbose = False, data = {}, files 
     if (verbose):
         print("\nAutograder Request Data:\n---\n%s\n---\n" % (json.dumps(data, indent = 4)))
 
-    raw_response = requests.request(
-        method = 'POST',
-        url = url,
-        data = {autograder.api.constants.API_REQUEST_JSON_KEY: json.dumps(data)},
-        files = post_files)
+    try:
+        raw_response = requests.request(
+            method = 'POST',
+            url = url,
+            data = {autograder.api.constants.API_REQUEST_JSON_KEY: json.dumps(data)},
+            files = post_files)
+    except requests.exceptions.ConnectionError:
+        raise autograder.api.error.ConnectionError(("Could not connect to autograder server"
+            + " '%s'." % (server)
+            + " This is a networking issue"
+            + " (e.g., network down, server down, wrong server address),"
+            + " not an authentication issue."))
 
     for file in post_files.values():
         file.close()
@@ -76,7 +83,7 @@ def send_api_request(endpoint, server = None, verbose = False, data = {}, files 
                 raw_response.text)) from ex
 
     if (verbose):
-        print("\nAutograder Reponse:\n---\n%s\n---\n" % (json.dumps(response, indent = 4)))
+        print("\nAutograder Response:\n---\n%s\n---\n" % (json.dumps(response, indent = 4)))
 
     if (not response.get(autograder.api.constants.API_RESPONSE_KEY_SUCCESS, False)):
         message = 'Request to the autograder failed.'
