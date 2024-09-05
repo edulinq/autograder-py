@@ -1,0 +1,11 @@
+{
+    "cli": "autograder.cli.users.tokens.create",
+    "arguments": [
+        "--name", "foo"
+    ]
+}
+---
+Token ID: <TOKEN_ID>
+Token Text: <TOKEN_CLEARTEXT>
+
+Copy down the token text and keep it safe, this will be the only time it is ever shown.
