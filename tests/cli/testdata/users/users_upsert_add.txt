@@ -3,8 +3,7 @@
     "arguments": [
         "--user", "server-admin@test.edulinq.org",
         "--pass", "server-admin",
-        "--new-email", "new-user@test.edulinq.org",
-        "--skip-emails", false
+        "--new-email", "new-user@test.edulinq.org"
     ]
 }
 ---

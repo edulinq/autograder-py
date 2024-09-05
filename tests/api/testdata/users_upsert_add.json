@@ -4,6 +4,9 @@
         "user": "server-admin@test.edulinq.org",
         "pass": "server-admin",
         "send-emails": true,
+        "skip-inserts": false,
+        "skip-updates": false,
+        "dry-run": false,
         "raw-users": [
 			{
 				"email": "new-user@test.edulinq.org",

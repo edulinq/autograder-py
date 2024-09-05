@@ -136,10 +136,12 @@ def _list_user_op_results_table(results, header = True, keys = ALL_USER_OP_KEYS)
     _print_tsv(rows, header, [header_key for _, header_key in keys])
 
 def list_user_op_results(results, table = False):
+    sorted_results = sorted(results, key=lambda x: x["email"])
+
     if (table):
-        _list_user_op_results_table(results)
+        _list_user_op_results_table(sorted_results)
     else:
-        _list_user_op_results(results)
+        _list_user_op_results(sorted_results)
 
 def _print_user_op_results_from_dict(result):
     lines = []
