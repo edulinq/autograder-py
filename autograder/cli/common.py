@@ -103,7 +103,8 @@ def _list_user_op_results(results):
         if (len(emails) > 0):
             op_results[label] = emails
 
-    _print_user_op_results_from_dict(op_results)
+    if (len(op_results) > 0):
+        _print_user_op_results_from_dict(op_results)
 
     # Print all errors last so users can easily see them.
     for result in results:

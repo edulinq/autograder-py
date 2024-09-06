@@ -101,8 +101,8 @@ def _get_parser():
 
     parser.add_argument('--skip-emails', dest = 'skip-emails',
         action = 'store_true', default = False,
-        help = 'Skip sending any emails. Be aware that this may result in inaccessible\
-                information.')
+        help = 'Skip sending any emails. Be aware that this may result in inaccessible'
+                + ' information.')
 
     parser.add_argument('--table', dest = 'table',
         action = 'store_true', default = False,
