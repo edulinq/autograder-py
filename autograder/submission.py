@@ -160,7 +160,7 @@ def run_test_submission(assignment_config_path, submission_config_path, debug = 
     finally:
         new_module_keys = set(sys.modules.keys())
         for new_module_key in (new_module_keys - old_module_keys):
-            # Numpy is a special case that iv very delicate to reloads.
+            # Numpy is a special case that is sensitive to reloads.
             # Note that this would be a security concern (a submission hijacking numpy),
             # but this is not used in docker-based grading.
             if (new_module_key.startswith('numpy')):
