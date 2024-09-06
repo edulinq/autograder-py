@@ -107,41 +107,35 @@ def _list_user_op_results(results):
 
     # Print all errors last so users can easily see them.
     for result in results:
-        val_errors = result.get('validation-errors', None)
-        if ((val_errors is not None) and (len(val_errors) > 0)):
-            print("Encountered %d validation errors while operating on user: '%s'." % (
-                len(val_errors), result['email']))
+        for error_key, label in USER_OP_ERROR_KEYS:
+            if (result.get(error_key, None) is not None):
+                _clean_result_error(result, error_key)
 
-            for i in range(len(val_errors)):
-                print(INDENT + "Index: %d, Message: '%s'." % (i, val_errors[i]['external-message']))
+                print("Encountered %d %s while operating on user: '%s'." % (
+                    len(result[error_key]), label.lower(), result['email']))
 
-        sys_errors = result.get('system-errors', None)
-        if ((sys_errors is not None) and (len(sys_errors) > 0)):
-            print("Encountered %d system errors while operating on user: '%s'." % (
-                len(sys_errors), result['email']))
-
-            for i in range(len(sys_errors)):
-                print(INDENT + "Index: %d, Message: '%s'." % (i, sys_errors[i]['external-message']))
+                for i in range(len(result[error_key])):
+                    print(INDENT + "Index: %d, Message: '%s'." % (i, result[error_key][i]))
 
 def _list_user_op_results_table(results, header = True, keys = ALL_USER_OP_KEYS):
     rows = []
     for result in results:
-        # Clean the error messages into a better format.
         for error_key, _ in USER_OP_ERROR_KEYS:
             if (result.get(error_key, None) is not None):
-                result[error_key] = [error['external-message'] for error in result[error_key]]
+                _clean_result_error(result, error_key)
 
         rows.append([result.get(key, '') for key, _ in keys])
 
     _print_tsv(rows, header, [header_key for _, header_key in keys])
 
 def list_user_op_results(results, table = False):
-    sorted_results = sorted(results, key=lambda x: x["email"])
-
     if (table):
-        _list_user_op_results_table(sorted_results)
+        _list_user_op_results_table(results)
     else:
-        _list_user_op_results(sorted_results)
+        _list_user_op_results(results)
+
+def _clean_result_error(result, key):
+    result[key] = [error['external-message'] for error in result[key]]
 
 def _print_user_op_results_from_dict(result):
     lines = []

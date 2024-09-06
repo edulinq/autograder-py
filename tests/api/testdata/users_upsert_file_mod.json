@@ -32,11 +32,11 @@
     "output": {
 		"results": [
             {
-                "email": "server-user@test.edulinq.org",
+                "email": "server-creator@test.edulinq.org",
                 "modified": true
             },
             {
-                "email": "server-creator@test.edulinq.org",
+                "email": "server-user@test.edulinq.org",
                 "modified": true
             }
         ]
