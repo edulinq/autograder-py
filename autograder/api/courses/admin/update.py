@@ -1,7 +1,7 @@
 import autograder.api.common
 import autograder.api.config
 
-API_ENDPOINT = 'admin/update/course'
+API_ENDPOINT = 'courses/admin/update'
 API_PARAMS = [
     autograder.api.config.PARAM_COURSE_ID,
     autograder.api.config.PARAM_USER_EMAIL,

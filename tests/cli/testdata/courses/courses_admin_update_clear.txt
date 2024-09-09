@@ -1,5 +1,5 @@
 {
-    "cli": "autograder.cli.admin.update-course",
+    "cli": "autograder.cli.courses.admin.update",
     "arguments": [
         "--clear"
     ]
