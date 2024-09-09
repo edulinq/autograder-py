@@ -5,11 +5,11 @@ import autograder.api.users.remove
 def run(arguments):
     result = autograder.api.users.remove.send(arguments, exit_on_error = True)
 
-    if (result['found-user']):
-        print("User removed.")
-    else:
+    if (not result['found-user']):
         print("User not found.")
+        return 1
 
+    print("User removed.")
     return 0
 
 def main():

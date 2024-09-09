@@ -4,7 +4,8 @@
         "--user", "server-admin@test.edulinq.org",
         "--pass", "server-admin",
         "--target-email", "ZZZ@test.edulinq.org"
-    ]
+    ],
+    "exit-status": 1
 }
 ---
 User not found.
