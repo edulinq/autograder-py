@@ -42,7 +42,6 @@ def _list_course_users(users, indent = ''):
         print(indent + "Name:", user['name'])
         print(indent + "Role:", user['role'])
         print(indent + "LMS ID:", user['lms-id'])
-        print()
 
 def _list_course_users_table(users, header = True, keys = COURSE_USER_HEADERS):
     rows = []

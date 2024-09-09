@@ -1,0 +1,10 @@
+{
+    "cli": "autograder.cli.courses.admin.update",
+    "arguments": [
+        "--course", "course-without-source"
+    ]
+}
+---
+Course not updated.
+The request to the server was successful, no errors were encountered.
+Does the course have a source?

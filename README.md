@@ -49,6 +49,15 @@ To get a specific submission, just pass the submission ID (as shown in `autograd
 python3 -m autograder.run.peek 123456789
 ```
 
+### `autograder.run.auth`
+
+You can use this command to quickly check if your password/config is correct.
+This is a shortcut for `autograder.cli.users.auth`.
+
+```sh
+python3 -m autograder.run.auth
+```
+
 ### `autograder.run.change-pass`
 
 This command lets your change your password to whatever you want.
@@ -99,7 +108,7 @@ To know who you are and what you are working on the autograder needs a few confi
  - `course` -- The ID for the course you are enrolled in.
  - `assignment` -- The current assignment you are working on (does not always apply)..
  - `user` -- Your username (which is also your email).
- - `pass` -- You password (probably sent to you by a TA or the autograding server in an email).
+ - `pass` -- Your password (probably sent to you by the autograding server in an email).
 
 All these options can be set on the command line when invoking on of these tools, e.g.,:
 ```sh
@@ -234,7 +243,32 @@ No matching submission found.
 
 #### Managing your Password
 
-# TODO
+Your password is the same throughout a single instance of the autograding server.
+This means that multiple courses that run on the same server will all use your same account
+(and therefore password).
+
+Your initial password should have been emailed to the email associated with your account
+(typically your school email address).
+
+To reset your password,
+use the `autograder.run.reset-pass` (aka `autograder.cli.users.pass.reset`) command:
+
+```sh
+python3 -m autograder.run.reset-pass
+```
+
+This will email you a new random password to your account's email.
+Once your password is reset, it is recommended to change it to whatever you want.
+
+To change your password, you can use the
+`autograder.run.change-pass` (aka `autograder.cli.users.pass.change`) command:
+
+```sh
+python3 -m autograder.run.change-pass
+```
+
+You will then be prompted to enter (and re-enter) your new password.
+See the command's help prompt (`--help`) for additional ways you can supply your password.
 
 ### Commands for TAs and Instructors
 

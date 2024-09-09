@@ -57,7 +57,7 @@ def parse_api_config(config, params,
     except autograder.api.error.APIError as ex:
         if (exit_on_error):
             print("ERROR: " + ex.args[0], file = sys.stderr)
-            sys.exit(1)
+            autograder.api.error.exit_from_error(1)
 
         raise ex
 
@@ -153,7 +153,9 @@ def get_argument_parser(
     Create an argparse parser that has all the standard options for API requests.
     """
 
-    parser = argparse.ArgumentParser(description = description)
+    parser = argparse.ArgumentParser(
+        description = description,
+        formatter_class = argparse.RawDescriptionHelpFormatter)
 
     parser.add_argument('--config', dest = CONFIG_PATHS_KEY,
         action = 'append', type = str,

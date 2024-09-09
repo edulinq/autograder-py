@@ -1,0 +1,10 @@
+{
+    "cli": "autograder.cli.courses.assignments.submissions.fetch.user.attempts",
+    "arguments": [
+        "--out-dir", "__TEMP_DIR__()",
+        "--target-email", "course-grader@test.edulinq.org"
+    ],
+    "exit-status": 2
+}
+---
+No attempts found.

@@ -1,0 +1,9 @@
+{
+    "module": "autograder.api.courses.admin.update",
+    "arguments": {
+        "clear": true
+    },
+    "output": {
+        "course-updated": true
+    }
+}

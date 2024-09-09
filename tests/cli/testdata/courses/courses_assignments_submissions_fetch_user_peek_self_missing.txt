@@ -1,0 +1,8 @@
+{
+    "cli": "autograder.cli.courses.assignments.submissions.fetch.user.peek",
+    "arguments": [
+    ],
+    "exit-status": 2
+}
+---
+No matching submission found.
