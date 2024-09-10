@@ -1,0 +1,2 @@
+course-student@test.edulinq.org	10
+zzz@test.edulinq.org	10

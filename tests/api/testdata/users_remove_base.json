@@ -1,0 +1,11 @@
+{
+    "module": "autograder.api.users.remove",
+    "arguments": {
+        "user": "server-admin@test.edulinq.org",
+        "pass": "server-admin",
+        "target-email": "server-user@test.edulinq.org"
+    },
+    "output": {
+        "found-user": true
+    }
+}

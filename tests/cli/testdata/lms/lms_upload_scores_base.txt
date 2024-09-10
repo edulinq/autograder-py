@@ -1,0 +1,15 @@
+{
+    "cli": "autograder.cli.lms.upload-scores",
+    "arguments": [
+        "--assignment-lms-id", "12345",
+        "__DATA_DIR__(lms_upload_scores_base.txt)"
+    ]
+}
+---
+Upload complete.
+    Grades Uploaded: 0
+    Errors: 2
+        Unrecognized Users: 1
+            Row 1 -- zzz@test.edulinq.org
+        Users without LMS IDs: 1
+            Row 0 -- course-student@test.edulinq.org

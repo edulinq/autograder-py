@@ -1,5 +1,5 @@
 {
-    "module": "autograder.api.admin.updatecourse",
+    "module": "autograder.api.courses.admin.update",
     "arguments": {
         "clear": false
     },

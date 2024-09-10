@@ -49,6 +49,15 @@ To get a specific submission, just pass the submission ID (as shown in `autograd
 python3 -m autograder.run.peek 123456789
 ```
 
+### `autograder.run.auth`
+
+You can use this command to quickly check if your password/config is correct.
+This is a shortcut for `autograder.cli.users.auth`.
+
+```sh
+python3 -m autograder.run.auth
+```
+
 ### `autograder.run.change-pass`
 
 This command lets your change your password to whatever you want.

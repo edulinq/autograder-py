@@ -37,12 +37,18 @@ def list_users(users, table = False):
         _list_users(users)
 
 def _list_users(users, indent = ''):
-    for user in users:
+    users = list(users)
+
+    for i in range(len(users)):
+        user = users[i]
+
+        if (i != 0):
+            print()
+
         print(indent + "Email:", user['email'])
         print(indent + "Name:", user['name'])
         print(indent + "Role:", user['role'])
         print(indent + "LMS ID:", user['lms-id'])
-        print()
 
 def _list_users_table(users, header = True, keys = HEADERS):
     if (header):
