@@ -30,7 +30,6 @@ Courses:
     Name: Course 101 - With Zero Limit
     Role: admin
 
-
 Email: course-grader@test.edulinq.org
 Name: course-grader
 Role: user
@@ -54,7 +53,6 @@ Courses:
     ID: course101-with-zero-limit
     Name: Course 101 - With Zero Limit
     Role: grader
-
 
 Email: course-other@test.edulinq.org
 Name: course-other
@@ -80,7 +78,6 @@ Courses:
     Name: Course 101 - With Zero Limit
     Role: other
 
-
 Email: course-owner@test.edulinq.org
 Name: course-owner
 Role: user
@@ -104,7 +101,6 @@ Courses:
     ID: course101-with-zero-limit
     Name: Course 101 - With Zero Limit
     Role: owner
-
 
 Email: course-student@test.edulinq.org
 Name: course-student
@@ -130,7 +126,6 @@ Courses:
     Name: Course 101 - With Zero Limit
     Role: student
 
-
 Email: server-admin@test.edulinq.org
 Name: server-admin
 Role: admin
@@ -150,4 +145,3 @@ Email: server-user@test.edulinq.org
 Name: server-user
 Role: user
 Courses:
-

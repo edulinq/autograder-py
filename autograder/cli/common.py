@@ -1,13 +1,14 @@
-USER_HEADERS = ['email', 'name']
+BASE_USER_HEADERS = ['email', 'name', 'role']
 
-COURSE_USER_HEADERS = USER_HEADERS + ['role', 'lms-id']
+COURSE_USER_HEADERS = BASE_USER_HEADERS + ['lms-id']
 SYNC_HEADERS = COURSE_USER_HEADERS + ['operation']
 
-BASE_SERVER_USER_HEADERS = USER_HEADERS + ['role']
-SERVER_USER_HEADERS = BASE_SERVER_USER_HEADERS + ['courses']
+SERVER_USER_HEADERS = BASE_USER_HEADERS + ['courses']
 COURSE_INFO_HEADERS = ['id', 'name', 'role']
 
 INDENT = '    '
+COURSE_USER_INFO_TYPE = 'Course'
+SERVER_USER_INFO_TYPE = 'Server'
 
 SYNC_USERS_KEYS = [
     ('add-users', 'Added', 'add'),
@@ -21,7 +22,7 @@ SYNC_USERS_KEYS = [
 def list_users(users, course_users, table = False, normalize = False):
     if (course_users):
         if (table):
-            _list_course_users_table(users)
+            _list_users_table(users, True)
         else:
             _list_course_users(users)
     else:
@@ -29,68 +30,78 @@ def list_users(users, course_users, table = False, normalize = False):
             if (normalize):
                 _list_server_users_table_normalize(users)
             else:
-                _list_server_users_table(users)
+                _list_users_table(users, False)
         else:
             _list_server_users(users)
 
+# Set course_users to True if listing course users, False for server users.
+# An error will be raised if a user of a different type is found.
+def _list_users_table(users, course_users, header = True, keys = []):
+    expected_user_info_type = ''
+    if (course_users):
+        expected_user_info_type = COURSE_USER_INFO_TYPE
+        if (len(keys) == 0):
+            keys = COURSE_USER_HEADERS
+    else:
+        expected_user_info_type = SERVER_USER_INFO_TYPE
+        if (len(keys) == 0):
+            keys = SERVER_USER_HEADERS
+
+    rows = []
+    for user in users:
+        if (user['type'] != expected_user_info_type):
+            raise ValueError("Invalid user type for listing users table: Expected: '%s',"
+                    + " actual: '%s'.", expected_user_info_type, user['type'])
+
+        row = [user[key] for key in keys]
+        rows.append(row)
+
+    _print_tsv(rows, header, keys)
+
 def _list_course_users(users, indent = ''):
     for user in users:
-        if (user['type'] != "CourseType"):
-            raise ValueError("Invalid user type for listing course users: '%s'.", user['type'])
+        if (user['type'] != COURSE_USER_INFO_TYPE):
+            raise ValueError("Invalid user type for listing course users: Expected: '%s',"
+                    + " actual: '%s'.", COURSE_USER_INFO_TYPE, user['type'])
 
-        print(indent + "Email:", user['email'])
-        print(indent + "Name:", user['name'])
-        print(indent + "Role:", user['role'])
-        print(indent + "LMS ID:", user['lms-id'])
-
-def _list_course_users_table(users, header = True, keys = COURSE_USER_HEADERS):
-    rows = []
-    for user in users:
-        if (user['type'] != "CourseType"):
-            raise ValueError("Invalid user type for listing course users table: '%s'.",
-                    user['type'])
-
-        row = [user[key] for key in keys]
-        rows.append(row)
-
-    _print_tsv(rows, header, keys)
+        print(indent + "Email: " + user['email'])
+        print(indent + "Name: " + user['name'])
+        print(indent + "Role: " + user['role'])
+        print(indent + "LMS ID: " + user['lms-id'])
 
 def _list_server_users(users, indent = ''):
-    for user in users:
-        if (user['type'] != "ServerType"):
-            raise ValueError("Invalid user type for listing server users: '%s'.", user['type'])
+    for i in range(len(users)):
+        user = users[i]
 
-        print(indent + "Email:", user['email'])
-        print(indent + "Name:", user['name'])
-        print(indent + "Role:", user['role'])
-        print(indent + "Courses:")
-        for course in user['courses']:
-            print(indent + INDENT + "ID:", user['courses'][course]['id'])
-            print(indent + INDENT + "Name:", user['courses'][course]['name'])
-            print(indent + INDENT + "Role:", user['courses'][course]['role'])
+        if (user['type'] != SERVER_USER_INFO_TYPE):
+            raise ValueError("Invalid user type for listing server users: Expected: '%s',"
+                    + "actual: '%s'.", SERVER_USER_INFO_TYPE, user['type'])
+
+        if (i != 0):
             print()
-        print()
 
-def _list_server_users_table(users, header = True, keys = SERVER_USER_HEADERS):
+        print(indent + "Email: " + user['email'])
+        print(indent + "Name: " + user['name'])
+        print(indent + "Role: " + user['role'])
+        print(indent + "Courses:")
+
+        for j, course in enumerate(user['courses']):
+            if (j != 0):
+                print()
+
+            print(indent + INDENT + "ID: " + user['courses'][course]['id'])
+            print(indent + INDENT + "Name: " + user['courses'][course]['name'])
+            print(indent + INDENT + "Role: " + user['courses'][course]['role'])
+
+def _list_server_users_table_normalize(users, header = True, keys = BASE_USER_HEADERS):
     rows = []
     for user in users:
-        if (user['type'] != "ServerType"):
-            raise ValueError("Invalid user type for listing server users table: '%s'.",
-                    user['type'])
+        if (user['type'] != SERVER_USER_INFO_TYPE):
+            raise ValueError("Invalid user type for listing normalized server users table:"
+                    + " Expected: '%s', actual: '%s'.", SERVER_USER_INFO_TYPE, user['type'])
 
         row = [user[key] for key in keys]
-        rows.append(row)
-
-    _print_tsv(rows, header, keys)
-
-def _list_server_users_table_normalize(users, header = True, keys = BASE_SERVER_USER_HEADERS):
-    rows = []
-    for user in users:
-        if (user['type'] != "ServerType"):
-            raise ValueError("Invalid user type for listing server users: '%s'.", user['type'])
-
-        row = [user[key] for key in keys]
-        if ((user.get('courses') is None) or (not user['courses'])):
+        if ((user.get('courses') is None) or (len(user['courses']) == 0)):
             row = row + ['' for key in COURSE_INFO_HEADERS]
             rows.append(row)
         else:
@@ -129,7 +140,7 @@ def _list_sync_users_table(sync_users):
         for user in users:
             user['operation'] = op
 
-        _list_course_users_table(users, header = False, keys = SYNC_HEADERS)
+        _list_users_table(users, True, header = False, keys = SYNC_HEADERS)
 
 def list_add_users(result, table = False):
     errors = result['errors']

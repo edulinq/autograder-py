@@ -22,8 +22,10 @@ def _get_parser():
 
     parser.add_argument('--normalize', dest = 'normalize',
         action = 'store_true', default = False,
-        help = 'Normalize the TSV table for each course a user is enrolled in (default: \
-                %(default)s). Can only be used if --table is set.')
+        help = 'Normalize the TSV table to include the following: [email, name, role, course-id,'
+            + ' course-name, course-role] for each course a user is enrolled in. If a user is'
+            + ' not enrolled in any courses, they will appear once with empty course information.'
+            + ' Only applies if --table is set (default: %(default)s).')
 
     return parser
 
