@@ -25,7 +25,7 @@ def run(arguments):
 
     result = autograder.api.users.upsert.send(arguments, exit_on_error = True)
 
-    autograder.cli.common.list_user_op_results(result['results'], table = arguments['table'])
+    autograder.cli.common.list_user_op_responses(result['results'], table = arguments['table'])
     return 0
 
 def main():

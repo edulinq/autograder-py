@@ -8,5 +8,7 @@
     ]
 }
 ---
-Encountered 1 validation errors while operating on user: 'server-user@test.edulinq.org'.
-    Index: 0, Message: 'You have insufficient permissions for the requested operation.'.
+server-user@test.edulinq.org
+    Validation Error
+        You have insufficient permissions for the requested operation.
+Processed 1 users. Encountered 1 errors.

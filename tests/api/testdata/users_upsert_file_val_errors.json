@@ -42,27 +42,24 @@
 		"results": [
             {
                 "email": "error@test.edulinq.org",
-				"validation-errors": [
-                    {
-                        "external-message": "You have insufficient permissions for the requested operation."
-                    }
-                ]
+				"validation-error": {
+                    "locator": "",
+                    "message": "You have insufficient permissions for the requested operation."
+                }
             },
             {
                 "email": "server-owner@test.edulinq.org",
-				"validation-errors": [
-                    {
-                        "external-message": "You have insufficient permissions for the requested operation."
-                    }
-                ]
+				"validation-error": {
+                    "locator": "",
+                    "message": "You have insufficient permissions for the requested operation."
+                }
             },
             {
                 "email": "server-user@test.edulinq.org",
-				"validation-errors": [
-                    {
-                        "external-message": "You have insufficient permissions for the requested operation."
-                    }
-                ]
+				"validation-error": {
+                    "locator": "",
+                    "message": "You have insufficient permissions for the requested operation."
+                }
             }
         ]
     }

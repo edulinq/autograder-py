@@ -8,5 +8,6 @@
     ]
 }
 ---
-Modified
-    server-user@test.edulinq.org
+server-user@test.edulinq.org
+    Modified
+Processed 1 users. Encountered 0 errors.

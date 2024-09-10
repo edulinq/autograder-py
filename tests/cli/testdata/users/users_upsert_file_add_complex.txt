@@ -7,13 +7,15 @@
     ]
 }
 ---
-Added
-    first@test.edulinq.org
-    second@test.edulinq.org
-Emailed
-    first@test.edulinq.org
-    second@test.edulinq.org
-Enrolled
-    first@test.edulinq.org
-Encountered 1 validation errors while operating on user: 'val-error@test.edulinq.org'.
-    Index: 0, Message: 'You have insufficient permissions for the requested operation.'.
+first@test.edulinq.org
+    Added
+    Emailed
+    Enrolled
+        course101
+second@test.edulinq.org
+    Added
+    Emailed
+val-error@test.edulinq.org
+    Validation Error
+        You have insufficient permissions for the requested operation.
+Processed 3 users. Encountered 1 errors.

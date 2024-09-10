@@ -7,7 +7,7 @@
     ]
 }
 ---
-Added
-    new-user@test.edulinq.org
-Emailed
-    new-user@test.edulinq.org
+new-user@test.edulinq.org
+    Added
+    Emailed
+Processed 1 users. Encountered 0 errors.

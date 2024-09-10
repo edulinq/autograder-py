@@ -7,9 +7,13 @@
     ]
 }
 ---
-Encountered 1 validation errors while operating on user: 'error@test.edulinq.org'.
-    Index: 0, Message: 'You have insufficient permissions for the requested operation.'.
-Encountered 1 validation errors while operating on user: 'server-owner@test.edulinq.org'.
-    Index: 0, Message: 'You have insufficient permissions for the requested operation.'.
-Encountered 1 validation errors while operating on user: 'server-user@test.edulinq.org'.
-    Index: 0, Message: 'You have insufficient permissions for the requested operation.'.
+error@test.edulinq.org
+    Validation Error
+        You have insufficient permissions for the requested operation.
+server-owner@test.edulinq.org
+    Validation Error
+        You have insufficient permissions for the requested operation.
+server-user@test.edulinq.org
+    Validation Error
+        You have insufficient permissions for the requested operation.
+Processed 3 users. Encountered 3 errors.

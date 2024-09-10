@@ -55,11 +55,10 @@
             },
             {
                 "email": "val-error@test.edulinq.org",
-				"validation-errors": [
-                    {
-                        "external-message": "You have insufficient permissions for the requested operation."
-                    }
-                ]
+				"validation-error": {
+                    "locator": "",
+                    "message": "You have insufficient permissions for the requested operation."
+                }
             }
         ]
     }
