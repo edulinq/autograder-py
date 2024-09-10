@@ -7,8 +7,8 @@ SERVER_USER_HEADERS = BASE_USER_HEADERS + ['courses']
 COURSE_INFO_HEADERS = ['id', 'name', 'role']
 
 INDENT = '    '
-COURSE_USER_INFO_TYPE = 'Course'
-SERVER_USER_INFO_TYPE = 'Server'
+COURSE_USER_INFO_TYPE = 'course'
+SERVER_USER_INFO_TYPE = 'server'
 
 SYNC_USERS_KEYS = [
     ('add-users', 'Added', 'add'),

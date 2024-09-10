@@ -7,7 +7,7 @@
     "output": {
         "users": [
             {
-                "type": "Server",
+                "type": "server",
                 "email": "course-admin@test.edulinq.org",
                 "name": "course-admin",
                 "role": "user",
@@ -40,7 +40,7 @@
                 }
             },
             {
-                "type": "Server",
+                "type": "server",
                 "email": "course-grader@test.edulinq.org",
                 "name": "course-grader",
                 "role": "user",
@@ -73,7 +73,7 @@
                 }
             },
             {
-                "type": "Server",
+                "type": "server",
                 "email": "course-other@test.edulinq.org",
                 "name": "course-other",
                 "role": "user",
@@ -106,7 +106,7 @@
                 }
             },
             {
-                "type": "Server",
+                "type": "server",
                 "email": "course-owner@test.edulinq.org",
                 "name": "course-owner",
                 "role": "user",
@@ -139,7 +139,7 @@
                 }
             },
             {
-                "type": "Server",
+                "type": "server",
                 "email": "course-student@test.edulinq.org",
                 "name": "course-student",
                 "role": "user",
@@ -172,28 +172,28 @@
                 }
             },
             {
-                "type": "Server",
+                "type": "server",
                 "email": "server-admin@test.edulinq.org",
                 "name": "server-admin",
                 "role": "admin",
                 "courses": {}
             },
             {
-                "type": "Server",
+                "type": "server",
                 "email": "server-creator@test.edulinq.org",
                 "name": "server-creator",
                 "role": "creator",
                 "courses": {}
             },
             {
-                "type": "Server",
+                "type": "server",
                 "email": "server-owner@test.edulinq.org",
                 "name": "server-owner",
                 "role": "owner",
                 "courses": {}
             },
             {
-                "type": "Server",
+                "type": "server",
                 "email": "server-user@test.edulinq.org",
                 "name": "server-user",
                 "role": "user",

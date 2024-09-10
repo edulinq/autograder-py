@@ -7,7 +7,7 @@
         "found-autograder-user": true,
         "found-lms-user": true,
         "user": {
-            "type": "Course",
+            "type": "course",
             "email": "course-student@test.edulinq.org",
             "name": "course-student",
             "role": "student",
