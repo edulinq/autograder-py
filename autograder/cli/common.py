@@ -59,10 +59,15 @@ def _list_users_table(users, course_users, header = True, keys = []):
     _print_tsv(rows, header, keys)
 
 def _list_course_users(users, indent = ''):
-    for user in users:
+    for i in range(len(users)):
+        user = users[i]
+
         if (user['type'] != COURSE_USER_INFO_TYPE):
             raise ValueError("Invalid user type for listing course users: Expected: '%s',"
                     + " actual: '%s'.", COURSE_USER_INFO_TYPE, user['type'])
+
+        if (i != 0):
+            print()
 
         print(indent + "Email: " + user['email'])
         print(indent + "Name: " + user['name'])
