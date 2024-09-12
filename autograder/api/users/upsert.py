@@ -27,7 +27,7 @@ API_PARAMS = [
         required = True, cli_param = False),
 ]
 
-DESCRIPTION = 'Upsert one or more users to the server (Update if exists, otherwise insert).'
+DESCRIPTION = 'Upsert one or more users to the server (update if exists, insert otherwise).'
 
 def send(arguments, **kwargs):
     return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT, **kwargs)

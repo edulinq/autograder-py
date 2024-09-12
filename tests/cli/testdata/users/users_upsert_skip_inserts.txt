@@ -10,4 +10,5 @@
 ---
 alt-new-user@test.edulinq.org
     Skipped
+
 Processed 1 users. Encountered 0 errors.

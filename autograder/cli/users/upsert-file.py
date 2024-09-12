@@ -29,6 +29,8 @@ def _load_users(path):
                 continue
 
             parts = line.split("\t")
+            parts = [part.strip() for part in parts]
+
             if (len(parts) > 7):
                 raise ValueError(
                     "File ('%s') line (%d) has too many values. Max is 7, found %d." % (
@@ -49,6 +51,7 @@ def _load_users(path):
             role = 'user'
             if (len(parts) > 0):
                 role = parts.pop(0)
+                role = role.lower()
 
             if (role not in autograder.api.constants.SERVER_ROLES):
                 raise ValueError(
@@ -62,6 +65,7 @@ def _load_users(path):
             course_role = 'unknown'
             if (len(parts) > 0):
                 course_role = parts.pop(0)
+                course_role = course_role.lower()
 
             if (course_role not in autograder.api.constants.COURSE_ROLES):
                 raise ValueError(
@@ -97,12 +101,14 @@ def _get_parser():
         action = 'store', type = str,
         help = 'Path to a TSV file where each line contains up to seven columns:'
                 + ' [email, pass, name, role, course, course-role, lms-id].'
-                + ' Only the email is required.')
+                + ' Only the email is required. Leading and trailing whitespace is stripped'
+                + ' from all fields, including pass. If pass is empty, a password will be'
+                + ' randomly generated and emailed to the user.')
 
     parser.add_argument('--skip-emails', dest = 'skip-emails',
         action = 'store_true', default = False,
         help = 'Skip sending any emails. Be aware that this may result in inaccessible'
-                + ' information.')
+                + ' information (default: %(default)s).')
 
     parser.add_argument('--table', dest = 'table',
         action = 'store_true', default = False,

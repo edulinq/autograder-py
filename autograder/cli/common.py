@@ -116,6 +116,7 @@ def _list_user_op_responses(results):
                 print(INDENT + label)
                 print(INDENT + INDENT + result[error_key]["message"])
 
+    print()
     print("Processed %d users. Encountered %d errors." % (len(results), error_count))
 
 def _list_user_op_responses_table(results, header = True, keys = ALL_USER_OP_KEYS):
