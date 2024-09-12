@@ -1,0 +1,13 @@
+{
+    "cli": "autograder.cli.users.upsert-file",
+    "arguments": [
+        "--user", "server-admin@test.edulinq.org",
+        "--pass", "server-admin",
+        "--table",
+        "__DATA_DIR__(users_upsert_file_val_errors.txt)"
+    ]}
+---
+Email	Added	Modified	Removed	Skipped	Not Exists	Emailed	Enrolled	Dropped	Validation Error	System Error	Communication Error
+error@test.edulinq.org									You have insufficient permissions for the requested operation.		
+server-owner@test.edulinq.org									You have insufficient permissions for the requested operation.		
+server-user@test.edulinq.org									You have insufficient permissions for the requested operation.		

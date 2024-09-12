@@ -33,7 +33,7 @@ USER_OP_KEYS = [
 USER_OP_ERROR_KEYS = [
     ('validation-error', 'Validation Error'),
     ('system-error', 'System Error'),
-    ('communication-error', 'System Error'),
+    ('communication-error', 'Communication Error'),
 ]
 
 ALL_USER_OP_KEYS = [
@@ -195,7 +195,7 @@ def _list_user_op_responses(results):
             if (result.get(error_key, None) is not None):
                 error_count += 1
                 print(INDENT + label)
-                print(INDENT + INDENT + result[error_key]["message"])
+                print(INDENT + INDENT + result[error_key]['message'])
 
     print()
     print("Processed %d users. Encountered %d errors." % (len(results), error_count))
@@ -203,8 +203,9 @@ def _list_user_op_responses(results):
 def _list_user_op_responses_table(results, header = True, keys = ALL_USER_OP_KEYS):
     rows = []
     for result in results:
-        for error_key in USER_OP_ERROR_KEYS:
-            result[error_key] = result[error_key]["message"]
+        for error_key, _ in USER_OP_ERROR_KEYS:
+            if (result.get(error_key, None) is not None):
+                result[error_key] = result[error_key]['message']
 
         rows.append([result.get(key, '') for key, _ in keys])
 
