@@ -1,7 +1,7 @@
 import contextlib
 import glob
-import json
 import importlib
+import json
 import io
 import os
 import re
@@ -9,6 +9,7 @@ import sys
 
 import tests.server.base
 import tests.server.server
+import autograder.api.error
 import autograder.util.dirent
 
 THIS_DIR = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
@@ -173,6 +174,16 @@ def _get_test_method(test_name, path):
             if (is_error):
                 self.fail("No error was not raised when one was expected ('%s')." % (
                     str(expected_output)))
+        except autograder.api.error.ConnectionError:
+            # Catch errors where the server does not responsed and suppress large connection errors.
+            try:
+                self.fail("Server had an error. See earlier output from the server.")
+            except AssertionError as ex:
+                ex.__suppress_context__ = True
+                ex.__cause__ = None
+                ex.__context__ = None
+                raise ex
+
         except BaseException as ex:
             if (not is_error):
                 raise ex
@@ -184,7 +195,6 @@ def _get_test_method(test_name, path):
                 ex = ex.__context__
 
             self.assertEqual(expected_output, str(ex), msg = "error output")
-            return
         finally:
             sys.argv = old_args
 

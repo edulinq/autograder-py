@@ -1,0 +1,9 @@
+{
+    "cli": "autograder.cli.courses.assignments.submissions.remove",
+    "arguments": [
+        "--target-email", "course-student@test.edulinq.org",
+        "--target-submission", "1697406265"
+    ]
+}
+---
+Submission removed.

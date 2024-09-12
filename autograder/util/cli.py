@@ -21,12 +21,13 @@ def main():
     """
 
     args = _get_parser().parse_args()
-    auto_list(recursive = args.recursive, callers_stack_index = 2)
+    auto_list(recursive = args.recursive, skip_dirs = args.skip_dirs, callers_stack_index = 2)
     return 0
 
-def auto_list(recursive = False, default_parser = None, callers_stack_index = 1):
+def auto_list(recursive = False, skip_dirs = False,
+        default_parser = None, callers_stack_index = 1):
     """
-    Will print the caller's prompt and call list_dir() on it,
+    Will print the caller's prompt and call _list_dir() on it,
     but will figure out the package's prompt (doc string), base_dir,
     and command_prefix automatically.
     This will use the inspect library, so only use in places that use code normally.
@@ -47,9 +48,9 @@ def auto_list(recursive = False, default_parser = None, callers_stack_index = 1)
         default_parser = argparse.ArgumentParser()
 
     print(module.__doc__.strip())
-    list_dir(base_dir, package, default_parser, recursive)
+    _list_dir(base_dir, package, default_parser, recursive, skip_dirs)
 
-def list_dir(base_dir, command_prefix, default_parser, recursive):
+def _list_dir(base_dir, command_prefix, default_parser, recursive, skip_dirs):
     for dirent in sorted(os.listdir(base_dir)):
         path = os.path.join(base_dir, dirent)
         cmd = command_prefix + '.' + os.path.splitext(dirent)[0]
@@ -60,10 +61,11 @@ def list_dir(base_dir, command_prefix, default_parser, recursive):
         if (os.path.isfile(path)):
             _handle_file(path, cmd, default_parser)
         else:
-            _handle_dir(path, cmd)
+            if (not skip_dirs):
+                _handle_dir(path, cmd)
 
             if (recursive):
-                list_dir(path, cmd, default_parser, recursive)
+                _list_dir(path, cmd, default_parser, recursive, skip_dirs)
 
 def _handle_file(path, cmd, default_parser):
     if (not path.endswith('.py')):
@@ -123,5 +125,10 @@ def _get_parser():
     parser.add_argument('-r', '--recursive', dest = 'recursive',
         action = 'store_true', default = False,
         help = 'Recur into each package to look for tools and subpackages (default: %(default)s).')
+
+    parser.add_argument('--skip-dirs', dest = 'skip_dirs',
+        action = 'store_true', default = False,
+        help = ('Do not output information about directories/packages,'
+            + ' only tools (default: %(default)s).'))
 
     return parser

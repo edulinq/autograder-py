@@ -57,7 +57,7 @@ def parse_api_config(config, params,
     except autograder.api.error.APIError as ex:
         if (exit_on_error):
             print("ERROR: " + ex.args[0], file = sys.stderr)
-            sys.exit(1)
+            autograder.api.error.exit_from_error(1)
 
         raise ex
 
