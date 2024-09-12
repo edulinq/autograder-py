@@ -1,0 +1,11 @@
+{
+    "cli": "autograder.cli.admin.fetch-logs",
+    "output_check": "content_equals_ignore_time",
+    "arguments": [
+        "--course", "course-without-source",
+        "--level", "DEBUG"
+    ]
+}
+---
+<TIME> [DEBUG] Loaded course. | {"num-assignments": 0, "path": "/some/path/course.json", "course": "course-without-source"}
+<TIME> [DEBUG] Loaded course. | {"num-assignments": 0, "path": "/some/path/course.json", "course": "course-without-source"}

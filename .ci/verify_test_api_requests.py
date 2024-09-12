@@ -23,7 +23,7 @@ TEST_DATA_DIR = os.path.join(ROOT_DIR, 'tests', 'api', 'testdata')
 sys.path.append(ROOT_DIR)
 
 import autograder.api.config
-import autograder.api.admin.updatecourse
+import autograder.api.courses.admin.update
 import tests.api.test_api
 import tests.server.base
 import tests.server.server
@@ -85,7 +85,7 @@ def reset_course(cli_arguments):
 
     arguments['clear'] = True
 
-    autograder.api.admin.updatecourse.send(arguments)
+    autograder.api.courses.admin.update.send(arguments)
 
 def run(arguments):
     # Override the server with the local server.

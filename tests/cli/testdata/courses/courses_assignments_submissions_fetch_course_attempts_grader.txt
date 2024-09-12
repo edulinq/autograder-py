@@ -1,0 +1,9 @@
+{
+    "cli": "autograder.cli.courses.assignments.submissions.fetch.course.attempts",
+    "arguments": [
+        "--out-dir", "__TEMP_DIR__()",
+        "--filter-role", "grader"
+    ]
+}
+---
+Wrote 0 submissions to '__TEMP_DIR__()'.

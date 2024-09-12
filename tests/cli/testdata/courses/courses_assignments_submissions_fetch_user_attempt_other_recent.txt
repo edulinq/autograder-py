@@ -1,0 +1,9 @@
+{
+    "cli": "autograder.cli.courses.assignments.submissions.fetch.user.attempt",
+    "arguments": [
+        "--out-dir", "__TEMP_DIR__()",
+        "--target-email", "course-student@test.edulinq.org"
+    ]
+}
+---
+Wrote submission to '__TEMP_DIR__()'.

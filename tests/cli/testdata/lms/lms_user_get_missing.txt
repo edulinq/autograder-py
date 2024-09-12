@@ -1,0 +1,8 @@
+{
+    "cli": "autograder.cli.lms.user-get",
+    "arguments": [
+        "--target-email", "ZZZ@test.edulinq.org"
+    ]
+}
+---
+No matching autograder user found.
