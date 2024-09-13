@@ -14,7 +14,7 @@ def run(arguments):
         print("No matching lms user found.")
         return 0
 
-    autograder.cli.common.list_users([result['user']], table = arguments.table)
+    autograder.cli.common.list_users([result['user']], True, table = arguments.table)
     return 0
 
 def main():
