@@ -1,11 +1,12 @@
 """
 Handle timestamp operations.
-All datetimes that may be serialized should be produced by this module and handled as strings.
-Likewise, all datetimes that come from the autograder should go through here.
+All datetimes/timestamps passed by the autograder are ints (milliseconds since UNIX epoch (UTC)).
+We will handle timestamps the same way (with the exception of pretty strings).
 """
 
 import datetime
 import re
+import time
 
 PRETTY_TIMESTAMP_FORMAT = '%Y-%m-%d %H:%M'
 UNKNOWN_TIMESTAMP = "<Unknown Time (%s)>"
@@ -18,46 +19,58 @@ def get(source = None, pretty = False, adjust_tz = True):
     if (isinstance(source, str) and ('Unknown Time' in source)):
         return source
 
-    instance, clean_source = _get_as_datetime(source)
-    if (instance is None):
+    timestamp, clean_source = _parse_timestamp(source)
+    if (timestamp is None):
         return UNKNOWN_TIMESTAMP % (clean_source)
 
-    return _to_string(instance, pretty = pretty, adjust_tz = adjust_tz)
+    if (pretty):
+        return _to_string(timestamp, adjust_tz = adjust_tz)
 
-def _get_as_datetime(source = None):
+    return timestamp
+
+def _parse_timestamp(source = None):
     if (source is None):
-        return datetime.datetime.now(datetime.timezone.utc), None
+        return _now(), None
 
     if (isinstance(source, datetime.datetime)):
-        return source, None
+        return _timestamp_from_pytime(source)
 
     if (source == ''):
         return None, ''
 
     if (isinstance(source, (int, float))):
         # Unix timestamp.
-        return datetime.datetime.fromtimestamp(source), None
+        return int(source), None
 
     if (not isinstance(source, str)):
         raise ValueError("Unknown type ('%s') for timestamp source." % (type(source)))
 
+    source = source.strip()
+
     # Parse out some cases that Python <= 3.10 cannot deal with.
     # This will remove fractional seconds.
     source = re.sub(r'Z$', '+00:00', source)
-    source = re.sub(r'(\d\d:\d\d)(\.\d+)', r'\1', source)
 
     try:
-        return datetime.datetime.fromisoformat(source), None
+        value = datetime.datetime.fromisoformat(source)
+        return _timestamp_from_pytime(value), None
     except Exception:
         pass
 
     return None, source
 
-def _to_string(instance, pretty = False, adjust_tz = True):
-    if (pretty):
-        if (adjust_tz):
-            return instance.astimezone().strftime(PRETTY_TIMESTAMP_FORMAT)
-        else:
-            return instance.strftime(PRETTY_TIMESTAMP_FORMAT)
+def _timestamp_from_pytime(pytime):
+    return int(pytime.timestamp() * 1000)
 
-    return instance.isoformat()
+def _pytime_from_timestamp(timestamp):
+    return datetime.datetime.utcfromtimestamp(timestamp / 1000)
+
+def _now():
+    return int(time.time() * 1000)
+
+def _to_string(timestamp, adjust_tz = True):
+    pytime = _pytime_from_timestamp(timestamp)
+    if (adjust_tz):
+        pytime = pytime.astimezone()
+
+    return pytime.strftime(PRETTY_TIMESTAMP_FORMAT)

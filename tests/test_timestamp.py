@@ -6,13 +6,13 @@ class TestTimestamp(unittest.TestCase):
     def test_timestamp_conversions(self):
         # [(input, normal, pretty), ...]
         test_cases = [
-            ('2023-09-28', '2023-09-28T00:00:00', '2023-09-28 00:00'),
-            ('2023-09-28T00:00:00', '2023-09-28T00:00:00', '2023-09-28 00:00'),
-            ('2023-09-28T04:00:20.683684Z', '2023-09-28T04:00:20+00:00', '2023-09-28 04:00'),
-            ('2023-09-28T04:00:20.683684+00:00', '2023-09-28T04:00:20+00:00', '2023-09-28 04:00'),
-            ('2023-09-28T13:10:44.432050+00:00', '2023-09-28T13:10:44+00:00', '2023-09-28 13:10'),
-            ('2023-09-28T13:10:44.43205+00:00', '2023-09-28T13:10:44+00:00', '2023-09-28 13:10'),
+            # Full information.
+            ('2023-09-28T04:00:20.683684Z', 1695873620683, '2023-09-28 04:00'),
+            ('2023-09-28T04:00:20.683684+00:00', 1695873620683, '2023-09-28 04:00'),
+            ('2023-09-28T13:10:44.432050+00:00', 1695906644432, '2023-09-28 13:10'),
+            ('2023-09-28T13:10:44.43205+00:00', 1695906644432, '2023-09-28 13:10'),
 
+            # Unknown format.
             ('abc', '<Unknown Time (abc)>', '<Unknown Time (abc)>'),
         ]
 
@@ -32,14 +32,11 @@ class TestTimestamp(unittest.TestCase):
 
             first_pretty_timestamp = autograder.util.timestamp.get(source,
                     pretty = True, adjust_tz = False)
-            second_pretty_timestamp = autograder.util.timestamp.get(first_pretty_timestamp,
-                    pretty = True, adjust_tz = False)
+
+            # Once created, pretty timestamps cannot be parsed (as they lack timezone information).
 
             self.assertEqual(expected_pretty, first_pretty_timestamp,
                     "Case %d: [%s] First Pretty Timestamp" % (i, source))
-
-            self.assertEqual(expected_pretty, second_pretty_timestamp,
-                    "Case %d: [%s] Second Pretty Timestamp" % (i, source))
 
             # Converting from normal to pretty is possible, since no information is list.
             # In the other direction, timezone information is lost.

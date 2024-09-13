@@ -15,7 +15,7 @@
                 "message": "",
                 "max_points": 2,
                 "score": 0,
-                "grading_start_time": "2023-10-15T21:44:16Z"
+                "grading_start_time": 1697406256000
             },
             {
                 "id": "course101::hw0::course-student@test.edulinq.org::1697406265",
@@ -26,7 +26,7 @@
                 "message": "",
                 "max_points": 2,
                 "score": 1,
-                "grading_start_time": "2023-10-15T21:44:26Z"
+                "grading_start_time": 1697406266000
             },
             {
                 "id": "course101::hw0::course-student@test.edulinq.org::1697406272",
@@ -37,7 +37,7 @@
                 "message": "",
                 "max_points": 2,
                 "score": 2,
-                "grading_start_time": "2023-10-15T21:44:33Z"
+                "grading_start_time": 1697406273000
             }
         ]
     }
