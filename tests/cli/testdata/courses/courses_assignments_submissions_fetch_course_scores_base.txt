@@ -11,4 +11,4 @@ course-admin@test.edulinq.org	False
 course-grader@test.edulinq.org	False				
 course-other@test.edulinq.org	False				
 course-owner@test.edulinq.org	False				
-course-student@test.edulinq.org	True	1697406272	2	2023-10-15T21:44:33Z	
+course-student@test.edulinq.org	True	1697406272	2	1697406273000	
