@@ -230,7 +230,7 @@ def json_logs_equal(test_case, expected, actual, **kwargs):
 
     for records in [expected, actual]:
         for record in records:
-            record['unix-time'] = -1
+            record['timestamp'] = 0
 
     test_case.assertListEqual(expected, actual)
 
