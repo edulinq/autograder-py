@@ -1,0 +1,44 @@
+{
+    "module": "autograder.api.users.upsert",
+    "endpoint": "users/upsert-file",
+    "arguments": {
+        "user": "server-admin@test.edulinq.org",
+        "pass": "server-admin",
+        "send-emails": true,
+        "skip-inserts": false,
+        "skip-updates": false,
+        "dry-run": false,
+        "raw-users": [
+			{
+				"email": "server-user@test.edulinq.org",
+				"name": "sammy",
+				"role": "user",
+				"pass": "",
+				"course": "",
+				"course-role": "unknown",
+				"course-lms-id": ""
+			},
+			{
+				"email": "server-creator@test.edulinq.org",
+				"name": "",
+				"role": "user",
+				"pass": "",
+				"course": "",
+				"course-role": "unknown",
+				"course-lms-id": ""
+			}
+        ]
+    },
+    "output": {
+		"results": [
+            {
+                "email": "server-creator@test.edulinq.org",
+                "modified": true
+            },
+            {
+                "email": "server-user@test.edulinq.org",
+                "modified": true
+            }
+        ]
+    }
+}

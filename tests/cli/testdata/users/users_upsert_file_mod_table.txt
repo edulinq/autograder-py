@@ -1,0 +1,12 @@
+{
+    "cli": "autograder.cli.users.upsert-file",
+    "arguments": [
+        "--user", "server-admin@test.edulinq.org",
+        "--pass", "server-admin",
+        "--table",
+        "__DATA_DIR__(users_upsert_file_mod.txt)"
+    ]}
+---
+Email	Added	Modified	Removed	Skipped	Not Exists	Emailed	Enrolled	Dropped	Validation Error	System Error	Communication Error
+server-creator@test.edulinq.org		True									
+server-user@test.edulinq.org		True									
