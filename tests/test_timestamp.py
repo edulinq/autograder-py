@@ -17,6 +17,9 @@ class TestTimestamp(unittest.TestCase):
             ('2023-09-28T13:10:44.432050+00:00', 1695906644000, '2023-09-28 13:10'),
             ('2023-09-28T13:10:44.43205+00:00', 1695906644000, '2023-09-28 13:10'),
 
+            (1695873620000, 1695873620000, '2023-09-28 04:00'),
+            ('1695873620000', 1695873620000, '2023-09-28 04:00'),
+
             # Unknown format.
             ('abc', '<Unknown Time (abc)>', '<Unknown Time (abc)>'),
         ]
@@ -49,3 +52,29 @@ class TestTimestamp(unittest.TestCase):
                     pretty = True, adjust_tz = False)
             self.assertEqual(expected_pretty, normal_pretty_timestamp,
                     "Case %d: [%s] Normal Then Pretty Timestamp" % (i, source))
+
+    def test_timestamp_message(self):
+        """
+        Test pulling timestamps out of messages.
+        """
+
+        # [(input, expected), ...]
+        test_cases = [
+            ("Some <timestamp:0> timestamp.", "Some 1970-01-01 00:00 timestamp."),
+            ("Some <timestamp:1695873620000> timestamp.", "Some 2023-09-28 04:00 timestamp."),
+            ("No timestamp here.", "No timestamp here."),
+            ("Some <timestamp:nil> timestamp.", "Some <Missing Time> timestamp."),
+            ("Some <timestamp:-60000> timestamp.", "Some 1969-12-31 23:59 timestamp."),
+            ("Some <timestamp:-60001> timestamp.", "Some 1969-12-31 23:58 timestamp."),
+            ("Timestamp one <timestamp:0> and two <timestamp:-60000>.",
+                "Timestamp one 1970-01-01 00:00 and two 1969-12-31 23:59."),
+            ("Timestamp one <timestamp:0> and two <timestamp:0>.",
+                "Timestamp one 1970-01-01 00:00 and two 1970-01-01 00:00."),
+        ]
+
+        for i in range(len(test_cases)):
+            (text, expected) = test_cases[i]
+
+            actual = autograder.util.timestamp.convert_message(text,
+                    pretty = True, adjust_tz = False)
+            self.assertEqual(expected, actual, "Case %d" % (i))

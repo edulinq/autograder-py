@@ -12,6 +12,8 @@ PRETTY_TIMESTAMP_FORMAT = '%Y-%m-%d %H:%M'
 UNKNOWN_TIMESTAMP = "<Unknown Time (%s)>"
 MISSING_TIMESTAMP = "<Missing Time>"
 
+MESSAGE_REGEX = r'<timestamp:(-?\d+|nil)>'
+
 def get(source = None, pretty = False, adjust_tz = True):
     if (source == MISSING_TIMESTAMP):
         return source
@@ -27,6 +29,28 @@ def get(source = None, pretty = False, adjust_tz = True):
         return _to_string(timestamp, adjust_tz = adjust_tz)
 
     return timestamp
+
+def convert_message(text, pretty = False, adjust_tz = True):
+    """
+    Look for any timestamps embedded in the text and replace them.
+    """
+
+    while True:
+        match = re.search(MESSAGE_REGEX, text)
+        if (match is None):
+            break
+
+        initial_text = match.group(0)
+        timestamp = match.group(1)
+
+        if (timestamp == 'nil'):
+            replacement = MISSING_TIMESTAMP
+        else:
+            replacement = str(get(timestamp, pretty = pretty, adjust_tz = adjust_tz))
+
+        text = text.replace(initial_text, replacement)
+
+    return text
 
 def _parse_timestamp(source = None):
     if (source is None):
@@ -46,6 +70,10 @@ def _parse_timestamp(source = None):
         raise ValueError("Unknown type ('%s') for timestamp source." % (type(source)))
 
     source = source.strip()
+
+    # Try once more for a unix timestamp.
+    if (re.match(r'^-?\d+(\.\d+)?$', source)):
+        return int(source), None
 
     # Parse out some cases that Python <= 3.10 cannot deal with.
     # This will remove fractional seconds.
