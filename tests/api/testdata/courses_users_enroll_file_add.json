@@ -1,0 +1,60 @@
+{
+    "module": "autograder.api.courses.users.enroll",
+    "endpoint": "courses/users/enroll-file",
+    "arguments": {
+        "user": "course-admin@test.edulinq.org",
+        "pass": "course-admin",
+        "send-emails": true,
+        "skip-inserts": false,
+        "skip-updates": false,
+        "dry-run": false,
+        "raw-course-users": [
+			{
+				"email": "new-user-1@test.edulinq.org",
+				"name": "",
+				"course-role": "student",
+				"course-lms-id": ""
+			},
+			{
+				"email": "new-user-2@test.edulinq.org",
+				"name": "",
+				"course-role": "grader",
+				"course-lms-id": ""
+			},
+			{
+				"email": "new-user-3@test.edulinq.org",
+				"name": "",
+				"course-role": "admin",
+				"course-lms-id": ""
+			}
+        ]
+    },
+    "output": {
+		"results": [
+            {
+                "email": "new-user-1@test.edulinq.org",
+                "added": true,
+                "emailed": true,
+                "enrolled": [
+                    "course101"
+                ]
+            },
+            {
+                "email": "new-user-2@test.edulinq.org",
+                "added": true,
+                "emailed": true,
+                "enrolled": [
+                    "course101"
+                ]
+            },
+            {
+                "email": "new-user-3@test.edulinq.org",
+                "added": true,
+                "emailed": true,
+                "enrolled": [
+                    "course101"
+                ]
+            }
+        ]
+    }
+}

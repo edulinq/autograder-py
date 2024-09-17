@@ -11,7 +11,7 @@
 			{
 				"email": "course-student@test.edulinq.org",
 				"name": "",
-				"course-role": "grader",
+				"course-role": "owner",
 				"course-lms-id": ""
 			}
         ]
@@ -20,7 +20,10 @@
 		"results": [
             {
                 "email": "course-student@test.edulinq.org",
-                "modified": true
+				"validation-error": {
+                    "locator": "",
+                    "message": "You have insufficient permissions for the requested operation."
+                }
             }
         ]
     }

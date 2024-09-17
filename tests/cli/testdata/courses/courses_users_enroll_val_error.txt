@@ -4,11 +4,12 @@
         "--user", "course-admin@test.edulinq.org",
         "--pass", "course-admin",
         "--new-email", "course-student@test.edulinq.org",
-        "--new-course-role", "grader"
+        "--new-course-role", "owner"
     ]
 }
 ---
 course-student@test.edulinq.org
-    Modified
+    Validation Error
+        You have insufficient permissions for the requested operation.
 
-Processed 1 users. Encountered 0 errors.
+Processed 1 users. Encountered 1 errors.

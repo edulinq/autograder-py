@@ -3,7 +3,6 @@
     "arguments": [
         "--user", "course-admin@test.edulinq.org",
         "--pass", "course-admin",
-        "--course", "course101",
         "--new-email", "new-user@test.edulinq.org",
         "--table"
     ]

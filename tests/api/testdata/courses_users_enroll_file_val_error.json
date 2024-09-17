@@ -1,0 +1,44 @@
+{
+    "module": "autograder.api.courses.users.enroll",
+    "endpoint": "courses/users/enroll-file",
+    "arguments": {
+        "user": "course-admin@test.edulinq.org",
+        "pass": "course-admin",
+        "send-emails": true,
+        "skip-inserts": false,
+        "skip-updates": false,
+        "dry-run": false,
+        "raw-course-users": [
+			{
+				"email": "course-student@test.edulinq.org",
+				"name": "",
+				"course-role": "owner",
+				"course-lms-id": ""
+			},
+			{
+				"email": "course-grader@test.edulinq.org",
+				"name": "",
+				"course-role": "owner",
+				"course-lms-id": "new-lms-id"
+			}
+        ]
+    },
+    "output": {
+		"results": [
+            {
+                "email": "course-grader@test.edulinq.org",
+				"validation-error": {
+                    "locator": "",
+                    "message": "You have insufficient permissions for the requested operation."
+                }
+            },
+            {
+                "email": "course-student@test.edulinq.org",
+				"validation-error": {
+                    "locator": "",
+                    "message": "You have insufficient permissions for the requested operation."
+                }
+            }
+        ]
+    }
+}

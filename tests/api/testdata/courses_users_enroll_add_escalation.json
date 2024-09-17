@@ -3,7 +3,6 @@
     "arguments": {
         "user": "server-admin@test.edulinq.org",
         "pass": "server-admin",
-        "course": "course101",
         "send-emails": true,
         "skip-inserts": false,
         "skip-updates": false,
