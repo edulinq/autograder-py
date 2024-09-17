@@ -1,0 +1,13 @@
+{
+    "cli": "autograder.cli.courses.users.enroll",
+    "arguments": [
+        "--user", "server-admin@test.edulinq.org",
+        "--pass", "server-admin",
+        "--course", "course101",
+        "--new-email", "new-user@test.edulinq.org",
+        "--table"
+    ]
+}
+---
+Email	Added	Modified	Removed	Skipped	Not Exists	Emailed	Enrolled	Dropped	Validation Error	System Error	Communication Error
+new-user@test.edulinq.org	True					True	['course101']				

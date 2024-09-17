@@ -10,7 +10,6 @@ def run(arguments):
     arguments['raw-course-users'] = [{
         'email': arguments['new-email'],
         'name': arguments['new-name'],
-        'course': arguments['course-id'],
         'course-role': arguments['new-course-role'],
         'course-lms-id': arguments['new-lms-id'],
     }]
