@@ -42,10 +42,13 @@ def _load_users(path):
             if (len(parts) > 0):
                 name = parts.pop(0)
 
-            course_role = 'unknown'
+            course_role = ''
             if (len(parts) > 0):
                 course_role = parts.pop(0)
                 course_role = course_role.lower()
+
+            if (course_role == ''):
+                course_role = 'unknown'
 
             if (course_role not in autograder.api.constants.COURSE_ROLES):
                 raise ValueError(
