@@ -1,0 +1,14 @@
+{
+    "module": "autograder.api.courses.users.get",
+    "arguments": {},
+    "output": {
+        "found": true,
+        "user": {
+            "type": "course",
+            "email": "course-admin@test.edulinq.org",
+            "name": "course-admin",
+            "role": "admin",
+            "lms-id": ""
+        }
+    }
+}

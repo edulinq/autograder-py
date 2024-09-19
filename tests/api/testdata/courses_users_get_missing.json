@@ -1,0 +1,10 @@
+{
+    "module": "autograder.api.courses.users.get",
+    "arguments": {
+        "target-email": "ZZZ@test.edulinq.org"
+    },
+    "output": {
+        "found": false,
+        "user": null
+    }
+}
