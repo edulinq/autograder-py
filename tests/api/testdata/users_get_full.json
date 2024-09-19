@@ -1,0 +1,44 @@
+{
+    "module": "autograder.api.users.get",
+    "arguments": {
+        "user": "server-admin@test.edulinq.org",
+        "pass": "server-admin",
+        "target-email": "course-student@test.edulinq.org"
+    },
+    "output": {
+        "found": true,
+        "user": {
+            "type": "server",
+            "email": "course-student@test.edulinq.org",
+            "name": "course-student",
+            "role": "user",
+            "courses": {
+                "course-languages": {
+                    "id": "course-languages",
+                    "name": "Course Using Different Languages.",
+                    "role": "student"
+                },
+                "course-with-lms": {
+                    "id": "course-with-lms",
+                    "name": "Course With LMS",
+                    "role": "student"
+                },
+                "course-without-source": {
+                    "id": "course-without-source",
+                    "name": "Course Without Source",
+                    "role": "student"
+                },
+                "course101": {
+                    "id": "course101",
+                    "name": "Course 101",
+                    "role": "student"
+                },
+                "course101-with-zero-limit": {
+                    "id": "course101-with-zero-limit",
+                    "name": "Course 101 - With Zero Limit",
+                    "role": "student"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,11 @@
+{
+    "module": "autograder.api.users.get",
+    "arguments": {
+        "user": "server-admin@test.edulinq.org",
+        "pass": "server-admin",
+        "target-email": "ZZZ@test.edulinq.org"
+    },
+    "output": {
+        "found": false
+    }
+}
