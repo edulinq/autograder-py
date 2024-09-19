@@ -6,6 +6,7 @@
         "target-email": "ZZZ@test.edulinq.org"
     },
     "output": {
-        "found": false
+        "found": false,
+        "user": null
     }
 }
