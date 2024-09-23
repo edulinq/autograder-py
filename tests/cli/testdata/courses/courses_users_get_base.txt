@@ -1,0 +1,11 @@
+{
+    "cli": "autograder.cli.courses.users.get",
+    "arguments": [
+        "--target-email", "course-student@test.edulinq.org"
+    ]
+}
+---
+Email: course-student@test.edulinq.org
+Name: course-student
+Role: student
+LMS ID: 

@@ -3,7 +3,7 @@
     "arguments": {
         "course": "course101",
         "level": "INFO",
-        "assignment-id": "HW0"
+        "target-assignment": "HW0"
     },
     "output-modifier": "clean_output_logs",
     "output": {

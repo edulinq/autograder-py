@@ -1,0 +1,14 @@
+{
+    "cli": "autograder.cli.users.get",
+    "arguments": [
+        "--table",
+        "--normalize"
+    ]
+}
+---
+email	name	role	course-id	course-name	course-role
+course-admin@test.edulinq.org	course-admin	user	course-languages	Course Using Different Languages.	admin
+course-admin@test.edulinq.org	course-admin	user	course-with-lms	Course With LMS	admin
+course-admin@test.edulinq.org	course-admin	user	course-without-source	Course Without Source	admin
+course-admin@test.edulinq.org	course-admin	user	course101	Course 101	admin
+course-admin@test.edulinq.org	course-admin	user	course101-with-zero-limit	Course 101 - With Zero Limit	admin
