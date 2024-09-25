@@ -10,10 +10,10 @@ import glob
 import importlib
 import json
 import os
+import subprocess
 import sys
+import time
 import traceback
-
-DEFAULT_PORT = 8080
 
 THIS_DIR = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
 ROOT_DIR = os.path.join(THIS_DIR, '..')
@@ -27,6 +27,13 @@ import autograder.api.courses.admin.update
 import tests.api.test_api
 import tests.server.base
 import tests.server.server
+
+DEFAULT_PORT = 8080
+
+DEFAULT_DOCKER_IMAGE = 'edulinq/autograder-server-prebuilt:latest'
+DOCKER_CONTAINER_NAME = 'autograder-py-verify-test-data'
+DOCKER_START_SLEEP_TIME_SECS = 0.25
+DOCKER_KILL_SLEEP_TIME_SECS = 0.25
 
 def verify_test_case(cli_arguments, path):
     print("Verifying test case: '%s'." % (path))
@@ -77,7 +84,27 @@ def verify_test_case(cli_arguments, path):
 
     return 0
 
-def reset_course(cli_arguments):
+def start_server(cli_arguments):
+    if (cli_arguments.docker):
+        _reset_server_docker(cli_arguments, True)
+    else:
+        _reset_server_api(cli_arguments)
+
+def reset_server(cli_arguments):
+    if (cli_arguments.docker):
+        _reset_server_docker(cli_arguments, False)
+    else:
+        _reset_server_api(cli_arguments)
+
+def stop_server(cli_arguments):
+    if (not cli_arguments.docker):
+        return
+
+    _run_bin(['docker', 'kill', DOCKER_CONTAINER_NAME])
+    time.sleep(DOCKER_KILL_SLEEP_TIME_SECS)
+
+# Do a soft server reset using the API to update the course.
+def _reset_server_api(cli_arguments):
     arguments = tests.server.server.INITIAL_BASE_ARGUMENTS.copy()
     for key, value in vars(cli_arguments).items():
         if ((value is not None) or (value)):
@@ -87,14 +114,58 @@ def reset_course(cli_arguments):
 
     autograder.api.courses.admin.update.send(arguments)
 
+# Do a hard server reset by (re)starting the docker continer.
+def _reset_server_docker(cli_arguments, initial):
+    base_args = [
+        'docker', 'run',
+        '-d', '-it', '--rm',
+        '--name', DOCKER_CONTAINER_NAME,
+        '-v', '/var/run/docker.sock:/var/run/docker.sock',
+        '-v', '/tmp/autograder-temp/:/tmp/autograder-temp',
+        '-p', '%d:%d' % (cli_arguments.port, DEFAULT_PORT),
+        cli_arguments.image,
+    ]
+
+    if (initial):
+        # If this is the first run, then ensure all the images are built.
+        # This will speed up later resets.
+        args = base_args + ['build-images', '--unit-testing']
+
+        # Don't detach this container, wait for it to finish.
+        args.remove('-d')
+
+        print("Building Assignment Images")
+        _run_bin(args)
+    else:
+        # Kill the previous container.
+        stop_server(cli_arguments)
+
+    args = base_args + ['server', '--unit-testing']
+
+    _run_bin(args)
+    time.sleep(DOCKER_START_SLEEP_TIME_SECS)
+
+def _run_bin(args, cwd = '.', raise_on_error = True, print_output = False):
+    try:
+        subprocess.run(args, cwd = cwd, check = raise_on_error, capture_output = (not print_output))
+    except subprocess.CalledProcessError as ex:
+        print("--- stdout ---")
+        print(ex.stdout)
+        print("--------------")
+        print("--- stderr ---")
+        print(ex.stderr)
+        print("--------------")
+
+        raise ex
+
 def run(arguments):
     # Override the server with the local server.
     arguments.server = "http://127.0.0.1:%d" % (arguments.port)
 
     error_count = 0
 
-    # Do an initial reset of the DB.
-    reset_course(arguments)
+    # Start the API server.
+    start_server(arguments)
 
     for path in sorted(glob.glob(os.path.join(TEST_DATA_DIR, '**', '*.json'), recursive = True)):
         try:
@@ -104,8 +175,11 @@ def run(arguments):
             print("Error verifying test '%s'." % (path))
             traceback.print_exception(ex)
 
-        # Reset the DB after every test.
-        reset_course(arguments)
+        # Reset the server after every test.
+        reset_server(arguments)
+
+    # Stop the API server.
+    stop_server(arguments)
 
     if (error_count > 0):
         print("Found %d API test case issues." % (error_count))
@@ -123,6 +197,14 @@ def main():
     parser.add_argument('--port', dest = 'port',
         action = 'store', type = int, default = DEFAULT_PORT,
         help = 'The default local port to connect to (default: %(default)s).')
+
+    parser.add_argument('--docker', dest = 'docker',
+        action = 'store_true', default = False,
+        help = 'Use a docker container for the serevr (will be started and restarted) (default: %(default)s).')
+
+    parser.add_argument('--image', dest = 'image',
+        action = 'store', type = str, default = DEFAULT_DOCKER_IMAGE,
+        help = 'The Docker image to use (when --docker is given) (default: %(default)s).')
 
     return run(parser.parse_args())
 
