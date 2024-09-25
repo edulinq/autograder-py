@@ -118,7 +118,7 @@ def _reset_server_api(cli_arguments):
 def _reset_server_docker(cli_arguments, initial):
     base_args = [
         'docker', 'run',
-        '-d', '-it', '--rm',
+        '-d', '--rm',
         '--name', DOCKER_CONTAINER_NAME,
         '-v', '/var/run/docker.sock:/var/run/docker.sock',
         '-v', '/tmp/autograder-temp/:/tmp/autograder-temp',
