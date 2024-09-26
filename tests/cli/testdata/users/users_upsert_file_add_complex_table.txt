@@ -1,0 +1,13 @@
+{
+    "cli": "autograder.cli.users.upsert-file",
+    "arguments": [
+        "--user", "server-admin@test.edulinq.org",
+        "--pass", "server-admin",
+        "--table",
+        "__DATA_DIR__(users_upsert_file_add_complex.txt)"
+    ]}
+---
+Email	Added	Modified	Removed	Skipped	Not Exists	Emailed	Enrolled	Dropped	Validation Error	System Error	Communication Error
+first@test.edulinq.org	True					True	['course101']				
+second@test.edulinq.org	True					True					
+val-error@test.edulinq.org									You have insufficient permissions for the requested operation.		

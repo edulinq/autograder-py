@@ -1,0 +1,65 @@
+{
+    "module": "autograder.api.users.upsert",
+    "endpoint": "users/upsert-file",
+    "arguments": {
+        "user": "server-admin@test.edulinq.org",
+        "pass": "server-admin",
+        "send-emails": true,
+        "skip-inserts": false,
+        "skip-updates": false,
+        "dry-run": false,
+        "raw-users": [
+			{
+				"email": "first@test.edulinq.org",
+				"name": "first",
+				"role": "user",
+				"pass": "",
+				"course": "course101",
+				"course-role": "student",
+				"course-lms-id": "first-lms-id"
+			},
+			{
+				"email": "second@test.edulinq.org",
+				"name": "second",
+				"role": "creator",
+				"pass": "",
+				"course": "",
+				"course-role": "unknown",
+				"course-lms-id": ""
+			},
+			{
+				"email": "val-error@test.edulinq.org",
+				"name": "val-error",
+				"role": "owner",
+				"pass": "",
+				"course": "",
+				"course-role": "unknown",
+				"course-lms-id": ""
+			}
+        ]
+    },
+    "output": {
+		"results": [
+            {
+                "email": "first@test.edulinq.org",
+                "added": true,
+                "emailed": true,
+                "enrolled": [
+                    "course101"
+                ]
+            },
+            {
+                "email": "second@test.edulinq.org",
+                "added": true,
+                "emailed": true
+            },
+            {
+                "email": "val-error@test.edulinq.org",
+				"validation-error": {
+                    "locator": "",
+                    "message": "You have insufficient permissions for the requested operation."
+                }
+            }
+        ]
+    }
+}
