@@ -26,35 +26,35 @@
                             "max_points": 1,
                             "score": 1,
                             "message": "",
-                            "grading_start_time": "2023-10-15T21:44:33Z",
-                            "grading_end_time": "2023-10-15T21:44:33Z"
+                            "grading_start_time": 1697406273000,
+                            "grading_end_time": 1697406273000
                         },
                         {
                             "name": "Q2",
                             "max_points": 1,
                             "score": 1,
                             "message": "",
-                            "grading_start_time": "2023-10-15T21:44:33Z",
-                            "grading_end_time": "2023-10-15T21:44:33Z"
+                            "grading_start_time": 1697406273000,
+                            "grading_end_time": 1697406273000
                         },
                         {
                             "name": "Style",
                             "max_points": 0,
                             "score": 0,
                             "message": "Style is clean!",
-                            "grading_start_time": "2023-10-15T21:44:33Z",
-                            "grading_end_time": "2023-10-15T21:44:33Z"
+                            "grading_start_time": 1697406273000,
+                            "grading_end_time": 1697406273000
                         }
                     ],
-                    "grading_start_time": "2023-10-15T21:44:33Z",
-                    "grading_end_time": "2023-10-15T21:44:33Z",
+                    "grading_start_time": 1697406273000,
+                    "grading_end_time": 1697406273000,
                     "additional-info": null
                 },
                 "input-files-gzip": {
                     "submission.py": "H4sICAAAAAAA/3N1Ym1pc3Npb24ucHkASklNU0grzUsuyczPM9TQtOJSUFBQKEotKS3KUwgpKk3l4kJWYaRRlpiDqqgsMUdBW8GQCxAAAP//PpwmbkkAAAA="
                 },
                 "output-files-gzip": {
-                    "result.json": "H4sICAAAAAAA/3Jlc3VsdC5qc29uAMyTUUvDMBDH3/0UZ17d5O6ypC6fwFdR8EGkhC2UwJpqE0EZ++6yrBZXnaP0xT4d/+N+/fODbC8AAESwtRMGxO0jitkhen1zMfkmRGHgKUf7b9tPR3d31J31m9q+ly+ND2l/T4NlXDWt+yWvXYy2ysQhr2rt2oeqjMm2qUz+8F9GlnOiOdEDsyFpFnytliylukI0iKcoLqzPMgrqGD1iNzvrgf+TB8XTPSjWxXgP9+lj4/5UgSdUDPNvKjIUfITVxtlwOcXMDSuaZkZzoRX+MJOn5+4JjWmEtDhuNKLJkjV/Ndl9BgAA///7xmbx0gMAAA=="
+                    "result.json": "H4sICAAAAAAA/3Jlc3VsdC5qc29uAMSSvQqDMBSFd5/iNrNDDPUnPkHX0qFDKRI0SEBja1JoEd+9mIptg1YyNdPl3HPO5YN0HgAAkqzmKAW0O2Lkv6TrjSstGqlQCicjDa+bpq/cPhhj06Zm9+zSCKmHfGAtVd60fEavuVKsNI12X9myQsgyU5q1OtPC3A0iSuMtTggJKVkIcFnM2id376/Skb/ThW50oQPdQT8q/hMQLwDa+gegKQWhIK84kxtn3sSFNyLxm9dM5/ETr97BlnGhn3q99wwAAP//PProBisDAAA="
                 },
                 "stdout": "",
                 "stderr": ""

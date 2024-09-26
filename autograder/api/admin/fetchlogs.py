@@ -20,7 +20,7 @@ API_PARAMS = [
                 + ' (using "h", "m", or "s" suffixes) (e.g., "24h", "10m", or "1h10m10s").'),
             required = False),
 
-    autograder.api.config.APIParam('assignment-id',
+    autograder.api.config.APIParam('target-assignment',
             'If supplied, only return log records for this assignment.',
             required = False),
 

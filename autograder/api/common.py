@@ -7,6 +7,7 @@ import requests
 import autograder.api.config
 import autograder.api.constants
 import autograder.api.error
+import autograder.util.timestamp
 
 def handle_api_request(arguments, params, endpoint, exit_on_error = False, files = []):
     """
@@ -90,6 +91,9 @@ def send_api_request(endpoint, server = None, verbose = False, data = {}, files 
         if (autograder.api.constants.API_RESPONSE_KEY_MESSAGE in response):
             message = ("Failed to complete operation: %s" %
                 response[autograder.api.constants.API_RESPONSE_KEY_MESSAGE])
+
+            # Replace any timestamps in the message.
+            message = autograder.util.timestamp.convert_message(message, pretty = True)
 
         code = response.get("status", None)
         raise autograder.api.error.APIError(code, message)

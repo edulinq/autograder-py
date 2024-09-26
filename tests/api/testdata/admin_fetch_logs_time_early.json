@@ -13,7 +13,7 @@
             {
                 "level": -10,
                 "message": "Loaded course.",
-                "unix-time": 0,
+                "timestamp": 0,
                 "course": "course-without-source",
                 "attributes": {
                     "num-assignments": 0,
@@ -23,7 +23,7 @@
             {
                 "level": -10,
                 "message": "Loaded course.",
-                "unix-time": 0,
+                "timestamp": 0,
                 "course": "course-without-source",
                 "attributes": {
                     "num-assignments": 0,

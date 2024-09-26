@@ -1,0 +1,43 @@
+{
+    "module": "autograder.api.courses.users.list",
+    "arguments": {},
+    "output": {
+        "users": [
+            {
+                "type": "course",
+                "email": "course-admin@test.edulinq.org",
+                "name": "course-admin",
+                "role": "admin",
+                "lms-id": ""
+            },
+            {
+                "type": "course",
+                "email": "course-grader@test.edulinq.org",
+                "name": "course-grader",
+                "role": "grader",
+                "lms-id": ""
+            },
+            {
+                "type": "course",
+                "email": "course-other@test.edulinq.org",
+                "name": "course-other",
+                "role": "other",
+                "lms-id": ""
+            },
+            {
+                "type": "course",
+                "email": "course-owner@test.edulinq.org",
+                "name": "course-owner",
+                "role": "owner",
+                "lms-id": ""
+            },
+            {
+                "type": "course",
+                "email": "course-student@test.edulinq.org",
+                "name": "course-student",
+                "role": "student",
+                "lms-id": ""
+            }
+        ]
+    }
+}

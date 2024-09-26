@@ -104,7 +104,7 @@ def clean_token(output):
 
 def clean_output_logs(output):
     record_set_values = {
-        'unix-time': 0,
+        'timestamp': 0,
     }
 
     attribute_set_values = {

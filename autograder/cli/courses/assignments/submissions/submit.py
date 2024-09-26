@@ -2,13 +2,17 @@ import sys
 
 import autograder.api.courses.assignments.submissions.submit
 import autograder.assignment
+import autograder.util.timestamp
 
 def run(arguments):
     result = autograder.api.courses.assignments.submissions.submit.send(arguments, arguments.files,
             exit_on_error = True)
 
-    message = result['message']
-    if (message != ''):
+    message = result.get('message', '')
+    if ((message is not None) and (message != '')):
+        # Replace any timestamps in the message.
+        message = autograder.util.timestamp.convert_message(message, pretty = True)
+
         print("--- Message from Autograder ---")
         print(message)
         print("-------------------------------")

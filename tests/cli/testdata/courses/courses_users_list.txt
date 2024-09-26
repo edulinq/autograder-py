@@ -1,0 +1,29 @@
+{
+    "cli": "autograder.cli.courses.users.list",
+    "arguments": []
+}
+---
+Email: course-admin@test.edulinq.org
+Name: course-admin
+Role: admin
+LMS ID: 
+
+Email: course-grader@test.edulinq.org
+Name: course-grader
+Role: grader
+LMS ID: 
+
+Email: course-other@test.edulinq.org
+Name: course-other
+Role: other
+LMS ID: 
+
+Email: course-owner@test.edulinq.org
+Name: course-owner
+Role: owner
+LMS ID: 
+
+Email: course-student@test.edulinq.org
+Name: course-student
+Role: student
+LMS ID: 
