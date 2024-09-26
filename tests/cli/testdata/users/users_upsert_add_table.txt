@@ -1,0 +1,12 @@
+{
+    "cli": "autograder.cli.users.upsert",
+    "arguments": [
+        "--user", "server-admin@test.edulinq.org",
+        "--pass", "server-admin",
+        "--new-email", "new-user@test.edulinq.org",
+        "--table"
+    ]
+}
+---
+Email	Added	Modified	Removed	Skipped	Not Exists	Emailed	Enrolled	Dropped	Validation Error	System Error	Communication Error
+new-user@test.edulinq.org	True					True					

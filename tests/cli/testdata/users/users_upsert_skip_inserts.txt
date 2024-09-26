@@ -1,0 +1,14 @@
+{
+    "cli": "autograder.cli.users.upsert",
+    "arguments": [
+        "--user", "server-admin@test.edulinq.org",
+        "--pass", "server-admin",
+        "--new-email", "alt-new-user@test.edulinq.org",
+        "--skip-inserts"
+    ]
+}
+---
+alt-new-user@test.edulinq.org
+    Skipped
+
+Processed 1 users. Encountered 0 errors.
