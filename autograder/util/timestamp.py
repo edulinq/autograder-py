@@ -92,7 +92,7 @@ def _timestamp_from_pytime(pytime):
     return int(pytime.timestamp() * 1000)
 
 def _pytime_from_timestamp(timestamp):
-    return datetime.datetime.fromtimestamp(timestamp / 1000, datetime.UTC)
+    return datetime.datetime.fromtimestamp(timestamp / 1000, datetime.timezone.utc)
 
 def _now():
     return int(time.time() * 1000)
