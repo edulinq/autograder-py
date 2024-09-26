@@ -1,0 +1,9 @@
+{
+    "cli": "autograder.cli.users.tokens.delete",
+    "arguments": [
+        "--token-id", "ZZZ"
+    ],
+    "exit-status": 1
+}
+---
+Token not found.
