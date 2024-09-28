@@ -66,6 +66,7 @@ class DockerServer(BaseServer):
         super().__init__(**kwargs)
 
         self._image = image
+        self._is_running = False
 
         # Try to stop the server on termination.
         atexit.register(self.stop)
@@ -76,9 +77,16 @@ class DockerServer(BaseServer):
         util.run(args)
         time.sleep(DOCKER_START_SLEEP_TIME_SECS)
 
+        self._is_running = True
+
     def stop(self, **kwargs):
+        if (not self._is_running):
+            return
+
         util.run(['docker', 'kill', DOCKER_CONTAINER_NAME])
         time.sleep(DOCKER_KILL_SLEEP_TIME_SECS)
+
+        self._is_running = False
 
     def reset(self, **kwargs):
         # Stop the previous container.
