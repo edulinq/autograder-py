@@ -41,7 +41,7 @@ def verify_test_case(server, path):
 
     arguments = util.build_api_args(server)
     parts = tests.api.test_api._get_api_test_info(path, arguments)
-    (import_module_name, arguments, expected, is_error, output_modifier) = parts
+    (import_module_name, arguments, expected, is_error, read_write, output_modifier) = parts
 
     api_module = importlib.import_module(import_module_name)
 
@@ -68,6 +68,10 @@ def verify_test_case(server, path):
             return 1
 
         return 0
+    finally:
+        # Ensure that tests that write data reset the server.
+        if (read_write):
+            server.reset()
 
     actual = output_modifier(actual)
 
@@ -100,9 +104,6 @@ def run(arguments):
             error_count += 1
             print("Error verifying test '%s'." % (path))
             traceback.print_exception(ex)
-
-        # Reset the server after every test.
-        server.reset()
 
     # Stop the API server.
     server.stop()

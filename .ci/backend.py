@@ -21,7 +21,7 @@ WEB_URL = 'http://127.0.0.1'
 DEFAULT_DOCKER_IMAGE = 'edulinq/autograder-server-prebuilt:latest'
 DOCKER_CONTAINER_NAME = 'autograder-py-verify-test-data'
 DOCKER_START_SLEEP_TIME_SECS = 0.25
-DOCKER_KILL_SLEEP_TIME_SECS = 0.25
+DOCKER_STOP_WAIT_TIME_SECS = 1
 
 SOURCE_START_SLEEP_TIME_SECS = 0.25
 SOURCE_KILL_SLEEP_TIME_SECS = 0.25
@@ -68,6 +68,11 @@ class DockerServer(BaseServer):
         self._image = image
         self._is_running = False
 
+        # Before starting the server the first time,
+        # ensure the image is up-to-date (only if we are using the default image).
+        if (self._image == DEFAULT_DOCKER_IMAGE):
+            self._pull_image()
+
         # Try to stop the server on termination.
         atexit.register(self.stop)
 
@@ -75,17 +80,21 @@ class DockerServer(BaseServer):
         args = self._get_base_args() + ['server', '--unit-testing']
 
         util.run(args)
-        time.sleep(DOCKER_START_SLEEP_TIME_SECS)
 
         self._is_running = True
+        time.sleep(DOCKER_START_SLEEP_TIME_SECS)
 
     def stop(self, **kwargs):
         if (not self._is_running):
             return
 
-        util.run(['docker', 'kill', DOCKER_CONTAINER_NAME])
-        time.sleep(DOCKER_KILL_SLEEP_TIME_SECS)
+        args = [
+            'docker', 'stop',
+            '--time', str(int(DOCKER_STOP_WAIT_TIME_SECS)),
+            DOCKER_CONTAINER_NAME,
+        ]
 
+        util.run(args)
         self._is_running = False
 
     def reset(self, **kwargs):
@@ -105,6 +114,11 @@ class DockerServer(BaseServer):
             '-p', '%d:%d' % (self._port, DEFAULT_PORT),
             self._image,
         ]
+
+    def _pull_image(self, **kwargs):
+        print("Pulling Latest Image ...")
+        util.run(['docker', 'pull', self._image])
+        print("Pulling Complete")
 
 class SourceServer(BaseServer):
     def __init__(self, source_dir = None, **kwargs):

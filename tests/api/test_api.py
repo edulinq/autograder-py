@@ -39,6 +39,7 @@ def _get_api_test_info(path, arguments):
         arguments[key] = value
 
     is_error = data.get('error', False)
+    read_write = data.get('read-write', False)
 
     output_modifier = clean_output_noop
     if ('output-modifier' in data):
@@ -50,7 +51,7 @@ def _get_api_test_info(path, arguments):
 
         output_modifier = globals()[modifier_name]
 
-    return import_module_name, arguments, data['output'], is_error, output_modifier
+    return import_module_name, arguments, data['output'], is_error, read_write, output_modifier
 
 def _discover_api_tests():
     for path in sorted(glob.glob(os.path.join(DATA_DIR, "**", "*.json"), recursive = True)):
@@ -65,7 +66,8 @@ def _add_api_test(path):
 
 def _get_api_test_method(path):
     def __method(self):
-        module_name, arguments, expected, is_error, output_modifier = self._get_test_info(path)
+        parts = self._get_test_info(path)
+        (module_name, arguments, expected, is_error, read_write, output_modifier) = parts
 
         api_module = importlib.import_module(module_name)
 

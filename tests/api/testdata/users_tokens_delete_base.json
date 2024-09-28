@@ -1,5 +1,6 @@
 {
     "module": "autograder.api.users.tokens.delete",
+    "read-write": true,
     "arguments": {
         "token-id": "df0a1f16-9cd8-4395-8509-10ae314fe6fc"
     },
