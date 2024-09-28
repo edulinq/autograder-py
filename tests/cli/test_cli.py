@@ -41,7 +41,7 @@ class CLITest(tests.server.base.ServerBaseTest):
         exit_status = options.get('exit-status', 0)
         is_error = options.get('error', False)
 
-        output_check_name = options.get('output_check', DEFAULT_OUTPUT_CHECK)
+        output_check_name = options.get('output-check', DEFAULT_OUTPUT_CHECK)
         if (output_check_name not in globals()):
             raise ValueError("Could not find output check function: '%s'." % (output_check_name))
         output_check = globals()[output_check_name]

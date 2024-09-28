@@ -1,6 +1,5 @@
 {
     "module": "autograder.api.users.upsert",
-    "endpoint": "users/upsert-file",
     "arguments": {
         "user": "server-admin@test.edulinq.org",
         "pass": "server-admin",

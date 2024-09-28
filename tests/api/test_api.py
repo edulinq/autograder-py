@@ -29,11 +29,7 @@ def _get_api_test_info(path, arguments):
 
     import_module_name = data.get('module', None)
     if (import_module_name is None):
-        parts = data['endpoint'].split('/')
-        prefix = parts[0]
-        suffix = ''.join(parts[1:])
-
-        import_module_name = '.'.join(['autograder', 'api', prefix, suffix])
+        raise ValueError("Could not find API test module.")
 
     for key, value in data.get('arguments', {}).items():
         arguments[key] = value

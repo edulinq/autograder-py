@@ -1,6 +1,6 @@
 {
     "cli": "autograder.cli.courses.assignments.submissions.fetch.user.peek",
-    "output_check": "content_equals_ignore_time",
+    "output-check": "content_equals_ignore_time",
     "arguments": [
         "--target-email", "course-student@test.edulinq.org",
         "--target-submission", "1697406265"
