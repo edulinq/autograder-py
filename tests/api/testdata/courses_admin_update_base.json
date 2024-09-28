@@ -1,5 +1,6 @@
 {
     "module": "autograder.api.courses.admin.update",
+    "read-write": true,
     "arguments": {
         "clear": false
     },

@@ -32,7 +32,7 @@ class Question(object):
         self.max_points = max_points
         self._timeout = timeout
 
-        # Scoring artifact.
+        # Create the base scoring artifact.
         self.result = GradedQuestion(name = self.name, max_points = self.max_points)
 
     @abc.abstractmethod
@@ -184,11 +184,14 @@ class GradedQuestion(object):
         self.score = score
         self.message = message
 
-        self.grading_start_time = autograder.util.timestamp.MISSING_TIMESTAMP
+        # Default the grading time to deal with situations where the grader throws an exception.
+        now = autograder.util.timestamp.get()
+
+        self.grading_start_time = now
         if (grading_start_time is not None):
             self.grading_start_time = autograder.util.timestamp.get(grading_start_time)
 
-        self.grading_end_time = autograder.util.timestamp.MISSING_TIMESTAMP
+        self.grading_end_time = now
         if (grading_end_time is not None):
             self.grading_end_time = autograder.util.timestamp.get(grading_end_time)
 

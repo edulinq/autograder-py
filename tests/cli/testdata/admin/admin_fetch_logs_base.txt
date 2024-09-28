@@ -1,6 +1,6 @@
 {
     "cli": "autograder.cli.admin.fetch-logs",
-    "output_check": "content_equals_ignore_time",
+    "output-check": "content_equals_ignore_time",
     "arguments": [
         "--course", "course-without-source",
         "--level", "DEBUG"

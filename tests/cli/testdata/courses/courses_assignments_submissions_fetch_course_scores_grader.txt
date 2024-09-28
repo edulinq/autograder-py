@@ -1,6 +1,6 @@
 {
     "cli": "autograder.cli.courses.assignments.submissions.fetch.course.scores",
-    "output_check": "content_equals_ignore_time",
+    "output-check": "content_equals_ignore_time",
     "arguments": [
         "--filter-role", "grader"
     ]

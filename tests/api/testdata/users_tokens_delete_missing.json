@@ -1,0 +1,9 @@
+{
+    "module": "autograder.api.users.tokens.delete",
+    "arguments": {
+        "token-id": "ZZZ"
+    },
+    "output": {
+        "found": false
+    }
+}

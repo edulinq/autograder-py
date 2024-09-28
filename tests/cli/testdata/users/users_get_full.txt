@@ -1,0 +1,32 @@
+{
+    "cli": "autograder.cli.users.get",
+    "arguments": [
+        "--user", "server-admin@test.edulinq.org",
+        "--pass", "server-admin",
+        "--target-email", "course-student@test.edulinq.org"
+    ]
+}
+---
+Email: course-student@test.edulinq.org
+Name: course-student
+Role: user
+Courses:
+    ID: course-languages
+    Name: Course Using Different Languages.
+    Role: student
+
+    ID: course-with-lms
+    Name: Course With LMS
+    Role: student
+
+    ID: course-without-source
+    Name: Course Without Source
+    Role: student
+
+    ID: course101
+    Name: Course 101
+    Role: student
+
+    ID: course101-with-zero-limit
+    Name: Course 101 - With Zero Limit
+    Role: student

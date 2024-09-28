@@ -8,19 +8,19 @@
         "skip-updates": true,
         "dry-run": false,
         "raw-users": [
-			{
-				"email": "server-user@test.edulinq.org",
-				"name": "",
-				"role": "creator",
-				"pass": "",
-				"course": "",
-				"course-role": "student",
-				"course-lms-id": ""
-			}
+            {
+                "email": "server-user@test.edulinq.org",
+                "name": "",
+                "role": "creator",
+                "pass": "",
+                "course": "",
+                "course-role": "student",
+                "course-lms-id": ""
+            }
         ]
     },
     "output": {
-		"results": [
+        "results": [
             {
                 "email": "server-user@test.edulinq.org",
                 "skipped": true

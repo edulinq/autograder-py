@@ -1,6 +1,5 @@
 {
     "module": "autograder.api.users.upsert",
-    "endpoint": "users/upsert-file",
     "arguments": {
         "user": "server-admin@test.edulinq.org",
         "pass": "server-admin",
@@ -9,54 +8,54 @@
         "skip-updates": false,
         "dry-run": false,
         "raw-users": [
-			{
-				"email": "error@test.edulinq.org",
-				"name": "",
-				"role": "owner",
-				"pass": "",
-				"course": "",
-				"course-role": "unknown",
-				"course-lms-id": ""
-			},
-			{
-				"email": "server-user@test.edulinq.org",
-				"name": "",
-				"role": "owner",
-				"pass": "",
-				"course": "",
-				"course-role": "unknown",
-				"course-lms-id": ""
-			},
-			{
-				"email": "server-owner@test.edulinq.org",
-				"name": "",
-				"role": "user",
-				"pass": "",
-				"course": "",
-				"course-role": "unknown",
-				"course-lms-id": ""
-			}
+            {
+                "email": "error@test.edulinq.org",
+                "name": "",
+                "role": "owner",
+                "pass": "",
+                "course": "",
+                "course-role": "unknown",
+                "course-lms-id": ""
+            },
+            {
+                "email": "server-user@test.edulinq.org",
+                "name": "",
+                "role": "owner",
+                "pass": "",
+                "course": "",
+                "course-role": "unknown",
+                "course-lms-id": ""
+            },
+            {
+                "email": "server-owner@test.edulinq.org",
+                "name": "",
+                "role": "user",
+                "pass": "",
+                "course": "",
+                "course-role": "unknown",
+                "course-lms-id": ""
+            }
         ]
     },
     "output": {
-		"results": [
+        "results": [
             {
                 "email": "error@test.edulinq.org",
-				"validation-error": {
+                "validation-error": {
                     "locator": "",
                     "message": "You have insufficient permissions for the requested operation."
                 }
             },
             {
                 "email": "server-owner@test.edulinq.org",
-				"validation-error": {
+                "validation-error": {
                     "locator": "",
                     "message": "You have insufficient permissions for the requested operation."
                 }
             },
             {
                 "email": "server-user@test.edulinq.org",
-				"validation-error": {
+                "validation-error": {
                     "locator": "",
                     "message": "You have insufficient permissions for the requested operation."
                 }

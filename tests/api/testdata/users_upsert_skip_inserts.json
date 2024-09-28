@@ -1,5 +1,6 @@
 {
     "module": "autograder.api.users.upsert",
+    "read-write": true,
     "arguments": {
         "user": "server-admin@test.edulinq.org",
         "pass": "server-admin",
@@ -20,7 +21,7 @@
         ]
     },
     "output": {
-		"results": [
+        "results": [
             {
                 "email": "alt-new-user@test.edulinq.org",
                 "skipped": true

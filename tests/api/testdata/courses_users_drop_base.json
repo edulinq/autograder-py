@@ -1,0 +1,10 @@
+{
+    "module": "autograder.api.courses.users.drop",
+    "read-write": true,
+    "arguments": {
+        "target-email": "course-student@test.edulinq.org"
+    },
+    "output": {
+        "found-user": true
+    }
+}

@@ -1,0 +1,8 @@
+{
+    "cli": "autograder.cli.courses.users.drop",
+    "arguments": [
+        "--target-email", "course-student@test.edulinq.org"
+    ]
+}
+---
+User dropped.

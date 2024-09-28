@@ -34,6 +34,7 @@ course-student@test.edulinq.org	course-student	user	course-with-lms	Course With 
 course-student@test.edulinq.org	course-student	user	course-without-source	Course Without Source	student
 course-student@test.edulinq.org	course-student	user	course101	Course 101	student
 course-student@test.edulinq.org	course-student	user	course101-with-zero-limit	Course 101 - With Zero Limit	student
+root	root	root			
 server-admin@test.edulinq.org	server-admin	admin			
 server-creator@test.edulinq.org	server-creator	creator			
 server-owner@test.edulinq.org	server-owner	owner			

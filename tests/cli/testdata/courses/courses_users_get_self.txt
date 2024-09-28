@@ -1,0 +1,9 @@
+{
+    "cli": "autograder.cli.courses.users.get",
+    "arguments": []
+}
+---
+Email: course-admin@test.edulinq.org
+Name: course-admin
+Role: admin
+LMS ID: 

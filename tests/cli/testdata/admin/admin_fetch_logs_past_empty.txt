@@ -1,6 +1,6 @@
 {
     "cli": "autograder.cli.admin.fetch-logs",
-    "output_check": "json_logs_equal",
+    "output-check": "json_logs_equal",
     "arguments": [
         "--course", "course-without-source",
         "--past", "24h",
