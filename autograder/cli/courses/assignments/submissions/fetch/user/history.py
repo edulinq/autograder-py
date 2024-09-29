@@ -1,6 +1,7 @@
 import sys
 
 import autograder.api.courses.assignments.submissions.fetch.user.history
+import autograder.cli.config
 import autograder.submission
 
 def run(arguments):
@@ -42,9 +43,7 @@ def main():
 def _get_parser():
     parser = autograder.api.courses.assignments.submissions.fetch.user.history._get_parser()
 
-    parser.add_argument('--table', dest = 'table',
-        action = 'store_true', default = False,
-        help = 'Output the results as a TSV table with a header (default: %(default)s).')
+    autograder.cli.config.add_table_argument(parser)
 
     return parser
 

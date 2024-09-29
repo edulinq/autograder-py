@@ -1,0 +1,15 @@
+{
+    "cli": "autograder.cli.courses.users.enroll",
+    "arguments": [
+        "--user", "course-admin@test.edulinq.org",
+        "--pass", "course-admin",
+        "--new-email", "course-student@test.edulinq.org",
+        "--new-course-role", "owner"
+    ]
+}
+---
+course-student@test.edulinq.org
+    Validation Error
+        You have insufficient permissions for the requested operation.
+
+Processed 1 users. Encountered 1 errors.

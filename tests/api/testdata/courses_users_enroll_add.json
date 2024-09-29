@@ -1,0 +1,32 @@
+{
+    "module": "autograder.api.courses.users.enroll",
+    "read-write": true,
+    "arguments": {
+        "user": "course-admin@test.edulinq.org",
+        "pass": "course-admin",
+        "send-emails": true,
+        "skip-inserts": false,
+        "skip-updates": false,
+        "dry-run": false,
+        "raw-course-users": [
+			{
+				"email": "new-user@test.edulinq.org",
+				"name": "",
+				"course-role": "student",
+				"course-lms-id": ""
+			}
+        ]
+    },
+    "output": {
+		"results": [
+            {
+                "email": "new-user@test.edulinq.org",
+                "added": true,
+                "emailed": true,
+                "enrolled": [
+                    "course101"
+                ]
+            }
+        ]
+    }
+}

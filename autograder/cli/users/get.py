@@ -2,6 +2,7 @@ import sys
 
 import autograder.api.users.get
 import autograder.cli.common
+import autograder.cli.config
 
 def run(arguments):
     result = autograder.api.users.get.send(arguments, exit_on_error = True)
@@ -20,9 +21,7 @@ def main():
 def _get_parser():
     parser = autograder.api.users.get._get_parser()
 
-    parser.add_argument('--table', dest = 'table',
-        action = 'store_true', default = False,
-        help = 'Output the results as a TSV table with a header (default: %(default)s).')
+    autograder.cli.config.add_table_argument(parser)
 
     parser.add_argument('--normalize', dest = 'normalize',
         action = 'store_true', default = False,

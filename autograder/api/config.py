@@ -222,13 +222,27 @@ PARAM_NEW_PASS = APIParam('new-pass',
         'The new password to set for the user that is the target of this request.',
         required = True, hash = True)
 
+PARAM_SEND_EMAILS = APIParam('send-emails',
+        'Send any emails.',
+        required = True, cli_param = False)
+
 PARAM_SKIP_EMAILS = APIParam('skip-emails',
         'Skip sending any emails. Be aware that this may result in inaccessible information.',
         required = False,
         parser_options = {'action': 'store_true', 'default': False})
 
+PARAM_SKIP_INSERTS = APIParam('skip-inserts',
+        'Skip inserts (default: False).',
+        required = False,
+        parser_options = {'action': 'store_true', 'default': False})
+
 PARAM_SKIP_LMS_SYNC = APIParam('skip-lms-sync',
         'Skip syncing with the LMS.',
+        required = False,
+        parser_options = {'action': 'store_true', 'default': False})
+
+PARAM_SKIP_UPDATES = APIParam('skip-updates',
+        'Skip updates (default: False).',
         required = False,
         parser_options = {'action': 'store_true', 'default': False})
 

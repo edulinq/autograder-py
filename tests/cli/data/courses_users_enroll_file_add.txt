@@ -1,0 +1,3 @@
+new-user-1@test.edulinq.org		student
+new-user-2@test.edulinq.org		grader
+new-user-3@test.edulinq.org		admin

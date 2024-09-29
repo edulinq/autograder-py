@@ -9,28 +9,28 @@
         "skip-updates": false,
         "dry-run": false,
         "raw-users": [
-			{
-				"email": "server-user@test.edulinq.org",
-				"name": "sammy",
-				"role": "user",
-				"pass": "",
-				"course": "",
-				"course-role": "unknown",
-				"course-lms-id": ""
-			},
-			{
-				"email": "server-creator@test.edulinq.org",
-				"name": "",
-				"role": "user",
-				"pass": "",
-				"course": "",
-				"course-role": "unknown",
-				"course-lms-id": ""
-			}
+            {
+                "email": "server-user@test.edulinq.org",
+                "name": "sammy",
+                "role": "user",
+                "pass": "",
+                "course": "",
+                "course-role": "unknown",
+                "course-lms-id": ""
+            },
+            {
+                "email": "server-creator@test.edulinq.org",
+                "name": "",
+                "role": "user",
+                "pass": "",
+                "course": "",
+                "course-role": "unknown",
+                "course-lms-id": ""
+            }
         ]
     },
     "output": {
-		"results": [
+        "results": [
             {
                 "email": "server-creator@test.edulinq.org",
                 "modified": true

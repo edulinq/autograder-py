@@ -1,0 +1,2 @@
+course-student@test.edulinq.org		grader
+course-grader@test.edulinq.org		grader	new-lms-id

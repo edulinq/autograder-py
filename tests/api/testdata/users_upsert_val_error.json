@@ -8,22 +8,22 @@
         "skip-updates": false,
         "dry-run": false,
         "raw-users": [
-			{
-				"email": "server-user@test.edulinq.org",
-				"name": "",
-				"role": "owner",
-				"pass": "",
-				"course": "",
-				"course-role": "student",
-				"course-lms-id": ""
-			}
+            {
+                "email": "server-user@test.edulinq.org",
+                "name": "",
+                "role": "owner",
+                "pass": "",
+                "course": "",
+                "course-role": "student",
+                "course-lms-id": ""
+            }
         ]
     },
     "output": {
-		"results": [
+        "results": [
             {
                 "email": "server-user@test.edulinq.org",
-				"validation-error": {
+                "validation-error": {
                     "locator": "",
                     "message": "You have insufficient permissions for the requested operation."
                 }

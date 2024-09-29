@@ -21,7 +21,7 @@
         ]
     },
     "output": {
-		"results": [
+        "results": [
             {
                 "email": "alt-new-user@test.edulinq.org",
                 "skipped": true

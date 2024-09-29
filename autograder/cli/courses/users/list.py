@@ -2,6 +2,7 @@ import sys
 
 import autograder.api.courses.users.list
 import autograder.cli.common
+import autograder.cli.config
 
 def run(arguments):
     result = autograder.api.courses.users.list.send(arguments, exit_on_error = True)
@@ -14,9 +15,7 @@ def main():
 def _get_parser():
     parser = autograder.api.courses.users.list._get_parser()
 
-    parser.add_argument('--table', dest = 'table',
-        action = 'store_true', default = False,
-        help = 'Output the results as a TSV table with a header (default: %(default)s).')
+    autograder.cli.config.add_table_argument(parser)
 
     return parser
 

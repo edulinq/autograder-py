@@ -21,7 +21,7 @@
         ]
     },
     "output": {
-		"results": [
+        "results": [
             {
                 "email": "server-user@test.edulinq.org",
                 "modified": true

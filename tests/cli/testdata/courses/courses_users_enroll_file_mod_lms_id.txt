@@ -1,0 +1,15 @@
+{
+    "cli": "autograder.cli.courses.users.enroll-file",
+    "arguments": [
+        "--user", "course-admin@test.edulinq.org",
+        "--pass", "course-admin",
+        "__DATA_DIR__(courses_users_enroll_file_mod.txt)"
+    ]
+}
+---
+course-grader@test.edulinq.org
+    Modified
+course-student@test.edulinq.org
+    Modified
+
+Processed 2 users. Encountered 0 errors.
