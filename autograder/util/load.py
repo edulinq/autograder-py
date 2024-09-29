@@ -12,12 +12,7 @@ def load_tsv(path, max_len, min_len = 1):
             line = line.strip()
 
             if (line == ""):
-                if (min_len > 0):
-                    raise ValueError(
-                        "File ('%s') line (%d) has too few values. Min is %d, found 0." % (
-                            path, lineno, min_len))
-                else:
-                    continue
+                continue
 
             row = line.split("\t")
             row = [field.strip() for field in row]
