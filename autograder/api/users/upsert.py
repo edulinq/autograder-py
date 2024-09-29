@@ -7,20 +7,10 @@ API_PARAMS = [
     autograder.api.config.PARAM_USER_PASS,
 
     autograder.api.config.PARAM_DRY_RUN,
+    autograder.api.config.PARAM_SKIP_INSERTS,
+    autograder.api.config.PARAM_SKIP_UPDATES,
 
-    autograder.api.config.APIParam('skip-inserts',
-        'Skip inserts (default: False).',
-        required = False,
-        parser_options = {'action': 'store_true', 'default': False}),
-
-    autograder.api.config.APIParam('skip-updates',
-        'Skip updates (default: False).',
-        required = False,
-        parser_options = {'action': 'store_true', 'default': False}),
-
-    autograder.api.config.APIParam('send-emails',
-        'Send any emails.',
-        required = True, cli_param = False),
+    autograder.api.config.PARAM_SEND_EMAILS,
 
     autograder.api.config.APIParam('raw-users',
         'A list of users to upsert.',

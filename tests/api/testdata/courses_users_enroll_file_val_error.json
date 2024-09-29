@@ -1,6 +1,5 @@
 {
     "module": "autograder.api.courses.users.enroll",
-    "read-write": true,
     "arguments": {
         "user": "course-admin@test.edulinq.org",
         "pass": "course-admin",
