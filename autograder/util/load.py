@@ -1,7 +1,8 @@
-# Read a TSV file and return a list of lists of the cleaned fields in the TSV file.
-# Raise an error if a line has more fields than the maximum length.
-def load_users(path, max_len):
-    all_parts = []
+# Read a TSV file and return a list of lists of the stripped fields in the TSV file.
+# Raise an error if a line has more fields than the maximum length
+# or less fields than the minimum length.
+def load_tsv(path, max_len, min_len = 1):
+    rows = []
 
     with open(path, 'r') as file:
         lineno = 0
@@ -9,17 +10,28 @@ def load_users(path, max_len):
             lineno += 1
 
             line = line.strip()
+
             if (line == ""):
-                continue
+                if (min_len > 0):
+                    raise ValueError(
+                        "File ('%s') line (%d) has too few values. Min is %d, found 0." % (
+                            path, lineno, min_len))
+                else:
+                    continue
 
-            parts = line.split("\t")
-            parts = [part.strip() for part in parts]
+            row = line.split("\t")
+            row = [field.strip() for field in row]
 
-            if (len(parts) > max_len):
+            if (len(row) < min_len):
+                raise ValueError(
+                    "File ('%s') line (%d) has too few values. Min is %d, found %d." % (
+                        path, lineno, min_len, len(row)))
+
+            if (len(row) > max_len):
                 raise ValueError(
                     "File ('%s') line (%d) has too many values. Max is %d, found %d." % (
-                        path, lineno, max_len, len(parts)))
+                        path, lineno, max_len, len(row)))
 
-            all_parts.append(parts)
+            rows.append(row)
 
-    return all_parts
+    return rows

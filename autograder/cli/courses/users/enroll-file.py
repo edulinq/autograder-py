@@ -21,19 +21,19 @@ def run(arguments):
 def _load_users(path):
     users = []
 
-    all_parts = autograder.util.load.load_users(path, 4)
-    for lineno in range(len(all_parts)):
-        parts = all_parts[lineno]
+    rows = autograder.util.load.load_tsv(path, 4)
+    for lineno in range(len(rows)):
+        row = rows[lineno]
 
-        email = parts.pop(0)
+        email = row.pop(0)
 
         name = ''
-        if (len(parts) > 0):
-            name = parts.pop(0)
+        if (len(row) > 0):
+            name = row.pop(0)
 
         course_role = ''
-        if (len(parts) > 0):
-            course_role = parts.pop(0)
+        if (len(row) > 0):
+            course_role = row.pop(0)
             course_role = course_role.lower()
 
         if (course_role == ''):
@@ -45,8 +45,8 @@ def _load_users(path):
                     path, lineno, course_role))
 
         course_lms_id = ''
-        if (len(parts) > 0):
-            course_lms_id = parts.pop(0)
+        if (len(row) > 0):
+            course_lms_id = row.pop(0)
 
         users.append({
             'email': email,
