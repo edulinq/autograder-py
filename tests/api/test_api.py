@@ -106,7 +106,9 @@ def clean_output_logs(output):
     }
 
     attribute_set_values = {
-        'path': '/some/path/course.json'
+        'path': '/some/path/course.json',
+        'unix_socket': '/tmp/autograder.sock',
+        'port': 8080,
     }
 
     if (output.get('results') is None):
