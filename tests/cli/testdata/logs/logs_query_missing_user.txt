@@ -1,0 +1,17 @@
+{
+    "cli": "autograder.cli.logs.query",
+    "output-check": "content_equals_ignore_time",
+    "arguments": [
+        "--user", "server-admin@test.edulinq.org",
+        "--pass", "server-admin",
+        "--level", "DEBUG",
+        "--target-email", "ZZZ"
+    ],
+    "exit-status": 1
+}
+---
+Error fetching logs:
+{
+    "locator": "-1102",
+    "message": "Failed to validate log query: 'Could not find user with email 'ZZZ'.'."
+}

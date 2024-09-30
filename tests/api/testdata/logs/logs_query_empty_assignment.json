@@ -1,14 +1,16 @@
 {
-    "module": "autograder.api.admin.fetchlogs",
+    "module": "autograder.api.logs.query",
     "arguments": {
-        "course": "course101",
+        "user": "server-admin@test.edulinq.org",
+        "pass": "server-admin",
         "level": "INFO",
+        "target-course": "course101",
         "target-assignment": "HW0"
     },
     "output-modifier": "clean_output_logs",
     "output": {
         "success": true,
-        "error-messages": null,
+        "error": null,
         "results": []
     }
 }

@@ -1,0 +1,13 @@
+{
+    "cli": "autograder.cli.logs.query",
+    "output-check": "content_equals_ignore_time",
+    "arguments": [
+    ],
+    "exit-status": 1
+}
+---
+Error fetching logs:
+{
+    "locator": "",
+    "message": "You do not have the correct permissions to execute this log query."
+}

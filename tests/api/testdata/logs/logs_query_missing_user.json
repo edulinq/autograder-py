@@ -1,0 +1,18 @@
+{
+    "module": "autograder.api.logs.query",
+    "arguments": {
+        "user": "server-admin@test.edulinq.org",
+        "pass": "server-admin",
+        "level": "DEBUG",
+        "target-email": "ZZZ"
+    },
+    "output-modifier": "clean_output_logs",
+    "output": {
+        "success": false,
+        "error": {
+            "locator": "-1102",
+            "message": "Failed to validate log query: 'Could not find user with email 'ZZZ'.'."
+        },
+        "results": null
+    }
+}

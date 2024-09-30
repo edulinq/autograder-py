@@ -1,0 +1,11 @@
+{
+    "cli": "autograder.cli.logs.query",
+    "output-check": "content_equals_ignore_time",
+    "arguments": [
+        "--user", "server-admin@test.edulinq.org",
+        "--pass", "server-admin",
+        "--level", "DEBUG",
+        "--after", "2999-01-01T00:00:00+00:00"
+    ]
+}
+---

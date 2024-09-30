@@ -1,0 +1,36 @@
+{
+    "module": "autograder.api.logs.query",
+    "arguments": {
+        "user": "server-admin@test.edulinq.org",
+        "pass": "server-admin",
+        "after": "1970-01-01T00:00:00+00:00",
+        "level": "INFO"
+    },
+    "output-modifier": "clean_output_logs",
+    "output": {
+        "success": true,
+        "error": null,
+        "results": [
+            {
+                "level": 0,
+                "message": "API Server Started.",
+                "timestamp": 0,
+                "attributes": {
+                    "port": 8080,
+                    "path": "/some/path/course.json",
+                    "unix_socket": "/tmp/autograder.sock"
+                }
+            },
+            {
+                "level": 0,
+                "message": "Unix Socket Server Started.",
+                "timestamp": 0,
+                "attributes": {
+                    "unix_socket": "/tmp/autograder.sock",
+                    "path": "/some/path/course.json",
+                    "port": 8080
+                }
+            }
+        ]
+    }
+}

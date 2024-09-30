@@ -1,0 +1,13 @@
+{
+    "module": "autograder.api.logs.query",
+    "arguments": {
+        "target-email": "course-admin@test.edulinq.org",
+        "level": "INFO"
+    },
+    "output-modifier": "clean_output_logs",
+    "output": {
+        "success": true,
+        "error": null,
+        "results": []
+    }
+}

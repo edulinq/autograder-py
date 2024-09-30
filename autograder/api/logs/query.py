@@ -1,9 +1,8 @@
 import autograder.api.common
 import autograder.api.config
 
-API_ENDPOINT = 'admin/logs/fetch'
+API_ENDPOINT = 'logs/query'
 API_PARAMS = [
-    autograder.api.config.PARAM_COURSE_ID,
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
 
@@ -20,6 +19,10 @@ API_PARAMS = [
                 + ' (using "h", "m", or "s" suffixes) (e.g., "24h", "10m", or "1h10m10s").'),
             required = False),
 
+    autograder.api.config.APIParam('target-course',
+            'If supplied, only return log records for this assignment.',
+            required = False),
+
     autograder.api.config.APIParam('target-assignment',
             'If supplied, only return log records for this assignment.',
             required = False),
@@ -29,7 +32,7 @@ API_PARAMS = [
             required = False),
 ]
 
-DESCRIPTION = 'Get log entries from the autograder server.'
+DESCRIPTION = 'Query log entries from the autograder server.'
 
 def send(arguments, **kwargs):
     return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT, **kwargs)

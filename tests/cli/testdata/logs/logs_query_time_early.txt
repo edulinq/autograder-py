@@ -1,0 +1,12 @@
+{
+    "cli": "autograder.cli.logs.query",
+    "output-check": "content_equals_ignore_time",
+    "arguments": [
+        "--user", "server-admin@test.edulinq.org",
+        "--pass", "server-admin",
+        "--after", "1970-01-01T00:00:00+00:00"
+    ]
+}
+---
+<TIME> [ INFO] API Server Started. | {"port": 8080, "path": "/some/path/course.json", "unix_socket": "/tmp/autograder.sock"}
+<TIME> [ INFO] Unix Socket Server Started. | {"unix_socket": "/tmp/autograder.sock", "path": "/some/path/course.json", "port": 8080}

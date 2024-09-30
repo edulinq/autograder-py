@@ -1,0 +1,32 @@
+{
+    "cli": "autograder.cli.logs.query",
+    "output-check": "json_logs_equal",
+    "arguments": [
+        "--user", "server-admin@test.edulinq.org",
+        "--pass", "server-admin",
+        "--json"
+    ]
+}
+---
+[
+    {
+        "level": 0,
+        "message": "API Server Started.",
+        "timestamp": 0,
+        "attributes": {
+            "port": 8080,
+            "path": "/some/path/course.json",
+            "unix_socket": "/tmp/autograder.sock"
+        }
+    },
+    {
+        "level": 0,
+        "message": "Unix Socket Server Started.",
+        "timestamp": 0,
+        "attributes": {
+            "unix_socket": "/tmp/autograder.sock",
+            "path": "/some/path/course.json",
+            "port": 8080
+        }
+    }
+]

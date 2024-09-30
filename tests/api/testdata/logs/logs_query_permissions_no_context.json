@@ -1,0 +1,15 @@
+{
+    "module": "autograder.api.logs.query",
+    "arguments": {
+        "level": "INFO"
+    },
+    "output-modifier": "clean_output_logs",
+    "output": {
+        "success": false,
+        "error": {
+            "locator": "",
+            "message": "You do not have the correct permissions to execute this log query."
+        },
+        "results": null
+    }
+}

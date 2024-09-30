@@ -1,6 +1,6 @@
 """
-The `autograder.cli.admin` package contains tools for
-administering an autograder course/server.
+The `autograder.cli.logs` package contains tools for
+managing log records from the autograder server.
 """
 
 import sys

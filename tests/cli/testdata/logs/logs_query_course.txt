@@ -1,0 +1,8 @@
+{
+    "cli": "autograder.cli.logs.query",
+    "output-check": "content_equals_ignore_time",
+    "arguments": [
+        "--target-course", "course101"
+    ]
+}
+---

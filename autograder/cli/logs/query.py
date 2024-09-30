@@ -1,7 +1,7 @@
 import json
 import sys
 
-import autograder.api.admin.fetchlogs
+import autograder.api.logs.query
 import autograder.util.timestamp
 
 LEVEL_TO_STRING = {
@@ -15,12 +15,11 @@ LEVEL_TO_STRING = {
 }
 
 def run(arguments):
-    result = autograder.api.admin.fetchlogs.send(arguments, exit_on_error = True)
+    result = autograder.api.logs.query.send(arguments, exit_on_error = True)
 
     if (not result['success']):
         print("Error fetching logs:")
-        for message in result['error-messages']:
-            print("    " + message)
+        print(json.dumps(result['error'], indent = 4))
 
         return 1
 
@@ -56,7 +55,7 @@ def main():
     return run(_get_parser().parse_args())
 
 def _get_parser():
-    parser = autograder.api.admin.fetchlogs._get_parser()
+    parser = autograder.api.logs.query._get_parser()
 
     parser.add_argument('--json', dest = 'json',
         action = 'store_true', default = False,

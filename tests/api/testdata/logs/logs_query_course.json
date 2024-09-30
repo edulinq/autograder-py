@@ -1,0 +1,14 @@
+{
+    "module": "autograder.api.logs.query",
+    "arguments": {
+        "target-course": "course101",
+        "level": "INFO"
+    },
+    "output-modifier": "clean_output_logs",
+    "output": {
+        "success": true,
+        "error": null,
+        "results": [
+        ]
+    }
+}
