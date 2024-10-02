@@ -112,7 +112,7 @@ To know who you are and what you are working on the autograder needs a few confi
 
 All these options can be set on the command line when invoking on of these tools, e.g.,:
 ```sh
-python3 -m autograder.cli.submission.submit --user sammy@ucsc.edu --pass pass123 my_file.py
+python3 -m autograder.run.submit --user sammy@ucsc.edu --pass pass123 my_file.py
 ```
 However, it will generally be more convenient to hold these common options in a more reusable location.
 
@@ -130,20 +130,20 @@ You can modify this config to include your settings and use that for setting all
 Using the default config file (`config.json`):
 ```sh
 # `./config.json` will be looked for and loaded if it exists.
-python3 -m autograder.cli.submission.submit my_file.py
+python3 -m autograder.run.submit my_file.py
 ```
 
 Using a custom config file (`my_config.json`):
 ```sh
 # `./my_config.json` will be used.
-python3 -m autograder.cli.submission.submit --config my_config.json my_file.py
+python3 -m autograder.run.submit --config my_config.json my_file.py
 ```
 
 You can also use multiple config files (latter files will override settings from previous ones).
 This is useful if you want to use the config files provided with assignments, but keep your user credentials in a more secure location:
 ```sh
 # Use the default config file (config.json), but then override any settings in there with another config file:
-python3 -m autograder.cli.submission.submit --config config.json --config ~/.secrets/autograder.json my_file.py
+python3 -m autograder.run.submit --config config.json --config ~/.secrets/autograder.json my_file.py
 ```
 
 For brevity, all future commands in this document will assume that all standard config options are in the default
@@ -152,22 +152,22 @@ config files (and thus will not need to be specified).
 ### Commands for Students
 
 Students will mainly be concerned with submitting assignments and checking on the status of their submission.
-Therefore, the `autograder.cli.submission` package will be their primary resource.
+Therefore, the `autograder.cli.courses.assignments.submissions` package will be their primary resource.
 This package contains tools for making, managing, and querying submissions.
 
 #### Submitting an Assignment
 
-Submitting an assignment to an autograder is done using the `autograder.cli.submission.submit` command.
+Submitting an assignment to an autograder is done using the `autograder.run.submit` command.
 This command takes the standard config options as well as an optional message to attach to the submission (like a commit message)
 as well as all files to be included in the submission.
 
 ```sh
-python3 -m autograder.cli.submission.submit --message "This is my submit message!" my_file.py
+python3 -m autograder.run.submit --message "This is my submit message!" my_file.py
 ```
 
 As many files as you need can be submitted (directories cannot be submitted):
 ```sh
-python3 -m autograder.cli.submission.submit my_first_file.py my_second_file.java some_dir/*
+python3 -m autograder.run.submit my_first_file.py my_second_file.java some_dir/*
 ```
 
 The autograder will attempt to grade your assignment and will return some message about the result of grading.
@@ -196,10 +196,10 @@ Message from the autograder: Request could not be authenticated. Ensure that you
 #### Checking Your Last Submission
 
 You can ask the autograder to show you the grade report for your last submission using the
-`autograder.cli.submission.peek` command.
+`autograder.run.peek` command.
 
 ```sh
-python3 -m autograder.cli.submission.peek
+python3 -m autograder.run.peek
 ```
 
 The output may look like:
@@ -223,10 +223,10 @@ No matching submission found.
 
 #### Getting a History of All Past Submissions
 
-You can use the `autograder.cli.submission.history` command to get a summary of all your past submissions for an assignment.
+You can use the `autograder.run.history` command to get a summary of all your past submissions for an assignment.
 
 ```sh
-python3 -m autograder.cli.submission.history
+python3 -m autograder.run.history
 ```
 
 The output may look like:
