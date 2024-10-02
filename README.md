@@ -152,7 +152,7 @@ config files (and thus will not need to be specified).
 ### Commands for Students
 
 Students will mainly be concerned with submitting assignments and checking on the status of their submission.
-Therefore, the `autograder.cli.courses.assignments.submissions` package will be their primary resource.
+Therefore, the `autograder.run` package will be their primary resource.
 This package contains tools for making, managing, and querying submissions.
 
 #### Submitting an Assignment
