@@ -276,19 +276,25 @@ For those that are managing a course and students,
 most commands will be useful to you.
 So you should have a look through all commands via:
 ```sh
-python3 -m autograder.cli
+python3 -m autograder.cli -r
+```
+
+This will list all available packages and commands.
+You can omit the `-r` if you want to look at one package at a time.
+For example, to inspect the `autograder.run` package, you can do:
+```sh
+python -m autograder.run
 ```
 
 Below is a list of commands you may want to look into.
 The help prompt of each command (accessible using the `--help` option)
 will give a more in-depth description of the command and available options.
 
- - `autograder.lms.sync-users` -- Get information about users from your LMS (e.g. Canvas).
  - `autograder.lms.upload-scores` -- Upload scores for any LMS assignment straight to your LMS. Very useful for avoiding a clunky LMS interface.
- - `autograder.submission.fetch-scores` -- Get all the most recent scores for an assignment.
- - `autograder.submission.fetch-submission` -- Get a student's submission (code) and grading output.
- - `autograder.submission.fetch-submissions` -- Get all the most recent submissions (code and grading output) for an assignment.
- - `autograder.users.*` -- Several different tools for managing users (adding, removing, changing passwords, etc).
+ - `autograder.cli.courses.assignments.submissions.fetch.course.scores` -- Get all the most recent scores for an assignment.
+ - `autograder.cli.courses.assignments.submissions.fetch.user.attempt` -- Get a student's submission (code) and grading output.
+ - `autograder.cli.courses.assignments.submissions.fetch.course.attempts` -- Get all the most recent submissions (code and grading output) for an assignment.
+ - `autograder.cli.courses.users.list` -- List all the users in a course.
 
 ### Commands for Course Builders
 
