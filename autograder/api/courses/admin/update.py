@@ -6,15 +6,9 @@ API_PARAMS = [
     autograder.api.config.PARAM_COURSE_ID,
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
-
-    autograder.api.config.PARAM_COURSE_SOURCE,
-    autograder.api.config.APIParam('clear',
-            'Clear the course database before updating.',
-            required = False,
-            parser_options = {'action': 'store_true', 'default': False})
 ]
 
-DESCRIPTION = 'Update a course from its source.'
+DESCRIPTION = 'Update an existing course.'
 
 def send(arguments, **kwargs):
     return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT, **kwargs)

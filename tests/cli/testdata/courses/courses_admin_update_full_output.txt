@@ -1,0 +1,47 @@
+{
+    "cli": "autograder.cli.courses.admin.update",
+    "arguments": [
+        "--full-output"
+    ]
+}
+---
+{
+    "course-id": "course101",
+    "success": true,
+    "message": "",
+    "created": false,
+    "updated": true,
+    "lms-sync-result": {
+        "user-sync": [
+            {
+                "email": "course-admin@test.edulinq.org",
+                "skipped": true
+            },
+            {
+                "email": "course-grader@test.edulinq.org",
+                "skipped": true
+            },
+            {
+                "email": "course-other@test.edulinq.org",
+                "skipped": true
+            },
+            {
+                "email": "course-owner@test.edulinq.org",
+                "skipped": true
+            },
+            {
+                "email": "course-student@test.edulinq.org",
+                "skipped": true
+            }
+        ],
+        "assignment-sync": {
+            "synced-assignments": [],
+            "ambiguous-matches": [],
+            "non-matched-assignments": [],
+            "unchanged-assignments": []
+        }
+    },
+    "built-assignment-images": [
+        "autograder.course101.hw0"
+    ]
+}

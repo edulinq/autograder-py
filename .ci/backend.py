@@ -12,7 +12,6 @@ ROOT_DIR = os.path.join(THIS_DIR, '..')
 # Add in the root path.
 sys.path.append(ROOT_DIR)
 
-import autograder.api.courses.admin.update
 import util
 
 DEFAULT_PORT = 8080
@@ -56,10 +55,7 @@ class WebServer(BaseServer):
         pass
 
     def reset(self, araguments = {}, **kwargs):
-        arguments = util.build_api_args(self)
-        arguments['clear'] = True
-
-        autograder.api.courses.admin.update.send(arguments)
+        pass
 
 class DockerServer(BaseServer):
     def __init__(self, image = DEFAULT_DOCKER_IMAGE, **kwargs):

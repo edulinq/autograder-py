@@ -1,7 +1,7 @@
 {
     "cli": "autograder.cli.courses.admin.update",
     "arguments": [
-        "--clear"
+        "--course", "course-without-source"
     ]
 }
 ---
