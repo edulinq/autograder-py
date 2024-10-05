@@ -24,27 +24,47 @@ def run(arguments):
         return 1
 
     if (arguments.json):
-        print(json.dumps(result['results'], indent = 4))
+        print(_log_records_json(result['results']))
     else:
         for record in result['results']:
             print(_log_record_str(record))
 
     return 0
 
+def _log_records_json(records):
+    records = records.copy()
+
+    for record in records:
+        raw_level = record['level']
+        record['level'] = _get_level_str(raw_level)
+        record['_raw_level_'] = raw_level
+
+        raw_timestamp = record['timestamp']
+        record['timestamp'] = autograder.util.timestamp.get(record['timestamp'], pretty = True)
+        record['_raw_timestamp_'] = raw_timestamp
+
+    return json.dumps(records, indent = 4)
+
+def _get_level_str(raw_level):
+    level = "Unknown (%d)" % (raw_level)
+    if (raw_level in LEVEL_TO_STRING):
+        level = LEVEL_TO_STRING[raw_level]
+
+    return level
+
 def _log_record_str(record):
-    level = "Unknown (%d)" % (record['level'])
-    if (record['level'] in LEVEL_TO_STRING):
-        level = LEVEL_TO_STRING[record['level']]
-
+    level = _get_level_str(record['level'])
     timestamp = autograder.util.timestamp.get(record['timestamp'], pretty = True)
-
     message = record['message']
-
     attributes = record.get('attributes', {})
 
     for key in ['course', 'assignment', 'user']:
         if (key in record):
             attributes[key] = record[key]
+
+    error = record.get('error', None)
+    if (error is not None):
+        attributes['_error_'] = error
 
     if (len(attributes) > 0):
         message += (" | " + json.dumps(attributes))

@@ -10,23 +10,27 @@
 ---
 [
     {
-        "level": 0,
+        "level": "INFO",
         "message": "API Server Started.",
         "timestamp": 0,
         "attributes": {
             "port": 8080,
             "path": "/some/path/course.json",
             "unix_socket": "/tmp/autograder.sock"
-        }
+        },
+        "_raw_level_": 0,
+        "_raw_timestamp_": 0
     },
     {
-        "level": 0,
+        "level": "INFO",
         "message": "Unix Socket Server Started.",
         "timestamp": 0,
         "attributes": {
             "unix_socket": "/tmp/autograder.sock",
             "path": "/some/path/course.json",
             "port": 8080
-        }
+        },
+        "_raw_level_": 0,
+        "_raw_timestamp_": 0
     }
 ]
