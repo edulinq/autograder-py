@@ -124,6 +124,9 @@ def clean_output_logs(output):
         for (key, value) in attribute_set_values.items():
             record['attributes'][key] = value
 
+    # Sort the output for consistency.
+    output['results'] = sorted(output['results'], key = lambda record: record['message'])
+
     return output
 
 _discover_api_tests()
