@@ -54,7 +54,8 @@ class Style(autograder.question.Question):
     A question that can be added to assignments that checks style.
     """
 
-    def __init__(self, paths, max_points = 5, fake_path = None, shorten_path = True):
+    def __init__(self, paths, ignore_paths = [],
+            max_points = 5, fake_path = None, shorten_path = True):
         super().__init__(max_points)
 
         if (isinstance(paths, str)):
@@ -65,11 +66,13 @@ class Style(autograder.question.Question):
             paths = list(paths)
 
         self._paths = paths
+        self._ignore_paths = ignore_paths
         self._fake_path = fake_path
         self._shorten_paths = shorten_path
 
     def score_question(self, *args, **kwargs):
         error_count, style_output = check_paths(self._paths,
+                ignore_paths = self._ignore_paths,
                 fake_path = self._fake_path,
                 shorten_path = self._shorten_paths)
 
@@ -93,7 +96,7 @@ class Style(autograder.question.Question):
 def check_path(path, **kwargs):
     return check_paths([path], **kwargs)
 
-def check_paths(paths, **kwargs):
+def check_paths(paths, ignore_paths = [], **kwargs):
     """
     Check the style of all the listed paths (recursivley) and return a two-item tuple of:
         - The total number of style violations.
@@ -102,11 +105,24 @@ def check_paths(paths, **kwargs):
             - A list of strings that describe the style issues.
     """
 
+    ignore_paths = [os.path.abspath(path) for path in ignore_paths]
+
     total_count = 0
     # [(path, lines), ...]
     total_lines = []
 
     for path in paths:
+        path = os.path.abspath(path)
+
+        skip = False
+        for ignore_path in ignore_paths:
+            if (path.startswith(ignore_path)):
+                skip = True
+                break
+
+        if (skip):
+            continue
+
         if (os.path.isfile(path)):
             if (os.path.splitext(path)[1] not in autograder.code.ALLOWED_EXTENSIONS):
                 continue
@@ -115,7 +131,7 @@ def check_paths(paths, **kwargs):
             lines = [(path, lines)]
         else:
             dirents = [os.path.join(path, dirent) for dirent in os.listdir(path)]
-            count, lines = check_paths(dirents, **kwargs)
+            count, lines = check_paths(dirents, ignore_paths = ignore_paths, **kwargs)
 
         if (count > 0):
             total_count += count
