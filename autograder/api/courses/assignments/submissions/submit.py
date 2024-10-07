@@ -15,9 +15,8 @@ API_PARAMS = [
 
 DESCRIPTION = 'Submit an assignment submission to the autograder.'
 
-def send(arguments, files, **kwargs):
-    return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT,
-        files = files, **kwargs)
+def send(arguments, **kwargs):
+    return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT, **kwargs)
 
 def _get_parser():
     parser = autograder.api.config.get_argument_parser(

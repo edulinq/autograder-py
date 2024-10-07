@@ -5,8 +5,8 @@ import autograder.assignment
 import autograder.util.timestamp
 
 def run(arguments):
-    result = autograder.api.courses.assignments.submissions.submit.send(arguments, arguments.files,
-            exit_on_error = True)
+    result = autograder.api.courses.assignments.submissions.submit.send(arguments,
+            files = arguments.files, exit_on_error = True)
 
     message = result.get('message', '')
     if ((message is not None) and (message != '')):

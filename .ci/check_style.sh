@@ -16,7 +16,7 @@ function main() {
     local error_count=0
 
     python3 -m autograder.cli.util.style \
-        --ignore "${BASE_DIR}/tests/api/data/hw0_no_compile.py" \
+        --ignore "${BASE_DIR}/tests/data" \
         "${BASE_DIR}/autograder" \
         "${BASE_DIR}/tests"
     ((error_count += $?))

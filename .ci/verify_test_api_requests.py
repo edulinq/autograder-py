@@ -21,6 +21,7 @@ import glob
 import importlib
 import json
 import os
+import re
 import sys
 import traceback
 
@@ -41,12 +42,12 @@ def verify_test_case(server, path):
 
     arguments = util.build_api_args(server)
     parts = tests.api.test_api._get_api_test_info(path, arguments)
-    (import_module_name, arguments, expected, is_error, read_write, output_modifier) = parts
+    (import_module_name, arguments, files, expected, is_error, read_write, output_modifier) = parts
 
     api_module = importlib.import_module(import_module_name)
 
     try:
-        actual = api_module.send(arguments)
+        actual = api_module.send(arguments, files = files)
 
         if (is_error):
             print("ERROR: Test case does not raise an error when one was expected: '%s'." % (path))
@@ -98,6 +99,12 @@ def run(arguments):
     server.start()
 
     for path in sorted(glob.glob(os.path.join(TEST_DATA_DIR, '**', '*.json'), recursive = True)):
+        if (arguments.pattern is not None):
+            match = re.search(arguments.pattern, path)
+            if (match is None):
+                print("Skipping test case because of match pattern: '%s'.", path)
+                continue
+
         try:
             error_count += verify_test_case(server, path)
         except Exception as ex:
@@ -119,6 +126,10 @@ def main():
     parser = argparse.ArgumentParser(
             description = __doc__.strip(),
             formatter_class = argparse.RawTextHelpFormatter)
+
+    parser.add_argument('pattern', metavar = 'PATTERN',
+        action = 'store', type = str, nargs = '?', default = None,
+        help = 'An optional regex. If provided, only test cases with a matching path will be verified.')
 
     # Only one server method can be chosen.
     group = parser.add_mutually_exclusive_group(required = True)

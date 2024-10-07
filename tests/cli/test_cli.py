@@ -14,10 +14,9 @@ import autograder.util.dirent
 
 THIS_DIR = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
 TEST_CASES_DIR = os.path.join(THIS_DIR, "testdata")
-DATA_DIR = os.path.join(THIS_DIR, "data")
+DATA_DIR = os.path.join(THIS_DIR, '..', "data")
 
 TEST_CASE_SEP = '---'
-DATA_DIR_ID = '__DATA_DIR__'
 TEMP_DIR_ID = '__TEMP_DIR__'
 
 DEFAULT_OUTPUT_CHECK = 'content_equals'
@@ -102,29 +101,12 @@ class CLITest(tests.server.base.ServerBaseTest):
 
 def _prepare_string(text, temp_dir):
     replacements = [
-        (DATA_DIR_ID, DATA_DIR),
+        (tests.server.base.DATA_DIR_ID, DATA_DIR),
         (TEMP_DIR_ID, temp_dir),
     ]
 
     for (key, base_dir) in replacements:
-        text = _replace_path(text, key, base_dir)
-
-    return text
-
-def _replace_path(text, key, base_dir):
-    match = re.search(r'%s\(([^)]*)\)' % (key), text)
-    if (match is not None):
-        filename = match.group(1)
-
-        # Normalize any path separators.
-        filename = os.path.join(*filename.split('/'))
-
-        if (filename == ''):
-            path = base_dir
-        else:
-            path = os.path.join(base_dir, filename)
-
-        text = text.replace(match.group(0), path)
+        text = tests.server.base.replace_path(text, key, base_dir)
 
     return text
 

@@ -2,14 +2,19 @@ import glob
 import json
 import importlib
 import os
+import re
 
 import tests.server.base
 
 THIS_DIR = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
-DATA_DIR = os.path.join(THIS_DIR, "testdata")
+TEST_CASES_DIR = os.path.join(THIS_DIR, "testdata")
+DATA_DIR = os.path.join(THIS_DIR, '..', "data")
 
 REWRITE_TOKEN_ID = '<TOKEN_ID>'
 REWRITE_TOKEN_CLEARTEXT = '<TOKEN_CLEARTEXT>'
+
+TIMESTAMP_PATTERN = r'\b\d{10,13}\b'
+TIMESTAMP_REPLACEMENT = '1234567890123'
 
 class APITest(tests.server.base.ServerBaseTest):
     """
@@ -34,8 +39,15 @@ def _get_api_test_info(path, arguments):
     for key, value in data.get('arguments', {}).items():
         arguments[key] = value
 
+    files = data.get('files', [])
+    for i in range(len(files)):
+        path = files[i]
+        files[i] = tests.server.base.replace_path(path, tests.server.base.DATA_DIR_ID, DATA_DIR)
+
     is_error = data.get('error', False)
     read_write = data.get('read-write', False)
+
+    output = data['output']
 
     output_modifier = clean_output_noop
     if ('output-modifier' in data):
@@ -47,10 +59,10 @@ def _get_api_test_info(path, arguments):
 
         output_modifier = globals()[modifier_name]
 
-    return import_module_name, arguments, data['output'], is_error, read_write, output_modifier
+    return import_module_name, arguments, files, output, is_error, read_write, output_modifier
 
 def _discover_api_tests():
-    for path in sorted(glob.glob(os.path.join(DATA_DIR, "**", "*.json"), recursive = True)):
+    for path in sorted(glob.glob(os.path.join(TEST_CASES_DIR, "**", "*.json"), recursive = True)):
         try:
             _add_api_test(path)
         except Exception as ex:
@@ -63,12 +75,12 @@ def _add_api_test(path):
 def _get_api_test_method(path):
     def __method(self):
         parts = self._get_test_info(path)
-        (module_name, arguments, expected, is_error, read_write, output_modifier) = parts
+        (module_name, arguments, files, expected, is_error, read_write, output_modifier) = parts
 
         api_module = importlib.import_module(module_name)
 
         try:
-            actual = api_module.send(arguments)
+            actual = api_module.send(arguments, files = files)
         except Exception as ex:
             if (not is_error):
                 raise ex
@@ -93,6 +105,13 @@ def _get_api_test_method(path):
 
 def clean_output_noop(output):
     return output
+
+def clean_output_timestamps(output):
+    # Convert the output to JSON so we can do a simple find/replace for all timestamps-like things.
+    text_output = json.dumps(output)
+    text_output = re.sub(TIMESTAMP_PATTERN, TIMESTAMP_REPLACEMENT, text_output)
+
+    return json.loads(text_output)
 
 def clean_token(output):
     output['token-id'] = REWRITE_TOKEN_ID

@@ -1,5 +1,7 @@
 import json
+import os
 import unittest
+import re
 import sys
 
 import autograder.api.error
@@ -7,6 +9,8 @@ import tests.server.server
 
 SERVER_URL_FORMAT = "http://127.0.0.1:%s"
 FORMAT_STR = "\n--- Expected ---\n%s\n--- Actual ---\n%s\n---\n"
+
+DATA_DIR_ID = tests.server.server.DATA_DIR_ID
 
 @unittest.skipUnless(sys.platform.startswith('linux'), 'linux only (multiprocessing)')
 class ServerBaseTest(unittest.TestCase):
@@ -51,3 +55,20 @@ class ServerBaseTest(unittest.TestCase):
         b_json = json.dumps(b, indent = 4)
 
         super().assertListEqual(a, b, FORMAT_STR % (a_json, b_json))
+
+def replace_path(text, key, base_dir):
+    match = re.search(r'%s\(([^)]*)\)' % (key), text)
+    if (match is not None):
+        filename = match.group(1)
+
+        # Normalize any path separators.
+        filename = os.path.join(*filename.split('/'))
+
+        if (filename == ''):
+            path = base_dir
+        else:
+            path = os.path.join(base_dir, filename)
+
+        text = text.replace(match.group(0), path)
+
+    return text

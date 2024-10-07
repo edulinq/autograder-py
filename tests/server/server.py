@@ -11,6 +11,8 @@ import socket
 import time
 import urllib.parse
 
+import requests_toolbelt.multipart.decoder
+
 import autograder.api.config
 import autograder.api.constants
 import autograder.util.timestamp
@@ -26,6 +28,8 @@ THIS_DIR = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
 ROOT_DIR = os.path.join(THIS_DIR, '..', '..')
 API_BASE_DIR = os.path.join(ROOT_DIR, 'autograder', 'api')
 API_TESTDATA_DIR = os.path.join(THIS_DIR, '..', 'api', 'testdata')
+
+DATA_DIR_ID = '__DATA_DIR__'
 
 INITIAL_BASE_ARGUMENTS = {
     'user': 'course-admin@test.edulinq.org',
@@ -115,7 +119,8 @@ def _load_responses():
         if (api_module_info is None):
             raise ValueError("Could not find module for module name '%s'." % (data['module']))
 
-        key = _create_request_lookup_key(api_module_info, data.get('arguments', {}),
+        key = _create_request_lookup_key(api_module_info,
+            data.get('arguments', {}), data.get('files', []),
             normalize_args = True)
 
         if (key in Handler._static_responses):
@@ -161,7 +166,7 @@ def _load_endpoint_modules():
         Handler._api_modules_by_endpoint[api_module.API_ENDPOINT] = data
         Handler._api_modules_by_module[import_module_name] = data
 
-def _create_request_lookup_key(api_module_info, arguments, normalize_args = False):
+def _create_request_lookup_key(api_module_info, arguments, files, normalize_args = False):
     """
     Build a key that can be used to uniquely identify an API request.
     """
@@ -183,6 +188,7 @@ def _create_request_lookup_key(api_module_info, arguments, normalize_args = Fals
         'endpoint': api_module_info['endpoint'],
         'module_name': api_module_info['module_name'],
         'arguments': arguments,
+        'files': files,
     }
 
     key = json.dumps(key, sort_keys = True)
@@ -201,17 +207,13 @@ class Handler(http.server.BaseHTTPRequestHandler):
         return
 
     def do_POST(self):
-        length = int(self.headers['Content-Length'])
-        raw_content = self.rfile.read(length).decode(ENCODING)
-        request = urllib.parse.parse_qs(raw_content)
-
-        request_data = json.loads(request[autograder.api.constants.API_REQUEST_JSON_KEY][0])
+        request_data, request_files = self._get_request_data()
 
         path = self.path
         endpoint = re.sub(r'^/api/v\d+/', '', path)
 
         headers = {}
-        content = self._get_response(endpoint, request_data)
+        content = self._get_response(endpoint, request_data, request_files)
         message = content.get('message', "")
         code = content.get('code', http.HTTPStatus.OK)
 
@@ -239,16 +241,75 @@ class Handler(http.server.BaseHTTPRequestHandler):
 
         self.wfile.write(payload.encode(ENCODING))
 
-    def _get_response(self, endpoint, data):
+    def _get_request_data(self):
+        data = {}
+        files = []
+
+        content_type = self.headers.get('Content-Type', '')
+        length = int(self.headers['Content-Length'])
+        raw_content = self.rfile.read(length)
+
+        if (content_type == 'application/x-www-form-urlencoded'):
+            request = urllib.parse.parse_qs(raw_content.decode(ENCODING))
+            data = json.loads(request[autograder.api.constants.API_REQUEST_JSON_KEY][0])
+            return data, files
+
+        if (content_type.startswith('multipart/form-data')):
+            decoder = requests_toolbelt.multipart.decoder.MultipartDecoder(
+                raw_content, content_type, encoding = ENCODING)
+
+            for part in decoder.parts:
+                values = _parse_disposition(part.headers)
+
+                if (values.get('name', ()) == autograder.api.constants.API_REQUEST_JSON_KEY):
+                    data = json.loads(part.text)
+                else:
+                    # Assume everything else is a file.
+                    filename = values.get('filename', '')
+                    if (filename == ''):
+                        raise ValueError("Unable to find filename for request.")
+
+                    files.append("%s(%s)" % (DATA_DIR_ID, filename))
+
+            return data, files
+
+        raise ValueError("Unknown content type: '%s'." % (content_type))
+
+    def _get_response(self, endpoint, data, files):
         api_module_info = Handler._api_modules_by_endpoint.get(endpoint)
         if (api_module_info is None):
             raise ValueError("Could not find module for endpoint '%s'." % (endpoint))
 
-        key = _create_request_lookup_key(api_module_info, data, normalize_args = False)
+        key = _create_request_lookup_key(api_module_info, data, files, normalize_args = False)
         if (key not in Handler._static_responses):
             raise ResponseKeyError(key)
 
         return Handler._static_responses[key]['output']
+
+def _parse_disposition(headers):
+    values = {}
+    for (key, value) in headers.items():
+        key = key.decode(ENCODING)
+        value = value.decode(ENCODING)
+
+        if (key.lower() != 'content-disposition'):
+            continue
+
+        # The python stdlib recommends using the email library for this parsing,
+        # but I have not had a good experience with it.
+        for part in value.strip().split(';'):
+            part = part.strip()
+
+            parts = part.split('=')
+            if (len(parts) != 2):
+                continue
+
+            cd_key = parts[0].strip()
+            cd_value = parts[1].strip().strip('"')
+
+            values[cd_key] = cd_value
+
+    return values
 
 class ResponseKeyError(ValueError):
     def __init__(self, key):

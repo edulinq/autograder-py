@@ -4,7 +4,7 @@ import unittest
 import autograder.util.submission
 
 THIS_DIR = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
-DATA_DIR = os.path.join(THIS_DIR, "data")
+DATA_DIR = os.path.join(THIS_DIR, "data", 'base')
 
 class TestImport(unittest.TestCase):
     """
