@@ -15,18 +15,6 @@ Courses:
     Name: Course Using Different Languages.
     Role: student
 
-    ID: course-with-lms
-    Name: Course With LMS
-    Role: student
-
-    ID: course-without-source
-    Name: Course Without Source
-    Role: student
-
     ID: course101
     Name: Course 101
-    Role: student
-
-    ID: course101-with-zero-limit
-    Name: Course 101 - With Zero Limit
     Role: student

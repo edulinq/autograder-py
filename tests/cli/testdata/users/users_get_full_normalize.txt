@@ -11,7 +11,4 @@
 ---
 email	name	role	course-id	course-name	course-role
 course-student@test.edulinq.org	course-student	user	course-languages	Course Using Different Languages.	student
-course-student@test.edulinq.org	course-student	user	course-with-lms	Course With LMS	student
-course-student@test.edulinq.org	course-student	user	course-without-source	Course Without Source	student
 course-student@test.edulinq.org	course-student	user	course101	Course 101	student
-course-student@test.edulinq.org	course-student	user	course101-with-zero-limit	Course 101 - With Zero Limit	student

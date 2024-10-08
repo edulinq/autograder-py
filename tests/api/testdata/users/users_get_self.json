@@ -14,24 +14,9 @@
                     "name": "Course Using Different Languages.",
                     "role": "admin"
                 },
-                "course-with-lms": {
-                    "id": "course-with-lms",
-                    "name": "Course With LMS",
-                    "role": "admin"
-                },
-                "course-without-source": {
-                    "id": "course-without-source",
-                    "name": "Course Without Source",
-                    "role": "admin"
-                },
                 "course101": {
                     "id": "course101",
                     "name": "Course 101",
-                    "role": "admin"
-                },
-                "course101-with-zero-limit": {
-                    "id": "course101-with-zero-limit",
-                    "name": "Course 101 - With Zero Limit",
                     "role": "admin"
                 }
             }

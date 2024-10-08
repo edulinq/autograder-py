@@ -10,30 +10,15 @@
 ---
 email	name	role	course-id	course-name	course-role
 course-admin@test.edulinq.org	course-admin	user	course-languages	Course Using Different Languages.	admin
-course-admin@test.edulinq.org	course-admin	user	course-with-lms	Course With LMS	admin
-course-admin@test.edulinq.org	course-admin	user	course-without-source	Course Without Source	admin
 course-admin@test.edulinq.org	course-admin	user	course101	Course 101	admin
-course-admin@test.edulinq.org	course-admin	user	course101-with-zero-limit	Course 101 - With Zero Limit	admin
 course-grader@test.edulinq.org	course-grader	user	course-languages	Course Using Different Languages.	grader
-course-grader@test.edulinq.org	course-grader	user	course-with-lms	Course With LMS	grader
-course-grader@test.edulinq.org	course-grader	user	course-without-source	Course Without Source	grader
 course-grader@test.edulinq.org	course-grader	user	course101	Course 101	grader
-course-grader@test.edulinq.org	course-grader	user	course101-with-zero-limit	Course 101 - With Zero Limit	grader
 course-other@test.edulinq.org	course-other	user	course-languages	Course Using Different Languages.	other
-course-other@test.edulinq.org	course-other	user	course-with-lms	Course With LMS	other
-course-other@test.edulinq.org	course-other	user	course-without-source	Course Without Source	other
 course-other@test.edulinq.org	course-other	user	course101	Course 101	other
-course-other@test.edulinq.org	course-other	user	course101-with-zero-limit	Course 101 - With Zero Limit	other
 course-owner@test.edulinq.org	course-owner	user	course-languages	Course Using Different Languages.	owner
-course-owner@test.edulinq.org	course-owner	user	course-with-lms	Course With LMS	owner
-course-owner@test.edulinq.org	course-owner	user	course-without-source	Course Without Source	owner
 course-owner@test.edulinq.org	course-owner	user	course101	Course 101	owner
-course-owner@test.edulinq.org	course-owner	user	course101-with-zero-limit	Course 101 - With Zero Limit	owner
 course-student@test.edulinq.org	course-student	user	course-languages	Course Using Different Languages.	student
-course-student@test.edulinq.org	course-student	user	course-with-lms	Course With LMS	student
-course-student@test.edulinq.org	course-student	user	course-without-source	Course Without Source	student
 course-student@test.edulinq.org	course-student	user	course101	Course 101	student
-course-student@test.edulinq.org	course-student	user	course101-with-zero-limit	Course 101 - With Zero Limit	student
 root	root	root			
 server-admin@test.edulinq.org	server-admin	admin			
 server-creator@test.edulinq.org	server-creator	creator			

@@ -1,11 +1,11 @@
 {
     "module": "autograder.api.courses.admin.update",
     "arguments": {
-        "course": "course-without-source"
+        "course": "course101"
     },
     "output": {
         "result": {
-            "course-id": "course-without-source",
+            "course-id": "course101",
             "success": true,
             "message": "",
             "created": false,
@@ -40,7 +40,9 @@
                     "unchanged-assignments": []
                 }
             },
-            "built-assignment-images": []
+            "built-assignment-images": [
+                "autograder.course101.hw0"
+            ]
         }
     }
 }

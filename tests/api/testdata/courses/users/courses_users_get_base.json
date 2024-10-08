@@ -10,7 +10,7 @@
             "email": "course-student@test.edulinq.org",
             "name": "course-student",
             "role": "student",
-            "lms-id": ""
+            "lms-id": "lms-course-student@test.edulinq.org"
         }
     }
 }

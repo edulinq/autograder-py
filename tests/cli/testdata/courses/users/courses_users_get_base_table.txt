@@ -7,4 +7,4 @@
 }
 ---
 email	name	role	lms-id
-course-student@test.edulinq.org	course-student	student	
+course-student@test.edulinq.org	course-student	student	lms-course-student@test.edulinq.org

@@ -6,4 +6,4 @@
 Email: course-admin@test.edulinq.org
 Name: course-admin
 Role: admin
-LMS ID: 
+LMS ID: lms-course-admin@test.edulinq.org

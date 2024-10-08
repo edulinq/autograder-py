@@ -14,20 +14,8 @@ Courses:
     Name: Course Using Different Languages.
     Role: admin
 
-    ID: course-with-lms
-    Name: Course With LMS
-    Role: admin
-
-    ID: course-without-source
-    Name: Course Without Source
-    Role: admin
-
     ID: course101
     Name: Course 101
-    Role: admin
-
-    ID: course101-with-zero-limit
-    Name: Course 101 - With Zero Limit
     Role: admin
 
 Email: course-grader@test.edulinq.org
@@ -38,20 +26,8 @@ Courses:
     Name: Course Using Different Languages.
     Role: grader
 
-    ID: course-with-lms
-    Name: Course With LMS
-    Role: grader
-
-    ID: course-without-source
-    Name: Course Without Source
-    Role: grader
-
     ID: course101
     Name: Course 101
-    Role: grader
-
-    ID: course101-with-zero-limit
-    Name: Course 101 - With Zero Limit
     Role: grader
 
 Email: course-other@test.edulinq.org
@@ -62,20 +38,8 @@ Courses:
     Name: Course Using Different Languages.
     Role: other
 
-    ID: course-with-lms
-    Name: Course With LMS
-    Role: other
-
-    ID: course-without-source
-    Name: Course Without Source
-    Role: other
-
     ID: course101
     Name: Course 101
-    Role: other
-
-    ID: course101-with-zero-limit
-    Name: Course 101 - With Zero Limit
     Role: other
 
 Email: course-owner@test.edulinq.org
@@ -86,20 +50,8 @@ Courses:
     Name: Course Using Different Languages.
     Role: owner
 
-    ID: course-with-lms
-    Name: Course With LMS
-    Role: owner
-
-    ID: course-without-source
-    Name: Course Without Source
-    Role: owner
-
     ID: course101
     Name: Course 101
-    Role: owner
-
-    ID: course101-with-zero-limit
-    Name: Course 101 - With Zero Limit
     Role: owner
 
 Email: course-student@test.edulinq.org
@@ -110,20 +62,8 @@ Courses:
     Name: Course Using Different Languages.
     Role: student
 
-    ID: course-with-lms
-    Name: Course With LMS
-    Role: student
-
-    ID: course-without-source
-    Name: Course Without Source
-    Role: student
-
     ID: course101
     Name: Course 101
-    Role: student
-
-    ID: course101-with-zero-limit
-    Name: Course 101 - With Zero Limit
     Role: student
 
 Email: root

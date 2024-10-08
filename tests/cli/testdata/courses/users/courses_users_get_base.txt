@@ -8,4 +8,4 @@
 Email: course-student@test.edulinq.org
 Name: course-student
 Role: student
-LMS ID: 
+LMS ID: lms-course-student@test.edulinq.org

@@ -8,7 +8,7 @@
             "email": "course-admin@test.edulinq.org",
             "name": "course-admin",
             "role": "admin",
-            "lms-id": ""
+            "lms-id": "lms-course-admin@test.edulinq.org"
         }
     }
 }

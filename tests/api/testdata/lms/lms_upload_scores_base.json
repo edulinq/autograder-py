@@ -14,19 +14,14 @@
         ]
     },
     "output": {
-        "count": 0,
-        "error-count": 2,
+        "count": 1,
+        "error-count": 1,
         "unrecognized-users": [
             {
                 "row": 1,
                 "entry": "zzz@test.edulinq.org"
             }
         ],
-        "no-lms-id-users": [
-            {
-                "row": 0,
-                "entry": "course-student@test.edulinq.org"
-            }
-        ]
+        "no-lms-id-users": []
     }
 }
