@@ -1,0 +1,11 @@
+{
+    "cli": "autograder.cli.courses.upsert.zip",
+    "arguments": [
+        "--user", "server-admin@test.edulinq.org",
+        "--pass", "server-admin",
+        "__DATA_DIR__(hw0_solution.py)"
+    ],
+    "exit-status": 1
+}
+---
+Expecting '.zip' extension, found '.py': '__DATA_DIR__(hw0_solution.py)'.

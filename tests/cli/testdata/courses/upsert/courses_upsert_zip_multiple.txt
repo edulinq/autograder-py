@@ -1,0 +1,11 @@
+{
+    "cli": "autograder.cli.courses.upsert.zip",
+    "arguments": [
+        "--user", "server-admin@test.edulinq.org",
+        "--pass", "server-admin",
+        "__DATA_DIR__(courses101-102.zip)"
+    ]
+}
+---
+Course 'course101' updated.
+Course 'course102' created.

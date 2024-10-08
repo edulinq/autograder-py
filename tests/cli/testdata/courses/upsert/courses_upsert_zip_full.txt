@@ -1,0 +1,23 @@
+{
+    "cli": "autograder.cli.courses.upsert.zip",
+    "arguments": [
+        "--user", "server-admin@test.edulinq.org",
+        "--pass", "server-admin",
+        "__DATA_DIR__(course101.zip)",
+        "--full-output"
+    ]
+}
+---
+[
+    {
+        "course-id": "course101",
+        "success": true,
+        "message": "",
+        "created": false,
+        "updated": true,
+        "lms-sync-result": null,
+        "built-assignment-images": [
+            "autograder.course101.hw0"
+        ]
+    }
+]

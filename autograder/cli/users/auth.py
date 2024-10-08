@@ -1,20 +1,20 @@
 import http
 import sys
 
-import autograder.api.error
+import autograder.error
 import autograder.api.users.auth
 
 def run(arguments):
     try:
         return _auth(arguments)
-    except autograder.api.error.AutograderError as ex:
+    except autograder.error.AutograderError as ex:
         print("ERROR: " + ex.args[0], file = sys.stderr)
         return 2
 
 def _auth(arguments):
     try:
         autograder.api.users.auth.send(arguments, exit_on_error = False)
-    except autograder.api.error.APIError as ex:
+    except autograder.error.APIError as ex:
         if (ex.code != http.HTTPStatus.UNAUTHORIZED):
             raise ex
 

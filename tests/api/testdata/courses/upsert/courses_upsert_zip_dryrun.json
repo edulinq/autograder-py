@@ -1,0 +1,31 @@
+{
+    "module": "autograder.api.courses.upsert.zip",
+    "arguments": {
+        "user": "server-admin@test.edulinq.org",
+        "pass": "server-admin",
+        "dry-run": true,
+        "skip-build-images": false,
+        "skip-emails": false,
+        "skip-lms-sync": false,
+        "skip-source-sync": false,
+        "skip-tasks": false
+    },
+    "files": [
+        "__DATA_DIR__(course101.zip)"
+    ],
+    "output": {
+        "results": [
+            {
+                "course-id": "course101",
+                "success": true,
+                "message": "",
+                "created": false,
+                "updated": true,
+                "lms-sync-result": null,
+                "built-assignment-images": [
+                    "autograder.__autograder_dryrun__course101.hw0"
+                ]
+            }
+        ]
+    }
+}

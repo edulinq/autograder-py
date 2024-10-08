@@ -6,7 +6,7 @@ import sys
 import platformdirs
 
 import autograder.api.constants
-import autograder.api.error
+import autograder.error
 import autograder.util.hash
 
 DEFAULT_CONFIG_FILENAME = 'config.json'
@@ -21,11 +21,11 @@ class APIParam(object):
             hash = False):
         self.key = str(key)
         if ((key is None) or (self.key == '')):
-            raise autograder.api.error.APIError(None, "APIParam cannot have an empty key.")
+            raise autograder.error.APIError(None, "APIParam cannot have an empty key.")
 
         self.description = str(description)
         if ((description is None) or (self.description == '')):
-            raise autograder.api.error.APIError(None, "APIParam cannot have an empty description.")
+            raise autograder.error.APIError(None, "APIParam cannot have an empty description.")
 
         self.config_key = config_key
         if (self.config_key is None):
@@ -54,10 +54,10 @@ def parse_api_config(config, params,
     try:
         return _parse_api_config(config, params,
                 additional_required_keys, additional_optional_keys)
-    except autograder.api.error.APIError as ex:
+    except autograder.error.APIError as ex:
         if (exit_on_error):
             print("ERROR: " + ex.args[0], file = sys.stderr)
-            autograder.api.error.exit_from_error(1)
+            autograder.error.exit_from_error(1)
 
         raise ex
 
@@ -68,7 +68,7 @@ def _parse_api_config(config, params, additional_required_keys, additional_optio
     for param in params:
         if (param.config_key not in config):
             if (param.required):
-                raise autograder.api.error.APIError(None,
+                raise autograder.error.APIError(None,
                     f"Required parameter '{param.config_key}' not set.")
 
             continue
@@ -81,7 +81,7 @@ def _parse_api_config(config, params, additional_required_keys, additional_optio
 
     for key in additional_required_keys:
         if (key not in config):
-            raise autograder.api.error.APIError(None, f"Required parameter '{key}' not set.")
+            raise autograder.error.APIError(None, f"Required parameter '{key}' not set.")
 
         extra[key] = config[key]
 
@@ -226,6 +226,11 @@ PARAM_SEND_EMAILS = APIParam('send-emails',
         'Send any emails.',
         required = True, cli_param = False)
 
+PARAM_SKIP_BUILD_IMAGES = APIParam('skip-build-images',
+        'Skip building assignment Docker images.',
+        required = False,
+        parser_options = {'action': 'store_true', 'default': False})
+
 PARAM_SKIP_EMAILS = APIParam('skip-emails',
         'Skip sending any emails. Be aware that this may result in inaccessible information.',
         required = False,
@@ -238,6 +243,16 @@ PARAM_SKIP_INSERTS = APIParam('skip-inserts',
 
 PARAM_SKIP_LMS_SYNC = APIParam('skip-lms-sync',
         'Skip syncing with the LMS.',
+        required = False,
+        parser_options = {'action': 'store_true', 'default': False})
+
+PARAM_SKIP_SOURCE_SYNC = APIParam('skip-source-sync',
+        'Skip syncing (updating with) the course sourse.',
+        required = False,
+        parser_options = {'action': 'store_true', 'default': False})
+
+PARAM_SKIP_TASKS = APIParam('skip-tasks',
+        'Skip starting course tasks.',
         required = False,
         parser_options = {'action': 'store_true', 'default': False})
 

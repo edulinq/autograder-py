@@ -6,7 +6,7 @@ import requests
 
 import autograder.api.config
 import autograder.api.constants
-import autograder.api.error
+import autograder.error
 import autograder.util.timestamp
 
 def handle_api_request(arguments, params, endpoint, exit_on_error = False, files = []):
@@ -18,10 +18,10 @@ def handle_api_request(arguments, params, endpoint, exit_on_error = False, files
 
     try:
         return _handle_api_request(arguments, params, endpoint, exit_on_error, files)
-    except autograder.api.error.AutograderError as ex:
+    except autograder.error.AutograderError as ex:
         if (exit_on_error):
             print("ERROR: " + ex.args[0], file = sys.stderr)
-            autograder.api.error.exit_from_error(1)
+            autograder.error.exit_from_error(1)
 
         raise ex
 
@@ -41,7 +41,7 @@ def send_api_request(endpoint, server = None, verbose = False, data = {}, files 
     """
 
     if ((server is None) or (server == '')):
-        raise autograder.api.error.APIError(None, "No server provided.")
+        raise autograder.error.APIError(None, "No server provided.")
 
     server = server.rstrip('/')
     endpoint = endpoint.lstrip('/')
@@ -52,7 +52,7 @@ def send_api_request(endpoint, server = None, verbose = False, data = {}, files 
     for path in files:
         filename = os.path.basename(path)
         if (filename in post_files):
-            raise autograder.api.error.APIError(None, "Cannot submit duplicate filenames ('%s')."
+            raise autograder.error.APIError(None, "Cannot submit duplicate filenames ('%s')."
                 % (filename))
 
         post_files[filename] = open(path, 'rb')
@@ -67,7 +67,7 @@ def send_api_request(endpoint, server = None, verbose = False, data = {}, files 
             data = {autograder.api.constants.API_REQUEST_JSON_KEY: json.dumps(data)},
             files = post_files)
     except requests.exceptions.ConnectionError:
-        raise autograder.api.error.ConnectionError(("Could not connect to autograder server"
+        raise autograder.error.ConnectionError(("Could not connect to autograder server"
             + " '%s'." % (server)
             + " This is a networking issue"
             + " (e.g., network down, server down, wrong server address),"
@@ -79,7 +79,7 @@ def send_api_request(endpoint, server = None, verbose = False, data = {}, files 
     try:
         response = raw_response.json()
     except Exception as ex:
-        raise autograder.api.error.APIError(None, "Autograder response does not contain valid JSON."
+        raise autograder.error.APIError(None, "Autograder response does not contain valid JSON."
             + " Contact a server admin with the following. Response:\n---\n%s\n---" % (
                 raw_response.text)) from ex
 
@@ -96,6 +96,6 @@ def send_api_request(endpoint, server = None, verbose = False, data = {}, files 
             message = autograder.util.timestamp.convert_message(message, pretty = True)
 
         code = response.get("status", None)
-        raise autograder.api.error.APIError(code, message)
+        raise autograder.error.APIError(code, message)
 
     return response[autograder.api.constants.API_RESPONSE_KEY_CONTENT]

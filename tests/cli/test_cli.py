@@ -9,7 +9,7 @@ import sys
 
 import tests.server.base
 import tests.server.server
-import autograder.api.error
+import autograder.error
 import autograder.util.dirent
 
 THIS_DIR = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
@@ -156,7 +156,7 @@ def _get_test_method(test_name, path):
             if (is_error):
                 self.fail("No error was not raised when one was expected ('%s')." % (
                     str(expected_output)))
-        except autograder.api.error.ConnectionError:
+        except autograder.error.ConnectionError:
             # Catch errors where the server does not responsed and suppress large connection errors.
             try:
                 self.fail("Server had an error. See earlier output from the server.")
@@ -165,7 +165,6 @@ def _get_test_method(test_name, path):
                 ex.__cause__ = None
                 ex.__context__ = None
                 raise ex
-
         except BaseException as ex:
             if (not is_error):
                 raise ex

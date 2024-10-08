@@ -1,0 +1,11 @@
+{
+    "cli": "autograder.cli.courses.upsert.zip",
+    "arguments": [
+        "--user", "server-admin@test.edulinq.org",
+        "--pass", "server-admin",
+        "__DATA_DIR__(__ZZZ__missing_course.zip)"
+    ],
+    "exit-status": 1
+}
+---
+Path does not exist: '__DATA_DIR__(__ZZZ__missing_course.zip)'.

@@ -4,7 +4,7 @@ import unittest
 import re
 import sys
 
-import autograder.api.error
+import autograder.error
 import tests.server.server
 
 SERVER_URL_FORMAT = "http://127.0.0.1:%s"
@@ -31,7 +31,7 @@ class ServerBaseTest(unittest.TestCase):
         cls._base_arguments['server'] = SERVER_URL_FORMAT % cls._port
 
         # Do not actually exit on errors, raise instead.
-        autograder.api.error._exit_on_error_for_testing = False
+        autograder.error._exit_on_error_for_testing = False
 
     @classmethod
     def tearDownClass(cls):
@@ -39,7 +39,7 @@ class ServerBaseTest(unittest.TestCase):
         cls._server_process = None
 
         # Reset.
-        autograder.api.error._exit_on_error_for_testing = True
+        autograder.error._exit_on_error_for_testing = True
 
     def get_base_arguments(self):
         return ServerBaseTest._base_arguments.copy()
