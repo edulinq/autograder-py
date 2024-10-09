@@ -1,8 +1,8 @@
-import json
 import os
 import sys
 
 import autograder.api.courses.upsert.zip
+import autograder.cli.courses.upsert.common
 import autograder.error
 import autograder.util.zip
 
@@ -16,31 +16,8 @@ def run(arguments):
     results = autograder.api.courses.upsert.zip.send(arguments, files = [zip_path],
         exit_on_error = True)
 
-    results = results['results']
-
-    error_count = 0
-    for result in results:
-        success = result['success']
-        course_id = result['course-id']
-
-        if (not success):
-            error_count += 1
-
-        if (arguments.full_output):
-            continue
-
-        if (not success):
-            print("Course '%s' not updated." % (course_id))
-            print("Message from server: '%s'." % (result.get('message', '')))
-        elif (result.get('created', False)):
-            print("Course '%s' created." % (course_id))
-        else:
-            print("Course '%s' updated." % (course_id))
-
-    if (arguments.full_output):
-        print(json.dumps(results, indent = 4))
-
-    return error_count
+    return autograder.cli.courses.upsert.common.handle_results(results,
+        arguments.full_output)
 
 def _prep_zip(path):
     if (not os.path.exists(path)):
@@ -62,9 +39,7 @@ def main():
 def _get_parser():
     parser = autograder.api.courses.upsert.zip._get_parser()
 
-    parser.add_argument('--full-output', dest = 'full_output',
-        action = 'store_true', default = False,
-        help = 'See the full course update output (as JSON) (default: %(default)s).')
+    autograder.cli.courses.upsert.common.add_full_output_argument(parser)
 
     parser.add_argument('path', metavar = 'PATH',
         action = 'store', type = str,
