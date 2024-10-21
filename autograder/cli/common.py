@@ -40,6 +40,10 @@ ALL_USER_OP_KEYS = [
     ('email', 'Email'),
 ] + USER_OP_KEYS + USER_OP_ERROR_KEYS
 
+METADATA_DESCRIBE_KEYS = [
+    ('endpoints', 'Endpoints')
+]
+
 # Set course_users to True if listing course users, False for server users.
 # An error will be raised if a user of a different type is found.
 def list_users(users, course_users, table = False, normalize = False):
@@ -216,6 +220,23 @@ def list_user_op_responses(results, table = False):
         _list_user_op_responses_table(results)
     else:
         _list_user_op_responses(results)
+
+def api_describe(results, table = False):
+    if (table):
+        _api_describe_table(results)
+    else:
+        _api_describe(results)
+
+def _api_describe_table(results, header = True, keys = METADATA_DESCRIBE_KEYS):
+    rows = []
+    for result in results:
+        row = [result[key] for key in keys]
+        rows.append(row)
+
+    _print_tsv(rows, header, ['wow' for _ in keys])
+
+def _api_describe(results):
+    print(results)
 
 def _print_tsv(rows, header, header_keys):
     lines = []
