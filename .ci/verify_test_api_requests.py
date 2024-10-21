@@ -102,7 +102,7 @@ def run(arguments):
         if (arguments.pattern is not None):
             match = re.search(arguments.pattern, path)
             if (match is None):
-                print("Skipping test case because of match pattern: '%s'.", path)
+                print("Skipping test case because of match pattern ('%s'): '%s'." % (arguments.pattern, path))
                 continue
 
         try:
