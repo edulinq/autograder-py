@@ -53,8 +53,8 @@
                 "output-files-gzip": {
                     "result.json": "H4sICAAAAAAA/3Jlc3VsdC5qc29uAMySwWrDMAyG73kKzecy4rRrkz7BdhmMHXYYI5haBEMsd7YKG6XvPuIlGTFsWW7NSUj/J+UDnzMAAEHKotiDuH/Jxeq79X7CwMZREHt4ja3uO4/VhHuSPTZOrPqoj84Qd7xMhuHgfMflKYQhqCZufHT8YI8tWiRGDR755An1bXqn8UobaurAynPNJv6P3FbVbpOXhVxX6Y0BQNJDXEzyYsxfVrPexdV6r+e9J/EF1s/82eKf4qngP8TjUjABDi0qulnsu13iuynufnxj9dY/+7k7ZZkEf9m/yy7ZVwAAAP//do3jyV0DAAA="
                 },
-                "stdout": "",
-                "stderr": ""
+                "stdout": "Autograder transcript for assignment: HW0.\nGrading started at 2023-11-11 22:13 and ended at 2023-11-11 22:13.\nQ1: 0 / 1\n   NotImplemented returned.\nQ2: 0 / 1\n   NotImplemented returned.\nStyle: 0 / 0\n   Style is clean!\n\nTotal: 0 / 2\n",
+                "stderr": "Dummy Stderr\n"
             },
             {
                 "info": {
@@ -103,7 +103,7 @@
                 "output-files-gzip": {
                     "result.json": "H4sICAAAAAAA/3Jlc3VsdC5qc29uAJySzWrDMBCE736Krc6hSE5/7DxBeymUHnooxYhoMQJrlUobaAl59xI1uFTEcRWfltmZMd+iXQUAIEg7FCsQD69SLH6kjy1Gtp6iWMFbkg7fbpz+5J7VMTZunP7sNt4SH/IqW8a1D3hCdxij7lNj3tcHbSz1XWQduGOb/qvu2vb+Rja1atvbiQCSOWkf3fvFLF19EZ2cpnvy/Og2AzokRgMBeRsIzXUxdVNG3RRQv/DXgGfBc8B/gKdSsBHWA2q6KuOtpcxvfY63lkv5y5um9+Pjnr3rMjNO9KtqX30HAAD//xSSgptDAwAA"
                 },
-                "stdout": "",
+                "stdout": "Autograder transcript for assignment: HW0.\nGrading started at 2023-11-11 22:13 and ended at 2023-11-11 22:13.\nQ1: 1 / 1\nQ2: 0 / 1\n   NotImplemented returned.\nStyle: 0 / 0\n   Style is clean!\n\nTotal: 1 / 2\n",
                 "stderr": ""
             },
             {
@@ -153,7 +153,7 @@
                 "output-files-gzip": {
                     "result.json": "H4sICAAAAAAA/3Jlc3VsdC5qc29uAMSSvQqDMBSFd5/iNrNDDPUnPkHX0qFDKRI0SEBja1JoEd+9mIptg1YyNdPl3HPO5YN0HgAAkqzmKAW0O2Lkv6TrjSstGqlQCicjDa+bpq/cPhhj06Zm9+zSCKmHfGAtVd60fEavuVKsNI12X9myQsgyU5q1OtPC3A0iSuMtTggJKVkIcFnM2id376/Skb/ThW50oQPdQT8q/hMQLwDa+gegKQWhIK84kxtn3sSFNyLxm9dM5/ETr97BlnGhn3q99wwAAP//PProBisDAAA="
                 },
-                "stdout": "",
+                "stdout": "Autograder transcript for assignment: HW0.\nGrading started at 2023-11-11 22:13 and ended at 2023-11-11 22:13.\nQ1: 1 / 1\nQ2: 1 / 1\nStyle: 0 / 0\n   Style is clean!\n\nTotal: 2 / 2\n",
                 "stderr": ""
             }
         ]
