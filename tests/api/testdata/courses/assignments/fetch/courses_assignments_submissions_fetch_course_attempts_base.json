@@ -56,7 +56,7 @@
                 "output-files-gzip": {
                     "result.json": "H4sICAAAAAAA/3Jlc3VsdC5qc29uAMSSvQqDMBSFd5/iNrNDDPUnPkHX0qFDKRI0SEBja1JoEd+9mIptg1YyNdPl3HPO5YN0HgAAkqzmKAW0O2Lkv6TrjSstGqlQCicjDa+bpq/cPhhj06Zm9+zSCKmHfGAtVd60fEavuVKsNI12X9myQsgyU5q1OtPC3A0iSuMtTggJKVkIcFnM2id376/Skb/ThW50oQPdQT8q/hMQLwDa+gegKQWhIK84kxtn3sSFNyLxm9dM5/ETr97BlnGhn3q99wwAAP//PProBisDAAA="
                 },
-                "stdout": "",
+                "stdout": "Autograder transcript for assignment: HW0.\nGrading started at 2023-11-11 22:13 and ended at 2023-11-11 22:13.\nQ1: 1 / 1\nQ2: 1 / 1\nStyle: 0 / 0\n   Style is clean!\n\nTotal: 2 / 2\n",
                 "stderr": ""
             }
         }
