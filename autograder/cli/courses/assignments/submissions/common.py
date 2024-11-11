@@ -39,4 +39,5 @@ def _output_grading_result_dir(out_dir, files):
         os.makedirs(os.path.dirname(path), exist_ok = True)
 
         contents = autograder.util.gzip.from_base64(gzip_contents)
-        autograder.util.file.write(path, contents)
+        with open(path, 'wb') as file:
+            file.write(contents)
