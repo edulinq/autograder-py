@@ -79,7 +79,7 @@ jobs:
         run: ./.ci/verify_test_api_requests.py --docker
 
   deploy:
-    needs: test
+    needs: verify-test-data
 
     strategy:
       matrix:
