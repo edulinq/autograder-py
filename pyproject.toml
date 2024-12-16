@@ -1,0 +1,45 @@
+[build-system]
+build-backend = "setuptools.build_meta"
+requires = [
+    "setuptools",
+    "packaging>=21.3",
+    "twine",
+    "vermin",
+]
+
+[project]
+name = "autograder-py"
+description = "The Python interface for the autograding server."
+readme = "README.md"
+requires-python = ">=3.8"
+license = {file = "LICENSE"}
+
+authors = [
+    {name = "Eriq Augustine", email = "eriq@edulinq.org"},
+]
+
+keywords = ['education', 'grading']
+classifiers = [
+    'Intended Audience :: Education',
+    'License :: OSI Approved :: MIT License',
+    'Programming Language :: Python :: 3.8',
+]
+
+dynamic = [
+    "version",
+    "dependencies",
+    "optional-dependencies",
+]
+
+[tool.setuptools.dynamic]
+version = {attr = "autograder.__version__"}
+dependencies = {file = ["requirements.txt"]}
+optional-dependencies = {dev = {file = ["requirements-dev.txt"]}}
+
+[project.urls]
+Homepage = "https://github.com/edulinq/autograder-py"
+Repository = "https://github.com/edulinq/autograder-py"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["autograder*"]
