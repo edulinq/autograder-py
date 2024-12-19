@@ -1,0 +1,16 @@
+{
+    "cli": "autograder.cli.courses.assignments.submissions.submit",
+    "output-check": "content_equals_ignore_time",
+    "arguments": [
+        "--course", "course-languages",
+        "--assignment", "bash-epoch",
+        "--allow-late",
+        "__DATA_DIR__(assignment.sh)"
+    ]
+}
+---
+Autograder transcript for assignment: bash.
+Grading started at <TIME> and ended at <TIME>.
+Task 1: add(): 10 / 10
+
+Total: 10 / 10

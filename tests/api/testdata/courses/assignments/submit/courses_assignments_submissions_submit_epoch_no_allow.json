@@ -11,7 +11,7 @@
     "output-modifier": "clean_output_timestamps",
     "output": {
         "rejected": true,
-        "message": "Attempting to submit assignment (A Simple Bash Assignment Due at the Unix Epoch) late without 'allow late'. It was due on <timestamp:1234567890123> (which was 12h34m56.789s ago). Include the 'allow late' flag to submit an assignment late. See your interface's help section for more information.",
+        "message": "Attempting to submit assignment (A Simple Bash Assignment Due at the Unix Epoch) late without 'allow late'. It was due on <timestamp:1234567890123> (which was <time-delta:TIME> ago). Include the 'allow late' flag to submit an assignment late. See your interface's help section for more information.",
         "grading-success": false,
         "result": null
     }
