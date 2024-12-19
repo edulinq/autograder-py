@@ -12,8 +12,9 @@ API_PARAMS = [
         'An optional message to attatch to the submission.',
         required = False),
 
-    autograder.api.config.APIParam('ack-late',
-        'Acknowledge that you are submitting an assignment late (default: False).',
+    autograder.api.config.APIParam('allow-late',
+        'Allow this submission to be graded, even if it is late (default: False).',
+        required = False,
         parser_options = {'action': 'store_true', 'default': False})
 ]
 

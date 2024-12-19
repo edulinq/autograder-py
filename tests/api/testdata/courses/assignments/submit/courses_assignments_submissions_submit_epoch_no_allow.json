@@ -1,0 +1,41 @@
+{
+    "module": "autograder.api.courses.assignments.submissions.submit",
+    "arguments": {
+        "course": "course-languages",
+        "assignment": "bash-epoch",
+        "allow-late": false
+    },
+    "files": [
+        "__DATA_DIR__(assignment.sh)"
+    ],
+    "output-modifier": "clean_output_timestamps",
+    "output": {
+        "rejected": false,
+        "message": "",
+        "grading-success": true,
+        "result": {
+            "id": "course-languages::bash-epoch::course-admin@test.edulinq.org::1234567890123",
+            "short-id": "1234567890123",
+            "course-id": "course-languages",
+            "assignment-id": "bash-epoch",
+            "user": "course-admin@test.edulinq.org",
+            "message": "",
+            "max_points": 10,
+            "score": 10,
+            "name": "bash",
+            "questions": [
+                {
+                    "name": "Task 1: add()",
+                    "max_points": 10,
+                    "score": 10,
+                    "message": "",
+                    "grading_start_time": 1234567890123,
+                    "grading_end_time": 1234567890123
+                }
+            ],
+            "grading_start_time": 1234567890123,
+            "grading_end_time": 1234567890123,
+            "additional-info": null
+        }
+    }
+}
