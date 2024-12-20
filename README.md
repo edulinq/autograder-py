@@ -208,9 +208,11 @@ This helps users avoid situations where they accidentally submit an assignment l
 Users must add the `--allow-late` flag to the normal submission command when they want to submit an assignment past the due date.
 
 Here is a sample output when trying to submit a late assignment without the flag:
-TODO: Add example for late message.
 ```
-
+--- Message from Autograder ---
+Attempting to submit assignment (<ASSIGNMENT NAME>) late without 'allow late'. It was due on <DUE DATE> (which was <AMOUNT OF TIME LATE> ago). Include the 'allow late' flag to submit an assignment late. See your interface's help section for more information.
+-------------------------------
+Submission was rejected by the autograder.
 ```
 
 When you see this message and want to submit your assignment late, then run the following command:
