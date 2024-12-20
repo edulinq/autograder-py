@@ -204,8 +204,8 @@ Message from the autograder: Request could not be authenticated. Ensure that you
 
 ##### Submitting an Assignment Late
 
-If you are submitting an assignment late, the autograder requires confirmation that you are submitting an assignment late.
-This helps users avoid situations where they accidentally submit an assignment late.
+If you are submitting an assignment late, the autograder requires confirmation in order to grade your submission.
+This helps users avoid situations where they accidentally submit an assignment late or submit to the wrong assignment.
 Users must add the `--allow-late` flag to the normal submission command when they want to submit an assignment past the due date.
 
 Here is a sample output when trying to submit a late assignment without the flag:
@@ -216,7 +216,8 @@ Attempting to submit assignment (<ASSIGNMENT NAME>) late without 'allow late'. I
 Submission was rejected by the autograder.
 ```
 
-When you see this message and want to submit your assignment late, then run the following command:
+When you see this message, be sure to double check the assignment name and due date.
+If those details look correct and you want to submit that assignment late, then run the following command:
 ```sh
 python3 -m autograder.run.submit --allow-late my_file.py
 ```
