@@ -201,7 +201,7 @@ The autograder failed to grade your assignment.
 Message from the autograder: Request could not be authenticated. Ensure that your username, password, and course are properly set.
 ```
 
-##### Submitting an Assignmet Late
+##### Submitting an Assignment Late
 
 If you are submitting an assignment late, the autograder requires confirmation that you are submitting an assignment late.
 This helps users avoid situations where they accidentally submit an assignment late.
