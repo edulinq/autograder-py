@@ -25,6 +25,14 @@ This is a shortcut for [`autograder.cli.courses.assignments.submissions.submit`]
 python3 -m autograder.run.submit my_file.py
 ```
 
+#### `autograder.run.submit` when late
+This command submits a late assingment.
+More information can be found [here](#submitting-an-assignment-late).
+
+```sh
+python3 -m autograder.run.submit --allow-late my_file.py
+```
+
 ### `autograder.run.history`
 
 This command gets a summary of all your past submissions for an assignment.
@@ -192,6 +200,25 @@ A failure may look like:
 The autograder failed to grade your assignment.
 Message from the autograder: Request could not be authenticated. Ensure that your username, password, and course are properly set.
 ```
+
+##### Submitting an Assignmet Late
+
+If you are submitting an assignment late, the autograder requires confirmation that you are submitting an assignment late.
+This helps users avoid situations where they accidentally submit an assignment late.
+Users must add the `--allow-late` flag to the normal submission command when they want to submit an assignment past the due date.
+
+Here is a sample output when trying to submit a late assignment without the flag:
+TODO: Add example for late message.
+```
+
+```
+
+When you see this message and want to submit your assignment late, then run the following command:
+```sh
+python3 -m autograder.run.submit --allow-late my_file.py
+```
+
+Now, the server will grade your submission like normal!
 
 #### Checking Your Last Submission
 
