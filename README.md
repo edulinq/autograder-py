@@ -26,8 +26,9 @@ python3 -m autograder.run.submit my_file.py
 ```
 
 #### `autograder.run.submit` when late
-This command submits a late assingment.
-More information can be found [here](#submitting-an-assignment-late).
+
+This command submits a late assingment. For more information and examples,
+see the [late submission section](#submitting-an-assignment-late) of this document.
 
 ```sh
 python3 -m autograder.run.submit --allow-late my_file.py
