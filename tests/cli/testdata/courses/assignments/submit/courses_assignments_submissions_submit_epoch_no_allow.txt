@@ -3,13 +3,13 @@
     "output-check": "content_equals_ignore_time",
     "arguments": [
         "--course", "course-languages",
-        "--assignment", "bash-epoch",
+        "--assignment", "bash",
         "__DATA_DIR__(assignment.sh)"
     ],
     "exit-status": 1
 }
 ---
 --- Message from Autograder ---
-Attempting to submit assignment (A Simple Bash Assignment Due at the Unix Epoch) late without 'allow late'. It was due on <TIME> (which was <time-delta:TIME> ago). Include the 'allow late' flag to submit an assignment late. See your interface's help section for more information.
+Attempting to submit assignment (A Simple Bash Assignment) late without 'allow late'. It was due on <TIME> (which was <time-delta:TIME> ago). Include the 'allow late' flag to submit an assignment late. See your interface's help section for more information.
 -------------------------------
 Submission was rejected by the autograder.

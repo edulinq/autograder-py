@@ -3,7 +3,7 @@
     "output-check": "content_equals_ignore_time",
     "arguments": [
         "--course", "course-languages",
-        "--assignment", "bash-epoch",
+        "--assignment", "bash",
         "--allow-late",
         "__DATA_DIR__(assignment.sh)"
     ]

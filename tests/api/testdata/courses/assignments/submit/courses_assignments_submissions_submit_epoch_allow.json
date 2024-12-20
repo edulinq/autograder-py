@@ -2,7 +2,7 @@
     "module": "autograder.api.courses.assignments.submissions.submit",
     "arguments": {
         "course": "course-languages",
-        "assignment": "bash-epoch",
+        "assignment": "bash",
         "allow-late": true
     },
     "files": [
@@ -14,10 +14,10 @@
         "message": "",
         "grading-success": true,
         "result": {
-            "id": "course-languages::bash-epoch::course-admin@test.edulinq.org::1234567890123",
+            "id": "course-languages::bash::course-admin@test.edulinq.org::1234567890123",
             "short-id": "1234567890123",
             "course-id": "course-languages",
-            "assignment-id": "bash-epoch",
+            "assignment-id": "bash",
             "user": "course-admin@test.edulinq.org",
             "message": "",
             "max_points": 10,
