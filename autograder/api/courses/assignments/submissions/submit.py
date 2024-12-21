@@ -13,7 +13,7 @@ API_PARAMS = [
         required = False),
 
     autograder.api.config.APIParam('allow-late',
-        'Allow this submission to be graded, even if it is late (default: False).',
+        'Allow this submission to be graded, even if it is late (default: %(default)s).',
         required = False,
         parser_options = {'action': 'store_true', 'default': False})
 ]

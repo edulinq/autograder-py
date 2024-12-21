@@ -24,6 +24,12 @@ DEFAULT_OUTPUT_CHECK = 'content_equals'
 TIME_REGEX = r'\d{4}-\d{2}-\d{2} \d{2}:\d{2}'
 TIME_REPLACEMENT = '<TIME>'
 
+TIME_DELTA_PATTERN = r'(\d+h)?(\d+m)?(\d+\.)?(\d+s)'
+TIME_DELTA_REPLACEMENT = '<time-delta:12h34m56.789s>'
+
+TIME_MESSAGE_PATTERN = r'<timestamp:(-?\d+|nil)>'
+TIME_MESSAGE_REPLACEMENT = '<timestamp:1234567890123>'
+
 class CLITest(tests.server.base.ServerBaseTest):
     """
     Test CLI tools.
@@ -198,6 +204,12 @@ def content_equals_ignore_time(test_case, expected, actual, **kwargs):
 
     expected = re.sub(TIME_REGEX, TIME_REPLACEMENT, expected)
     actual = re.sub(TIME_REGEX, TIME_REPLACEMENT, actual)
+
+    expected = re.sub(TIME_DELTA_PATTERN, TIME_DELTA_REPLACEMENT, expected)
+    actual = re.sub(TIME_DELTA_PATTERN, TIME_DELTA_REPLACEMENT, actual)
+
+    expected = re.sub(TIME_MESSAGE_PATTERN, TIME_MESSAGE_REPLACEMENT, expected)
+    actual = re.sub(TIME_MESSAGE_PATTERN, TIME_MESSAGE_REPLACEMENT, actual)
 
     content_equals(test_case, expected, actual)
 

@@ -10,6 +10,6 @@
 }
 ---
 --- Message from Autograder ---
-Attempting to submit assignment (A Simple Bash Assignment) late without 'allow late'. It was due on <TIME> (which was <time-delta:TIME> ago). Include the 'allow late' flag to submit an assignment late. See your interface's help section for more information.
+Attempting to submit assignment (A Simple Bash Assignment) late without the 'allow late' option. It was due on <TIME> (which was <time-delta:1234567890123> ago). Use the 'allow late' option to submit an assignment late. See your interface's documentation for more information.
 -------------------------------
 Submission was rejected by the autograder.
