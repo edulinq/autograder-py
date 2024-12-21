@@ -1,6 +1,7 @@
 {
     "module": "autograder.api.courses.assignments.submissions.submit",
     "arguments": {
+        "allow-late": false
     },
     "files": [
         "__DATA_DIR__(hw0_no_compile.py)"
