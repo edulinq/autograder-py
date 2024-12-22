@@ -25,8 +25,8 @@ This is a shortcut for [`autograder.cli.courses.assignments.submissions.submit`]
 python3 -m autograder.run.submit my_file.py
 ```
 
-To submit an assignment late, use the following command. For more information and examples,
-see the [late submission section](#submitting-an-assignment-late) of this document.
+To submit an assignment late, use the following command.
+For more information and examples, see the [late submission section](#submitting-an-assignment-late) of this document.
 
 ```sh
 python3 -m autograder.run.submit --allow-late my_file.py
