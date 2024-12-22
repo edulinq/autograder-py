@@ -16,6 +16,12 @@ REWRITE_TOKEN_CLEARTEXT = '<TOKEN_CLEARTEXT>'
 TIMESTAMP_PATTERN = r'\b\d{10,13}\b'
 TIMESTAMP_REPLACEMENT = '1234567890123'
 
+TIME_DELTA_PATTERN = r'(\d+h)?(\d+m)?(\d+\.)?(\d+[mun]?s)'
+TIME_DELTA_REPLACEMENT = '<time-delta:1234567890123>'
+
+TIME_MESSAGE_PATTERN = r'<timestamp:(-?\d+|nil)>'
+TIME_MESSAGE_REPLACEMENT = '<timestamp:1234567890123>'
+
 class APITest(tests.server.base.ServerBaseTest):
     """
     Test API calls by mocking a server.
@@ -110,6 +116,8 @@ def clean_output_timestamps(output):
     # Convert the output to JSON so we can do a simple find/replace for all timestamps-like things.
     text_output = json.dumps(output)
     text_output = re.sub(TIMESTAMP_PATTERN, TIMESTAMP_REPLACEMENT, text_output)
+    text_output = re.sub(TIME_DELTA_PATTERN, TIME_DELTA_REPLACEMENT, text_output)
+    text_output = re.sub(TIME_MESSAGE_PATTERN, TIME_MESSAGE_REPLACEMENT, text_output)
 
     return json.loads(text_output)
 
