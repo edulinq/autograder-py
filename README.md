@@ -4,9 +4,39 @@ The canonical Python interface for the autograding server.
 
 ## Quick Links
 
+ - [Resources](#resources)
+ - [Installation / Requirements](#installation--requirements)
+ - [Quickstart](#quickstart)
+ - [The CLI](#the-cli)
+   - [Configuration](#configuration)
+   - [Commands for Students](#commands-for-students)
+     - [Submitting an Assignment](#submitting-an-assignment)
+     - [Checking Your Last Submission](#checking-your-last-submission)
+     - [Getting a History of All Past Submissions](#getting-a-history-of-all-past-submissions)
+     - [Managing your Password](#managing-your-password)
+   - [Commands for TAs and Instructors](#commands-for-tas-and-instructors)
+   - [Commands for Course Builders](#commands-for-course-builders)
+
+## Resources
+
  - [Autograder Server](https://github.com/eriq-augustine/autograder-server)
  - [Autograder Python Interface](https://github.com/eriq-augustine/autograder-py)
  - [Autograder Sample Course](https://github.com/eriq-augustine/cse-cracks-course)
+
+## Installation / Requirements
+
+This project requires [Python](https://www.python.org/) >= 3.8.
+
+The project can be installed from PyPi with:
+```
+pip3 install autograder-py
+```
+
+Standard Python requirements are listed in `pyproject.toml`.
+The project and Python dependencies can be installed from source with:
+```
+pip3 install .
+```
 
 ## Quickstart
 
