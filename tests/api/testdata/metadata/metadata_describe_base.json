@@ -5,123 +5,153 @@
         "endpoints": {
             "courses/admin/update": {
                 "request-type": "*admin.UpdateRequest",
-                "response-type": "*admin.UpdateResponse"
+                "response-type": "*admin.UpdateResponse",
+                "description": "Update an existing course."
             },
             "courses/assignments/get": {
                 "request-type": "*assignments.GetRequest",
-                "response-type": "*assignments.GetResponse"
+                "response-type": "*assignments.GetResponse",
+                "description": "Get the information for a course assignment."
             },
             "courses/assignments/list": {
                 "request-type": "*assignments.ListRequest",
-                "response-type": "*assignments.ListResponse"
+                "response-type": "*assignments.ListResponse",
+                "description": "List the assignments in the course."
             },
             "courses/assignments/submissions/fetch/course/attempts": {
-                "request-type": "*submissions.FetchCourseAttemptsRequest",
-                "response-type": "*submissions.FetchCourseAttemptsResponse"
+                "request-type": "*course.FetchCourseAttemptsRequest",
+                "response-type": "*course.FetchCourseAttemptsResponse",
+                "description": "Get all recent submissions and grading information for this assignment."
             },
             "courses/assignments/submissions/fetch/course/scores": {
-                "request-type": "*submissions.FetchCourseScoresRequest",
-                "response-type": "*submissions.FetchCourseScoresResponse"
+                "request-type": "*course.FetchCourseScoresRequest",
+                "response-type": "*course.FetchCourseScoresResponse",
+                "description": "Get a summary of the most recent scores for this assignment."
             },
             "courses/assignments/submissions/fetch/user/attempt": {
-                "request-type": "*submissions.FetchUserAttemptRequest",
-                "response-type": "*submissions.FetchUserAttemptResponse"
+                "request-type": "*user.FetchUserAttemptRequest",
+                "response-type": "*user.FetchUserAttemptResponse",
+                "description": "Get a submission along with all grading information."
             },
             "courses/assignments/submissions/fetch/user/attempts": {
-                "request-type": "*submissions.FetchUserAttemptsRequest",
-                "response-type": "*submissions.FetchUserAttemptsResponse"
+                "request-type": "*user.FetchUserAttemptsRequest",
+                "response-type": "*user.FetchUserAttemptsResponse",
+                "description": "Get all submission attempts made by a user along with all grading information."
             },
             "courses/assignments/submissions/fetch/user/history": {
-                "request-type": "*submissions.FetchUserHistoryRequest",
-                "response-type": "*submissions.FetchUserHistoryResponse"
+                "request-type": "*user.FetchUserHistoryRequest",
+                "response-type": "*user.FetchUserHistoryResponse",
+                "description": "Get a summary of the submissions for this assignment."
             },
             "courses/assignments/submissions/fetch/user/peek": {
-                "request-type": "*submissions.FetchUserPeekRequest",
-                "response-type": "*submissions.FetchUserPeekResponse"
+                "request-type": "*user.FetchUserPeekRequest",
+                "response-type": "*user.FetchUserPeekResponse",
+                "description": "Get a copy of the grading report for the specified submission. Does not submit a new submission."
             },
             "courses/assignments/submissions/remove": {
                 "request-type": "*submissions.RemoveRequest",
-                "response-type": "*submissions.RemoveResponse"
+                "response-type": "*submissions.RemoveResponse",
+                "description": "Remove a specified submission. Defaults to the most recent submission."
             },
             "courses/assignments/submissions/submit": {
                 "request-type": "*submissions.SubmitRequest",
-                "response-type": "*submissions.SubmitResponse"
+                "response-type": "*submissions.SubmitResponse",
+                "description": "Submit an assignment submission to the autograder."
             },
             "courses/upsert/filespec": {
                 "request-type": "*upsert.FileSpecRequest",
-                "response-type": "*upsert.UpsertResponse"
+                "response-type": "*upsert.UpsertResponse",
+                "description": "Upsert a course using a filespec."
             },
             "courses/upsert/zip": {
                 "request-type": "*upsert.ZipFileRequest",
-                "response-type": "*upsert.UpsertResponse"
+                "response-type": "*upsert.UpsertResponse",
+                "description": "Upsert a course using a zip file."
             },
             "courses/users/drop": {
                 "request-type": "*users.DropRequest",
-                "response-type": "*users.DropResponse"
+                "response-type": "*users.DropResponse",
+                "description": "Drop a user from the course."
             },
             "courses/users/enroll": {
                 "request-type": "*users.EnrollRequest",
-                "response-type": "*users.EnrollResponse"
+                "response-type": "*users.EnrollResponse",
+                "description": "Enroll one or more users to the course."
             },
             "courses/users/get": {
                 "request-type": "*users.GetRequest",
-                "response-type": "*users.GetResponse"
+                "response-type": "*users.GetResponse",
+                "description": "Get the information for a course user."
             },
             "courses/users/list": {
                 "request-type": "*users.ListRequest",
-                "response-type": "*users.ListResponse"
+                "response-type": "*users.ListResponse",
+                "description": "List the users in the course."
             },
             "lms/upload/scores": {
-                "request-type": "*lms.UploadScoresRequest",
-                "response-type": "*lms.UploadScoresResponse"
+                "request-type": "*upload.UploadScoresRequest",
+                "response-type": "*upload.UploadScoresResponse",
+                "description": "Upload scores from a tab-separated file to the course's LMS.\nThe file should not have headers, and should have two columns: email and score."
             },
             "lms/user/get": {
-                "request-type": "*lms.UserGetRequest",
-                "response-type": "*lms.UserGetResponse"
+                "request-type": "*user.UserGetRequest",
+                "response-type": "*user.UserGetResponse",
+                "description": "Get information for an LMS user."
             },
             "logs/query": {
                 "request-type": "*logs.QueryRequest",
-                "response-type": "*logs.QueryResponse"
+                "response-type": "*logs.QueryResponse",
+                "description": "Query log entries from the autograder server."
             },
             "metadata/describe": {
                 "request-type": "*metadata.DescribeRequest",
-                "response-type": "*metadata.DescribeResponse"
+                "response-type": "*metadata.DescribeResponse",
+                "description": "Describe all endpoints on the server."
             },
             "users/auth": {
                 "request-type": "*users.AuthRequest",
-                "response-type": "*users.AuthResponse"
+                "response-type": "*users.AuthResponse",
+                "description": "Authenticate as a user."
             },
             "users/get": {
                 "request-type": "*users.GetRequest",
-                "response-type": "*users.GetResponse"
+                "response-type": "*users.GetResponse",
+                "description": "Get the information for a server user."
             },
             "users/list": {
                 "request-type": "*users.ListRequest",
-                "response-type": "*users.ListResponse"
+                "response-type": "*users.ListResponse",
+                "description": "List the users on the server."
             },
             "users/password/change": {
-                "request-type": "*users.PasswordChangeRequest",
-                "response-type": "*users.PasswordChangeResponse"
+                "request-type": "*password.PasswordChangeRequest",
+                "response-type": "*password.PasswordChangeResponse",
+                "description": "Change your password to the one provided."
             },
             "users/password/reset": {
-                "request-type": "*users.PasswordResetRequest",
-                "response-type": "*users.PasswordResetResponse"
+                "request-type": "*password.PasswordResetRequest",
+                "response-type": "*password.PasswordResetResponse",
+                "description": "Reset to a random password that will be emailed to you."
             },
             "users/remove": {
                 "request-type": "*users.RemoveRequest",
-                "response-type": "*users.RemoveResponse"
+                "response-type": "*users.RemoveResponse",
+                "description": "Remove a user from the server."
             },
             "users/tokens/create": {
-                "request-type": "*users.TokensCreateRequest",
-                "response-type": "*users.TokensCreateResponse"
+                "request-type": "*tokens.TokensCreateRequest",
+                "response-type": "*tokens.TokensCreateResponse",
+                "description": "Create a new authentication token."
             },
             "users/tokens/delete": {
-                "request-type": "*users.TokensDeleteRequest",
-                "response-type": "*users.TokensDeleteResponse"
+                "request-type": "*tokens.TokensDeleteRequest",
+                "response-type": "*tokens.TokensDeleteResponse",
+                "description": "Delete an authentication token."
             },
             "users/upsert": {
                 "request-type": "*users.UpsertRequest",
-                "response-type": "*users.UpsertResponse"
+                "response-type": "*users.UpsertResponse",
+                "description": "Upsert one or more users to the server (update if exists, insert otherwise)."
             }
         }
     }
