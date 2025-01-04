@@ -18,7 +18,8 @@ def run(arguments):
         paths = _get_files(test_submission)
 
         try:
-            result = autograder.api.courses.assignments.submissions.submit.send(arguments, files = paths)
+            result = autograder.api.courses.assignments.submissions.submit.send(arguments,
+                    files = paths)
         except Exception as ex:
             print("Failed to run submission '%s': '%s'." % (test_submission, ex))
             traceback.print_exc()
