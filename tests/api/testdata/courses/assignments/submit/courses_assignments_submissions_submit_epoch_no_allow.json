@@ -1,0 +1,18 @@
+{
+    "module": "autograder.api.courses.assignments.submissions.submit",
+    "arguments": {
+        "course": "course-languages",
+        "assignment": "bash",
+        "allow-late": false
+    },
+    "files": [
+        "__DATA_DIR__(assignment.sh)"
+    ],
+    "output-modifier": "clean_output_timestamps",
+    "output": {
+        "rejected": true,
+        "message": "Attempting to submit assignment (A Simple Bash Assignment) late without the 'allow late' option. It was due on <timestamp:1234567890123> (which was <time-delta:1234567890123> ago). Use the 'allow late' option to submit an assignment late. See your interface's documentation for more information.",
+        "grading-success": false,
+        "result": null
+    }
+}
