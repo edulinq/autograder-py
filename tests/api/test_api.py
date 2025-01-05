@@ -152,8 +152,8 @@ _discover_api_tests()
 
 def fake_system_stats(output):
     """
-    Beause of the variable and fine-grained level of system stats,
-    the enture output must be faked.
+    Because of the variable and fine-grained level of system stats,
+    the entire output must be faked.
     """
 
     return {
