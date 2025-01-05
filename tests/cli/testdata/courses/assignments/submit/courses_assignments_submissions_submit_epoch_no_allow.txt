@@ -1,0 +1,15 @@
+{
+    "cli": "autograder.cli.courses.assignments.submissions.submit",
+    "output-check": "content_equals_ignore_time",
+    "arguments": [
+        "--course", "course-languages",
+        "--assignment", "bash",
+        "__DATA_DIR__(assignment.sh)"
+    ],
+    "exit-status": 1
+}
+---
+--- Message from Autograder ---
+Attempting to submit assignment (A Simple Bash Assignment) late without the 'allow late' option. It was due on <TIME> (which was <time-delta:1234567890123> ago). Use the 'allow late' option to submit an assignment late. See your interface's documentation for more information.
+-------------------------------
+Submission was rejected by the autograder.
