@@ -11,6 +11,7 @@ The canonical Python interface for the autograding server.
    - [Configuration](#configuration)
    - [Commands for Students](#commands-for-students)
      - [Submitting an Assignment](#submitting-an-assignment)
+       - [Submitting an Assignment Late](#submitting-an-assignment-late)
      - [Checking Your Last Submission](#checking-your-last-submission)
      - [Getting a History of All Past Submissions](#getting-a-history-of-all-past-submissions)
      - [Managing your Password](#managing-your-password)
