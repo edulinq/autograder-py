@@ -110,6 +110,11 @@
             "response-type": "*metadata.DescribeResponse",
             "description": "Describe all endpoints on the server."
         },
+        "stats/system/query": {
+            "request-type": "*system.QueryRequest",
+            "response-type": "*system.QueryResponse",
+            "description": "Query the system stats for the server."
+        },
         "users/auth": {
             "request-type": "*users.AuthRequest",
             "response-type": "*users.AuthResponse",
