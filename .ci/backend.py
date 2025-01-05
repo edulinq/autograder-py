@@ -21,6 +21,7 @@ DEFAULT_DOCKER_IMAGE = 'edulinq/autograder-server-prebuilt:latest'
 DOCKER_CONTAINER_NAME = 'autograder-py-verify-test-data'
 DOCKER_START_SLEEP_TIME_SECS = 0.25
 DOCKER_STOP_WAIT_TIME_SECS = 1
+DOCKER_STOP_FINAL_WAIT_TIME_SECS = 0.5
 
 SOURCE_START_SLEEP_TIME_SECS = 0.25
 SOURCE_KILL_SLEEP_TIME_SECS = 0.25
@@ -91,6 +92,7 @@ class DockerServer(BaseServer):
         ]
 
         util.run(args)
+        time.sleep(DOCKER_STOP_FINAL_WAIT_TIME_SECS)
         self._is_running = False
 
     def reset(self, **kwargs):
