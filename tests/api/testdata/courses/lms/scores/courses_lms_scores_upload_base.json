@@ -1,0 +1,10 @@
+{
+    "module": "autograder.api.courses.lms.scores.upload",
+    "arguments": {
+        "dry-run": false
+    },
+    "output": {
+        "dry-run": false,
+        "results": []
+    }
+}

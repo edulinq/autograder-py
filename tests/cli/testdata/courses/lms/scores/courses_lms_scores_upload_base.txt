@@ -1,0 +1,10 @@
+{
+    "cli": "autograder.cli.courses.lms.scores.upload",
+    "arguments": [
+    ]
+}
+---
+{
+    "dry-run": false,
+    "results": []
+}

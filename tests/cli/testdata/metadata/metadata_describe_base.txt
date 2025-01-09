@@ -60,6 +60,11 @@
             "response-type": "*submissions.SubmitResponse",
             "description": "Submit an assignment submission to the autograder."
         },
+        "courses/lms/scores/upload": {
+            "request-type": "*scores.UploadRequest",
+            "response-type": "*scores.UploadResponse",
+            "description": "Perform a full scoring and upload scores to the course's LMS."
+        },
         "courses/upsert/filespec": {
             "request-type": "*upsert.FileSpecRequest",
             "response-type": "*upsert.UpsertResponse",
