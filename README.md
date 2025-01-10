@@ -164,6 +164,16 @@ Here are the places options can be specified in the order that they are checked:
 
 A base config file (`config.json`) is often distributed with assignments that contains most the settings you need.
 You can modify this config to include your settings and use that for setting all your configuration options.
+A `config.json` file may look something like:
+```json
+{
+    "course": "my-course",
+    "assignment": "assignment-01",
+    "server": "http://fake.autograder.edulinq.org",
+    "user": "user@edulinq.org",
+    "pass": "1234567890"
+}
+```
 
 Using the default config file (`config.json`):
 ```sh
