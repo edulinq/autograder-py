@@ -156,8 +156,6 @@ def clean_output_logs(output):
 
     return output
 
-_discover_api_tests()
-
 def fake_system_stats(output):
     """
     Because of the variable and fine-grained level of system stats,
@@ -189,3 +187,5 @@ def fake_system_stats(output):
             },
         ],
     }
+
+_discover_api_tests()

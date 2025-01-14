@@ -20,9 +20,9 @@ The canonical Python interface for the autograding server.
 
 ## Resources
 
- - [Autograder Server](https://github.com/eriq-augustine/autograder-server)
- - [Autograder Python Interface](https://github.com/eriq-augustine/autograder-py)
- - [Autograder Sample Course](https://github.com/eriq-augustine/cse-cracks-course)
+ - [Autograder Server](https://github.com/edulinq/autograder-server)
+ - [Autograder Python Interface (this repo)](https://github.com/edulinq/autograder-py)
+ - [Autograder Sample Course](https://github.com/edulinq/cse-cracks-course)
 
 ## Installation / Requirements
 
