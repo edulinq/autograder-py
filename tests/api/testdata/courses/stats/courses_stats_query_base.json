@@ -1,0 +1,26 @@
+{
+    "module": "autograder.api.courses.stats.query",
+    "arguments": {
+    },
+    "output-modifier": "fake_course_stats",
+    "output": {
+        "results": [
+            {
+                "timestamp": 100,
+                "type": "grading-time",
+                "course": "course101",
+                "assignment": "hw0",
+                "user": "server-admin@test.edulinq.org",
+                "duration": 100
+            },
+            {
+                "timestamp": 200,
+                "type": "grading-time",
+                "course": "course101",
+                "assignment": "hw0",
+                "user": "server-admin@test.edulinq.org",
+                "duration": 200
+            }
+        ]
+    }
+}

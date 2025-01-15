@@ -63,6 +63,11 @@
                 "response-type": "*scores.UploadResponse",
                 "description": "Perform a full scoring and upload scores to the course's LMS."
             },
+            "courses/stats/query": {
+                "request-type": "*stats.QueryRequest",
+                "response-type": "*stats.QueryResponse",
+                "description": "Query metrics for a specific course.\nOnly the context course can be queried for, the target-course field will be ignored for this endpoint."
+            },
             "courses/upsert/filespec": {
                 "request-type": "*upsert.FileSpecRequest",
                 "response-type": "*upsert.UpsertResponse",

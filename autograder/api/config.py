@@ -222,6 +222,34 @@ PARAM_NEW_PASS = APIParam('new-pass',
         'The new password to set for the user that is the target of this request.',
         required = True, hash = True)
 
+PARAM_QUERY_LIMIT = APIParam('limit',
+            'The maximum number of records to return.',
+            required = False, parser_options = {'action': 'store', 'type': int})
+
+PARAM_QUERY_AFTER = APIParam('after',
+            'If supplied, only return records after this timestamp.',
+            required = False)
+
+PARAM_QUERY_BEFORE = APIParam('before',
+            'If supplied, only return records before this timestamp.',
+            required = False)
+
+PARAM_QUERY_SORT = APIParam('sort',
+            'Sort the results. -1 for ascending, 0 for no sorting, 1 for descending.',
+            required = False, parser_options = {'action': 'store', 'type': int})
+
+PARAM_QUERY_TARGET_COURSE = APIParam('target-course',
+            'If supplied, only return records for this course.',
+            required = False)
+
+PARAM_QUERY_TARGET_ASSIGNMENT = APIParam('target-assignment',
+            'If supplied, only return records for this assignment.',
+            required = False)
+
+PARAM_QUERY_TARGET_EMAIL = APIParam('target-email',
+            'If supplied, only return records for this user.',
+            required = False)
+
 PARAM_SEND_EMAILS = APIParam('send-emails',
         'Send any emails.',
         required = True, cli_param = False)

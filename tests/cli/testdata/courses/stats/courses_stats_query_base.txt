@@ -1,0 +1,24 @@
+{
+    "cli": "autograder.cli.courses.stats.query",
+    "arguments": [
+    ]
+}
+---
+[
+    {
+        "timestamp": 100,
+        "type": "grading-time",
+        "course": "course101",
+        "assignment": "hw0",
+        "user": "server-admin@test.edulinq.org",
+        "duration": 100
+    },
+    {
+        "timestamp": 200,
+        "type": "grading-time",
+        "course": "course101",
+        "assignment": "hw0",
+        "user": "server-admin@test.edulinq.org",
+        "duration": 200
+    }
+]

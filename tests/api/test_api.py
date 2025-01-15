@@ -188,4 +188,31 @@ def fake_system_stats(output):
         ],
     }
 
+def fake_course_stats(output):
+    """
+    Because of the variable and fine-grained level of course stats,
+    the entire output must be faked.
+    """
+
+    return {
+        "results": [
+            {
+                "timestamp": 100,
+                "type": "grading-time",
+                "course": "course101",
+                "assignment": "hw0",
+                "user": "server-admin@test.edulinq.org",
+                "duration": 100
+            },
+            {
+                "timestamp": 200,
+                "type": "grading-time",
+                "course": "course101",
+                "assignment": "hw0",
+                "user": "server-admin@test.edulinq.org",
+                "duration": 200
+            }
+        ]
+    }
+
 _discover_api_tests()

@@ -19,17 +19,9 @@ API_PARAMS = [
                 + ' (using "h", "m", or "s" suffixes) (e.g., "24h", "10m", or "1h10m10s").'),
             required = False),
 
-    autograder.api.config.APIParam('target-course',
-            'If supplied, only return log records for this assignment.',
-            required = False),
-
-    autograder.api.config.APIParam('target-assignment',
-            'If supplied, only return log records for this assignment.',
-            required = False),
-
-    autograder.api.config.APIParam('target-email',
-            'If supplied, only return log records for this user.',
-            required = False),
+    autograder.api.config.PARAM_QUERY_TARGET_COURSE,
+    autograder.api.config.PARAM_QUERY_TARGET_ASSIGNMENT,
+    autograder.api.config.PARAM_QUERY_TARGET_EMAIL,
 ]
 
 DESCRIPTION = 'Query log entries from the autograder server.'
