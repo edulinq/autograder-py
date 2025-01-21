@@ -1,0 +1,27 @@
+{
+    "cli": "autograder.cli.courses.assignments.submissions.analysis.pairwise",
+    "arguments": [
+        "course101::hw0::course-student@test.edulinq.org::1697406256",
+        "course101::hw0::course-student@test.edulinq.org::1697406265"
+    ]
+}
+---
+{
+    "complete": false,
+    "summary": {
+        "complete": false,
+        "complete-count": 0,
+        "pending-count": 1,
+        "first-timestamp": 0,
+        "last-timestamp": 0,
+        "aggregate-mean-similarities": null,
+        "aggregate-total-mean-similarity": {
+            "count": 0,
+            "mean": 0,
+            "median": 0,
+            "min": 0,
+            "max": 0
+        }
+    },
+    "results": []
+}

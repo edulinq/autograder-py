@@ -20,6 +20,11 @@
             "response-type": "*assignments.ListResponse",
             "description": "List the assignments in the course."
         },
+        "courses/assignments/submissions/analysis/pairwise": {
+            "request-type": "*analysis.PairwiseRequest",
+            "response-type": "*analysis.PairwiseResponse",
+            "description": "Get the result of a pairwise analysis for the specified submissions."
+        },
         "courses/assignments/submissions/fetch/course/attempts": {
             "request-type": "*course.FetchCourseAttemptsRequest",
             "response-type": "*course.FetchCourseAttemptsResponse",

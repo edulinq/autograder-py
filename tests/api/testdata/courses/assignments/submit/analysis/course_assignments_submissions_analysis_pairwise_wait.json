@@ -1,0 +1,62 @@
+{
+    "module": "autograder.api.courses.assignments.submissions.analysis.pairwise",
+    "read-write": true,
+    "arguments": {
+        "submissions": [
+            "course101::hw0::course-student@test.edulinq.org::1697406256",
+            "course101::hw0::course-student@test.edulinq.org::1697406265"
+        ],
+        "wait-for-completion": true
+    },
+    "output-modifier": "clean_output_timestamps",
+    "output": {
+        "complete": true,
+        "summary": {
+            "complete": true,
+            "complete-count": 1,
+            "pending-count": 0,
+            "first-timestamp": 1234567890123,
+            "last-timestamp": 1234567890123,
+            "aggregate-mean-similarities": {
+                "submission.py": {
+                    "count": 1,
+                    "mean": 0,
+                    "median": 0,
+                    "min": 0,
+                    "max": 0
+                }
+            },
+            "aggregate-total-mean-similarity": {
+                "count": 1,
+                "mean": 0,
+                "median": 0,
+                "min": 0,
+                "max": 0
+            }
+        },
+        "results": [
+            {
+                "analysis-timestamp": 1234567890123,
+                "submission-ids": [
+                    "course101::hw0::course-student@test.edulinq.org::1697406256",
+                    "course101::hw0::course-student@test.edulinq.org::1697406265"
+                ],
+                "similarities": {
+                    "submission.py": [
+                        {
+                            "filename": "submission.py",
+                            "tool": "dolos",
+                            "version": "2.9.0",
+                            "score": 0
+                        }
+                    ]
+                },
+                "unmatched-files": [],
+                "mean-similarities": {
+                    "submission.py": 0
+                },
+                "total-mean-similarity": 0
+            }
+        ]
+    }
+}

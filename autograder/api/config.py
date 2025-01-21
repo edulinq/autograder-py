@@ -18,6 +18,7 @@ class APIParam(object):
     def __init__(self, key, description,
             config_key = None, required = True, cli_param = True,
             parser_options = {'action': 'store', 'type': str},
+            parser_add_func = None,
             hash = False):
         self.key = str(key)
         if ((key is None) or (self.key == '')):
@@ -35,6 +36,9 @@ class APIParam(object):
         self.cli_param = cli_param
         self.parser_options = parser_options
         self.hash = hash
+
+        # A full override of parser adding behavior.
+        self.parser_add_func = parser_add_func
 
 def parse_api_config(config, params,
         additional_required_keys = ['server'],
@@ -181,9 +185,12 @@ def get_argument_parser(
         if (not param.cli_param):
             continue
 
-        parser.add_argument(f'--{param.config_key}', dest = param.config_key,
-            help = param.description,
-            **param.parser_options)
+        if (param.parser_add_func is not None):
+            param.parser_add_func(parser, param)
+        else:
+            parser.add_argument(f'--{param.config_key}', dest = param.config_key,
+                help = param.description,
+                **param.parser_options)
 
     return parser
 

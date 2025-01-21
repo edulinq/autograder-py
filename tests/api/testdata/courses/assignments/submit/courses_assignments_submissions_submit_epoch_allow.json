@@ -1,5 +1,6 @@
 {
     "module": "autograder.api.courses.assignments.submissions.submit",
+    "read-write": true,
     "arguments": {
         "course": "course-languages",
         "assignment": "bash",
@@ -8,14 +9,14 @@
     "files": [
         "__DATA_DIR__(assignment.sh)"
     ],
-    "output-modifier": "clean_output_timestamps",
+    "output-modifier": "clean_output_timestamps_and_submission_ids",
     "output": {
         "rejected": false,
         "message": "",
         "grading-success": true,
         "result": {
-            "id": "course-languages::bash::course-admin@test.edulinq.org::1234567890123",
-            "short-id": "1234567890123",
+            "id": "course-languages::bash::course-admin@test.edulinq.org::1234567890",
+            "short-id": "1234567890",
             "course-id": "course-languages",
             "assignment-id": "bash",
             "user": "course-admin@test.edulinq.org",

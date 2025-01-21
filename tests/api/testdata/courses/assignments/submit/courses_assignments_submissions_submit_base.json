@@ -1,19 +1,20 @@
 {
     "module": "autograder.api.courses.assignments.submissions.submit",
+    "read-write": true,
     "arguments": {
         "allow-late": false
     },
     "files": [
         "__DATA_DIR__(hw0_solution.py)"
     ],
-    "output-modifier": "clean_output_timestamps",
+    "output-modifier": "clean_output_timestamps_and_submission_ids",
     "output": {
         "rejected": false,
         "message": "",
         "grading-success": true,
         "result": {
-            "id": "course101::hw0::course-admin@test.edulinq.org::1234567890123",
-            "short-id": "1234567890123",
+            "id": "course101::hw0::course-admin@test.edulinq.org::1234567890",
+            "short-id": "1234567890",
             "course-id": "course101",
             "assignment-id": "hw0",
             "user": "course-admin@test.edulinq.org",
