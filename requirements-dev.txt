@@ -1,4 +1,5 @@
 build
 packaging>=21.3
+requests-toolbelt
 twine
 vermin
