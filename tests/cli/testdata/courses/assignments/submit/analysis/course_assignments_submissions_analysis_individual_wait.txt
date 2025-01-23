@@ -1,0 +1,114 @@
+{
+    "cli": "autograder.cli.courses.assignments.submissions.analysis.individual",
+    "arguments": [
+        "--wait-for-completion",
+        "course101::hw0::course-student@test.edulinq.org::1697406256",
+        "course101::hw0::course-student@test.edulinq.org::1697406265"
+    ]
+}
+---
+{
+    "complete": true,
+    "summary": {
+        "complete": true,
+        "complete-count": 2,
+        "pending-count": 0,
+        "first-timestamp": 1234567890123,
+        "last-timestamp": 1234567890123,
+        "aggregate-score": {
+            "count": 2,
+            "mean": 0.5,
+            "median": 0.5,
+            "min": 0,
+            "max": 1
+        },
+        "aggregate-lines-of-code": {
+            "count": 2,
+            "mean": 4,
+            "median": 4,
+            "min": 4,
+            "max": 4
+        },
+        "aggregate-lines-of-code-per-file": {
+            "submission.py": {
+                "count": 2,
+                "mean": 4,
+                "median": 4,
+                "min": 4,
+                "max": 4
+            }
+        },
+        "aggregate-lines-of-code-delta": {
+            "count": 2,
+            "mean": 0,
+            "median": 0,
+            "min": 0,
+            "max": 0
+        },
+        "aggregate-score-delta": {
+            "count": 2,
+            "mean": 0.5,
+            "median": 0.5,
+            "min": 0,
+            "max": 1
+        },
+        "aggregate-lines-of-code-per-hour": {
+            "count": 2,
+            "mean": 0,
+            "median": 0,
+            "min": 0,
+            "max": 0
+        },
+        "aggregate-score-per-hour": {
+            "count": 2,
+            "mean": 180,
+            "median": 180,
+            "min": 0,
+            "max": 360
+        }
+    },
+    "results": [
+        {
+            "analysis-timestamp": 1234567890123,
+            "submission-id": "course101::hw0::course-student@test.edulinq.org::1697406256",
+            "short-id": "1697406256",
+            "course-id": "course101",
+            "assignment-id": "hw0",
+            "user-email": "course-student@test.edulinq.org",
+            "submission-start-time": 1234567890123,
+            "score": 0,
+            "files": [
+                {
+                    "filename": "submission.py",
+                    "lines-of-code": 4
+                }
+            ],
+            "lines-of-code": 4,
+            "lines-of-code-delta": 0,
+            "score-delta": 0,
+            "lines-of-code-per-hour": 0,
+            "score-per-hour": 0
+        },
+        {
+            "analysis-timestamp": 1234567890123,
+            "submission-id": "course101::hw0::course-student@test.edulinq.org::1697406265",
+            "short-id": "1697406265",
+            "course-id": "course101",
+            "assignment-id": "hw0",
+            "user-email": "course-student@test.edulinq.org",
+            "submission-start-time": 1234567890123,
+            "score": 1,
+            "files": [
+                {
+                    "filename": "submission.py",
+                    "lines-of-code": 4
+                }
+            ],
+            "lines-of-code": 4,
+            "lines-of-code-delta": 0,
+            "score-delta": 1,
+            "lines-of-code-per-hour": 0,
+            "score-per-hour": 360
+        }
+    ]
+}

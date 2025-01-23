@@ -18,6 +18,11 @@
                 "response-type": "*assignments.ListResponse",
                 "description": "List the assignments in the course."
             },
+            "courses/assignments/submissions/analysis/individual": {
+                "request-type": "*analysis.IndividualRequest",
+                "response-type": "*analysis.IndividualResponse",
+                "description": "Get the result of a individual analysis for the specified submissions."
+            },
             "courses/assignments/submissions/analysis/pairwise": {
                 "request-type": "*analysis.PairwiseRequest",
                 "response-type": "*analysis.PairwiseResponse",

@@ -194,128 +194,151 @@ def get_argument_parser(
 
     return parser
 
+def _submission_add_func(parser, param):
+    parser.add_argument('submissions', metavar = 'SUBMISSION',
+        action = 'store', type = str, nargs = '+',
+        help = param.description)
+
 # Common API params.
 
 PARAM_ASSIGNMENT_ID = APIParam('assignment-id',
-        'The ID of the assignment to make this request to.',
-        config_key = 'assignment', required = True)
+    'The ID of the assignment to make this request to.',
+    config_key = 'assignment', required = True)
 
 PARAM_COURSE_ID = APIParam('course-id',
-        'The ID of the course to make this request to.',
-        config_key = 'course', required = True)
+    'The ID of the course to make this request to.',
+    config_key = 'course', required = True)
 
 PARAM_COURSE_SOURCE = APIParam('source',
-        'The source to use for the course.',
-        required = False)
+    'The source to use for the course.',
+    required = False)
 
 PARAM_DRY_RUN = APIParam('dry-run',
-        'Do not commit/finalize the operation,'
-            + ' just do all the steps and state what the result would look like.',
-        required = False,
-        parser_options = {'action': 'store_true', 'default': False})
+    ('Do not commit/finalize the operation,'
+    + ' just do all the steps and state what the result would look like.'),
+    required = False,
+    parser_options = {'action': 'store_true', 'default': False})
 
 PARAM_FILTER_ROLE = APIParam('filter-role',
-        'Only show results from users with this role (all roles if unknown (default)).',
-        required = False,
-        parser_options = {'action': 'store', 'default': 'unknown',
-            'choices': autograder.api.constants.COURSE_ROLES})
+    'Only show results from users with this role (all roles if unknown (default)).',
+    required = False,
+    parser_options = {'action': 'store', 'default': 'unknown',
+        'choices': autograder.api.constants.COURSE_ROLES})
 
 PARAM_FORCE = APIParam('force',
-        'Force the operation, overwriting and existing resources.',
-        required = False,
-        parser_options = {'action': 'store_true', 'default': False})
+    'Force the operation, overwriting and existing resources.',
+    required = False,
+    parser_options = {'action': 'store_true', 'default': False})
 
 PARAM_NEW_PASS = APIParam('new-pass',
-        'The new password to set for the user that is the target of this request.',
-        required = True, hash = True)
+    'The new password to set for the user that is the target of this request.',
+    required = True, hash = True)
 
 PARAM_QUERY_LIMIT = APIParam('limit',
-            'The maximum number of records to return.',
-            required = False, parser_options = {'action': 'store', 'type': int})
+    'The maximum number of records to return.',
+    required = False, parser_options = {'action': 'store', 'type': int})
 
 PARAM_QUERY_AFTER = APIParam('after',
-            'If supplied, only return records after this timestamp.',
-            required = False)
+    'If supplied, only return records after this timestamp.',
+    required = False)
 
 PARAM_QUERY_BEFORE = APIParam('before',
-            'If supplied, only return records before this timestamp.',
-            required = False)
+    'If supplied, only return records before this timestamp.',
+    required = False)
 
 PARAM_QUERY_SORT = APIParam('sort',
-            'Sort the results. -1 for ascending, 0 for no sorting, 1 for descending.',
-            required = False, parser_options = {'action': 'store', 'type': int})
+    'Sort the results. -1 for ascending, 0 for no sorting, 1 for descending.',
+    required = False, parser_options = {'action': 'store', 'type': int})
 
 PARAM_QUERY_TARGET_COURSE = APIParam('target-course',
-            'If supplied, only return records for this course.',
-            required = False)
+    'If supplied, only return records for this course.',
+    required = False)
 
 PARAM_QUERY_TARGET_ASSIGNMENT = APIParam('target-assignment',
-            'If supplied, only return records for this assignment.',
-            required = False)
+    'If supplied, only return records for this assignment.',
+    required = False)
 
 PARAM_QUERY_TARGET_EMAIL = APIParam('target-email',
-            'If supplied, only return records for this user.',
-            required = False)
+    'If supplied, only return records for this user.',
+    required = False)
 
 PARAM_SEND_EMAILS = APIParam('send-emails',
-        'Send any emails.',
-        required = True, cli_param = False)
+    'Send any emails.',
+    required = True, cli_param = False)
 
 PARAM_SKIP_BUILD_IMAGES = APIParam('skip-build-images',
-        'Skip building assignment Docker images.',
-        required = False,
-        parser_options = {'action': 'store_true', 'default': False})
+    'Skip building assignment Docker images.',
+    required = False,
+    parser_options = {'action': 'store_true', 'default': False})
 
 PARAM_SKIP_EMAILS = APIParam('skip-emails',
-        'Skip sending any emails. Be aware that this may result in inaccessible information.',
-        required = False,
-        parser_options = {'action': 'store_true', 'default': False})
+    'Skip sending any emails. Be aware that this may result in inaccessible information.',
+    required = False,
+    parser_options = {'action': 'store_true', 'default': False})
 
 PARAM_SKIP_INSERTS = APIParam('skip-inserts',
-        'Skip inserts (default: False).',
-        required = False,
-        parser_options = {'action': 'store_true', 'default': False})
+    'Skip inserts (default: False).',
+    required = False,
+    parser_options = {'action': 'store_true', 'default': False})
 
 PARAM_SKIP_LMS_SYNC = APIParam('skip-lms-sync',
-        'Skip syncing with the LMS.',
-        required = False,
-        parser_options = {'action': 'store_true', 'default': False})
+    'Skip syncing with the LMS.',
+    required = False,
+    parser_options = {'action': 'store_true', 'default': False})
 
 PARAM_SKIP_SOURCE_SYNC = APIParam('skip-source-sync',
-        'Skip syncing (updating with) the course sourse.',
-        required = False,
-        parser_options = {'action': 'store_true', 'default': False})
+    'Skip syncing (updating with) the course sourse.',
+    required = False,
+    parser_options = {'action': 'store_true', 'default': False})
 
 PARAM_SKIP_TASKS = APIParam('skip-tasks',
-        'Skip starting course tasks.',
-        required = False,
-        parser_options = {'action': 'store_true', 'default': False})
+    'Skip starting course tasks.',
+    required = False,
+    parser_options = {'action': 'store_true', 'default': False})
 
 PARAM_SKIP_UPDATES = APIParam('skip-updates',
-        'Skip updates (default: False).',
-        required = False,
-        parser_options = {'action': 'store_true', 'default': False})
+'Skip updates (default: False).',
+required = False,
+parser_options = {'action': 'store_true', 'default': False})
+
+PARAM_SUBMISSION_SPECS = APIParam('submissions',
+    ('A list of submission specifications to analyze.'
+    + ' Submissions may span courses and assignments.'
+    + ' Submissions may be specified in three ways:'
+    + ' 1) "<course id>::<assignment id>::<user email>::<submission short id>"'
+    + ' for a specific submission,'
+    + ' 2) "<course id>::<assignment id>::<user email>"'
+    + ' for the given user\'s most recent submission to the given assignment,'
+    + ' and 3) "<course id>::<assignment id>"'
+    + ' for the most recent submission for all students.'),
+    config_key = 'submissions', required = True,
+    parser_add_func = _submission_add_func)
 
 PARAM_TARGET_EMAIL = APIParam('target-email',
-        'The email of the user that is the target of this request.',
-        required = True)
+    'The email of the user that is the target of this request.',
+    required = True)
 
 PARAM_TARGET_EMAIL_OR_SELF = APIParam('target-email',
-        'The email of the user that is the target of this request (defaults to you).',
-        required = False)
+    'The email of the user that is the target of this request (defaults to you).',
+    required = False)
 
 PARAM_TARGET_PASS = APIParam('target-pass',
-        'The password of the user that is the target of this request.',
-        required = True, hash = True)
+    'The password of the user that is the target of this request.',
+    required = True, hash = True)
 
 PARAM_TARGET_SUBMISSION_OR_RECENT = APIParam('target-submission',
-        'The ID of the submission (default to the most recent submission).',
-        required = False)
+    'The ID of the submission (default to the most recent submission).',
+    required = False)
 
 PARAM_USER_EMAIL = APIParam('user-email',
-        'The email of the user making this request.',
-        config_key = 'user', required = True)
+    'The email of the user making this request.',
+    config_key = 'user', required = True)
 
 PARAM_USER_PASS = APIParam('user-pass',
-        'The password of the user making this request.',
-        config_key = 'pass', required = True, hash = True)
+    'The password of the user making this request.',
+    config_key = 'pass', required = True, hash = True)
+
+PARAM_WAIT_FOR_COMPLETION = APIParam('wait-for-completion',
+    'Wait for the full analysis to complete before returning.',
+    required = False,
+    parser_options = {'action': 'store_true', 'default': False})

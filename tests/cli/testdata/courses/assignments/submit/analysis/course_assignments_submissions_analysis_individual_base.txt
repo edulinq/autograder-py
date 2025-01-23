@@ -1,0 +1,62 @@
+{
+    "cli": "autograder.cli.courses.assignments.submissions.analysis.individual",
+    "arguments": [
+        "course101::hw0::course-student@test.edulinq.org::1697406256",
+        "course101::hw0::course-student@test.edulinq.org::1697406265"
+    ]
+}
+---
+{
+    "complete": false,
+    "summary": {
+        "complete": false,
+        "complete-count": 0,
+        "pending-count": 2,
+        "first-timestamp": 0,
+        "last-timestamp": 0,
+        "aggregate-score": {
+            "count": 0,
+            "mean": 0,
+            "median": 0,
+            "min": 0,
+            "max": 0
+        },
+        "aggregate-lines-of-code": {
+            "count": 0,
+            "mean": 0,
+            "median": 0,
+            "min": 0,
+            "max": 0
+        },
+        "aggregate-lines-of-code-per-file": null,
+        "aggregate-lines-of-code-delta": {
+            "count": 0,
+            "mean": 0,
+            "median": 0,
+            "min": 0,
+            "max": 0
+        },
+        "aggregate-score-delta": {
+            "count": 0,
+            "mean": 0,
+            "median": 0,
+            "min": 0,
+            "max": 0
+        },
+        "aggregate-lines-of-code-per-hour": {
+            "count": 0,
+            "mean": 0,
+            "median": 0,
+            "min": 0,
+            "max": 0
+        },
+        "aggregate-score-per-hour": {
+            "count": 0,
+            "mean": 0,
+            "median": 0,
+            "min": 0,
+            "max": 0
+        }
+    },
+    "results": []
+}
