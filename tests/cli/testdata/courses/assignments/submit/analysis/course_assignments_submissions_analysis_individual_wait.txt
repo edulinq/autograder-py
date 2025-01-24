@@ -38,6 +38,13 @@
                 "max": 4
             }
         },
+        "aggregate-submission-time-delta": {
+            "count": 2,
+            "mean": 5000,
+            "median": 5000,
+            "min": 0,
+            "max": 10000
+        },
         "aggregate-lines-of-code-delta": {
             "count": 2,
             "mean": 0,
@@ -84,6 +91,7 @@
                 }
             ],
             "lines-of-code": 4,
+            "submission-time-delta": 0,
             "lines-of-code-delta": 0,
             "score-delta": 0,
             "lines-of-code-per-hour": 0,
@@ -105,6 +113,7 @@
                 }
             ],
             "lines-of-code": 4,
+            "submission-time-delta": 10000,
             "lines-of-code-delta": 0,
             "score-delta": 1,
             "lines-of-code-per-hour": 0,

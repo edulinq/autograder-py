@@ -29,6 +29,13 @@
             "max": 0
         },
         "aggregate-lines-of-code-per-file": null,
+        "aggregate-submission-time-delta": {
+            "count": 0,
+            "mean": 0,
+            "median": 0,
+            "min": 0,
+            "max": 0
+        },
         "aggregate-lines-of-code-delta": {
             "count": 0,
             "mean": 0,
