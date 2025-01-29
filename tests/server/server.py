@@ -99,12 +99,31 @@ def _run(port):
 def _load_responses():
     """
     Load API responses from the existing API test cases.
+    """
 
-    Request keys are just string JSON objects with the endpoint and args.
+    responses, api_modules_by_endpoint, api_modules_by_module = build_api_responses()
+
+    Handler._api_modules_by_endpoint = api_modules_by_endpoint
+    Handler._api_modules_by_module = api_modules_by_module
+    Handler._static_responses = responses
+
+def build_api_responses():
+    """
+    Look through the autograder/api/* packages for API endpoints
+    and the API_TESTDATA_DIR directory for test data,
+    and build up API responses and information about the API modeules.
+    Response keys are just string JSON objects with the endpoint and args.
+
+    Return:
+       {<API reponse key>: { <response information> }, ...}
+       {<API endpoint>: { <endpoint/module information> }, ...}
+       {<API module name>: { <endpoint/module information> }, ...}
     """
 
     # First, build maps to lookup API endpoints.
-    _load_endpoint_modules()
+    api_modules_by_endpoint, api_modules_by_module = _load_endpoint_modules()
+
+    responses = {}
 
     for path in sorted(glob.glob(os.path.join(API_TESTDATA_DIR, "**", "*.json"), recursive = True)):
         with open(path, 'r') as file:
@@ -115,7 +134,7 @@ def _load_responses():
                 raise ValueError("Found API test data without key '%s': '%s'." % (
                     required_key, path))
 
-        api_module_info = Handler._api_modules_by_module.get(data['module'])
+        api_module_info = api_modules_by_module.get(data['module'])
         if (api_module_info is None):
             raise ValueError("Could not find module for module name '%s'." % (data['module']))
 
@@ -123,14 +142,17 @@ def _load_responses():
             data.get('arguments', {}), data.get('files', []),
             normalize_args = True)
 
-        if (key in Handler._static_responses):
+        if (key in responses):
             raise ValueError("Duplicate response key '%s' found in '%s'." % (key, path))
 
-        Handler._static_responses[key] = {
+        responses[key] = {
+            'endpoint': api_module_info['endpoint'],
             'module_name': data['module'],
             'arguments': data.get('arguments', {}),
             'output': data['output'],
         }
+
+    return responses, api_modules_by_endpoint, api_modules_by_module
 
 def _load_endpoint_modules():
     """
@@ -138,6 +160,9 @@ def _load_endpoint_modules():
     which all have API_ENDPOINT and API_PARAMS constants.
     Load these modules into maps for lookup by endpoint and module name (qualified import name).
     """
+
+    api_modules_by_endpoint = {}
+    api_modules_by_module = {}
 
     for path in sorted(glob.glob(os.path.join(API_BASE_DIR, '**', '*.py'), recursive = True)):
         filename = os.path.basename(path)
@@ -163,8 +188,10 @@ def _load_endpoint_modules():
             'params': api_module.API_PARAMS,
         }
 
-        Handler._api_modules_by_endpoint[api_module.API_ENDPOINT] = data
-        Handler._api_modules_by_module[import_module_name] = data
+        api_modules_by_endpoint[api_module.API_ENDPOINT] = data
+        api_modules_by_module[import_module_name] = data
+
+    return api_modules_by_endpoint, api_modules_by_module
 
 def _create_request_lookup_key(api_module_info, arguments, files, normalize_args = False):
     """
@@ -186,12 +213,11 @@ def _create_request_lookup_key(api_module_info, arguments, files, normalize_args
 
     key = {
         'endpoint': api_module_info['endpoint'],
-        'module_name': api_module_info['module_name'],
         'arguments': arguments,
         'files': files,
     }
 
-    key = json.dumps(key, sort_keys = True)
+    key = json.dumps(key, sort_keys = True, separators = (',', ':'))
 
     return key
 
