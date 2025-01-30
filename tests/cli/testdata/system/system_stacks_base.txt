@@ -1,0 +1,186 @@
+{
+    "cli": "autograder.cli.system.stacks",
+    "arguments": [
+        "--user", "server-admin@test.edulinq.org",
+        "--pass", "server-admin"
+    ]
+}
+---
+{
+    "stacks": [
+        {
+            "name": "goroutine 1",
+            "status": "chan receive, 3 minutes",
+            "records": [
+                {
+                    "call": "github.com/edulinq/autograder/internal/api/server.(*APIServer).RunAndBlock(0xc0003422b0, {0xe4a5fb?, 0x0?})",
+                    "file": "/home/eriq/code/autograder/autograder-server/internal/api/server/server.go",
+                    "line": 63,
+                    "pointer": "+0x265"
+                },
+                {
+                    "call": "github.com/edulinq/autograder/internal/procedures/server.RunAndBlock.RunAndBlockFull.func1(0xc000091e78, {0xe4a5fb, 0xe}, 0xe0?)",
+                    "file": "/home/eriq/code/autograder/autograder-server/internal/procedures/server/start.go",
+                    "line": 112,
+                    "pointer": "+0x115"
+                },
+                {
+                    "call": "github.com/edulinq/autograder/internal/procedures/server.RunAndBlockFull(...)",
+                    "file": "/home/eriq/code/autograder/autograder-server/internal/procedures/server/start.go",
+                    "line": 117,
+                    "pointer": ""
+                },
+                {
+                    "call": "github.com/edulinq/autograder/internal/procedures/server.RunAndBlock({0xe4a5fb?, 0x0?})",
+                    "file": "/home/eriq/code/autograder/autograder-server/internal/procedures/server/start.go",
+                    "line": 95,
+                    "pointer": "+0x2b"
+                },
+                {
+                    "call": "main.main()",
+                    "file": "/home/eriq/code/autograder/autograder-server/cmd/server/main.go",
+                    "line": 23,
+                    "pointer": "+0xf6"
+                }
+            ]
+        },
+        {
+            "name": "goroutine 7",
+            "status": "chan receive, 3 minutes",
+            "records": [
+                {
+                    "call": "github.com/edulinq/autograder/internal/common.removeStaleLocks()",
+                    "file": "/home/eriq/code/autograder/autograder-server/internal/common/lockmanager.go",
+                    "line": 95,
+                    "pointer": "+0x54"
+                },
+                {
+                    "call": "created by github.com/edulinq/autograder/internal/common.init.0 in goroutine 1",
+                    "file": "/home/eriq/code/autograder/autograder-server/internal/common/lockmanager.go",
+                    "line": 28,
+                    "pointer": "+0x4c"
+                }
+            ]
+        },
+        {
+            "name": "goroutine 21",
+            "status": "sleep, 2 minutes",
+            "records": [
+                {
+                    "call": "time.Sleep(0x1bf08eb000)",
+                    "file": "/usr/lib/go/src/runtime/time.go",
+                    "line": 300,
+                    "pointer": "+0xf2"
+                },
+                {
+                    "call": "github.com/edulinq/autograder/internal/tasks.runTasks()",
+                    "file": "/home/eriq/code/autograder/autograder-server/internal/tasks/core.go",
+                    "line": 57,
+                    "pointer": "+0x6f"
+                },
+                {
+                    "call": "created by github.com/edulinq/autograder/internal/tasks.Start in goroutine 1",
+                    "file": "/home/eriq/code/autograder/autograder-server/internal/tasks/core.go",
+                    "line": 26,
+                    "pointer": "+0x7f"
+                }
+            ]
+        },
+        {
+            "name": "goroutine 25",
+            "status": "syscall, 3 minutes",
+            "records": [
+                {
+                    "call": "os/signal.signal_recv()",
+                    "file": "/usr/lib/go/src/runtime/sigqueue.go",
+                    "line": 152,
+                    "pointer": "+0x29"
+                },
+                {
+                    "call": "os/signal.loop()",
+                    "file": "/usr/lib/go/src/os/signal/signal_unix.go",
+                    "line": 23,
+                    "pointer": "+0x13"
+                },
+                {
+                    "call": "created by os/signal.Notify.func1.1 in goroutine 1",
+                    "file": "/usr/lib/go/src/os/signal/signal.go",
+                    "line": 151,
+                    "pointer": "+0x1f"
+                }
+            ]
+        },
+        {
+            "name": "goroutine 26",
+            "status": "chan receive, 3 minutes",
+            "records": [
+                {
+                    "call": "github.com/edulinq/autograder/internal/api/server.(*APIServer).RunAndBlock.func4()",
+                    "file": "/home/eriq/code/autograder/autograder-server/internal/api/server/server.go",
+                    "line": 56,
+                    "pointer": "+0x25"
+                },
+                {
+                    "call": "created by github.com/edulinq/autograder/internal/api/server.(*APIServer).RunAndBlock in goroutine 1",
+                    "file": "/home/eriq/code/autograder/autograder-server/internal/api/server/server.go",
+                    "line": 55,
+                    "pointer": "+0x23f"
+                }
+            ]
+        },
+        {
+            "name": "goroutine 99",
+            "status": "IO wait",
+            "records": [
+                {
+                    "call": "internal/poll.runtime_pollWait(0x790e13448ca0, 0x72)",
+                    "file": "/usr/lib/go/src/runtime/netpoll.go",
+                    "line": 351,
+                    "pointer": "+0x85"
+                },
+                {
+                    "call": "internal/poll.(*pollDesc).wait(0xc000182380?, 0xc000162131?, 0x0)",
+                    "file": "/usr/lib/go/src/internal/poll/fd_poll_runtime.go",
+                    "line": 84,
+                    "pointer": "+0x27"
+                },
+                {
+                    "call": "internal/poll.(*pollDesc).waitRead(...)",
+                    "file": "/usr/lib/go/src/internal/poll/fd_poll_runtime.go",
+                    "line": 89,
+                    "pointer": ""
+                },
+                {
+                    "call": "internal/poll.(*FD).Read(0xc000182380, {0xc000162131, 0x1, 0x1})",
+                    "file": "/usr/lib/go/src/internal/poll/fd_unix.go",
+                    "line": 165,
+                    "pointer": "+0x27a"
+                },
+                {
+                    "call": "net.(*netFD).Read(0xc000182380, {0xc000162131?, 0x0?, 0x0?})",
+                    "file": "/usr/lib/go/src/net/fd_posix.go",
+                    "line": 55,
+                    "pointer": "+0x25"
+                },
+                {
+                    "call": "net.(*conn).Read(0xc000452060, {0xc000162131?, 0x0?, 0x0?})",
+                    "file": "/usr/lib/go/src/net/net.go",
+                    "line": 189,
+                    "pointer": "+0x45"
+                },
+                {
+                    "call": "net/http.(*connReader).backgroundRead(0xc000162120)",
+                    "file": "/usr/lib/go/src/net/http/server.go",
+                    "line": 690,
+                    "pointer": "+0x37"
+                },
+                {
+                    "call": "created by net/http.(*connReader).startBackgroundRead in goroutine 98",
+                    "file": "/usr/lib/go/src/net/http/server.go",
+                    "line": 686,
+                    "pointer": "+0xb6"
+                }
+            ]
+        }
+    ]
+}
