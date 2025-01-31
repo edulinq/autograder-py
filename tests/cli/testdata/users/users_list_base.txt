@@ -11,11 +11,9 @@ Name: course-admin
 Role: user
 Courses:
     ID: course-languages
-    Name: Course Using Different Languages.
     Role: admin
 
     ID: course101
-    Name: Course 101
     Role: admin
 
 Email: course-grader@test.edulinq.org
@@ -23,11 +21,9 @@ Name: course-grader
 Role: user
 Courses:
     ID: course-languages
-    Name: Course Using Different Languages.
     Role: grader
 
     ID: course101
-    Name: Course 101
     Role: grader
 
 Email: course-other@test.edulinq.org
@@ -35,11 +31,9 @@ Name: course-other
 Role: user
 Courses:
     ID: course-languages
-    Name: Course Using Different Languages.
     Role: other
 
     ID: course101
-    Name: Course 101
     Role: other
 
 Email: course-owner@test.edulinq.org
@@ -47,11 +41,9 @@ Name: course-owner
 Role: user
 Courses:
     ID: course-languages
-    Name: Course Using Different Languages.
     Role: owner
 
     ID: course101
-    Name: Course 101
     Role: owner
 
 Email: course-student@test.edulinq.org
@@ -59,11 +51,9 @@ Name: course-student
 Role: user
 Courses:
     ID: course-languages
-    Name: Course Using Different Languages.
     Role: student
 
     ID: course101
-    Name: Course 101
     Role: student
 
 Email: root

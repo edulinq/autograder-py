@@ -8,9 +8,7 @@ Name: course-admin
 Role: user
 Courses:
     ID: course-languages
-    Name: Course Using Different Languages.
     Role: admin
 
     ID: course101
-    Name: Course 101
     Role: admin

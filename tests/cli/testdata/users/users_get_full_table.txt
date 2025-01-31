@@ -9,4 +9,4 @@
 }
 ---
 email	name	role	courses
-course-student@test.edulinq.org	course-student	user	{'course-languages': {'id': 'course-languages', 'name': 'Course Using Different Languages.', 'role': 'student'}, 'course101': {'id': 'course101', 'name': 'Course 101', 'role': 'student'}}
+course-student@test.edulinq.org	course-student	user	{'course-languages': {'id': 'course-languages', 'role': 'student'}, 'course101': {'id': 'course101', 'role': 'student'}}

@@ -15,13 +15,42 @@
             "courses": {
                 "course-languages": {
                     "id": "course-languages",
-                    "name": "Course Using Different Languages.",
                     "role": "student"
                 },
                 "course101": {
                     "id": "course101",
-                    "name": "Course 101",
                     "role": "student"
+                }
+            }
+        },
+        "courses": {
+            "course-languages": {
+                "id": "course-languages",
+                "name": "Course Using Different Languages",
+                "assignments": {
+                    "bash": {
+                        "id": "bash",
+                        "name": "A Simple Bash Assignment",
+                        "due-date": 0
+                    },
+                    "cpp-simple": {
+                        "id": "cpp-simple",
+                        "name": "A Simple C++ Assignment"
+                    },
+                    "java": {
+                        "id": "java",
+                        "name": "A Simple Java Assignment"
+                    }
+                }
+            },
+            "course101": {
+                "id": "course101",
+                "name": "Course 101",
+                "assignments": {
+                    "hw0": {
+                        "id": "hw0",
+                        "name": "Homework 0"
+                    }
                 }
             }
         }

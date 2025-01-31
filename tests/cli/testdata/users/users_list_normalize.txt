@@ -8,19 +8,19 @@
 		]
 }
 ---
-email	name	role	course-id	course-name	course-role
-course-admin@test.edulinq.org	course-admin	user	course-languages	Course Using Different Languages.	admin
-course-admin@test.edulinq.org	course-admin	user	course101	Course 101	admin
-course-grader@test.edulinq.org	course-grader	user	course-languages	Course Using Different Languages.	grader
-course-grader@test.edulinq.org	course-grader	user	course101	Course 101	grader
-course-other@test.edulinq.org	course-other	user	course-languages	Course Using Different Languages.	other
-course-other@test.edulinq.org	course-other	user	course101	Course 101	other
-course-owner@test.edulinq.org	course-owner	user	course-languages	Course Using Different Languages.	owner
-course-owner@test.edulinq.org	course-owner	user	course101	Course 101	owner
-course-student@test.edulinq.org	course-student	user	course-languages	Course Using Different Languages.	student
-course-student@test.edulinq.org	course-student	user	course101	Course 101	student
-root	root	root			
-server-admin@test.edulinq.org	server-admin	admin			
-server-creator@test.edulinq.org	server-creator	creator			
-server-owner@test.edulinq.org	server-owner	owner			
-server-user@test.edulinq.org	server-user	user			
+email	name	role	course-id	course-role
+course-admin@test.edulinq.org	course-admin	user	course-languages	admin
+course-admin@test.edulinq.org	course-admin	user	course101	admin
+course-grader@test.edulinq.org	course-grader	user	course-languages	grader
+course-grader@test.edulinq.org	course-grader	user	course101	grader
+course-other@test.edulinq.org	course-other	user	course-languages	other
+course-other@test.edulinq.org	course-other	user	course101	other
+course-owner@test.edulinq.org	course-owner	user	course-languages	owner
+course-owner@test.edulinq.org	course-owner	user	course101	owner
+course-student@test.edulinq.org	course-student	user	course-languages	student
+course-student@test.edulinq.org	course-student	user	course101	student
+root	root	root		
+server-admin@test.edulinq.org	server-admin	admin		
+server-creator@test.edulinq.org	server-creator	creator		
+server-owner@test.edulinq.org	server-owner	owner		
+server-user@test.edulinq.org	server-user	user		

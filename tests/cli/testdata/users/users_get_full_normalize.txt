@@ -9,6 +9,6 @@
     ]
 }
 ---
-email	name	role	course-id	course-name	course-role
-course-student@test.edulinq.org	course-student	user	course-languages	Course Using Different Languages.	student
-course-student@test.edulinq.org	course-student	user	course101	Course 101	student
+email	name	role	course-id	course-role
+course-student@test.edulinq.org	course-student	user	course-languages	student
+course-student@test.edulinq.org	course-student	user	course101	student

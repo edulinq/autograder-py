@@ -13,6 +13,7 @@
             "name": "server-user",
             "role": "user",
             "courses": {}
-        }
+        },
+        "courses": {}
     }
 }

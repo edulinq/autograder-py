@@ -12,9 +12,7 @@ Name: course-student
 Role: user
 Courses:
     ID: course-languages
-    Name: Course Using Different Languages.
     Role: student
 
     ID: course101
-    Name: Course 101
     Role: student

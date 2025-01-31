@@ -4,7 +4,7 @@ COURSE_USER_HEADERS = BASE_USER_HEADERS + ['lms-id']
 SYNC_HEADERS = COURSE_USER_HEADERS + ['operation']
 
 SERVER_USER_HEADERS = BASE_USER_HEADERS + ['courses']
-COURSE_INFO_HEADERS = ['id', 'name', 'role']
+ENROLLMENT_INFO_HEADERS = ['id', 'role']
 
 INDENT = '    '
 COURSE_USER_INFO_TYPE = 'course'
@@ -118,7 +118,6 @@ def _list_server_users(users, indent = ''):
                 print()
 
             print(indent + INDENT + "ID: " + user['courses'][course]['id'])
-            print(indent + INDENT + "Name: " + user['courses'][course]['name'])
             print(indent + INDENT + "Role: " + user['courses'][course]['role'])
 
 def _list_server_users_table_normalize(users, header = True, keys = BASE_USER_HEADERS):
@@ -130,14 +129,14 @@ def _list_server_users_table_normalize(users, header = True, keys = BASE_USER_HE
 
         row = [user[key] for key in keys]
         if ((user.get('courses') is None) or (len(user['courses']) == 0)):
-            row = row + ['' for key in COURSE_INFO_HEADERS]
+            row = row + ['' for key in ENROLLMENT_INFO_HEADERS]
             rows.append(row)
         else:
             for course in user['courses']:
-                course_row = row + [user['courses'][course][key] for key in COURSE_INFO_HEADERS]
+                course_row = row + [user['courses'][course][key] for key in ENROLLMENT_INFO_HEADERS]
                 rows.append(course_row)
 
-    header_keys = keys + ["course-" + course_key for course_key in COURSE_INFO_HEADERS]
+    header_keys = keys + ["course-" + course_key for course_key in ENROLLMENT_INFO_HEADERS]
     _print_tsv(rows, header, header_keys)
 
 def list_sync_users(sync_users, table = False):

@@ -9,5 +9,5 @@
     ]
 }
 ---
-email	name	role	course-id	course-name	course-role
-server-user@test.edulinq.org	server-user	user			
+email	name	role	course-id	course-role
+server-user@test.edulinq.org	server-user	user		
