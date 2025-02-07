@@ -33,14 +33,16 @@ def do_file_operation(operation, op_dir):
             raise ValueError("Incorrect number of argument for 'mv' file operation."
                 + " Expected 2, found %d." % ((len(operation) - 1)))
 
-        shutil.move(os.path.join(op_dir, operation[1]), os.path.join(op_dir, operation[2]))
+        for path in glob.glob(operation[1], root_dir = op_dir):
+            shutil.move(os.path.join(op_dir, path), os.path.join(op_dir, operation[2]))
     elif (operation[0] == 'cp'):
         if (len(operation) != 3):
             raise ValueError("Incorrect number of argument for 'cp' file operation."
                 + " Expected 2, found %d." % ((len(operation) - 1)))
 
-        autograder.util.dirent.copy(os.path.join(op_dir, operation[1]), os.path.join(op_dir,
-            operation[2]))
+        for path in glob.glob(operation[1], root_dir = op_dir):
+            autograder.util.dirent.copy(os.path.join(op_dir, path), os.path.join(op_dir,
+                operation[2]))
     else:
         raise ValueError("Unknown file operation: '%s'." % (operation[0]))
 
