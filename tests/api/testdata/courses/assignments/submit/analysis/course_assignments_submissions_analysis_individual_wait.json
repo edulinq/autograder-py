@@ -92,6 +92,7 @@
                         "lines-of-code": 4
                     }
                 ],
+                "skipped-files": [],
                 "lines-of-code": 4,
                 "submission-time-delta": 0,
                 "lines-of-code-delta": 0,
@@ -114,6 +115,7 @@
                         "lines-of-code": 4
                     }
                 ],
+                "skipped-files": [],
                 "lines-of-code": 4,
                 "submission-time-delta": 10000,
                 "lines-of-code-delta": 0,
