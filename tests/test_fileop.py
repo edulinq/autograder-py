@@ -1,5 +1,6 @@
 import os
 import unittest
+import sys
 
 import autograder.fileop
 import autograder.util.dir
@@ -11,6 +12,7 @@ ALREADY_EXISTS_FILE_POSIX_RELPATH = ALREADY_EXISTS_DIRNAME + "/" + ALREADY_EXIST
 ALREADY_EXISTS_FILE_RELPATH = os.path.join(ALREADY_EXISTS_DIRNAME, ALREADY_EXISTS_FILENAME)
 
 class TestFileOp(unittest.TestCase):
+    @unittest.skipIf(sys.platform.startswith("win"), "filops reqire POSIX")
     def test_fileop_validation(self):
         test_cases = [
             # Base
@@ -82,6 +84,7 @@ class TestFileOp(unittest.TestCase):
 
                 self.assertListEqual(operation, expected, 'Operation not as expected.')
 
+    @unittest.skipIf(sys.platform.startswith("win"), "filops reqire POSIX")
     def test_fileop_exec_copy(self):
         test_cases = [
             (ALREADY_EXISTS_FILE_POSIX_RELPATH, "a", None),
@@ -113,6 +116,7 @@ class TestFileOp(unittest.TestCase):
 
                 self._run_fileop_exec_test(operation, error_substring, post_check)
 
+    @unittest.skipIf(sys.platform.startswith("win"), "filops reqire POSIX")
     def test_fileop_exec_move(self):
         test_cases = [
             (ALREADY_EXISTS_FILE_POSIX_RELPATH, "a", None),
@@ -144,6 +148,7 @@ class TestFileOp(unittest.TestCase):
 
                 self._run_fileop_exec_test(operation, error_substring, post_check)
 
+    @unittest.skipIf(sys.platform.startswith("win"), "filops reqire POSIX")
     def test_fileop_exec_mkdir(self):
         test_cases = [
             ("a", None),
@@ -169,6 +174,7 @@ class TestFileOp(unittest.TestCase):
 
                 self._run_fileop_exec_test(operation, error_substring, post_check)
 
+    @unittest.skipIf(sys.platform.startswith("win"), "filops reqire POSIX")
     def test_fileop_exec_remove(self):
         test_cases = [
             ("a", None),
