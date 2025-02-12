@@ -3,6 +3,7 @@ import json
 import os
 import sys
 
+import autograder.fileop
 import autograder.submission
 
 DEFAULT_BASE_DIR = os.path.join('/', 'autograder')
@@ -29,8 +30,8 @@ def run(args):
     # Do post-submission file operations.
     # There are no pre-sub file ops and Docker has already copied over the submission files
     # into the input directory.
-    for file_operation in config.get(autograder.submission.CONFIG_KEY_POST_SUB_OPS, []):
-        autograder.submission.do_file_operation(file_operation, args.basedir)
+    operations = config.get(autograder.submission.CONFIG_KEY_POST_SUB_OPS, [])
+    autograder.fileop.exec_file_operations(operations, args.basedir)
 
     return 0
 
