@@ -51,6 +51,7 @@
                         }
                     ]
                 },
+                "skipped-files": [],
                 "unmatched-files": [],
                 "mean-similarities": {
                     "submission.py": 0.13

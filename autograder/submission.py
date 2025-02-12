@@ -28,14 +28,14 @@ def do_file_operation(operation, op_dir):
     if ((operation is None) or (len(operation) == 0)):
         raise ValueError("File operation is empty.")
 
-    if (operation[0] == 'mv'):
+    if (operation[0].lower() in ['move', 'mv']):
         if (len(operation) != 3):
             raise ValueError("Incorrect number of argument for 'mv' file operation."
                 + " Expected 2, found %d." % ((len(operation) - 1)))
 
         for path in glob.glob(operation[1], root_dir = op_dir):
             shutil.move(os.path.join(op_dir, path), os.path.join(op_dir, operation[2]))
-    elif (operation[0] == 'cp'):
+    elif (operation[0].lower() in ['copy', 'cp']):
         if (len(operation) != 3):
             raise ValueError("Incorrect number of argument for 'cp' file operation."
                 + " Expected 2, found %d." % ((len(operation) - 1)))
