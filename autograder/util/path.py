@@ -1,7 +1,14 @@
-import ntpath
 import os
 
 THIS_DIR = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
+
+# Reserved filenames (mainly on Windows).
+# See: https://github.com/python/cpython/blob/3.13/Lib/ntpath.py
+RESERVED_NAMES = frozenset(
+    {'CON', 'PRN', 'AUX', 'NUL', 'CONIN$', 'CONOUT$'} |  # noqa: W504
+    {f'COM{c}' for c in '123456789\xb9\xb2\xb3'} |  # noqa: W504
+    {f'LPT{c}' for c in '123456789\xb9\xb2\xb3'}
+)
 
 # Try to see of a file is "local" using only lexical analysis.
 # See: https://pkg.go.dev/path/filepath#IsLocal
@@ -15,7 +22,7 @@ def is_local(path):
     if (os.path.isabs(path)):
         return False
 
-    if (ntpath.isreserved(path)):
+    if (_is_reserved(path)):
         return False
 
     # To see if the path does not break out of the current directory,
@@ -33,3 +40,8 @@ def is_local(path):
         return False
 
     return True
+
+# A very weak version of ntpath.isreserved(path) (which was added in version 3.13).
+# https://docs.python.org/3/library/os.path.html#os.path.isreserved
+def _is_reserved(path):
+    return os.path.basename(path).upper() in RESERVED_NAMES
