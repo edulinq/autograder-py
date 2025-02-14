@@ -76,6 +76,17 @@
     },
     "results": [
         {
+            "options": {
+                "include-patterns": [
+                    "submission.py"
+                ],
+                "template-files": [
+                    {
+                        "type": "path",
+                        "path": "test-submissions/not_implemented/submission.py"
+                    }
+                ]
+            },
             "analysis-timestamp": 1234567890123,
             "submission-id": "course101::hw0::course-student@test.edulinq.org::1697406256",
             "short-id": "1697406256",
@@ -99,6 +110,17 @@
             "score-per-hour": 0
         },
         {
+            "options": {
+                "include-patterns": [
+                    "submission.py"
+                ],
+                "template-files": [
+                    {
+                        "type": "path",
+                        "path": "test-submissions/not_implemented/submission.py"
+                    }
+                ]
+            },
             "analysis-timestamp": 1234567890123,
             "submission-id": "course101::hw0::course-student@test.edulinq.org::1697406265",
             "short-id": "1697406265",
