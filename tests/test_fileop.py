@@ -200,8 +200,6 @@ class TestFileOp(unittest.TestCase):
                 self._run_fileop_exec_test(operation, error_substring, post_check)
 
     def _run_fileop_exec_test(self, operation, error_substring, post_exec):
-        autograder.fileop.validate(operation)
-
         temp_dir = autograder.util.dir.get_temp_dir(prefix = "ag-py-testing-fileop-execute-")
 
         # Make some existing entries.

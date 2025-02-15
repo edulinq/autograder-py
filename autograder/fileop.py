@@ -98,6 +98,8 @@ def validate(operation):
 
 # Execute operation operation in the given directory.
 def execute(operation, base_dir):
+    validate(operation)
+
     command = operation[0]
 
     if (command == FILE_OP_LONG_COPY):
