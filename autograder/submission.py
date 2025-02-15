@@ -16,9 +16,9 @@ GRADER_FILENAME = 'grader.py'
 GRADING_RESULT_FILENAME = 'result.json'
 
 CONFIG_KEY_STATIC_FILES = 'static-files'
-CONFIG_KEY_PRE_STATIC_OPS = 'pre-static-files-ops'
-CONFIG_KEY_POST_STATIC_OPS = 'post-static-files-ops'
-CONFIG_KEY_POST_SUB_OPS = 'post-submission-files-ops'
+CONFIG_KEY_PRE_STATIC_OPS = 'pre-static-file-ops'
+CONFIG_KEY_POST_STATIC_OPS = 'post-static-file-ops'
+CONFIG_KEY_POST_SUB_OPS = 'post-submission-file-ops'
 
 INPUT_DIRNAME = 'input'
 OUTPUT_DIRNAME = 'output'
