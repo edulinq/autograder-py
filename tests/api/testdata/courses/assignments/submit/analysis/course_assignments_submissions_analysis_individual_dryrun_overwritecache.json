@@ -1,20 +1,19 @@
 {
     "module": "autograder.api.courses.assignments.submissions.analysis.individual",
-    "read-write": true,
     "arguments": {
         "submissions": [
             "course101::hw0::course-student@test.edulinq.org::1697406256",
             "course101::hw0::course-student@test.edulinq.org::1697406265"
         ],
-        "dry-run": false,
-        "overwrite-cache": false,
+        "dry-run": true,
+        "overwrite-cache": true,
         "wait-for-completion": false
     },
     "output": {
         "complete": false,
         "options": {
-            "dry-run": false,
-            "overwrite-cache": false,
+            "dry-run": true,
+            "overwrite-cache": true,
             "wait-for-completion": false,
             "submissions": [
                 "course101::hw0::course-student@test.edulinq.org::1697406256",

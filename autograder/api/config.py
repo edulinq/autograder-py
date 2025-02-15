@@ -226,13 +226,19 @@ PARAM_FILTER_ROLE = APIParam('filter-role',
         'choices': autograder.api.constants.COURSE_ROLES})
 
 PARAM_FORCE = APIParam('force',
-    'Force the operation, overwriting and existing resources.',
+    'Force the operation, overwriting any existing resources.',
     required = False,
     parser_options = {'action': 'store_true', 'default': False})
 
 PARAM_NEW_PASS = APIParam('new-pass',
     'The new password to set for the user that is the target of this request.',
     required = True, hash = True)
+
+PARAM_OVERWRITE_CACHE = APIParam('overwrite-cache',
+    ('Replace any existing cache entries that match the current operation'
+        + ' (e.g. re-do existing results).'),
+    required = False,
+    parser_options = {'action': 'store_true', 'default': False})
 
 PARAM_QUERY_LIMIT = APIParam('limit',
     'The maximum number of records to return.',

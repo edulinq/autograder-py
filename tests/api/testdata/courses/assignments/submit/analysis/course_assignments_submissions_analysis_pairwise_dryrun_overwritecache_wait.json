@@ -6,16 +6,16 @@
             "course101::hw0::course-student@test.edulinq.org::1697406256",
             "course101::hw0::course-student@test.edulinq.org::1697406265"
         ],
-        "dry-run": false,
-        "overwrite-cache": false,
+        "dry-run": true,
+        "overwrite-cache": true,
         "wait-for-completion": true
     },
     "output-modifier": "clean_output_timestamps",
     "output": {
         "complete": true,
         "options": {
-            "dry-run": false,
-            "overwrite-cache": false,
+            "dry-run": true,
+            "overwrite-cache": true,
             "wait-for-completion": true,
             "submissions": [
                 "course101::hw0::course-student@test.edulinq.org::1697406256",
