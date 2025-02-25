@@ -11,9 +11,10 @@
 [
     {
         "level": "INFO",
-        "message": "API Server Started.",
+        "message": "API Server Created.",
         "timestamp": 0,
         "attributes": {
+            "https": false,
             "port": 8080,
             "path": "/some/path/course.json",
             "unix_socket": "/tmp/autograder.sock"
