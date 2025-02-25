@@ -7,5 +7,5 @@
     ]
 }
 ---
-<TIME> [ INFO] API Server Started. | {"port": 8080, "path": "/some/path/course.json", "unix_socket": "/tmp/autograder.sock"}
+<TIME> [ INFO] API Server Created. | {"https": false, "port": 8080, "path": "/some/path/course.json", "unix_socket": "/tmp/autograder.sock"}
 <TIME> [ INFO] Unix Socket Server Started. | {"unix_socket": "/tmp/autograder.sock", "path": "/some/path/course.json", "port": 8080}

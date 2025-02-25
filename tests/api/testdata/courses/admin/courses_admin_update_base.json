@@ -41,7 +41,12 @@
             },
             "built-assignment-images": [
                 "autograder.course101.hw0"
-            ]
+            ],
+            "assignment-template-files": {
+                "hw0": [
+                    "submission.py"
+                ]
+            }
         }
     }
 }

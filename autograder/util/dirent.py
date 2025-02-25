@@ -31,6 +31,9 @@ def remove(path):
     else:
         raise ValueError("Unknown type of dirent: '%s'." % (path))
 
+def move(source, dest):
+    shutil.move(source, dest)
+
 def copy(source, dest):
     """
     Copy a file or directory into dest.
@@ -39,7 +42,11 @@ def copy(source, dest):
     """
 
     if (os.path.isfile(source)):
-        shutil.copy2(source, dest)
+        try:
+            os.makedirs(os.path.dirname(dest), exist_ok = True)
+            shutil.copy2(source, dest)
+        except shutil.SameFileError:
+            return
     else:
         shutil.copytree(source, dest)
 

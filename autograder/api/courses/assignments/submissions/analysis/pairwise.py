@@ -6,6 +6,8 @@ API_PARAMS = [
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
 
+    autograder.api.config.PARAM_DRY_RUN,
+    autograder.api.config.PARAM_OVERWRITE_CACHE,
     autograder.api.config.PARAM_SUBMISSION_SPECS,
     autograder.api.config.PARAM_WAIT_FOR_COMPLETION,
 ]

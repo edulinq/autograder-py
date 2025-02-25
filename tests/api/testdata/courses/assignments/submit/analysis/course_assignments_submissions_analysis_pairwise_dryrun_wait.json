@@ -6,7 +6,7 @@
             "course101::hw0::course-student@test.edulinq.org::1697406256",
             "course101::hw0::course-student@test.edulinq.org::1697406265"
         ],
-        "dry-run": false,
+        "dry-run": true,
         "overwrite-cache": false,
         "wait-for-completion": true
     },
@@ -14,7 +14,7 @@
     "output": {
         "complete": true,
         "options": {
-            "dry-run": false,
+            "dry-run": true,
             "overwrite-cache": false,
             "wait-for-completion": true,
             "submissions": [

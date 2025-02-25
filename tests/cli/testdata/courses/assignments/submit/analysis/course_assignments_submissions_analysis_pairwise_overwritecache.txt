@@ -1,6 +1,7 @@
 {
     "cli": "autograder.cli.courses.assignments.submissions.analysis.pairwise",
     "arguments": [
+        "--overwrite-cache",
         "course101::hw0::course-student@test.edulinq.org::1697406256",
         "course101::hw0::course-student@test.edulinq.org::1697406265"
     ]
@@ -10,7 +11,7 @@
     "complete": false,
     "options": {
         "dry-run": false,
-        "overwrite-cache": false,
+        "overwrite-cache": true,
         "wait-for-completion": false,
         "submissions": [
             "course101::hw0::course-student@test.edulinq.org::1697406256",

@@ -1,12 +1,12 @@
 import glob
 import json
 import os
-import shutil
 import subprocess
 import sys
 import traceback
 
 import autograder.assignment
+import autograder.fileop
 import autograder.filespec
 import autograder.util.dirent
 import autograder.util.timestamp
@@ -16,35 +16,13 @@ GRADER_FILENAME = 'grader.py'
 GRADING_RESULT_FILENAME = 'result.json'
 
 CONFIG_KEY_STATIC_FILES = 'static-files'
-CONFIG_KEY_PRE_STATIC_OPS = 'pre-static-files-ops'
-CONFIG_KEY_POST_STATIC_OPS = 'post-static-files-ops'
-CONFIG_KEY_POST_SUB_OPS = 'post-submission-files-ops'
+CONFIG_KEY_PRE_STATIC_OPS = 'pre-static-file-ops'
+CONFIG_KEY_POST_STATIC_OPS = 'post-static-file-ops'
+CONFIG_KEY_POST_SUB_OPS = 'post-submission-file-ops'
 
 INPUT_DIRNAME = 'input'
 OUTPUT_DIRNAME = 'output'
 WORK_DIRNAME = 'work'
-
-def do_file_operation(operation, op_dir):
-    if ((operation is None) or (len(operation) == 0)):
-        raise ValueError("File operation is empty.")
-
-    if (operation[0].lower() in ['move', 'mv']):
-        if (len(operation) != 3):
-            raise ValueError("Incorrect number of argument for 'mv' file operation."
-                + " Expected 2, found %d." % ((len(operation) - 1)))
-
-        for path in glob.glob(operation[1], root_dir = op_dir):
-            shutil.move(os.path.join(op_dir, path), os.path.join(op_dir, operation[2]))
-    elif (operation[0].lower() in ['copy', 'cp']):
-        if (len(operation) != 3):
-            raise ValueError("Incorrect number of argument for 'cp' file operation."
-                + " Expected 2, found %d." % ((len(operation) - 1)))
-
-        for path in glob.glob(operation[1], root_dir = op_dir):
-            autograder.util.dirent.copy(os.path.join(op_dir, path), os.path.join(op_dir,
-                operation[2]))
-    else:
-        raise ValueError("Unknown file operation: '%s'." % (operation[0]))
 
 def copy_assignment_files(source_dir, dest_dir, op_dir, files,
         only_contents = False, pre_ops = [], post_ops = []):
@@ -56,8 +34,7 @@ def copy_assignment_files(source_dir, dest_dir, op_dir, files,
     """
 
     # Do pre operations.
-    for file_operation in pre_ops:
-        do_file_operation(file_operation, op_dir)
+    autograder.fileop.exec_file_operations(pre_ops, op_dir)
 
     # Copy over the assignment's files.
     for filespec_text in files:
@@ -65,8 +42,7 @@ def copy_assignment_files(source_dir, dest_dir, op_dir, files,
         autograder.filespec.copy(spec, source_dir, dest_dir, only_contents)
 
     # Do post operations.
-    for file_operation in post_ops:
-        do_file_operation(file_operation, op_dir)
+    autograder.fileop.exec_file_operations(post_ops, op_dir)
 
 def fetch_test_submissions(path):
     path = os.path.abspath(path)
