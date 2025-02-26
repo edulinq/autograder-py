@@ -1,3 +1,4 @@
+import glob
 import os
 import unittest
 import sys
@@ -10,9 +11,13 @@ ALREADY_EXISTS_DIRNAME = "already_exists"
 ALREADY_EXISTS_FILENAME = "already_exists.txt"
 ALREADY_EXISTS_FILE_POSIX_RELPATH = ALREADY_EXISTS_DIRNAME + "/" + ALREADY_EXISTS_FILENAME
 ALREADY_EXISTS_FILE_RELPATH = os.path.join(ALREADY_EXISTS_DIRNAME, ALREADY_EXISTS_FILENAME)
+ALREADY_EXISTS_FILENAME_ALT = "already_exists_alt.txt"
+ALREADY_EXISTS_FILE_ALT_POSIX_RELPATH = ALREADY_EXISTS_DIRNAME + "/" + ALREADY_EXISTS_FILENAME_ALT
+ALREADY_EXISTS_FILE_ALT_RELPATH = os.path.join(ALREADY_EXISTS_DIRNAME, ALREADY_EXISTS_FILENAME_ALT)
+STARTING_EMPTY_DIRNAME = "empty_start"
 
 class TestFileOp(unittest.TestCase):
-    @unittest.skipIf(sys.platform.startswith("win"), "filops reqire POSIX")
+    @unittest.skipIf(sys.platform.startswith("win"), "fileops require POSIX")
     def test_fileop_validation(self):
         test_cases = [
             # Base
@@ -35,6 +40,13 @@ class TestFileOp(unittest.TestCase):
             (["copy", "a/", "b"], ["copy", "a", "b"], None),
             (["copy", "a//b", "b"], ["copy", "a/b", "b"], None),
             (["copy", "./a", "b"], ["copy", "a", "b"], None),
+            (["copy", "*/*/..", "b"], ["copy", "*", "b"], None),
+
+            # Glob Paths
+            (["copy", "a/*", "b"], ["copy", "a/*", "b"], None),
+            (["copy", "a/?", "b"], ["copy", "a/?", "b"], None),
+            (["move", "a/*", "b"], ["move", "a/*", "b"], None),
+            (["move", "a/?", "b"], ["move", "a/?", "b"], None),
 
             # Errors
 
@@ -62,8 +74,11 @@ class TestFileOp(unittest.TestCase):
             (["copy", "../a", "b"], None, "points outside of the its base directory"),
             (["copy", "a/../..", "b"], None, "points outside of the its base directory"),
             (["copy", "a/../../b", "b"], None, "points outside of the its base directory"),
+            (["copy", "*/../..", "b"], None, "points outside of the its base directory"),
+            (["copy", "*/../../*", "b"], None, "points outside of the its base directory"),
             (["copy", ".", "b"], None, "cannot point just to the current directory"),
             (["copy", "a/..", "b"], None, "cannot point just to the current directory"),
+            (["copy", "*/..", "b"], None, "cannot point just to the current directory"),
         ]
 
         for i in range(len(test_cases)):
@@ -84,7 +99,7 @@ class TestFileOp(unittest.TestCase):
 
                 self.assertListEqual(operation, expected, 'Operation not as expected.')
 
-    @unittest.skipIf(sys.platform.startswith("win"), "filops reqire POSIX")
+    @unittest.skipIf(sys.platform.startswith("win"), "fileops require POSIX")
     def test_fileop_exec_copy(self):
         test_cases = [
             (ALREADY_EXISTS_FILE_POSIX_RELPATH, "a", None),
@@ -94,8 +109,15 @@ class TestFileOp(unittest.TestCase):
             (ALREADY_EXISTS_FILE_POSIX_RELPATH, ALREADY_EXISTS_DIRNAME + "/a", None),
             (ALREADY_EXISTS_FILE_POSIX_RELPATH, "a/b", None),
             (ALREADY_EXISTS_FILE_POSIX_RELPATH, ALREADY_EXISTS_DIRNAME, None),
+            (ALREADY_EXISTS_DIRNAME, "a", None),
+            ("*", "a", None),
+            (ALREADY_EXISTS_DIRNAME + "/*", "a", None),
+            (ALREADY_EXISTS_DIRNAME + "/*.txt", "a", None),
+            (ALREADY_EXISTS_DIRNAME + "/*", STARTING_EMPTY_DIRNAME, None),
+            (ALREADY_EXISTS_DIRNAME + "/*.txt", STARTING_EMPTY_DIRNAME, None),
             ("a", "b", "No such file or directory"),
             (ALREADY_EXISTS_DIRNAME, ALREADY_EXISTS_FILE_POSIX_RELPATH, "File exists"),
+            (ALREADY_EXISTS_DIRNAME + "/*.txt", ALREADY_EXISTS_FILENAME, "is not a directory"),
         ]
 
         for i in range(len(test_cases)):
@@ -105,18 +127,20 @@ class TestFileOp(unittest.TestCase):
                 operation = ["cp", source, dest]
 
                 def post_check(operation, temp_dir):
-                    expected_source = os.path.normpath(os.path.join(temp_dir, source))
+                    expected_source_glob = os.path.normpath(os.path.join(temp_dir, source))
                     expected_dest = os.path.normpath(os.path.join(temp_dir, dest))
 
                     self.assertTrue(os.path.exists(expected_dest),
                         f"Dest does not exist '{expected_dest}'.")
 
-                    self.assertTrue(os.path.exists(expected_source),
-                        f"Source does not exist '{expected_source}'.")
+                    expected_sources = glob.glob(expected_source_glob)
+                    for expected_source in expected_sources:
+                        self.assertTrue(os.path.exists(expected_source),
+                            f"Source does not exist '{expected_source}'.")
 
                 self._run_fileop_exec_test(operation, error_substring, post_check)
 
-    @unittest.skipIf(sys.platform.startswith("win"), "filops reqire POSIX")
+    @unittest.skipIf(sys.platform.startswith("win"), "fileops require POSIX")
     def test_fileop_exec_move(self):
         test_cases = [
             (ALREADY_EXISTS_FILE_POSIX_RELPATH, "a", None),
@@ -124,10 +148,16 @@ class TestFileOp(unittest.TestCase):
             (ALREADY_EXISTS_DIRNAME, "a", None),
             (ALREADY_EXISTS_DIRNAME, "a.txt", None),
             (ALREADY_EXISTS_FILE_POSIX_RELPATH, ALREADY_EXISTS_DIRNAME + "/a", None),
+            ("*", "a", None),
+            (ALREADY_EXISTS_DIRNAME + "/*", "a", None),
+            (ALREADY_EXISTS_DIRNAME + "/*.txt", "a", None),
+            (ALREADY_EXISTS_DIRNAME + "/*", STARTING_EMPTY_DIRNAME, None),
+            (ALREADY_EXISTS_DIRNAME + "/*.txt", STARTING_EMPTY_DIRNAME, None),
             ("a", "b", "No such file or directory"),
             (ALREADY_EXISTS_FILE_POSIX_RELPATH, "a/b", "No such file or directory"),
             (ALREADY_EXISTS_FILE_POSIX_RELPATH, ALREADY_EXISTS_DIRNAME, "already exists"),
             (ALREADY_EXISTS_DIRNAME, ALREADY_EXISTS_FILE_POSIX_RELPATH, "into itself"),
+            (ALREADY_EXISTS_DIRNAME + "/*.txt", ALREADY_EXISTS_FILENAME, "is not a directory"),
         ]
 
         for i in range(len(test_cases)):
@@ -137,18 +167,20 @@ class TestFileOp(unittest.TestCase):
                 operation = ["mv", source, dest]
 
                 def post_check(operation, temp_dir):
-                    expected_source = os.path.normpath(os.path.join(temp_dir, source))
+                    expected_source_glob = os.path.normpath(os.path.join(temp_dir, source))
                     expected_dest = os.path.normpath(os.path.join(temp_dir, dest))
 
                     self.assertTrue(os.path.exists(expected_dest),
                         f"Dest does not exist '{expected_dest}'.")
 
-                    self.assertFalse(os.path.exists(expected_source),
-                        f"Source exists '{expected_source}'.")
+                    expected_sources = glob.glob(expected_source_glob)
+                    for expected_source in expected_sources:
+                        self.assertTrue(os.path.exists(expected_source),
+                            f"Source does not exist '{expected_source}'.")
 
                 self._run_fileop_exec_test(operation, error_substring, post_check)
 
-    @unittest.skipIf(sys.platform.startswith("win"), "filops reqire POSIX")
+    @unittest.skipIf(sys.platform.startswith("win"), "fileops require POSIX")
     def test_fileop_exec_mkdir(self):
         test_cases = [
             ("a", None),
@@ -174,7 +206,7 @@ class TestFileOp(unittest.TestCase):
 
                 self._run_fileop_exec_test(operation, error_substring, post_check)
 
-    @unittest.skipIf(sys.platform.startswith("win"), "filops reqire POSIX")
+    @unittest.skipIf(sys.platform.startswith("win"), "fileops require POSIX")
     def test_fileop_exec_remove(self):
         test_cases = [
             ("a", None),
@@ -205,6 +237,9 @@ class TestFileOp(unittest.TestCase):
         # Make some existing entries.
         autograder.util.dir.mkdir(os.path.join(temp_dir, ALREADY_EXISTS_DIRNAME))
         autograder.util.file.write(os.path.join(temp_dir, ALREADY_EXISTS_FILE_RELPATH), "AAA")
+        autograder.util.file.write(os.path.join(temp_dir, ALREADY_EXISTS_FILE_ALT_RELPATH), "BBB")
+        autograder.util.file.write(os.path.join(temp_dir, ALREADY_EXISTS_FILENAME), "CCC")
+        autograder.util.dir.mkdir(os.path.join(temp_dir, STARTING_EMPTY_DIRNAME))
 
         try:
             autograder.fileop.execute(operation, temp_dir)

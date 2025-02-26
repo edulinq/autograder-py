@@ -41,6 +41,13 @@ def is_local(path):
 
     return True
 
+def ensure_dir(path):
+    if (not os.path.exists(path)):
+        os.makedirs(path)
+
+    if (not os.path.isdir(path)):
+        raise NotADirectoryError(f"Path exists but is not a directory: '{path}'.")
+
 # A very weak version of ntpath.isreserved(path) (which was added in version 3.13).
 # https://docs.python.org/3/library/os.path.html#os.path.isreserved
 def _is_reserved(path):
