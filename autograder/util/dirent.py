@@ -34,7 +34,7 @@ def remove(path):
 def move(source, dest):
     shutil.move(source, dest)
 
-def copy(source, dest):
+def copy(source, dest, dirs_exist_ok = False):
     """
     Copy a file or directory into dest.
     If source is a file, then dest can be a file or dir.
@@ -48,7 +48,7 @@ def copy(source, dest):
         except shutil.SameFileError:
             return
     else:
-        shutil.copytree(source, dest)
+        shutil.copytree(source, dest, dirs_exist_ok = dirs_exist_ok)
 
 def copy_contents(source, dest):
     """
