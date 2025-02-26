@@ -47,6 +47,7 @@ class TestFileOp(unittest.TestCase):
             (["copy", "a/?", "b"], ["copy", "a/?", "b"], None),
             (["move", "a/*", "b"], ["move", "a/*", "b"], None),
             (["move", "a/?", "b"], ["move", "a/?", "b"], None),
+            (["copy", "*/[a-z", "b"], ["copy", "*/[a-z", "b"], None),
 
             # Errors
 
@@ -109,14 +110,40 @@ class TestFileOp(unittest.TestCase):
             (ALREADY_EXISTS_FILE_POSIX_RELPATH, ALREADY_EXISTS_DIRNAME + "/a", None),
             (ALREADY_EXISTS_FILE_POSIX_RELPATH, "a/b", None),
             (ALREADY_EXISTS_FILE_POSIX_RELPATH, ALREADY_EXISTS_DIRNAME, None),
-            (ALREADY_EXISTS_DIRNAME, "a", None),
+            ("a", "b", "No such file or directory"),
+            (ALREADY_EXISTS_DIRNAME, ALREADY_EXISTS_FILE_POSIX_RELPATH, "File exists"),
+        ]
+
+        for i in range(len(test_cases)):
+            with self.subTest(msg = f"Case {i}"):
+                (source, dest, error_substring) = test_cases[i]
+
+                operation = ["cp", source, dest]
+
+                def post_check(operation, temp_dir):
+                    expected_source = os.path.normpath(os.path.join(temp_dir, source))
+                    expected_dest = os.path.normpath(os.path.join(temp_dir, dest))
+
+                    self.assertTrue(os.path.exists(expected_dest),
+                        f"Dest does not exist '{expected_dest}'.")
+
+                    self.assertTrue(os.path.exists(expected_source),
+                        f"Source does not exist '{expected_source}'.")
+
+                self._run_fileop_exec_test(operation, error_substring, post_check)
+
+    @unittest.skipIf(sys.platform.startswith("win"), "fileops require POSIX")
+    def test_fileop_exec_copy_glob(self):
+        test_cases = [
             ("*", "a", None),
             (ALREADY_EXISTS_DIRNAME + "/*", "a", None),
             (ALREADY_EXISTS_DIRNAME + "/*.txt", "a", None),
             (ALREADY_EXISTS_DIRNAME + "/*", STARTING_EMPTY_DIRNAME, None),
             (ALREADY_EXISTS_DIRNAME + "/*.txt", STARTING_EMPTY_DIRNAME, None),
-            ("a", "b", "No such file or directory"),
-            (ALREADY_EXISTS_DIRNAME, ALREADY_EXISTS_FILE_POSIX_RELPATH, "File exists"),
+            (ALREADY_EXISTS_DIRNAME, STARTING_EMPTY_DIRNAME, None),
+            (ALREADY_EXISTS_DIRNAME + "/*", ALREADY_EXISTS_DIRNAME, None),
+            (ALREADY_EXISTS_DIRNAME + "/*.txt", ALREADY_EXISTS_DIRNAME, None),
+            (ALREADY_EXISTS_DIRNAME, ALREADY_EXISTS_DIRNAME, None),
             (ALREADY_EXISTS_DIRNAME + "/*.txt", ALREADY_EXISTS_FILENAME, "is not a directory"),
         ]
 
@@ -148,15 +175,42 @@ class TestFileOp(unittest.TestCase):
             (ALREADY_EXISTS_DIRNAME, "a", None),
             (ALREADY_EXISTS_DIRNAME, "a.txt", None),
             (ALREADY_EXISTS_FILE_POSIX_RELPATH, ALREADY_EXISTS_DIRNAME + "/a", None),
+            ("a", "b", "No such file or directory"),
+            (ALREADY_EXISTS_FILE_POSIX_RELPATH, "a/b", "No such file or directory"),
+            (ALREADY_EXISTS_FILE_POSIX_RELPATH, ALREADY_EXISTS_DIRNAME, "already exists"),
+            (ALREADY_EXISTS_DIRNAME, ALREADY_EXISTS_FILE_POSIX_RELPATH, "into itself"),
+        ]
+
+        for i in range(len(test_cases)):
+            with self.subTest(msg = f"Case {i}"):
+                (source, dest, error_substring) = test_cases[i]
+
+                operation = ["mv", source, dest]
+
+                def post_check(operation, temp_dir):
+                    expected_source = os.path.normpath(os.path.join(temp_dir, source))
+                    expected_dest = os.path.normpath(os.path.join(temp_dir, dest))
+
+                    self.assertTrue(os.path.exists(expected_dest),
+                        f"Dest does not exist '{expected_dest}'.")
+
+                    self.assertFalse(os.path.exists(expected_source),
+                        f"Source exists '{expected_source}'.")
+
+                self._run_fileop_exec_test(operation, error_substring, post_check)
+
+    @unittest.skipIf(sys.platform.startswith("win"), "fileops require POSIX")
+    def test_fileop_exec_move_glob(self):
+        test_cases = [
             ("*", "a", None),
             (ALREADY_EXISTS_DIRNAME + "/*", "a", None),
             (ALREADY_EXISTS_DIRNAME + "/*.txt", "a", None),
             (ALREADY_EXISTS_DIRNAME + "/*", STARTING_EMPTY_DIRNAME, None),
             (ALREADY_EXISTS_DIRNAME + "/*.txt", STARTING_EMPTY_DIRNAME, None),
-            ("a", "b", "No such file or directory"),
-            (ALREADY_EXISTS_FILE_POSIX_RELPATH, "a/b", "No such file or directory"),
-            (ALREADY_EXISTS_FILE_POSIX_RELPATH, ALREADY_EXISTS_DIRNAME, "already exists"),
-            (ALREADY_EXISTS_DIRNAME, ALREADY_EXISTS_FILE_POSIX_RELPATH, "into itself"),
+            (ALREADY_EXISTS_DIRNAME, STARTING_EMPTY_DIRNAME, None),
+            (ALREADY_EXISTS_DIRNAME, ALREADY_EXISTS_DIRNAME, None),
+            (ALREADY_EXISTS_DIRNAME + "/*", ALREADY_EXISTS_DIRNAME, "already exists"),
+            (ALREADY_EXISTS_DIRNAME + "/*.txt", ALREADY_EXISTS_DIRNAME, "already exists"),
             (ALREADY_EXISTS_DIRNAME + "/*.txt", ALREADY_EXISTS_FILENAME, "is not a directory"),
         ]
 
@@ -209,25 +263,49 @@ class TestFileOp(unittest.TestCase):
     @unittest.skipIf(sys.platform.startswith("win"), "fileops require POSIX")
     def test_fileop_exec_remove(self):
         test_cases = [
-            ("a", None),
-            ("a/b", None),
-            ("a/../b", None),
-            (ALREADY_EXISTS_DIRNAME, None),
-            (ALREADY_EXISTS_DIRNAME + "/a", None),
-            (ALREADY_EXISTS_FILE_POSIX_RELPATH, None),
+            ("a", None, None),
+            ("a/b", None, None),
+            ("a/../b", None, None),
+            (ALREADY_EXISTS_DIRNAME, None, None),
+            (ALREADY_EXISTS_DIRNAME + "/a", None, None),
+            (ALREADY_EXISTS_FILE_POSIX_RELPATH, None, None),
+            (
+                ALREADY_EXISTS_DIRNAME + "/*",
+                [ALREADY_EXISTS_FILE_RELPATH, ALREADY_EXISTS_FILE_ALT_RELPATH],
+                None
+            ),
+            (
+                ALREADY_EXISTS_DIRNAME + "/*.txt",
+                [ALREADY_EXISTS_FILE_RELPATH, ALREADY_EXISTS_FILE_ALT_RELPATH],
+                None
+            ),
+            (
+                "*",
+                [
+                    ALREADY_EXISTS_FILENAME,
+                    ALREADY_EXISTS_DIRNAME,
+                    STARTING_EMPTY_DIRNAME,
+                    ALREADY_EXISTS_FILE_RELPATH,
+                    ALREADY_EXISTS_FILE_ALT_RELPATH
+                ],
+                None
+            ),
         ]
 
         for i in range(len(test_cases)):
             with self.subTest(msg = f"Case {i}"):
-                (path, error_substring) = test_cases[i]
+                (path, expected_paths, error_substring) = test_cases[i]
+                if (expected_paths is None):
+                    expected_paths = [path]
 
                 operation = ["rm", path]
 
                 def post_check(operation, temp_dir):
-                    expected_path = os.path.normpath(os.path.join(temp_dir, path))
+                    for rel_expected_path in expected_paths:
+                        expected_path = os.path.normpath(os.path.join(temp_dir, rel_expected_path))
 
-                    self.assertFalse(os.path.exists(expected_path),
-                        f"Target exists '{expected_path}'.")
+                        self.assertFalse(os.path.exists(expected_path),
+                            f"Target exists '{expected_path}'.")
 
                 self._run_fileop_exec_test(operation, error_substring, post_check)
 
