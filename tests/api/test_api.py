@@ -257,16 +257,6 @@ def fake_apirequest_stats(output):
                 "locator": "2",
                 "duration": 200
             },
-            {
-                "timestamp": 200,
-                "sender": "2",
-                "endpoint": "E2",
-                "user": "server-admin@test.edulinq.org",
-                "course": "course101",
-                "assignment": "hw0",
-                "locator": "2",
-                "duration": 200
-            }
         ]
     }
 
