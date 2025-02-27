@@ -229,6 +229,47 @@ def fake_course_stats(output):
         ]
     }
 
+def fake_apirequest_stats(output):
+    """
+    Because of the variable and fine-grained level of apirequest stats,
+    the entire output must be faked.
+    """
+
+    return {
+        "results": [
+            {
+                "timestamp": 100,
+                "sender": "1",
+                "endpoint": "E1",
+                "user": "server-admin@test.edulinq.org",
+                "course": "course101",
+                "assignment": "hw0",
+                "locator": "1",
+                "duration": 100
+            },
+            {
+                "timestamp": 200,
+                "sender": "2",
+                "endpoint": "E2",
+                "user": "server-admin@test.edulinq.org",
+                "course": "course101",
+                "assignment": "hw0",
+                "locator": "2",
+                "duration": 200
+            },
+            {
+                "timestamp": 200,
+                "sender": "2",
+                "endpoint": "E2",
+                "user": "server-admin@test.edulinq.org",
+                "course": "course101",
+                "assignment": "hw0",
+                "locator": "2",
+                "duration": 200
+            }
+        ]
+    }
+
 # flake8: noqa: E501
 def fake_system_stacks(output):
     """
