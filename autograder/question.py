@@ -138,6 +138,15 @@ class Question(object):
         self.set_result(0, message)
         raise AutograderFailError()
 
+    def hard_fail(self, message):
+        """
+        Immediately hard fail this question, no partial credit.
+        Grading will be stopped for the rest of the assignment.
+        """
+
+        self.set_result(0, message)
+        raise AutograderHardFailError()
+
     def full_credit(self, message = ''):
         self.set_score(self.max_points)
 
@@ -165,6 +174,14 @@ class AutograderFailError(RuntimeError):
     """
     This error indicates that fail() has been called on a question
     and execution should be stopped.
+    """
+
+    pass
+
+class AutograderHardFailError(RuntimeError):
+    """
+    This error indicates that hard_fail() has been called on a question
+    and execution should be stopped for all questions in the assignment.
     """
 
     pass
