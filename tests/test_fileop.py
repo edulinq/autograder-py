@@ -46,6 +46,8 @@ class TestFileOp(unittest.TestCase):
             (["copy", "a/?", "b"], ["copy", "a/?", "b"], None),
             (["move", "a/*", "b"], ["move", "a/*", "b"], None),
             (["move", "a/?", "b"], ["move", "a/?", "b"], None),
+            # Validation does not raise an error on malformed globs.
+            # They are treated as path literals, following glob.glob().
             (["copy", "*/[a-z", "b"], ["copy", "*/[a-z", "b"], None),
 
             # Errors
