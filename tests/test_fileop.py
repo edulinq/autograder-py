@@ -1,4 +1,3 @@
-import glob
 import os
 import unittest
 import sys
@@ -111,7 +110,7 @@ class TestFileOp(unittest.TestCase):
             (ALREADY_EXISTS_FILE_POSIX_RELPATH, "a/b", None),
             (ALREADY_EXISTS_FILE_POSIX_RELPATH, ALREADY_EXISTS_DIRNAME, None),
             ("a", "b", "No such file or directory"),
-            (ALREADY_EXISTS_DIRNAME, ALREADY_EXISTS_FILE_POSIX_RELPATH, "File exists"),
+            (ALREADY_EXISTS_DIRNAME, ALREADY_EXISTS_FILE_POSIX_RELPATH, "Not a directory"),
         ]
 
         for i in range(len(test_cases)):
@@ -135,35 +134,58 @@ class TestFileOp(unittest.TestCase):
     @unittest.skipIf(sys.platform.startswith("win"), "fileops require POSIX")
     def test_fileop_exec_copy_glob(self):
         test_cases = [
-            ("*", "a", None),
-            (ALREADY_EXISTS_DIRNAME + "/*", "a", None),
-            (ALREADY_EXISTS_DIRNAME + "/*.txt", "a", None),
-            (ALREADY_EXISTS_DIRNAME + "/*", STARTING_EMPTY_DIRNAME, None),
-            (ALREADY_EXISTS_DIRNAME + "/*.txt", STARTING_EMPTY_DIRNAME, None),
-            (ALREADY_EXISTS_DIRNAME, STARTING_EMPTY_DIRNAME, None),
-            (ALREADY_EXISTS_DIRNAME + "/*", ALREADY_EXISTS_DIRNAME, None),
-            (ALREADY_EXISTS_DIRNAME + "/*.txt", ALREADY_EXISTS_DIRNAME, None),
-            (ALREADY_EXISTS_DIRNAME, ALREADY_EXISTS_DIRNAME, None),
-            (ALREADY_EXISTS_DIRNAME + "/*.txt", ALREADY_EXISTS_FILENAME, "is not a directory"),
+            (
+                ALREADY_EXISTS_DIRNAME + "/*",
+                STARTING_EMPTY_DIRNAME,
+                [
+                    ALREADY_EXISTS_FILE_RELPATH,
+                    ALREADY_EXISTS_FILE_ALT_RELPATH,
+                    os.path.join(STARTING_EMPTY_DIRNAME, ALREADY_EXISTS_FILENAME),
+                    os.path.join(STARTING_EMPTY_DIRNAME, ALREADY_EXISTS_FILENAME_ALT),
+                ],
+                None
+            ),
+            (
+                ALREADY_EXISTS_DIRNAME + "/*.txt",
+                STARTING_EMPTY_DIRNAME,
+                [
+                    ALREADY_EXISTS_FILE_RELPATH,
+                    ALREADY_EXISTS_FILE_ALT_RELPATH,
+                    os.path.join(STARTING_EMPTY_DIRNAME, ALREADY_EXISTS_FILENAME),
+                    os.path.join(STARTING_EMPTY_DIRNAME, ALREADY_EXISTS_FILENAME_ALT),
+                ],
+                None
+            ),
+            (
+                ALREADY_EXISTS_DIRNAME,
+                STARTING_EMPTY_DIRNAME,
+                [
+                    ALREADY_EXISTS_FILE_RELPATH,
+                    ALREADY_EXISTS_FILE_ALT_RELPATH,
+                    os.path.join(STARTING_EMPTY_DIRNAME, ALREADY_EXISTS_FILE_RELPATH),
+                    os.path.join(STARTING_EMPTY_DIRNAME, ALREADY_EXISTS_FILE_ALT_RELPATH),
+                ],
+                None
+            ),
+            (
+                ALREADY_EXISTS_DIRNAME + "/*.txt",
+                ALREADY_EXISTS_FILENAME,
+                [],
+                "File exists"
+            ),
         ]
 
         for i in range(len(test_cases)):
             with self.subTest(msg = f"Case {i}"):
-                (source, dest, error_substring) = test_cases[i]
+                (source, dest, expected_paths, error_substring) = test_cases[i]
 
                 operation = ["cp", source, dest]
 
                 def post_check(operation, temp_dir):
-                    expected_source_glob = os.path.normpath(os.path.join(temp_dir, source))
-                    expected_dest = os.path.normpath(os.path.join(temp_dir, dest))
-
-                    self.assertTrue(os.path.exists(expected_dest),
-                        f"Dest does not exist '{expected_dest}'.")
-
-                    expected_sources = glob.glob(expected_source_glob)
-                    for expected_source in expected_sources:
-                        self.assertTrue(os.path.exists(expected_source),
-                            f"Source does not exist '{expected_source}'.")
+                    for expected_path in expected_paths:
+                        expected_path = os.path.normpath(os.path.join(temp_dir, expected_path))
+                        self.assertTrue(os.path.exists(expected_path),
+                                        f"A path does not exist when it should '{expected_path}'.")
 
                 self._run_fileop_exec_test(operation, error_substring, post_check)
 
@@ -202,35 +224,89 @@ class TestFileOp(unittest.TestCase):
     @unittest.skipIf(sys.platform.startswith("win"), "fileops require POSIX")
     def test_fileop_exec_move_glob(self):
         test_cases = [
-            ("*", "a", None),
-            (ALREADY_EXISTS_DIRNAME + "/*", "a", None),
-            (ALREADY_EXISTS_DIRNAME + "/*.txt", "a", None),
-            (ALREADY_EXISTS_DIRNAME + "/*", STARTING_EMPTY_DIRNAME, None),
-            (ALREADY_EXISTS_DIRNAME + "/*.txt", STARTING_EMPTY_DIRNAME, None),
-            (ALREADY_EXISTS_DIRNAME, STARTING_EMPTY_DIRNAME, None),
-            (ALREADY_EXISTS_DIRNAME, ALREADY_EXISTS_DIRNAME, None),
-            (ALREADY_EXISTS_DIRNAME + "/*", ALREADY_EXISTS_DIRNAME, "already exists"),
-            (ALREADY_EXISTS_DIRNAME + "/*.txt", ALREADY_EXISTS_DIRNAME, "already exists"),
-            (ALREADY_EXISTS_DIRNAME + "/*.txt", ALREADY_EXISTS_FILENAME, "is not a directory"),
+            (
+                "*",
+                "a",
+                [
+                    os.path.join("a", ALREADY_EXISTS_FILENAME),
+                    os.path.join("a", ALREADY_EXISTS_DIRNAME),
+                    os.path.join("a", STARTING_EMPTY_DIRNAME),
+                    os.path.join("a", ALREADY_EXISTS_FILE_RELPATH),
+                    os.path.join("a", ALREADY_EXISTS_FILE_ALT_RELPATH),
+                ],
+                [
+                    ALREADY_EXISTS_FILENAME,
+                    ALREADY_EXISTS_DIRNAME,
+                    STARTING_EMPTY_DIRNAME,
+                    ALREADY_EXISTS_FILE_RELPATH,
+                    ALREADY_EXISTS_FILE_ALT_RELPATH,
+                ],
+                None
+            ),
+            (
+                ALREADY_EXISTS_DIRNAME + "/*",
+                "a",
+                [
+                    os.path.join("a", ALREADY_EXISTS_FILENAME),
+                    os.path.join("a", ALREADY_EXISTS_FILENAME_ALT),
+                ],
+                [
+                    ALREADY_EXISTS_FILE_RELPATH,
+                    ALREADY_EXISTS_FILE_ALT_RELPATH,
+                ],
+                None
+            ),
+            (
+                ALREADY_EXISTS_DIRNAME + "/*.txt",
+                "a",
+                [
+                    os.path.join("a", ALREADY_EXISTS_FILENAME),
+                    os.path.join("a", ALREADY_EXISTS_FILENAME_ALT),
+                ],
+                [
+                    ALREADY_EXISTS_FILE_RELPATH,
+                    ALREADY_EXISTS_FILE_ALT_RELPATH,
+                ],
+                None
+            ),
+            (
+                ALREADY_EXISTS_DIRNAME,
+                STARTING_EMPTY_DIRNAME,
+                [
+                    os.path.join(STARTING_EMPTY_DIRNAME, ALREADY_EXISTS_FILE_RELPATH),
+                    os.path.join(STARTING_EMPTY_DIRNAME, ALREADY_EXISTS_FILE_ALT_RELPATH),
+                ],
+                [
+                    ALREADY_EXISTS_FILE_RELPATH,
+                    ALREADY_EXISTS_FILE_ALT_RELPATH,
+                ],
+                None
+            ),
+            (
+                ALREADY_EXISTS_DIRNAME + "/*.txt",
+                ALREADY_EXISTS_FILENAME,
+                [],
+                [],
+                "File exists",
+            ),
         ]
 
         for i in range(len(test_cases)):
             with self.subTest(msg = f"Case {i}"):
-                (source, dest, error_substring) = test_cases[i]
+                (source, dest, expected_paths, not_expected_paths, error_substring) = test_cases[i]
 
                 operation = ["mv", source, dest]
 
                 def post_check(operation, temp_dir):
-                    expected_source_glob = os.path.normpath(os.path.join(temp_dir, source))
-                    expected_dest = os.path.normpath(os.path.join(temp_dir, dest))
+                    for expected_path in expected_paths:
+                        path = os.path.normpath(os.path.join(temp_dir, expected_path))
+                        self.assertTrue(os.path.exists(path),
+                                        f"Expected path does not exist '{path}'.")
 
-                    self.assertTrue(os.path.exists(expected_dest),
-                        f"Dest does not exist '{expected_dest}'.")
-
-                    expected_sources = glob.glob(expected_source_glob)
-                    for expected_source in expected_sources:
-                        self.assertTrue(os.path.exists(expected_source),
-                            f"Source does not exist '{expected_source}'.")
+                    for not_expected_path in not_expected_paths:
+                        path = os.path.normpath(os.path.join(temp_dir, not_expected_path))
+                        self.assertFalse(os.path.exists(path),
+                                         f"Unexpected path exists '{path}'.")
 
                 self._run_fileop_exec_test(operation, error_substring, post_check)
 

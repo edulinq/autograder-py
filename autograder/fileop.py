@@ -168,10 +168,6 @@ def _prep_for_globs(source_path_glob, dest_path):
         raise FileNotFoundError(f"No such file or directory: '{source_path_glob}'.")
 
     if (len(source_paths) > 1):
-        if (not os.path.exists(dest_path)):
-            os.makedirs(dest_path)
-
-        if (not os.path.isdir(dest_path)):
-            raise NotADirectoryError(f"Dest path exists but is not a directory: '{dest_path}'.")
+        os.makedirs(dest_path, exist_ok = True)
 
     return source_paths
