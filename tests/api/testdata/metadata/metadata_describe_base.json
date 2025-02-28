@@ -128,6 +128,11 @@
                 "response-type": "*metadata.DescribeResponse",
                 "description": "Describe all endpoints on the server."
             },
+            "stats/apirequest/query": {
+                "request-type": "*apirequest.QueryRequest",
+                "response-type": "*apirequest.QueryResponse",
+                "description": "Query the API request stats for the server."
+            },
             "stats/system/query": {
                 "request-type": "*system.QueryRequest",
                 "response-type": "*system.QueryResponse",
