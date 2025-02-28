@@ -7,8 +7,10 @@ See:
  - https://github.com/edulinq/autograder-server/blob/main/internal/util/fileop.go
 """
 
+import fnmatch
 import glob
 import os
+import re
 
 import autograder.util.dir
 import autograder.util.dirent
@@ -94,7 +96,8 @@ def validate(operation):
                 + " dirent inside the current directory tree.")
 
         try:
-            glob.glob(path)
+            glob_pattern = fnmatch.translate(path)
+            re.compile(glob_pattern)
         except Exception as error:
             raise ValueError(f"Argument at index {i} ('{operation[i]}')"
                 + f" is an invalid glob pattern: {error}.")

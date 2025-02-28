@@ -39,7 +39,7 @@ def copy(source, dest, dirs_exist_ok = False):
     Copy a file or directory into dest.
     If source is a file, then dest can be a file or dir.
     If source is a dir, it is copied as a subdirectory of dest.
-    If dirs_exist_ok=True, an existing destination directory is allowed.
+    If dirs_exist_ok is true, an existing destination directory is allowed.
     """
 
     if (os.path.isfile(source)):
@@ -49,7 +49,7 @@ def copy(source, dest, dirs_exist_ok = False):
         except shutil.SameFileError:
             return
     else:
-        if (os.path.isdir(source)):
+        if (os.path.isdir(dest)):
             dest = os.path.join(dest, os.path.basename(source))
 
         shutil.copytree(source, dest, dirs_exist_ok = dirs_exist_ok)
