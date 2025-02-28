@@ -268,6 +268,18 @@ PARAM_QUERY_TARGET_EMAIL = APIParam('target-email',
     'If supplied, only return records for this user.',
     required = False)
 
+PARAM_QUERY_TARGET_SENDER = APIParam('target-sender',
+    'If supplied, only return records for this sender.',
+    required = False)
+
+PARAM_QUERY_TARGET_ENDPOINT = APIParam('target-endpoint',
+    'If supplied, only return records for this endpoint.',
+    required = False)
+
+PARAM_QUERY_TARGET_LOCATOR = APIParam('target-locator',
+    'If supplied, only return records for this locator.',
+    required = False)
+
 PARAM_SEND_EMAILS = APIParam('send-emails',
     'Send any emails.',
     required = True, cli_param = False)
