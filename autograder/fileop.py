@@ -7,7 +7,10 @@ See:
  - https://github.com/edulinq/autograder-server/blob/main/internal/util/fileop.go
 """
 
+import fnmatch
+import glob
 import os
+import re
 
 import autograder.util.dir
 import autograder.util.dirent
@@ -92,6 +95,13 @@ def validate(operation):
                 + " File operation paths must point to a"
                 + " dirent inside the current directory tree.")
 
+        try:
+            glob_pattern = fnmatch.translate(path)
+            re.compile(glob_pattern)
+        except Exception as error:
+            raise ValueError(f"Argument at index {i} ('{operation[i]}')"
+                + f" is an invalid glob pattern: {error}.")
+
         operation[i] = path
 
     return operation
@@ -105,24 +115,23 @@ def execute(operation, base_dir):
     if (command == FILE_OP_LONG_COPY):
         source_path = _resolve_path(operation[1], base_dir)
         dest_path = _resolve_path(operation[2], base_dir)
-        if (source_path == dest_path):
-            return
 
-        autograder.util.dirent.copy(source_path, dest_path)
+        _handle_glob_file_operation(
+            source_path, dest_path, autograder.util.dirent.copy, dirs_exist_ok = True
+        )
     elif (command == FILE_OP_LONG_MOVE):
         source_path = _resolve_path(operation[1], base_dir)
         dest_path = _resolve_path(operation[2], base_dir)
-        if (source_path == dest_path):
-            return
 
-        autograder.util.dirent.move(source_path, dest_path)
+        _handle_glob_file_operation(source_path, dest_path, autograder.util.dirent.move)
     elif (command == FILE_OP_LONG_MKDIR):
         path = _resolve_path(operation[1], base_dir)
 
         autograder.util.dir.mkdir(path)
     elif (command == FILE_OP_LONG_REMOVE):
-        path = _resolve_path(operation[1], base_dir)
-        autograder.util.dirent.remove(path)
+        path_glob = _resolve_path(operation[1], base_dir)
+
+        _handle_glob_remove(path_glob)
     else:
         raise ValueError(f"Unknown file operation: '{command}'.")
 
@@ -139,3 +148,29 @@ def _resolve_path(path, base_dir):
         return os.path.normpath(path)
 
     return os.path.normpath(os.path.join(base_dir, path))
+
+def _handle_glob_file_operation(source_path_glob, dest_path, operation, **kwargs):
+    source_paths = _prep_for_globs(source_path_glob, dest_path)
+
+    for source_path in source_paths:
+        if (source_path == dest_path):
+            continue
+
+        operation(source_path, dest_path, **kwargs)
+
+def _handle_glob_remove(path_glob):
+    paths = glob.glob(path_glob)
+
+    for path in paths:
+        autograder.util.dirent.remove(path)
+
+def _prep_for_globs(source_path_glob, dest_path):
+    source_paths = glob.glob(source_path_glob)
+
+    if (len(source_paths) == 0):
+        raise FileNotFoundError(f"No such file or directory: '{source_path_glob}'.")
+
+    if (len(source_paths) > 1):
+        os.makedirs(dest_path, exist_ok = True)
+
+    return source_paths

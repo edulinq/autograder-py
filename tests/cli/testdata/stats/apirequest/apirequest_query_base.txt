@@ -1,0 +1,30 @@
+{
+    "cli": "autograder.cli.stats.apirequest.query",
+    "arguments": [
+        "--user", "server-admin@test.edulinq.org",
+        "--pass", "server-admin"
+    ]
+}
+---
+[
+    {
+        "timestamp": 100,
+        "sender": "1",
+        "endpoint": "E1",
+        "user": "server-admin@test.edulinq.org",
+        "course": "course101",
+        "assignment": "hw0",
+        "locator": "1",
+        "duration": 100
+    },
+    {
+        "timestamp": 200,
+        "sender": "2",
+        "endpoint": "E2",
+        "user": "server-admin@test.edulinq.org",
+        "course": "course101",
+        "assignment": "hw0",
+        "locator": "2",
+        "duration": 200
+    }
+]
