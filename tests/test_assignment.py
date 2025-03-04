@@ -5,31 +5,31 @@ import autograder.question
 import autograder.assignment
 import autograder.util.invoke
 
-BASE_ERROR_MESSAGE = "Incorrect result."
-SKIPPING_QUESTION_MESSAGE = "Grading stopped, skipping question..."
+BASE_ERROR_MESSAGE = "Got a False."
+SKIPPING_QUESTION_MESSAGE = "Grading stopped because of a hard error, skipping question..."
 
 class TestAssignment(unittest.TestCase):
-    class Q0(autograder.question.Question):
-        def score_question(self, submission):
-            result = submission()
-
-            if (result == 0):
-                self.full_credit()
-            else:
-                self.hard_fail(BASE_ERROR_MESSAGE)
-
-    class Q1(autograder.question.Question):
+    class QuestionBase(autograder.question.Question):
         def score_question(self, submission):
             result = submission()
 
             if (result):
                 self.full_credit()
             else:
-                self.fail("Got a False.")
+                self.fail(BASE_ERROR_MESSAGE)
+
+    class QuestionHardFail(autograder.question.Question):
+        def score_question(self, submission):
+            result = submission()
+
+            if (result):
+                self.full_credit()
+            else:
+                self.hard_fail(BASE_ERROR_MESSAGE)
 
     def test_base_full_credit(self):
         questions = [
-            TestAssignment.Q1(1),
+            TestAssignment.QuestionBase(1),
         ]
 
         class TA(autograder.assignment.Assignment):
@@ -46,7 +46,7 @@ class TestAssignment(unittest.TestCase):
 
     def test_base_fail(self):
         questions = [
-            TestAssignment.Q1(1),
+            TestAssignment.QuestionBase(1),
         ]
 
         class TA(autograder.assignment.Assignment):
@@ -63,7 +63,7 @@ class TestAssignment(unittest.TestCase):
 
     def test_sleep_fail(self):
         questions = [
-            TestAssignment.Q1(1, timeout = 0.05),
+            TestAssignment.QuestionBase(1, timeout = 0.05),
         ]
 
         def submission():
@@ -90,26 +90,78 @@ class TestAssignment(unittest.TestCase):
         self.assertEqual(max_score, 1)
 
     def test_hard_fail(self):
-        questions = [
-            TestAssignment.Q0(1),
-            TestAssignment.Q1(1),
+        test_cases = [
+            (
+                [TestAssignment.QuestionBase(1), TestAssignment.QuestionBase(1)],
+                [(False, False), (False, False)]
+            ),
+            (
+                [TestAssignment.QuestionBase(1), TestAssignment.QuestionHardFail(1)],
+                [(False, False), (True, False)]
+            ),
+            (
+                [TestAssignment.QuestionHardFail(1), TestAssignment.QuestionBase(1)],
+                [(True, False), (False, True)]
+            ),
+            (
+                [TestAssignment.QuestionHardFail(1), TestAssignment.QuestionHardFail(1)],
+                [(True, False), (False, True)]
+            ),
         ]
-
-        def submission():
-            return -1
 
         class TA(autograder.assignment.Assignment):
             def _prepare_submission(self):
-                return submission
+                return lambda: False
 
-        assignment = TA('test_hard_fail', questions)
-        result = assignment.grade(show_exceptions = True)
+        for i in range(len(test_cases)):
+            with self.subTest(i = i):
+                questions, expected_results = test_cases[i]
 
-        total_score, max_score = result.get_score()
+                assignment = TA(f'test_hard_fail_{i}', questions)
+                result = assignment.grade(show_exceptions = True)
 
-        self.assertEqual(total_score, 0)
-        self.assertEqual(max_score, 2)
+                total_score, max_score = result.get_score()
 
-        self.assertIn(BASE_ERROR_MESSAGE, result.questions[0].message)
-        # Ensure we are skipping the remaining questions.
-        self.assertIn(SKIPPING_QUESTION_MESSAGE, result.questions[1].message)
+                self.assertEqual(total_score, 0)
+                self.assertEqual(max_score, 2)
+
+                for j in range(len(expected_results)):
+                    (expected_hard_fail, expected_skipped) = expected_results[j]
+
+                    self.assertEqual(expected_hard_fail, result.questions[j].hard_fail)
+                    self.assertEqual(expected_skipped, result.questions[j].skipped)
+
+                    if (expected_skipped):
+                        self.assertIn(SKIPPING_QUESTION_MESSAGE, result.questions[j].message)
+                    else:
+                        self.assertIn(BASE_ERROR_MESSAGE, result.questions[j].message)
+
+    def test_hard_fail_full_credit(self):
+        test_cases = [
+            [TestAssignment.QuestionBase(1), TestAssignment.QuestionBase(1)],
+            [TestAssignment.QuestionBase(1), TestAssignment.QuestionHardFail(1)],
+            [TestAssignment.QuestionHardFail(1), TestAssignment.QuestionBase(1)],
+            [TestAssignment.QuestionHardFail(1), TestAssignment.QuestionHardFail(1)],
+        ]
+
+        class TA(autograder.assignment.Assignment):
+            def _prepare_submission(self):
+                return lambda: True
+
+        for i in range(len(test_cases)):
+            with self.subTest(i = i):
+                questions = test_cases[i]
+
+                assignment = TA(f'test_hard_fail_full_credit_{i}', questions)
+                result = assignment.grade(show_exceptions = True)
+
+                total_score, max_score = result.get_score()
+
+                self.assertEqual(total_score, 2)
+                self.assertEqual(max_score, 2)
+
+                for j in range(len(questions)):
+                    self.assertEqual(False, result.questions[j].hard_fail)
+                    self.assertEqual(False, result.questions[j].skipped)
+
+                    self.assertNotIn(BASE_ERROR_MESSAGE, result.questions[j].message)

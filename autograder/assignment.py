@@ -80,27 +80,25 @@ class Assignment(object):
         self.result = GradedAssignment(name = self._name, questions = [])
         self.result.grading_start_time = autograder.util.timestamp.get()
 
-        ungraded_questions = self._questions.copy()
-
+        stop_grading = False
         for question in self._questions:
+            if (stop_grading):
+                now = autograder.util.timestamp.get()
 
-            self.result.questions.append(question.grade(submission,
-                additional_data = self._additional_data,
-                show_exceptions = show_exceptions))
+                self.result.questions.append(autograder.question.GradedQuestion(
+                    name = question.name,
+                    max_points = question.max_points, score = 0,
+                    message = "Grading stopped because of a hard error, skipping question...",
+                    grading_start_time = now, grading_end_time = now,
+                    skipped = True))
+            else:
+                result = question.grade(submission,
+                    additional_data = self._additional_data,
+                    show_exceptions = show_exceptions)
 
-            ungraded_questions.remove(question)
+                self.result.questions.append(result)
 
-            if (question.get_stop_grading()):
-                break
-
-        now = autograder.util.timestamp.get()
-
-        for question in ungraded_questions:
-            self.result.questions.append(autograder.question.GradedQuestion(
-                name = question.name,
-                max_points = question.max_points, score = 0,
-                message = "Grading stopped, skipping question...",
-                grading_start_time = now, grading_end_time = now))
+                stop_grading = result.hard_fail
 
         self.result.grading_end_time = autograder.util.timestamp.get()
 

@@ -31,7 +31,6 @@ class Question(object):
 
         self.max_points = max_points
         self._timeout = timeout
-        self.stop_grading = False
 
         # Create the base scoring artifact.
         self.result = GradedQuestion(name = self.name, max_points = self.max_points)
@@ -69,9 +68,6 @@ class Question(object):
             self.set_result(0, "Raised an exception: " + traceback.format_exc())
             return
 
-        if (value is not None):
-            value, self.stop_grading = value
-
         if (not success):
             if (value is None):
                 self.set_result(0, "Timeout (%d seconds)." % (self._timeout))
@@ -89,8 +85,8 @@ class Question(object):
 
     def _score_helper(self, submission, additional_data = {}):
         """
-        Score the question, but make sure to return the result and stop grading
-        so multiprocessing can properly pass it back.
+        Score the question, but make sure to return the result so
+        multiprocessing can properly pass it back.
         """
 
         self.result = GradedQuestion(name = self.name, max_points = self.max_points)
@@ -104,21 +100,17 @@ class Question(object):
             pass
         except AutograderHardFailError:
             # The question has been failed hard, signal to stop grading.
-            self.stop_grading = True
-            pass
+            self.result.hard_fail = True
 
         self.result.grading_end_time = autograder.util.timestamp.get()
 
-        return self.result, self.stop_grading
+        return self.result
 
     def get_last_result(self):
         return self.result
 
     def get_score(self):
         return self.result.score
-
-    def get_stop_grading(self):
-        return self.stop_grading
 
     # Grading functions.
 
@@ -203,7 +195,7 @@ class GradedQuestion(object):
     """
 
     def __init__(self, name = '', max_points = 0,
-            score = 0, message = '',
+            score = 0, message = '', skipped = False,
             grading_start_time = None, grading_end_time = None,
             **kwargs):
         self.name = name
@@ -211,6 +203,9 @@ class GradedQuestion(object):
 
         self.score = score
         self.message = message
+
+        self.hard_fail = False
+        self.skipped = skipped
 
         # Default the grading time to deal with situations where the grader throws an exception.
         now = autograder.util.timestamp.get()
