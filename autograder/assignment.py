@@ -84,15 +84,13 @@ class Assignment(object):
 
         for question in self._questions:
 
-            result = question.grade(submission,
+            self.result.questions.append(question.grade(submission,
                 additional_data = self._additional_data,
-                show_exceptions = show_exceptions)
-
-            self.result.questions.append(result)
+                show_exceptions = show_exceptions))
 
             ungraded_questions.remove(question)
 
-            if ("AutograderHardFailError" in result.message):
+            if (question.get_stop_grading()):
                 break
 
         now = autograder.util.timestamp.get()

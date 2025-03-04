@@ -6,7 +6,6 @@ import autograder.assignment
 import autograder.util.invoke
 
 BASE_ERROR_MESSAGE = "Incorrect result."
-FULL_ERROR_MESSAGE = "AutograderHardFailError: " + BASE_ERROR_MESSAGE
 SKIPPING_QUESTION_MESSAGE = "Grading stopped, skipping question..."
 
 class TestAssignment(unittest.TestCase):
@@ -111,6 +110,6 @@ class TestAssignment(unittest.TestCase):
         self.assertEqual(total_score, 0)
         self.assertEqual(max_score, 2)
 
-        self.assertIn(FULL_ERROR_MESSAGE, result.questions[0].message)
+        self.assertIn(BASE_ERROR_MESSAGE, result.questions[0].message)
         # Ensure we are skipping the remaining questions.
         self.assertIn(SKIPPING_QUESTION_MESSAGE, result.questions[1].message)
