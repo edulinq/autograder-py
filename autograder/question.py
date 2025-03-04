@@ -95,7 +95,7 @@ class Question(object):
 
         try:
             self.score_question(submission, **additional_data)
-        except AutograderFailError:
+        except (AutograderFailError, AutograderHardFailError):
             # The question has been failed, no additional output is required.
             pass
 
@@ -144,7 +144,7 @@ class Question(object):
         Grading will be stopped for the rest of the assignment.
         """
 
-        self.set_result(0, message)
+        self.set_result(0, "AutograderHardFailError: " + message)
         raise AutograderHardFailError()
 
     def full_credit(self, message = ''):
