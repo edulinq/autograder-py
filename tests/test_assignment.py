@@ -7,6 +7,7 @@ import autograder.assignment
 import autograder.util.invoke
 
 BASE_ERROR_MESSAGE = "Bad result for question."
+HARD_FAIL_ERROR_MESSAGE = "Fix your code! Hard failing..."
 SKIPPING_QUESTION_MESSAGE = "Grading stopped because of a hard error, skipping question..."
 
 class TestAssignment(unittest.TestCase):
@@ -19,20 +20,17 @@ class TestAssignment(unittest.TestCase):
             else:
                 self.fail(BASE_ERROR_MESSAGE)
 
-    class QuestionHardFail(autograder.question.Question):
+    class QuestionAlwaysPass(autograder.question.Question):
         def score_question(self, submission):
-            result = submission()
+            self.full_credit()
 
-            if (result):
-                self.full_credit()
-            else:
-                self.hard_fail(BASE_ERROR_MESSAGE)
+    class QuestionAlwaysFail(autograder.question.Question):
+        def score_question(self, submission):
+            self.fail(BASE_ERROR_MESSAGE)
 
     class QuestionAlwaysHardFail(autograder.question.Question):
         def score_question(self, submission):
-            submission()
-
-            self.hard_fail(BASE_ERROR_MESSAGE)
+            self.hard_fail(HARD_FAIL_ERROR_MESSAGE)
 
     def test_base_full_credit(self):
         questions = [
@@ -97,101 +95,13 @@ class TestAssignment(unittest.TestCase):
         self.assertEqual(max_score, 1)
 
     def test_hard_fail(self):
-        # question, question, submission, score, graded_question, graded_question.
+        # Each test case is a tuple of question, question, graded_question, graded_question.
         test_cases = [
-            # Incorrect submission, (fail, fail).
+            # 2 points, (success, success).
             (
-                TestAssignment.QuestionBase(1), TestAssignment.QuestionBase(1),
-                False, 0,
+                TestAssignment.QuestionAlwaysPass(1), TestAssignment.QuestionAlwaysPass(1),
                 {
-                    "name": "QuestionBase",
-                    "max_points": 1,
-                    "score": 0,
-                    "hard_fail": False,
-                    "skipped": False,
-                    "message": BASE_ERROR_MESSAGE
-                },
-                {
-                    "name": "QuestionBase",
-                    "max_points": 1,
-                    "score": 0,
-                    "hard_fail": False,
-                    "skipped": False,
-                    "message": BASE_ERROR_MESSAGE
-                },
-            ),
-
-            # Incorrect submission, (fail, hard fail).
-            (
-                TestAssignment.QuestionBase(1), TestAssignment.QuestionHardFail(1),
-                False, 0,
-                {
-                    "name": "QuestionBase",
-                    "max_points": 1,
-                    "score": 0,
-                    "hard_fail": False,
-                    "skipped": False,
-                    "message": BASE_ERROR_MESSAGE
-                },
-                {
-                    "name": "QuestionHardFail",
-                    "max_points": 1,
-                    "score": 0,
-                    "hard_fail": True,
-                    "skipped": False,
-                    "message": BASE_ERROR_MESSAGE
-                },
-            ),
-
-            # Incorrect submission, (hard fail, skip).
-            (
-                TestAssignment.QuestionHardFail(1), TestAssignment.QuestionBase(1),
-                False, 0,
-                {
-                    "name": "QuestionHardFail",
-                    "max_points": 1,
-                    "score": 0,
-                    "hard_fail": True,
-                    "skipped": False,
-                    "message": BASE_ERROR_MESSAGE
-                },
-                {
-                    "name": "QuestionBase",
-                    "max_points": 1,
-                    "score": 0,
-                    "hard_fail": False,
-                    "skipped": True,
-                    "message": SKIPPING_QUESTION_MESSAGE
-                },
-            ),
-            (
-                TestAssignment.QuestionHardFail(1), TestAssignment.QuestionHardFail(1),
-                False, 0,
-                {
-                    "name": "QuestionHardFail",
-                    "max_points": 1,
-                    "score": 0,
-                    "hard_fail": True,
-                    "skipped": False,
-                    "message": BASE_ERROR_MESSAGE
-                },
-                {
-                    "name": "QuestionHardFail",
-                    "max_points": 1,
-                    "score": 0,
-                    "hard_fail": False,
-                    "skipped": True,
-                    "message": SKIPPING_QUESTION_MESSAGE
-                },
-            ),
-
-            # Correct submissions, possible question (hard fails only on error).
-            # Expected graded questions (success, success).
-            (
-                TestAssignment.QuestionBase(1), TestAssignment.QuestionBase(1),
-                True, 2,
-                {
-                    "name": "QuestionBase",
+                    "name": "QuestionAlwaysPass",
                     "max_points": 1,
                     "score": 1,
                     "hard_fail": False,
@@ -199,67 +109,7 @@ class TestAssignment(unittest.TestCase):
                     "message": ""
                 },
                 {
-                    "name": "QuestionBase",
-                    "max_points": 1,
-                    "score": 1,
-                    "hard_fail": False,
-                    "skipped": False,
-                    "message": ""
-                },
-            ),
-            (
-                TestAssignment.QuestionBase(1), TestAssignment.QuestionHardFail(1),
-                True, 2,
-                {
-                    "name": "QuestionBase",
-                    "max_points": 1,
-                    "score": 1,
-                    "hard_fail": False,
-                    "skipped": False,
-                    "message": ""
-                },
-                {
-                    "name": "QuestionHardFail",
-                    "max_points": 1,
-                    "score": 1,
-                    "hard_fail": False,
-                    "skipped": False,
-                    "message": ""
-                },
-            ),
-            (
-                TestAssignment.QuestionHardFail(1), TestAssignment.QuestionBase(1),
-                True, 2,
-                {
-                    "name": "QuestionHardFail",
-                    "max_points": 1,
-                    "score": 1,
-                    "hard_fail": False,
-                    "skipped": False,
-                    "message": ""
-                },
-                {
-                    "name": "QuestionBase",
-                    "max_points": 1,
-                    "score": 1,
-                    "hard_fail": False,
-                    "skipped": False,
-                    "message": ""
-                },
-            ),
-            (
-                TestAssignment.QuestionHardFail(1), TestAssignment.QuestionHardFail(1),
-                True, 2,
-                {
-                    "name": "QuestionHardFail",
-                    "max_points": 1,
-                    "score": 1,
-                    "hard_fail": False,
-                    "skipped": False,
-                    "message": ""
-                },
-                {
-                    "name": "QuestionHardFail",
+                    "name": "QuestionAlwaysPass",
                     "max_points": 1,
                     "score": 1,
                     "hard_fail": False,
@@ -268,13 +118,11 @@ class TestAssignment(unittest.TestCase):
                 },
             ),
 
-            # Matrix of possible questions and impossible questions that always hard fail.
-            # Correct submission, (success, hard fail).
+            # 1 point, (success, hard fail).
             (
-                TestAssignment.QuestionBase(1), TestAssignment.QuestionAlwaysHardFail(1),
-                True, 1,
+                TestAssignment.QuestionAlwaysPass(1), TestAssignment.QuestionAlwaysHardFail(1),
                 {
-                    "name": "QuestionBase",
+                    "name": "QuestionAlwaysPass",
                     "max_points": 1,
                     "score": 1,
                     "hard_fail": False,
@@ -287,64 +135,23 @@ class TestAssignment(unittest.TestCase):
                     "score": 0,
                     "hard_fail": True,
                     "skipped": False,
-                    "message": BASE_ERROR_MESSAGE
-                },
-            ),
-            (
-                TestAssignment.QuestionHardFail(1), TestAssignment.QuestionAlwaysHardFail(1),
-                True, 1,
-                {
-                    "name": "QuestionHardFail",
-                    "max_points": 1,
-                    "score": 1,
-                    "hard_fail": False,
-                    "skipped": False,
-                    "message": ""
-                },
-                {
-                    "name": "QuestionAlwaysHardFail",
-                    "max_points": 1,
-                    "score": 0,
-                    "hard_fail": True,
-                    "skipped": False,
-                    "message": BASE_ERROR_MESSAGE
+                    "message": HARD_FAIL_ERROR_MESSAGE
                 },
             ),
 
-            # Correct submission, impossible start (hard fail, skip).
+            # 0 points, (hard fail, skip).
             (
-                TestAssignment.QuestionAlwaysHardFail(1), TestAssignment.QuestionBase(1),
-                True, 0,
+                TestAssignment.QuestionAlwaysHardFail(1), TestAssignment.QuestionAlwaysPass(1),
                 {
                     "name": "QuestionAlwaysHardFail",
                     "max_points": 1,
                     "score": 0,
                     "hard_fail": True,
                     "skipped": False,
-                    "message": BASE_ERROR_MESSAGE
+                    "message": HARD_FAIL_ERROR_MESSAGE
                 },
                 {
-                    "name": "QuestionBase",
-                    "max_points": 1,
-                    "score": 0,
-                    "hard_fail": False,
-                    "skipped": True,
-                    "message": SKIPPING_QUESTION_MESSAGE
-                },
-            ),
-            (
-                TestAssignment.QuestionAlwaysHardFail(1), TestAssignment.QuestionHardFail(1),
-                True, 0,
-                {
-                    "name": "QuestionAlwaysHardFail",
-                    "max_points": 1,
-                    "score": 0,
-                    "hard_fail": True,
-                    "skipped": False,
-                    "message": BASE_ERROR_MESSAGE
-                },
-                {
-                    "name": "QuestionHardFail",
+                    "name": "QuestionAlwaysPass",
                     "max_points": 1,
                     "score": 0,
                     "hard_fail": False,
@@ -354,14 +161,13 @@ class TestAssignment(unittest.TestCase):
             ),
             (
                 TestAssignment.QuestionAlwaysHardFail(1), TestAssignment.QuestionAlwaysHardFail(1),
-                True, 0,
                 {
                     "name": "QuestionAlwaysHardFail",
                     "max_points": 1,
                     "score": 0,
                     "hard_fail": True,
                     "skipped": False,
-                    "message": BASE_ERROR_MESSAGE
+                    "message": HARD_FAIL_ERROR_MESSAGE
                 },
                 {
                     "name": "QuestionAlwaysHardFail",
@@ -372,19 +178,120 @@ class TestAssignment(unittest.TestCase):
                     "message": SKIPPING_QUESTION_MESSAGE
                 },
             ),
+
+            # 1 point, (success, fail).
+            (
+                TestAssignment.QuestionAlwaysPass(1), TestAssignment.QuestionAlwaysFail(1),
+                {
+                    "name": "QuestionAlwaysPass",
+                    "max_points": 1,
+                    "score": 1,
+                    "hard_fail": False,
+                    "skipped": False,
+                    "message": ""
+                },
+                {
+                    "name": "QuestionAlwaysFail",
+                    "max_points": 1,
+                    "score": 0,
+                    "hard_fail": False,
+                    "skipped": False,
+                    "message": BASE_ERROR_MESSAGE
+                },
+            ),
+
+            # 1 point, (fail, success).
+            (
+                TestAssignment.QuestionAlwaysFail(1), TestAssignment.QuestionAlwaysPass(1),
+                {
+                    "name": "QuestionAlwaysFail",
+                    "max_points": 1,
+                    "score": 0,
+                    "hard_fail": False,
+                    "skipped": False,
+                    "message": BASE_ERROR_MESSAGE
+                },
+                {
+                    "name": "QuestionAlwaysPass",
+                    "max_points": 1,
+                    "score": 1,
+                    "hard_fail": False,
+                    "skipped": False,
+                    "message": ""
+                },
+            ),
+
+            # 0 points, (fail, fail).
+            (
+                TestAssignment.QuestionAlwaysFail(1), TestAssignment.QuestionAlwaysFail(1),
+                {
+                    "name": "QuestionAlwaysFail",
+                    "max_points": 1,
+                    "score": 0,
+                    "hard_fail": False,
+                    "skipped": False,
+                    "message": BASE_ERROR_MESSAGE
+                },
+                {
+                    "name": "QuestionAlwaysFail",
+                    "max_points": 1,
+                    "score": 0,
+                    "hard_fail": False,
+                    "skipped": False,
+                    "message": BASE_ERROR_MESSAGE
+                },
+            ),
+
+            # 0 points, (hard fail, skip).
+            (
+                TestAssignment.QuestionAlwaysHardFail(1), TestAssignment.QuestionAlwaysFail(1),
+                {
+                    "name": "QuestionAlwaysHardFail",
+                    "max_points": 1,
+                    "score": 0,
+                    "hard_fail": True,
+                    "skipped": False,
+                    "message": HARD_FAIL_ERROR_MESSAGE
+                },
+                {
+                    "name": "QuestionAlwaysFail",
+                    "max_points": 1,
+                    "score": 0,
+                    "hard_fail": False,
+                    "skipped": True,
+                    "message": SKIPPING_QUESTION_MESSAGE
+                },
+            ),
+
+            # 0 points, (fail, hard fail).
+            (
+                TestAssignment.QuestionAlwaysFail(1), TestAssignment.QuestionAlwaysHardFail(1),
+                {
+                    "name": "QuestionAlwaysFail",
+                    "max_points": 1,
+                    "score": 0,
+                    "hard_fail": False,
+                    "skipped": False,
+                    "message": BASE_ERROR_MESSAGE
+                },
+                {
+                    "name": "QuestionAlwaysHardFail",
+                    "max_points": 1,
+                    "score": 0,
+                    "hard_fail": True,
+                    "skipped": False,
+                    "message": HARD_FAIL_ERROR_MESSAGE
+                },
+            ),
         ]
+
+        class TA(autograder.assignment.Assignment):
+            def _prepare_submission(self):
+                pass
 
         for i in range(len(test_cases)):
             with self.subTest(i = i):
-                (
-                    question_a, question_b,
-                    submission, score,
-                    graded_question_a, graded_question_b
-                ) = test_cases[i]
-
-                class TA(autograder.assignment.Assignment):
-                    def _prepare_submission(self):
-                        return lambda: submission
+                (question_a, question_b, graded_question_a, graded_question_b) = test_cases[i]
 
                 questions = [question_a, question_b]
 
@@ -393,8 +300,9 @@ class TestAssignment(unittest.TestCase):
                 result = assignment.grade(show_exceptions = True)
 
                 total_score, max_score = result.get_score()
+                expected_score = graded_question_a["score"] + graded_question_b["score"]
 
-                self.assertEqual(total_score, score)
+                self.assertEqual(total_score, expected_score)
                 self.assertEqual(max_score, 2)
 
                 expected_result = autograder.assignment.GradedAssignment.from_dict({
