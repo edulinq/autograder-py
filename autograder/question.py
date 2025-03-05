@@ -98,6 +98,9 @@ class Question(object):
         except AutograderFailError:
             # The question has been failed, no additional output is required.
             pass
+        except AutograderHardFailError:
+            # The question has been failed hard, signal to stop grading.
+            self.result.hard_fail = True
 
         self.result.grading_end_time = autograder.util.timestamp.get()
 
@@ -138,6 +141,15 @@ class Question(object):
         self.set_result(0, message)
         raise AutograderFailError()
 
+    def hard_fail(self, message):
+        """
+        Immediately hard fail this question, no partial credit.
+        Grading will be stopped for the rest of the assignment.
+        """
+
+        self.set_result(0, message)
+        raise AutograderHardFailError()
+
     def full_credit(self, message = ''):
         self.set_score(self.max_points)
 
@@ -169,6 +181,14 @@ class AutograderFailError(RuntimeError):
 
     pass
 
+class AutograderHardFailError(RuntimeError):
+    """
+    This error indicates that hard_fail() has been called on a question
+    and execution should be stopped for all questions in the assignment.
+    """
+
+    pass
+
 class GradedQuestion(object):
     """
     The result of a question being graded with a submission.
@@ -176,6 +196,7 @@ class GradedQuestion(object):
 
     def __init__(self, name = '', max_points = 0,
             score = 0, message = '',
+            hard_fail = False, skipped = False,
             grading_start_time = None, grading_end_time = None,
             **kwargs):
         self.name = name
@@ -183,6 +204,9 @@ class GradedQuestion(object):
 
         self.score = score
         self.message = message
+
+        self.hard_fail = hard_fail
+        self.skipped = skipped
 
         # Default the grading time to deal with situations where the grader throws an exception.
         now = autograder.util.timestamp.get()
@@ -204,6 +228,8 @@ class GradedQuestion(object):
             'name': self.name,
             'max_points': self.max_points,
             'score': self.score,
+            'hard_fail': self.hard_fail,
+            'skipped': self.skipped,
             'message': self.message,
             'grading_start_time': self.grading_start_time,
             'grading_end_time': self.grading_end_time,
@@ -248,7 +274,9 @@ class GradedQuestion(object):
         if (
                 (self.name != other.name)
                 or (self.max_points != other.max_points)
-                or (self.score != other.score)):
+                or (self.score != other.score)
+                or (self.hard_fail != other.hard_fail)
+                or (self.skipped != other.skipped)):
             return False
 
         if (ignore_messages):
