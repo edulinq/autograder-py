@@ -195,7 +195,8 @@ class GradedQuestion(object):
     """
 
     def __init__(self, name = '', max_points = 0,
-            score = 0, message = '', skipped = False,
+            score = 0, message = '',
+            hard_fail = False, skipped = False,
             grading_start_time = None, grading_end_time = None,
             **kwargs):
         self.name = name
@@ -204,7 +205,7 @@ class GradedQuestion(object):
         self.score = score
         self.message = message
 
-        self.hard_fail = False
+        self.hard_fail = hard_fail
         self.skipped = skipped
 
         # Default the grading time to deal with situations where the grader throws an exception.
@@ -227,6 +228,8 @@ class GradedQuestion(object):
             'name': self.name,
             'max_points': self.max_points,
             'score': self.score,
+            'hard_fail': self.hard_fail,
+            'skipped': self.skipped,
             'message': self.message,
             'grading_start_time': self.grading_start_time,
             'grading_end_time': self.grading_end_time,
@@ -271,7 +274,9 @@ class GradedQuestion(object):
         if (
                 (self.name != other.name)
                 or (self.max_points != other.max_points)
-                or (self.score != other.score)):
+                or (self.score != other.score)
+                or (self.hard_fail != other.hard_fail)
+                or (self.skipped != other.skipped)):
             return False
 
         if (ignore_messages):
