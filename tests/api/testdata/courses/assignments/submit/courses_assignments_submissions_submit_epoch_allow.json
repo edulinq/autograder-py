@@ -29,6 +29,8 @@
                     "name": "Task 1: add()",
                     "max_points": 10,
                     "score": 10,
+                    "hard_fail": false,
+                    "skipped": false,
                     "message": "",
                     "grading_start_time": 1234567890123,
                     "grading_end_time": 1234567890123
