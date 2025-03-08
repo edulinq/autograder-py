@@ -22,6 +22,8 @@
                             "name": "Q1",
                             "max_points": 1,
                             "score": 0,
+                            "hard_fail": false,
+                            "skipped": false,
                             "message": "NotImplemented returned.",
                             "grading_start_time": 1697406256000,
                             "grading_end_time": 1697406256000
@@ -30,6 +32,8 @@
                             "name": "Q2",
                             "max_points": 1,
                             "score": 0,
+                            "hard_fail": false,
+                            "skipped": false,
                             "message": "NotImplemented returned.",
                             "grading_start_time": 1697406256000,
                             "grading_end_time": 1697406256000
@@ -38,6 +42,8 @@
                             "name": "Style",
                             "max_points": 0,
                             "score": 0,
+                            "hard_fail": false,
+                            "skipped": false,
                             "message": "Style is clean!",
                             "grading_start_time": 1697406256000,
                             "grading_end_time": 1697406256000
@@ -72,6 +78,8 @@
                             "name": "Q1",
                             "max_points": 1,
                             "score": 1,
+                            "hard_fail": false,
+                            "skipped": false,
                             "message": "",
                             "grading_start_time": 1697406266000,
                             "grading_end_time": 1697406266000
@@ -80,6 +88,8 @@
                             "name": "Q2",
                             "max_points": 1,
                             "score": 0,
+                            "hard_fail": false,
+                            "skipped": false,
                             "message": "NotImplemented returned.",
                             "grading_start_time": 1697406266000,
                             "grading_end_time": 1697406266000
@@ -88,6 +98,8 @@
                             "name": "Style",
                             "max_points": 0,
                             "score": 0,
+                            "hard_fail": false,
+                            "skipped": false,
                             "message": "Style is clean!",
                             "grading_start_time": 1697406266000,
                             "grading_end_time": 1697406266000
@@ -122,6 +134,8 @@
                             "name": "Q1",
                             "max_points": 1,
                             "score": 1,
+                            "hard_fail": false,
+                            "skipped": false,
                             "message": "",
                             "grading_start_time": 1697406273000,
                             "grading_end_time": 1697406273000
@@ -130,6 +144,8 @@
                             "name": "Q2",
                             "max_points": 1,
                             "score": 1,
+                            "hard_fail": false,
+                            "skipped": false,
                             "message": "",
                             "grading_start_time": 1697406273000,
                             "grading_end_time": 1697406273000
@@ -138,6 +154,8 @@
                             "name": "Style",
                             "max_points": 0,
                             "score": 0,
+                            "hard_fail": false,
+                            "skipped": false,
                             "message": "Style is clean!",
                             "grading_start_time": 1697406273000,
                             "grading_end_time": 1697406273000
