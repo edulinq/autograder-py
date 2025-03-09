@@ -4,10 +4,10 @@ import http
 import http.server
 import importlib
 import json
-import multiprocessing
 import os
 import re
 import socket
+import threading
 import time
 import urllib.parse
 
@@ -41,25 +41,26 @@ INITIAL_BASE_ARGUMENTS = {
     'server': None,
 }
 
+_server = None
+
 def start():
     port = _find_open_port()
 
-    process = multiprocessing.Process(target = _run, args = (port,))
-    process.start()
+    thread = threading.Thread(target = _run, args = (port,))
+    thread.start()
 
     time.sleep(SLEEP_TIME_SEC)
-    return process, port
+    return thread, port
 
-def stop(process):
-    if (process.is_alive()):
-        process.terminate()
-        process.join(REAP_TIME_SEC)
+def stop(thread):
+    global _server
 
-        if (process.is_alive()):
-            process.kill()
-            process.join(REAP_TIME_SEC)
+    if (_server is not None):
+        _server.shutdown()
+        time.sleep(SLEEP_TIME_SEC)
 
-    process.close()
+    if (thread.is_alive()):
+        thread.join(REAP_TIME_SEC)
 
 def _find_open_port():
     for port in range(START_PORT, END_PORT + 1):
@@ -91,10 +92,15 @@ def _run(port):
     Run the test server.
     """
 
+    global _server
+
     _load_responses()
 
-    server = http.server.HTTPServer(('', port), Handler)
-    server.serve_forever()
+    _server = http.server.HTTPServer(('', port), Handler)
+    _server.serve_forever(poll_interval = 0.1)
+
+    _server.server_close()
+    _server = None
 
 def _load_responses():
     """
