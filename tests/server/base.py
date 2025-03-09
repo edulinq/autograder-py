@@ -2,7 +2,6 @@ import json
 import os
 import unittest
 import re
-import sys
 
 import autograder.error
 import tests.server.server
@@ -12,7 +11,6 @@ FORMAT_STR = "\n--- Expected ---\n%s\n--- Actual ---\n%s\n---\n"
 
 DATA_DIR_ID = tests.server.server.DATA_DIR_ID
 
-@unittest.skipUnless(sys.platform.startswith('linux'), 'linux only (multiprocessing)')
 class ServerBaseTest(unittest.TestCase):
     """
     A base tests that need to call the mock server.
