@@ -4,10 +4,10 @@ import http
 import http.server
 import importlib
 import json
-import multiprocessing
 import os
 import re
 import socket
+import threading
 import time
 import urllib.parse
 
@@ -21,7 +21,8 @@ START_PORT = 30000
 END_PORT = 40000
 ENCODING = 'utf8'
 
-SLEEP_TIME_SEC = 0.2
+INITIAL_SLEEP_TIME_SEC = 0.05
+SLEEP_TIME_SEC = 0.20
 REAP_TIME_SEC = 0.5
 
 THIS_DIR = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
@@ -41,25 +42,29 @@ INITIAL_BASE_ARGUMENTS = {
     'server': None,
 }
 
+_server = None
+_startup_barrier = threading.Barrier(2)
+
 def start():
     port = _find_open_port()
+    _startup_barrier.reset()
 
-    process = multiprocessing.Process(target = _run, args = (port,))
-    process.start()
+    thread = threading.Thread(target = _run, args = (port,))
+    thread.start()
 
-    time.sleep(SLEEP_TIME_SEC)
-    return process, port
+    # Wait for the server to startup.
+    _startup_barrier.wait()
+    time.sleep(INITIAL_SLEEP_TIME_SEC)
 
-def stop(process):
-    if (process.is_alive()):
-        process.terminate()
-        process.join(REAP_TIME_SEC)
+    return thread, port
 
-        if (process.is_alive()):
-            process.kill()
-            process.join(REAP_TIME_SEC)
+def stop(thread):
+    if (_server is not None):
+        _server.shutdown()
+        time.sleep(SLEEP_TIME_SEC)
 
-    process.close()
+    if (thread.is_alive()):
+        thread.join(REAP_TIME_SEC)
 
 def _find_open_port():
     for port in range(START_PORT, END_PORT + 1):
@@ -91,10 +96,17 @@ def _run(port):
     Run the test server.
     """
 
+    global _server
+
     _load_responses()
 
-    server = http.server.HTTPServer(('', port), Handler)
-    server.serve_forever()
+    _server = http.server.HTTPServer(('', port), Handler)
+
+    _startup_barrier.wait()
+    _server.serve_forever(poll_interval = 0.1)
+
+    _server.server_close()
+    _server = None
 
 def _load_responses():
     """
@@ -172,7 +184,7 @@ def _load_endpoint_modules():
         relpath = os.path.relpath(path, API_BASE_DIR)
 
         import_module_name = re.sub(r'\.py$', '', relpath)
-        import_module_name = import_module_name.replace('/', '.')
+        import_module_name = import_module_name.replace(os.sep, '.')
         import_module_name = 'autograder.api.' + import_module_name
 
         api_module = importlib.import_module(import_module_name)
