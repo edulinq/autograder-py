@@ -3,7 +3,7 @@
     "arguments": {
         "user": "course-grader@test.edulinq.org",
         "pass": "course-grader",
-        "to": "course-student@test.edulinq.org",
+        "to": ["course-student@test.edulinq.org"],
         "subject": "Subject"
     },
     "output": {
