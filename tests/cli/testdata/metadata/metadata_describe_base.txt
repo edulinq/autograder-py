@@ -5,6 +5,11 @@
 ---
 {
     "endpoints": {
+        "courses/admin/email": {
+            "request-type": "*admin.EmailRequest",
+            "response-type": "*admin.EmailResponse",
+            "description": "Send an email to course users."
+        },
         "courses/admin/update": {
             "request-type": "*admin.UpdateRequest",
             "response-type": "*admin.UpdateResponse",
