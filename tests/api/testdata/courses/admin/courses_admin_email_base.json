@@ -1,9 +1,8 @@
 {
     "module": "autograder.api.courses.admin.email",
     "arguments": {
-        "user": "course-grader@test.edulinq.org",
-        "pass": "course-grader",
-        "dry-run": false,
+        "user": "server-admin@test.edulinq.org",
+        "pass": "server-admin",
         "to": ["course-student@test.edulinq.org"],
         "subject": "Subject"
     },
