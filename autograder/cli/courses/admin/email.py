@@ -5,7 +5,7 @@ import autograder.api.courses.admin.email
 
 def run(arguments):
     result = autograder.api.courses.admin.email.send(arguments, exit_on_error = True)
-    print(json.dumps(result, indent = 4))
+    print(json.dumps(result))
     return 0
 
 def main():
