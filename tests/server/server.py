@@ -21,7 +21,8 @@ START_PORT = 30000
 END_PORT = 40000
 ENCODING = 'utf8'
 
-SLEEP_TIME_SEC = 0.2
+INITIAL_SLEEP_TIME_SEC = 0.05
+SLEEP_TIME_SEC = 0.20
 REAP_TIME_SEC = 0.5
 
 THIS_DIR = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
@@ -42,19 +43,22 @@ INITIAL_BASE_ARGUMENTS = {
 }
 
 _server = None
+_startup_barrier = threading.Barrier(2)
 
 def start():
     port = _find_open_port()
+    _startup_barrier.reset()
 
     thread = threading.Thread(target = _run, args = (port,))
     thread.start()
 
-    time.sleep(SLEEP_TIME_SEC)
+    # Wait for the server to startup.
+    _startup_barrier.wait()
+    time.sleep(INITIAL_SLEEP_TIME_SEC)
+
     return thread, port
 
 def stop(thread):
-    global _server
-
     if (_server is not None):
         _server.shutdown()
         time.sleep(SLEEP_TIME_SEC)
@@ -97,6 +101,8 @@ def _run(port):
     _load_responses()
 
     _server = http.server.HTTPServer(('', port), Handler)
+
+    _startup_barrier.wait()
     _server.serve_forever(poll_interval = 0.1)
 
     _server.server_close()
@@ -178,7 +184,7 @@ def _load_endpoint_modules():
         relpath = os.path.relpath(path, API_BASE_DIR)
 
         import_module_name = re.sub(r'\.py$', '', relpath)
-        import_module_name = import_module_name.replace('/', '.')
+        import_module_name = import_module_name.replace(os.sep, '.')
         import_module_name = 'autograder.api.' + import_module_name
 
         api_module = importlib.import_module(import_module_name)
