@@ -3,7 +3,6 @@
     "arguments": [
         "--user", "server-admin@test.edulinq.org",
         "--pass", "server-admin",
-        "--dry-run", "false",
         "--to", "course-student@test.edulinq.org",
         "--subject", "Subject"
     ]
