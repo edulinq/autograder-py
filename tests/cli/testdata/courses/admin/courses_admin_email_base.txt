@@ -3,7 +3,7 @@
     "arguments": [
         "--user", "server-admin@test.edulinq.org",
         "--pass", "server-admin",
-        "--to", ["course-student@test.edulinq.org"],
+        "--to", "course-student@test.edulinq.org",
         "--subject", "Subject"
     ]
 }
