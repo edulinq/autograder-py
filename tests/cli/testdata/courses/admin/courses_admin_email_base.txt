@@ -8,4 +8,10 @@
     ]
 }
 ---
-{"to": ["course-student@test.edulinq.org"], "cc": [], "bcc": []}
+{
+    "to": [
+        "course-student@test.edulinq.org"
+    ],
+    "cc": [],
+    "bcc": []
+}
