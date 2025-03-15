@@ -199,7 +199,7 @@ def _submission_add_func(parser, param):
         action = 'store', type = str, nargs = '+',
         help = param.description)
 
-def csv_to_list(arg):
+def _csv_to_list(arg):
     if ',' in arg:
         return arg.split(',')
     else:
@@ -228,7 +228,7 @@ PARAM_DRY_RUN = APIParam('dry-run',
 PARAM_EMAIL_BCC = APIParam('bcc',
     'A list of emails addresses and/or course roles to send a blind carbon copy.',
     required = False,
-    parser_options = {'type': csv_to_list})
+    parser_options = {'type': _csv_to_list})
 
 PARAM_EMAIL_BODY = APIParam('body',
     'The email body.',
@@ -237,7 +237,7 @@ PARAM_EMAIL_BODY = APIParam('body',
 PARAM_EMAIL_CC = APIParam('cc',
     'A list of email addresses and/or course roles to send a carbon copy.',
     required = False,
-    parser_options = {'type': csv_to_list})
+    parser_options = {'type': _csv_to_list})
 
 PARAM_EMAIL_HTML = APIParam('html',
     'Indicates the email body contains HTML.',
@@ -250,7 +250,7 @@ PARAM_EMAIL_SUBJECT = APIParam('subject',
 PARAM_EMAIL_TO = APIParam('to',
     'A list of email addresses and/or course roles to receive the email.',
     required = False,
-    parser_options = {'type': csv_to_list})
+    parser_options = {'type': _csv_to_list})
 
 PARAM_FILTER_ROLE = APIParam('filter-role',
     'Only show results from users with this role (all roles if unknown (default)).',
