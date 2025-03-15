@@ -5,13 +5,19 @@
         "pass": "server-admin",
         "dry-run": false,
         "to": ["course-student@test.edulinq.org"],
+        "cc": ["course-owner@test.edulinq.org"],
+        "bcc": ["course-other@test.edulinq.org"],
         "subject": "Subject"
     },
     "output": {
         "to": [
             "course-student@test.edulinq.org"
         ],
-        "cc": [],
-        "bcc": []
+        "cc": [
+            "course-owner@test.edulinq.org"
+        ],
+        "bcc": [
+            "course-other@test.edulinq.org"
+        ]
     }
 }
