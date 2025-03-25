@@ -24,6 +24,7 @@
         "complete": true,
         "complete-count": 1,
         "pending-count": 0,
+        "failure-count": 0,
         "first-timestamp": 1234567890123,
         "last-timestamp": 1234567890123,
         "aggregate-mean-similarities": {
@@ -71,8 +72,6 @@
                     }
                 ]
             },
-            "skipped-files": [],
-            "unmatched-files": [],
             "mean-similarities": {
                 "submission.py": 0.13
             },
