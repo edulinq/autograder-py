@@ -9,6 +9,7 @@ import autograder.api.constants
 import autograder.error
 import autograder.util.hash
 
+EMAIL_ADDRESS_DELIMITER = ','
 DEFAULT_CONFIG_FILENAME = 'config.json'
 DEFAULT_USER_CONFIG_PATH = platformdirs.user_config_dir('autograder.json')
 
@@ -203,7 +204,7 @@ def _csv_to_list(arg):
     if arg == "" or arg is None:
         raise ValueError('Email recipient parameters (to, cc, bcc) cannot be empty.')
 
-    return [email.strip() for email in arg.split(',')]
+    return [email.strip() for email in arg.split(EMAIL_ADDRESS_DELIMITER)]
 
 # Common API params.
 
@@ -228,8 +229,7 @@ PARAM_DRY_RUN = APIParam('dry-run',
 PARAM_EMAIL_BCC = APIParam('bcc',
     'A list of bcc email addresses.',
     required = False,
-    parser_options = {'action': 'extend',
-        'type': _csv_to_list})
+    parser_options = {'action': 'extend', 'type': _csv_to_list})
 
 PARAM_EMAIL_BODY = APIParam('body',
     'The email body.',
@@ -238,8 +238,7 @@ PARAM_EMAIL_BODY = APIParam('body',
 PARAM_EMAIL_CC = APIParam('cc',
     'A list of cc email addresses.',
     required = False,
-    parser_options = {'action': 'extend',
-        'type': _csv_to_list})
+    parser_options = {'action': 'extend', 'type': _csv_to_list})
 
 PARAM_EMAIL_HTML = APIParam('html',
     'Indicates the email body contains HTML.',
@@ -252,8 +251,7 @@ PARAM_EMAIL_SUBJECT = APIParam('subject',
 PARAM_EMAIL_TO = APIParam('to',
     'A list of email addresses.',
     required = False,
-    parser_options = {'action': 'extend',
-        'type': _csv_to_list})
+    parser_options = {'action': 'extend', 'type': _csv_to_list})
 
 PARAM_FILTER_ROLE = APIParam('filter-role',
     'Only show results from users with this role (all roles if unknown (default)).',

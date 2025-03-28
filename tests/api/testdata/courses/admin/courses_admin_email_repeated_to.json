@@ -1,16 +1,16 @@
 {
-  "module": "autograder.api.courses.admin.email",
-  "arguments": {
-    "user": "server-admin@test.edulinq.org",
-    "pass": "server-admin",
-    "dry-run": false,
-    "to": ["student", "course-other@test.edulinq.org"],
-    "bcc": ["course-grader@test.edulinq.org"],
-    "subject": "Subject",
-    "body": "Body"
-  },
-  "output": {
-    "to": ["course-student@test.edulinq.org", "course-other@test.edulinq.org"],
-    "bcc": ["course-grader@test.edulinq.org"]
-  }
+    "module": "autograder.api.courses.admin.email",
+    "arguments": {
+        "user": "server-admin@test.edulinq.org",
+        "pass": "server-admin",
+        "dry-run": false,
+        "to": ["student", "course-other@test.edulinq.org"],
+        "bcc": ["course-grader@test.edulinq.org"],
+        "subject": "Subject",
+        "body": "Body"
+    },
+    "output": {
+        "to": ["course-student@test.edulinq.org", "course-other@test.edulinq.org"],
+        "bcc": ["course-grader@test.edulinq.org"]
+    }
 }
