@@ -9,11 +9,10 @@ import autograder.api.constants
 import autograder.error
 import autograder.util.hash
 
-EMAIL_ADDRESS_DELIMITER = ','
+CONFIG_PATHS_KEY = 'config_paths'
 DEFAULT_CONFIG_FILENAME = 'config.json'
 DEFAULT_USER_CONFIG_PATH = platformdirs.user_config_dir('autograder.json')
-
-CONFIG_PATHS_KEY = 'config_paths'
+CSV_TO_LIST_DELIMITER = ','
 
 class APIParam(object):
     def __init__(self, key, description,
@@ -200,11 +199,15 @@ def _submission_add_func(parser, param):
         action = 'store', type = str, nargs = '+',
         help = param.description)
 
+# This is used as an argparse argument type.
+# See: https://docs.python.org/3/library/argparse.html#type
+# This converts a csv string and returns a list of strings,
+# e.g. --to email1@gmail.com,email2@gmail.com -> ["email1@gmail.com", "email2@gmail.com"].
 def _csv_to_list(arg):
     if arg == "" or arg is None:
-        raise ValueError('Email recipient parameters (to, cc, bcc) cannot be empty.')
+        raise ValueError('Parameter argument cannot be empty.')
 
-    return [email.strip() for email in arg.split(EMAIL_ADDRESS_DELIMITER)]
+    return [part.strip() for part in arg.split(CSV_TO_LIST_DELIMITER)]
 
 # Common API params.
 
