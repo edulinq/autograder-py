@@ -13,9 +13,10 @@
 ---
 {
     "to": [
-        "course-student@test.edulinq.org",
-        "course-other@test.edulinq.org"
+        "course-other@test.edulinq.org",
+        "course-student@test.edulinq.org"
     ],
+    "cc": [],
     "bcc": [
         "course-grader@test.edulinq.org"
     ]
