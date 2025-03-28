@@ -9,10 +9,10 @@ import autograder.api.constants
 import autograder.error
 import autograder.util.hash
 
+CONFIG_PATHS_KEY = 'config_paths'
 DEFAULT_CONFIG_FILENAME = 'config.json'
 DEFAULT_USER_CONFIG_PATH = platformdirs.user_config_dir('autograder.json')
-
-CONFIG_PATHS_KEY = 'config_paths'
+CSV_TO_LIST_DELIMITER = ','
 
 class APIParam(object):
     def __init__(self, key, description,
@@ -199,6 +199,16 @@ def _submission_add_func(parser, param):
         action = 'store', type = str, nargs = '+',
         help = param.description)
 
+# This is used as an argparse argument type.
+# See: https://docs.python.org/3/library/argparse.html#type
+# This converts a csv string and returns a list of strings,
+# e.g. --to email1@gmail.com,email2@gmail.com -> ["email1@gmail.com", "email2@gmail.com"].
+def _csv_to_list(arg):
+    if arg == "" or arg is None:
+        raise ValueError('Parameter argument cannot be empty.')
+
+    return [part.strip() for part in arg.split(CSV_TO_LIST_DELIMITER)]
+
 # Common API params.
 
 PARAM_ASSIGNMENT_ID = APIParam('assignment-id',
@@ -218,6 +228,33 @@ PARAM_DRY_RUN = APIParam('dry-run',
     + ' just do all the steps and state what the result would look like.'),
     required = False,
     parser_options = {'action': 'store_true', 'default': False})
+
+PARAM_EMAIL_BCC = APIParam('bcc',
+    'A list of bcc email addresses.',
+    required = False,
+    parser_options = {'action': 'extend', 'type': _csv_to_list})
+
+PARAM_EMAIL_BODY = APIParam('body',
+    'The email body.',
+    required = False)
+
+PARAM_EMAIL_CC = APIParam('cc',
+    'A list of cc email addresses.',
+    required = False,
+    parser_options = {'action': 'extend', 'type': _csv_to_list})
+
+PARAM_EMAIL_HTML = APIParam('html',
+    'Indicates the email body contains HTML.',
+    required = False)
+
+PARAM_EMAIL_SUBJECT = APIParam('subject',
+    'The email subject.',
+    required = True)
+
+PARAM_EMAIL_TO = APIParam('to',
+    'A list of email addresses.',
+    required = False,
+    parser_options = {'action': 'extend', 'type': _csv_to_list})
 
 PARAM_FILTER_ROLE = APIParam('filter-role',
     'Only show results from users with this role (all roles if unknown (default)).',
