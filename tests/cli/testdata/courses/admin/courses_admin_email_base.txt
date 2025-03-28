@@ -6,7 +6,8 @@
         "--to", "course-student@test.edulinq.org",
         "--cc", "course-owner@test.edulinq.org",
         "--bcc", "course-other@test.edulinq.org",
-        "--subject", "Subject"
+        "--subject", "Subject",
+        "--body", "Body"
     ]
 }
 ---

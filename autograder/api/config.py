@@ -200,10 +200,10 @@ def _submission_add_func(parser, param):
         help = param.description)
 
 def _csv_to_list(arg):
-    if ',' in arg:
-        return arg.split(',')
-    else:
-        return [arg]
+    if arg == "" or arg is None:
+        raise ValueError('Email recipient parameters (to, cc, bcc) cannot be empty.')
+
+    return [email.strip() for email in arg.split(',')]
 
 # Common API params.
 
@@ -226,18 +226,20 @@ PARAM_DRY_RUN = APIParam('dry-run',
     parser_options = {'action': 'store_true', 'default': False})
 
 PARAM_EMAIL_BCC = APIParam('bcc',
-    'A list of emails addresses and/or course roles to send a blind carbon copy.',
+    'A list of bcc email addresses.',
     required = False,
-    parser_options = {'type': _csv_to_list})
+    parser_options = {'action': 'extend',
+        'type': _csv_to_list})
 
 PARAM_EMAIL_BODY = APIParam('body',
     'The email body.',
     required = False)
 
 PARAM_EMAIL_CC = APIParam('cc',
-    'A list of email addresses and/or course roles to send a carbon copy.',
+    'A list of cc email addresses.',
     required = False,
-    parser_options = {'type': _csv_to_list})
+    parser_options = {'action': 'extend',
+        'type': _csv_to_list})
 
 PARAM_EMAIL_HTML = APIParam('html',
     'Indicates the email body contains HTML.',
@@ -248,9 +250,10 @@ PARAM_EMAIL_SUBJECT = APIParam('subject',
     required = True)
 
 PARAM_EMAIL_TO = APIParam('to',
-    'A list of email addresses and/or course roles to receive the email.',
+    'A list of email addresses.',
     required = False,
-    parser_options = {'type': _csv_to_list})
+    parser_options = {'action': 'extend',
+        'type': _csv_to_list})
 
 PARAM_FILTER_ROLE = APIParam('filter-role',
     'Only show results from users with this role (all roles if unknown (default)).',

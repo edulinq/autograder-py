@@ -1,0 +1,22 @@
+{
+    "cli": "autograder.cli.courses.admin.email",
+    "arguments": [
+        "--user", "server-admin@test.edulinq.org",
+        "--pass", "server-admin",
+        "--to", "student",
+        "--to", "course-other@test.edulinq.org",
+        "--bcc", "course-grader@test.edulinq.org",
+        "--subject", "Subject",
+        "--body", "Body"
+    ]
+}
+---
+{
+    "to": [
+        "course-student@test.edulinq.org",
+        "course-other@test.edulinq.org"
+    ],
+    "bcc": [
+        "course-grader@test.edulinq.org"
+    ]
+}
