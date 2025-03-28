@@ -22,6 +22,7 @@
         "complete": false,
         "complete-count": 0,
         "pending-count": 1,
+        "failure-count": 0,
         "first-timestamp": 0,
         "last-timestamp": 0,
         "aggregate-mean-similarities": null,
