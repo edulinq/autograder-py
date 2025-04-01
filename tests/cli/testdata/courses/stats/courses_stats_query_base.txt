@@ -1,6 +1,7 @@
 {
     "cli": "autograder.cli.courses.stats.query",
     "arguments": [
+        "--type", "grading-time"
     ]
 }
 ---
@@ -8,17 +9,21 @@
     {
         "timestamp": 100,
         "type": "grading-time",
-        "course": "course101",
-        "assignment": "hw0",
-        "user": "server-admin@test.edulinq.org",
-        "duration": 100
+        "value": 100,
+        "attributes": {
+            "assignment": "hw0",
+            "course": "course101",
+            "user": "server-admin@test.edulinq.org"
+        }
     },
     {
-        "timestamp": 200,
+        "timestamp": 100,
         "type": "grading-time",
-        "course": "course101",
-        "assignment": "hw0",
-        "user": "server-admin@test.edulinq.org",
-        "duration": 200
+        "value": 100,
+        "attributes": {
+            "assignment": "hw0",
+            "course": "course101",
+            "user": "server-admin@test.edulinq.org"
+        }
     }
 ]

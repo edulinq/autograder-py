@@ -170,9 +170,9 @@ def clean_output_logs(output):
 
     return output
 
-def fake_system_stats(output):
+def fake_stats_cpu(output):
     """
-    Because of the variable and fine-grained level of system stats,
+    Because of the variable and fine-grained level of stats,
     the entire output must be faked.
     """
 
@@ -180,31 +180,25 @@ def fake_system_stats(output):
         "results": [
             {
                 "timestamp": 100,
-                "cpu-percent": 1,
-                "mem-percent": 1,
-                "net-bytes-sent": 1,
-                "net-bytes-received": 1,
+                "type": "cpu-usage",
+                "value": 1
             },
             {
                 "timestamp": 200,
-                "cpu-percent": 2,
-                "mem-percent": 2,
-                "net-bytes-sent": 2,
-                "net-bytes-received": 2,
+                "type": "cpu-usage",
+                "value": 2
             },
             {
                 "timestamp": 300,
-                "cpu-percent": 3,
-                "mem-percent": 3,
-                "net-bytes-sent": 3,
-                "net-bytes-received": 3,
-            },
+                "type": "cpu-usage",
+                "value": 3
+            }
         ],
     }
 
-def fake_course_stats(output):
+def fake_stats_grading_time(output):
     """
-    Because of the variable and fine-grained level of course stats,
+    Because of the variable and fine-grained level of stats,
     the entire output must be faked.
     """
 
@@ -213,50 +207,23 @@ def fake_course_stats(output):
             {
                 "timestamp": 100,
                 "type": "grading-time",
-                "course": "course101",
-                "assignment": "hw0",
-                "user": "server-admin@test.edulinq.org",
-                "duration": 100
+                "value": 100,
+                "attributes": {
+                    "assignment": "hw0",
+                    "course": "course101",
+                    "user": "server-admin@test.edulinq.org"
+                }
             },
             {
-                "timestamp": 200,
+                "timestamp": 100,
                 "type": "grading-time",
-                "course": "course101",
-                "assignment": "hw0",
-                "user": "server-admin@test.edulinq.org",
-                "duration": 200
+                "value": 100,
+                "attributes": {
+                    "assignment": "hw0",
+                    "course": "course101",
+                    "user": "server-admin@test.edulinq.org"
+                }
             }
-        ]
-    }
-
-def fake_apirequest_stats(output):
-    """
-    Because of the variable and fine-grained level of apirequest stats,
-    the entire output must be faked.
-    """
-
-    return {
-        "results": [
-            {
-                "timestamp": 100,
-                "sender": "1",
-                "endpoint": "E1",
-                "user": "server-admin@test.edulinq.org",
-                "course": "course101",
-                "assignment": "hw0",
-                "locator": "1",
-                "duration": 100
-            },
-            {
-                "timestamp": 200,
-                "sender": "2",
-                "endpoint": "E2",
-                "user": "server-admin@test.edulinq.org",
-                "course": "course101",
-                "assignment": "hw0",
-                "locator": "2",
-                "duration": 200
-            },
         ]
     }
 

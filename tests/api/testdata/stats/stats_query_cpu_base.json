@@ -1,0 +1,28 @@
+{
+    "module": "autograder.api.stats.query",
+    "arguments": {
+        "user": "server-admin@test.edulinq.org",
+        "pass": "server-admin",
+        "type": "cpu-usage"
+    },
+    "output-modifier": "fake_stats_cpu",
+    "output": {
+        "results": [
+            {
+                "timestamp": 100,
+                "type": "cpu-usage",
+                "value": 1
+            },
+            {
+                "timestamp": 200,
+                "type": "cpu-usage",
+                "value": 2
+            },
+            {
+                "timestamp": 300,
+                "type": "cpu-usage",
+                "value": 3
+            }
+        ]
+    }
+}

@@ -12,6 +12,7 @@ bin/
 dist/
 test/
 /test*.*
+/out*
 /build/
 
 *.gz
