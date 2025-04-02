@@ -7,14 +7,13 @@ API_PARAMS = [
     autograder.api.config.PARAM_USER_PASS,
 
     autograder.api.config.PARAM_COURSE_ID,
+    autograder.api.config.PARAM_QUERY_TYPE,
 
     autograder.api.config.PARAM_QUERY_LIMIT,
     autograder.api.config.PARAM_QUERY_AFTER,
     autograder.api.config.PARAM_QUERY_BEFORE,
     autograder.api.config.PARAM_QUERY_SORT,
-
-    autograder.api.config.PARAM_QUERY_TARGET_ASSIGNMENT,
-    autograder.api.config.PARAM_QUERY_TARGET_EMAIL,
+    autograder.api.config.PARAM_QUERY_WHERE,
 ]
 
 DESCRIPTION = 'Query stats for this course.'

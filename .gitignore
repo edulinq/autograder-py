@@ -6,11 +6,13 @@
 .ipynb_checkpoints
 *.pyc
 __pycache__/
+venv/
 
 bin/
 dist/
 test/
 /test*.*
+/out*
 /build/
 
 *.gz

@@ -1,0 +1,20 @@
+{
+    "module": "autograder.api.courses.admin.email",
+    "arguments": {
+        "user": "server-admin@test.edulinq.org",
+        "pass": "server-admin",
+        "dry-run": false,
+        "to": ["student", "course-other@test.edulinq.org"],
+        "bcc": ["course-grader@test.edulinq.org"],
+        "subject": "Subject",
+        "body": "Body"
+    },
+    "output": {
+        "to": [
+            "course-other@test.edulinq.org",
+            "course-student@test.edulinq.org"
+        ],
+        "cc": [],
+        "bcc": ["course-grader@test.edulinq.org"]
+    }
+}

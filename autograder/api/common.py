@@ -1,6 +1,7 @@
 import json
 import os
 import sys
+import traceback
 
 import requests
 
@@ -58,7 +59,8 @@ def send_api_request(endpoint, server = None, verbose = False, data = {}, files 
         post_files[filename] = open(path, 'rb')
 
     if (verbose):
-        print("\nAutograder Request Data:\n---\n%s\n---\n" % (json.dumps(data, indent = 4)))
+        print("\nURL: %s" % (url))
+        print("Autograder Request Data:\n---\n%s\n---\n" % (json.dumps(data, indent = 4)))
 
     try:
         raw_response = requests.request(
@@ -67,6 +69,9 @@ def send_api_request(endpoint, server = None, verbose = False, data = {}, files 
             data = {autograder.api.constants.API_REQUEST_JSON_KEY: json.dumps(data)},
             files = post_files)
     except requests.exceptions.ConnectionError:
+        if (verbose):
+            traceback.print_exc()
+
         raise autograder.error.ConnectionError(("Could not connect to autograder server"
             + " '%s'." % (server)
             + " This is a networking issue"

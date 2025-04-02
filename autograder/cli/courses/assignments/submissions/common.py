@@ -9,7 +9,13 @@ def output_grading_result(result, base_dir = '.', short_id = False):
     if short_id:
         out_dir = os.path.join(base_dir, result['info']['short-id'])
     else:
-        out_dir = os.path.join(base_dir, result['info']['id'])
+        long_id = result['info']['id']
+
+        # Windows doesn't like colons in filenames.
+        if (os.name == 'nt'):
+            long_id = long_id.replace(':', '_')
+
+        out_dir = os.path.join(base_dir, long_id)
 
     if (os.path.exists(out_dir)):
         autograder.util.dirent.remove(out_dir)

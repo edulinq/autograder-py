@@ -1,25 +1,30 @@
 {
     "module": "autograder.api.courses.stats.query",
     "arguments": {
+        "type": "grading-time"
     },
-    "output-modifier": "fake_course_stats",
+    "output-modifier": "fake_stats_grading_time",
     "output": {
         "results": [
             {
                 "timestamp": 100,
                 "type": "grading-time",
-                "course": "course101",
-                "assignment": "hw0",
-                "user": "server-admin@test.edulinq.org",
-                "duration": 100
+                "value": 100,
+                "attributes": {
+                    "assignment": "hw0",
+                    "course": "course101",
+                    "user": "server-admin@test.edulinq.org"
+                }
             },
             {
-                "timestamp": 200,
+                "timestamp": 100,
                 "type": "grading-time",
-                "course": "course101",
-                "assignment": "hw0",
-                "user": "server-admin@test.edulinq.org",
-                "duration": 200
+                "value": 100,
+                "attributes": {
+                    "assignment": "hw0",
+                    "course": "course101",
+                    "user": "server-admin@test.edulinq.org"
+                }
             }
         ]
     }

@@ -1,18 +1,24 @@
 import autograder.api.common
 import autograder.api.config
 
-API_ENDPOINT = 'stats/system/query'
+API_ENDPOINT = 'courses/admin/email'
 API_PARAMS = [
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
 
-    autograder.api.config.PARAM_QUERY_LIMIT,
-    autograder.api.config.PARAM_QUERY_AFTER,
-    autograder.api.config.PARAM_QUERY_BEFORE,
-    autograder.api.config.PARAM_QUERY_SORT,
+    autograder.api.config.PARAM_COURSE_ID,
+
+    autograder.api.config.PARAM_EMAIL_TO,
+    autograder.api.config.PARAM_EMAIL_CC,
+    autograder.api.config.PARAM_EMAIL_BCC,
+    autograder.api.config.PARAM_EMAIL_SUBJECT,
+    autograder.api.config.PARAM_EMAIL_BODY,
+    autograder.api.config.PARAM_EMAIL_HTML,
+
+    autograder.api.config.PARAM_DRY_RUN,
 ]
 
-DESCRIPTION = 'Query system stats from the autograder server.'
+DESCRIPTION = 'Send an email to course users.'
 
 def send(arguments, **kwargs):
     return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT, **kwargs)

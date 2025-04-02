@@ -9,10 +9,11 @@ import autograder.api.constants
 import autograder.error
 import autograder.util.hash
 
+CONFIG_PATHS_KEY = 'config_paths'
 DEFAULT_CONFIG_FILENAME = 'config.json'
 DEFAULT_USER_CONFIG_PATH = platformdirs.user_config_dir('autograder.json')
-
-CONFIG_PATHS_KEY = 'config_paths'
+CSV_TO_LIST_DELIMITER = ','
+MAP_KEY_VALUE_SEP = '='
 
 class APIParam(object):
     def __init__(self, key, description,
@@ -199,6 +200,35 @@ def _submission_add_func(parser, param):
         action = 'store', type = str, nargs = '+',
         help = param.description)
 
+# This is used as an argparse argument type.
+# See: https://docs.python.org/3/library/argparse.html#type
+# This converts a csv string and returns a list of strings,
+# e.g. --to email1@gmail.com,email2@gmail.com -> ["email1@gmail.com", "email2@gmail.com"].
+def _csv_to_list(arg):
+    if arg == "" or arg is None:
+        raise ValueError('Parameter argument cannot be empty.')
+
+    return [part.strip() for part in arg.split(CSV_TO_LIST_DELIMITER)]
+
+class ArgumentMap(argparse.Action):
+    def __call__(self, parser, namespace, raw_values, option_string = None):
+        if (not hasattr(namespace, self.dest)):
+            setattr(namespace, self.dest, {})
+
+        allValues = getattr(namespace, self.dest)
+        if (allValues is None):
+            allValues = {}
+            setattr(namespace, self.dest, allValues)
+
+        for raw_value in raw_values:
+            parts = raw_value.split(MAP_KEY_VALUE_SEP, 1)
+            if (len(parts) != 2):
+                raise ValueError((
+                    "Argument map key/value pair ('%s') is missing a separator '%s'."
+                    % (raw_value, MAP_KEY_VALUE_SEP)))
+
+            allValues[parts[0].strip()] = parts[1].strip()
+
 # Common API params.
 
 PARAM_ASSIGNMENT_ID = APIParam('assignment-id',
@@ -219,10 +249,39 @@ PARAM_DRY_RUN = APIParam('dry-run',
     required = False,
     parser_options = {'action': 'store_true', 'default': False})
 
+PARAM_EMAIL_BCC = APIParam('bcc',
+    'A list of bcc email addresses.',
+    required = False,
+    parser_options = {'action': 'extend', 'type': _csv_to_list})
+
+PARAM_EMAIL_BODY = APIParam('body',
+    'The email body.',
+    required = False)
+
+PARAM_EMAIL_CC = APIParam('cc',
+    'A list of cc email addresses.',
+    required = False,
+    parser_options = {'action': 'extend', 'type': _csv_to_list})
+
+PARAM_EMAIL_HTML = APIParam('html',
+    'Indicates the email body contains HTML.',
+    required = False)
+
+PARAM_EMAIL_SUBJECT = APIParam('subject',
+    'The email subject.',
+    required = True)
+
+PARAM_EMAIL_TO = APIParam('to',
+    'A list of email addresses.',
+    required = False,
+    parser_options = {'action': 'extend', 'type': _csv_to_list})
+
 PARAM_FILTER_ROLE = APIParam('filter-role',
     'Only show results from users with this role (all roles if unknown (default)).',
     required = False,
-    parser_options = {'action': 'store', 'default': 'unknown',
+    parser_options = {
+        'action': 'store',
+        'default': 'unknown',
         'choices': autograder.api.constants.COURSE_ROLES})
 
 PARAM_FORCE = APIParam('force',
@@ -256,29 +315,30 @@ PARAM_QUERY_SORT = APIParam('sort',
     'Sort the results. -1 for ascending, 0 for no sorting, 1 for descending.',
     required = False, parser_options = {'action': 'store', 'type': int})
 
-PARAM_QUERY_TARGET_COURSE = APIParam('target-course',
-    'If supplied, only return records for this course.',
-    required = False)
-
 PARAM_QUERY_TARGET_ASSIGNMENT = APIParam('target-assignment',
     'If supplied, only return records for this assignment.',
+    required = False)
+
+PARAM_QUERY_TARGET_COURSE = APIParam('target-course',
+    'If supplied, only return records for this course.',
     required = False)
 
 PARAM_QUERY_TARGET_EMAIL = APIParam('target-email',
     'If supplied, only return records for this user.',
     required = False)
 
-PARAM_QUERY_TARGET_SENDER = APIParam('target-sender',
-    'If supplied, only return records for this sender.',
-    required = False)
+PARAM_QUERY_TYPE = APIParam('type',
+    'The type of metric to query for.',
+    required = True)
 
-PARAM_QUERY_TARGET_ENDPOINT = APIParam('target-endpoint',
-    'If supplied, only return records for this endpoint.',
-    required = False)
-
-PARAM_QUERY_TARGET_LOCATOR = APIParam('target-locator',
-    'If supplied, only return records for this locator.',
-    required = False)
+PARAM_QUERY_WHERE = APIParam('where',
+    'Only includes records with a patching key/value pair.',
+    required = False,
+    parser_options = {
+        'metavar': (f"KEY{MAP_KEY_VALUE_SEP}VALUE"),
+        'action': ArgumentMap,
+        'nargs': '+',
+    })
 
 PARAM_SEND_EMAILS = APIParam('send-emails',
     'Send any emails.',
@@ -315,9 +375,9 @@ PARAM_SKIP_TASKS = APIParam('skip-tasks',
     parser_options = {'action': 'store_true', 'default': False})
 
 PARAM_SKIP_UPDATES = APIParam('skip-updates',
-'Skip updates (default: False).',
-required = False,
-parser_options = {'action': 'store_true', 'default': False})
+    'Skip updates (default: False).',
+    required = False,
+    parser_options = {'action': 'store_true', 'default': False})
 
 PARAM_SUBMISSION_SPECS = APIParam('submissions',
     ('A list of submission specifications to analyze.'
