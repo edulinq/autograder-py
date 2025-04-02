@@ -304,7 +304,12 @@ PARAM_PROXY_EMAIL = APIParam('proxy-email',
     required = True)
 
 PARAM_PROXY_TIME = APIParam('proxy-time',
-    'The proxy timestamp that will be applied to the request.',
+    ('The proxy timestamp that will be applied to the request.'
+    + ' By default, a time will be automatically assigned'
+    + ' that does not mark the assignment late.'
+    + ' Use this option to manually set the proxy time.'
+    + ' Timestamps are milliseconds from the UNIX epoch'
+    + ' (https://en.wikipedia.org/wiki/Unix_time).'),
     required = False, parser_options = {'action': 'store', 'type': int})
 
 PARAM_QUERY_LIMIT = APIParam('limit',
