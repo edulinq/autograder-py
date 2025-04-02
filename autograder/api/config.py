@@ -305,7 +305,7 @@ PARAM_PROXY_EMAIL = APIParam('proxy-email',
 
 PARAM_PROXY_TIME = APIParam('proxy-time',
     'The proxy timestamp that will be applied to the request.',
-    required = False)
+    required = False, parser_options = {'action': 'store', 'type': int})
 
 PARAM_QUERY_LIMIT = APIParam('limit',
     'The maximum number of records to return.',

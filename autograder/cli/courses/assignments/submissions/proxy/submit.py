@@ -9,6 +9,10 @@ def run(arguments):
     result = autograder.api.courses.assignments.submissions.proxy.submit.send(arguments,
             files = arguments.files, exit_on_error = True)
 
+    if (not result['found-user']):
+        print("Proxy user not found.")
+        return 1
+
     message = result.get('message', '')
     if ((message is not None) and (message != '')):
         # Replace any timestamps in the message.
@@ -20,11 +24,11 @@ def run(arguments):
 
     if (result['rejected']):
         print("Submission was rejected by the autograder.")
-        return 1
+        return 2
 
     if (not result['grading-success']):
         print("Grading failed.")
-        return 2
+        return 3
 
     submission = autograder.assignment.GradedAssignment.from_dict(result['result'])
     print(submission.report())

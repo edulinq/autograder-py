@@ -1,0 +1,67 @@
+{
+    "module": "autograder.api.courses.assignments.submissions.proxy.submit",
+    "read-write": true,
+    "arguments": {
+        "proxy-email": "course-student@test.edulinq.org",
+        "proxy-time": 999999999999
+    },
+    "files": [
+        "__DATA_DIR__(hw0_solution.py)"
+    ],
+    "output-modifier": "clean_output_timestamps_and_submission_ids",
+    "output": {
+        "found-user": true,
+        "rejected": false,
+        "message": "",
+        "grading-success": true,
+        "result": {
+            "id": "course101::hw0::course-student@test.edulinq.org::1234567890",
+            "short-id": "1234567890",
+            "course-id": "course101",
+            "assignment-id": "hw0",
+            "user": "course-student@test.edulinq.org",
+            "proxy-user": "course-admin@test.edulinq.org",
+            "message": "",
+            "max_points": 2,
+            "score": 2,
+            "proxy_start_time": 1234567890123,
+            "proxy_end_time": 1234567890123,
+            "name": "HW0",
+            "questions": [
+                {
+                    "name": "Q1",
+                    "max_points": 1,
+                    "score": 1,
+                    "hard_fail": false,
+                    "skipped": false,
+                    "message": "",
+                    "grading_start_time": 1234567890123,
+                    "grading_end_time": 1234567890123
+                },
+                {
+                    "name": "Q2",
+                    "max_points": 1,
+                    "score": 1,
+                    "hard_fail": false,
+                    "skipped": false,
+                    "message": "",
+                    "grading_start_time": 1234567890123,
+                    "grading_end_time": 1234567890123
+                },
+                {
+                    "name": "Style",
+                    "max_points": 0,
+                    "score": 0,
+                    "hard_fail": false,
+                    "skipped": false,
+                    "message": "Style is clean!",
+                    "grading_start_time": 1234567890123,
+                    "grading_end_time": 1234567890123
+                }
+            ],
+            "grading_start_time": 999999999999,
+            "grading_end_time": 1234567890123,
+            "additional-info": null
+        }
+    }
+}

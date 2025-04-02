@@ -1,0 +1,18 @@
+{
+    "module": "autograder.api.courses.assignments.submissions.proxy.submit",
+    "read-write": true,
+    "arguments": {
+        "proxy-email": "zzz@test.edulinq.org"
+    },
+    "files": [
+        "__DATA_DIR__(hw0_solution.py)"
+    ],
+    "output-modifier": "clean_output_timestamps_and_submission_ids",
+    "output": {
+        "found-user": false,
+        "rejected": false,
+        "message": "",
+        "grading-success": false,
+        "result": null
+    }
+}
