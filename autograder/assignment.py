@@ -127,6 +127,7 @@ class GradedAssignment(object):
     def __init__(self, name = '',
             questions = [],
             grading_start_time = None, grading_end_time = None,
+            proxy_start_time = None, proxy_end_time = None,
             prologue = None, epilogue = None,
             **kwargs):
         self.name = name
@@ -143,6 +144,14 @@ class GradedAssignment(object):
         if (grading_end_time is not None):
             self.grading_end_time = autograder.util.timestamp.get(grading_end_time)
 
+        self.proxy_start_time = autograder.util.timestamp.MISSING_TIMESTAMP
+        if (proxy_start_time is not None):
+            self.proxy_start_time = autograder.util.timestamp.get(proxy_start_time)
+
+        self.proxy_end_time = autograder.util.timestamp.MISSING_TIMESTAMP
+        if (proxy_end_time is not None):
+            self.proxy_end_time = autograder.util.timestamp.get(proxy_end_time)
+
     def to_dict(self):
         """
         Convert to all simple structures that can be later converted to JSON.
@@ -153,6 +162,8 @@ class GradedAssignment(object):
             'questions': [question.to_dict() for question in self.questions],
             'grading_start_time': self.grading_start_time,
             'grading_end_time': self.grading_end_time,
+            'proxy_start_time': self.proxy_start_time,
+            'proxy_end_time': self.proxy_end_time,
         }
 
     def to_test_submission(self, options = {}):
@@ -164,6 +175,8 @@ class GradedAssignment(object):
 
         del results['grading_start_time']
         del results['grading_end_time']
+        del results['proxy_start_time']
+        del results['proxy_end_time']
 
         for question in results['questions']:
             del question['grading_start_time']

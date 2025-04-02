@@ -1,12 +1,12 @@
 import sys
 
-import autograder.api.courses.assignments.submissions.submit
+import autograder.api.courses.assignments.submissions.proxy.submit
 import autograder.assignment
 import autograder.cli.config
 import autograder.util.timestamp
 
 def run(arguments):
-    result = autograder.api.courses.assignments.submissions.submit.send(arguments,
+    result = autograder.api.courses.assignments.submissions.proxy.submit.send(arguments,
             files = arguments.files, exit_on_error = True)
 
     message = result.get('message', '')
@@ -34,7 +34,7 @@ def main():
     return run(_get_parser().parse_args())
 
 def _get_parser():
-    parser = autograder.api.courses.assignments.submissions.submit._get_parser()
+    parser = autograder.api.courses.assignments.submissions.proxy.submit._get_parser()
 
     autograder.cli.config.add_submission_files_argument(parser)
 
