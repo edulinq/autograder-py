@@ -213,6 +213,28 @@
                     "submission-result": "*github.com/edulinq/autograder/internal/model.GradingInfo"
                 }
             },
+            "courses/assignments/submissions/proxy/submit": {
+                "description": "Proxy submit an assignment submission to the autograder.",
+                "input": {
+                    "APIRequest": "github.com/edulinq/autograder/internal/api/core.APIRequest",
+                    "MinCourseRoleGrader": "bool",
+                    "assignment-id": "string",
+                    "course-id": "string",
+                    "message": "string",
+                    "proxy-email": "github.com/edulinq/autograder/internal/api/core.TargetCourseUser",
+                    "proxy-time": "int64",
+                    "root-user-nonce": "string",
+                    "user-email": "string",
+                    "user-pass": "string"
+                },
+                "output": {
+                    "found-user": "bool",
+                    "grading-success": "bool",
+                    "message": "string",
+                    "rejected": "bool",
+                    "result": "*github.com/edulinq/autograder/internal/model.GradingInfo"
+                }
+            },
             "courses/assignments/submissions/remove": {
                 "description": "Remove a specified submission. Defaults to the most recent submission.",
                 "input": {
@@ -714,36 +736,36 @@
                 }
             },
             "github.com/edulinq/autograder/internal/api/core.MinCourseRoleAdmin": {
-                "alias-type": "bool",
-                "category": "alias"
+                "category": "alias",
+                "alias-type": "bool"
             },
             "github.com/edulinq/autograder/internal/api/core.MinCourseRoleGrader": {
-                "alias-type": "bool",
-                "category": "alias"
+                "category": "alias",
+                "alias-type": "bool"
             },
             "github.com/edulinq/autograder/internal/api/core.MinCourseRoleOther": {
-                "alias-type": "bool",
-                "category": "alias"
+                "category": "alias",
+                "alias-type": "bool"
             },
             "github.com/edulinq/autograder/internal/api/core.MinCourseRoleStudent": {
-                "alias-type": "bool",
-                "category": "alias"
+                "category": "alias",
+                "alias-type": "bool"
             },
             "github.com/edulinq/autograder/internal/api/core.MinServerRoleAdmin": {
-                "alias-type": "bool",
-                "category": "alias"
+                "category": "alias",
+                "alias-type": "bool"
             },
             "github.com/edulinq/autograder/internal/api/core.MinServerRoleCourseCreator": {
-                "alias-type": "bool",
-                "category": "alias"
+                "category": "alias",
+                "alias-type": "bool"
             },
             "github.com/edulinq/autograder/internal/api/core.MinServerRoleUser": {
-                "alias-type": "bool",
-                "category": "alias"
+                "category": "alias",
+                "alias-type": "bool"
             },
             "github.com/edulinq/autograder/internal/api/core.NonEmptyString": {
-                "alias-type": "string",
-                "category": "alias"
+                "category": "alias",
+                "alias-type": "string"
             },
             "github.com/edulinq/autograder/internal/api/core.ServerUserInfo": {
                 "category": "struct",
@@ -783,8 +805,8 @@
                 }
             },
             "github.com/edulinq/autograder/internal/api/core.UserInfoType": {
-                "alias-type": "string",
-                "category": "alias"
+                "category": "alias",
+                "alias-type": "string"
             },
             "github.com/edulinq/autograder/internal/api/courses/admin.EmailRequest": {
                 "category": "struct",
@@ -1074,6 +1096,31 @@
                     "found-submission": "bool",
                     "found-user": "bool",
                     "submission-result": "*github.com/edulinq/autograder/internal/model.GradingInfo"
+                }
+            },
+            "github.com/edulinq/autograder/internal/api/courses/assignments/submissions/proxy.SubmitRequest": {
+                "category": "struct",
+                "fields": {
+                    "APIRequest": "github.com/edulinq/autograder/internal/api/core.APIRequest",
+                    "MinCourseRoleGrader": "bool",
+                    "assignment-id": "string",
+                    "course-id": "string",
+                    "message": "string",
+                    "proxy-email": "github.com/edulinq/autograder/internal/api/core.TargetCourseUser",
+                    "proxy-time": "int64",
+                    "root-user-nonce": "string",
+                    "user-email": "string",
+                    "user-pass": "string"
+                }
+            },
+            "github.com/edulinq/autograder/internal/api/courses/assignments/submissions/proxy.SubmitResponse": {
+                "category": "struct",
+                "fields": {
+                    "found-user": "bool",
+                    "grading-success": "bool",
+                    "message": "string",
+                    "rejected": "bool",
+                    "result": "*github.com/edulinq/autograder/internal/model.GradingInfo"
                 }
             },
             "github.com/edulinq/autograder/internal/api/courses/lms/scores.UploadRequest": {
@@ -1525,8 +1572,8 @@
                 }
             },
             "github.com/edulinq/autograder/internal/log.LogLevel": {
-                "alias-type": "int32",
-                "category": "alias"
+                "category": "alias",
+                "alias-type": "int32"
             },
             "github.com/edulinq/autograder/internal/log.RawLogQuery": {
                 "category": "struct",
@@ -1611,8 +1658,8 @@
                 }
             },
             "github.com/edulinq/autograder/internal/model.CourseUserRole": {
-                "alias-type": "int",
-                "category": "alias"
+                "category": "alias",
+                "alias-type": "int"
             },
             "github.com/edulinq/autograder/internal/model.ExternalLocatableError": {
                 "category": "struct",
@@ -1688,6 +1735,9 @@
                     "message": "string",
                     "name": "string",
                     "prologue": "string",
+                    "proxy-user": "string",
+                    "proxy_end_time": "int64",
+                    "proxy_start_time": "int64",
                     "questions": "[]*github.com/edulinq/autograder/internal/model.GradedQuestion",
                     "score": "float64",
                     "short-id": "string",
@@ -1811,8 +1861,8 @@
                 }
             },
             "github.com/edulinq/autograder/internal/model.ServerUserRole": {
-                "alias-type": "int",
-                "category": "alias"
+                "category": "alias",
+                "alias-type": "int"
             },
             "github.com/edulinq/autograder/internal/model.SubmissionHistoryItem": {
                 "category": "struct",
@@ -1901,8 +1951,8 @@
                 }
             },
             "github.com/edulinq/autograder/internal/stats.MetricType": {
-                "alias-type": "string",
-                "category": "alias"
+                "category": "alias",
+                "alias-type": "string"
             },
             "github.com/edulinq/autograder/internal/stats.Query": {
                 "category": "struct",
@@ -1916,8 +1966,8 @@
                 }
             },
             "github.com/edulinq/autograder/internal/timestamp.Timestamp": {
-                "alias-type": "int64",
-                "category": "alias"
+                "category": "alias",
+                "alias-type": "int64"
             },
             "github.com/edulinq/autograder/internal/util.AggregateValues": {
                 "category": "struct",
@@ -1962,8 +2012,8 @@
                 }
             },
             "github.com/edulinq/autograder/internal/util.FileSpecType": {
-                "alias-type": "string",
-                "category": "alias"
+                "category": "alias",
+                "alias-type": "string"
             }
         }
     }
