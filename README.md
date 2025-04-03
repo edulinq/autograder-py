@@ -374,7 +374,7 @@ will give a more in-depth description of the command and available options.
 The autograder allows course staff to submit on behalf of students using "proxy" submissions.
 The proxy submit command adds two parameters to the normal submission command:
 
- - `proxy-user` -- The student that the course staff is submitting on behalf of.
+ - `proxy-email` -- The student that the course staff is submitting on behalf of.
  - `proxy-time` -- The "fudged" submission time that is automatically set to the earlier time between now and one minute before the due date.
    - If you want to set the time manually, time is the number of milliseconds from the [Unix Epoch](https://en.wikipedia.org/wiki/Unix_time).
 
@@ -383,14 +383,14 @@ Here is an example usage of `autograder.cli.courses.assignments.submissions.prox
 where `course-admin@test.edulinq.org` submits code (`hw0_solution.py`) on behalf of `course-student@test.edulinq.org`.
 The example does not set a `proxy-time` so the command automatically sets one that does not mark the submissions as late.
 ```sh
-python3 -m autograder.cli.courses.assignments.submissions.proxy.submit --user course-admin@test.edulinq.org --proxy-user course-student@test.edulinq.org hw0_solution.py
+python3 -m autograder.cli.courses.assignments.submissions.proxy.submit --user course-admin@test.edulinq.org --proxy-email course-student@test.edulinq.org hw0_solution.py
 ```
 
 Extending the previous example, we can manually set the time of submission through `proxy-time`.
 We can use a [Unix Epoch time converter](https://www.epochconverter.com/) to change the target time
 of March, 4th 2025 at 12:00 PM Pacific Time to milliseconds from the Unix Epoch, `1741118400000`:
 ```sh
-python3 -m autograder.cli.courses.assignments.submissions.proxy.submit --user course-admin@test.edulinq.org --proxy-user course-student@test.edulinq.org --proxt-time 1741118400000 hw0_solution.py
+python3 -m autograder.cli.courses.assignments.submissions.proxy.submit --user course-admin@test.edulinq.org --proxy-email course-student@test.edulinq.org --proxy-time 1741118400000 hw0_solution.py
 ```
 
 ### Commands for Course Builders
