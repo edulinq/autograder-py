@@ -307,7 +307,7 @@ PARAM_PROXY_EMAIL = APIParam('proxy-email',
 PARAM_PROXY_TIME = APIParam('proxy-time',
     ('The proxy timestamp that will be applied to the request.'
     + ' By default, the earlier time between now and'
-    + ' one minute before the due date will be automatically assigned.'
+    + ' one minute before the due date will be used.'
     + ' Use this option to manually set the proxy time.'
     + ' Timestamps are milliseconds from the UNIX epoch'
     + ' (https://en.wikipedia.org/wiki/Unix_time).'),
