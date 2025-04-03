@@ -300,13 +300,14 @@ PARAM_OVERWRITE_CACHE = APIParam('overwrite-cache',
     parser_options = {'action': 'store_true', 'default': False})
 
 PARAM_PROXY_EMAIL = APIParam('proxy-email',
-    'The email of the user that is the target of this proxy request.',
+    ('The email of the user the request is pretending to be made under'
+    + ' (the submission will be made on behalf of this user).'),
     required = True)
 
 PARAM_PROXY_TIME = APIParam('proxy-time',
     ('The proxy timestamp that will be applied to the request.'
-    + ' By default, a time will be automatically assigned'
-    + ' that does not mark the assignment late.'
+    + ' By default, the earlier time between now and'
+    + ' one minute before the due date will be automatically assigned.'
     + ' Use this option to manually set the proxy time.'
     + ' Timestamps are milliseconds from the UNIX epoch'
     + ' (https://en.wikipedia.org/wiki/Unix_time).'),

@@ -4,7 +4,7 @@
         "--proxy-email", "zzz@test.edulinq.org",
         "__DATA_DIR__(hw0_solution.py)"
     ],
-    "exit-status": 1
+    "exit-status": 3
 }
 ---
 Proxy user not found.

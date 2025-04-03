@@ -369,6 +369,21 @@ will give a more in-depth description of the command and available options.
  - `autograder.cli.courses.assignments.submissions.fetch.course.attempts` -- Get all the most recent submissions (code and grading output) for an assignment.
  - `autograder.cli.courses.users.list` -- List all the users in a course.
 
+#### Proxy Submissions
+
+Instructors and TAs may need to accomodate a student's unique situations.
+The autograder server includes proxy submissions to assist students if necessary.
+Proxy submissions allow course staff to target a `proxy-user` and set a `proxy-time`.
+
+ - `proxy-user` is the student that the course staff is submitting on behalf of.
+ - `proxy-time` is the "fudged" submission time and will be automatically set to the earlier time between now and one minute before the due date.
+   - If you want to set the time manually, time is measured by the number of milliseconds from the [Unix Epoch](https://en.wikipedia.org/wiki/Unix_time).
+
+As the commands come from course staff, the submissions are not subject to submission restrictions.
+Here are a list of proxy commands that could help in various scenarios:
+
+ - `autograder.cli.courses.assignments.submissions.proxy.submit` -- Submit files (code) on behalf of a student that avoids the late penalty.
+
 ### Commands for Course Builders
 
 Users who are building courses should generally be aware of all the available tools,
