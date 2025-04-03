@@ -372,11 +372,11 @@ will give a more in-depth description of the command and available options.
 #### Proxy Submissions
 
 Instructors and TAs may need to accomodate a student's unique situations.
-The autograder server includes proxy submissions to assist students if necessary.
+The autograder server includes proxy submissions so course staff may assist students if necessary.
 Proxy submissions allow course staff to target a `proxy-user` and set a `proxy-time`.
 
- - `proxy-user` is the student that the course staff is submitting on behalf of.
- - `proxy-time` is the "fudged" submission time and will be automatically set to the earlier time between now and one minute before the due date.
+ - `proxy-user` -- The student that the course staff is submitting on behalf of.
+ - `proxy-time` -- The "fudged" submission time that is automatically set to the earlier time between now and one minute before the due date.
    - If you want to set the time manually, time is measured by the number of milliseconds from the [Unix Epoch](https://en.wikipedia.org/wiki/Unix_time).
 
 As the commands come from course staff, the submissions are not subject to submission restrictions.
