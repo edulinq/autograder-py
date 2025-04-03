@@ -1,7 +1,7 @@
 import autograder.api.common
 import autograder.api.config
 
-API_ENDPOINT = 'courses/assignments/submissions/submit'
+API_ENDPOINT = 'courses/assignments/submissions/proxy/submit'
 API_PARAMS = [
     autograder.api.config.PARAM_COURSE_ID,
     autograder.api.config.PARAM_USER_EMAIL,
@@ -9,13 +9,11 @@ API_PARAMS = [
     autograder.api.config.PARAM_ASSIGNMENT_ID,
     autograder.api.config.PARAM_SUBMISSION_MESSAGE,
 
-    autograder.api.config.APIParam('allow-late',
-        'Allow this submission to be graded, even if it is late (default: %(default)s).',
-        required = False,
-        parser_options = {'action': 'store_true', 'default': False})
+    autograder.api.config.PARAM_PROXY_EMAIL,
+    autograder.api.config.PARAM_PROXY_TIME,
 ]
 
-DESCRIPTION = 'Submit an assignment submission to the autograder.'
+DESCRIPTION = 'Proxy submit an assignment submission to the autograder.'
 
 def send(arguments, **kwargs):
     return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT, **kwargs)

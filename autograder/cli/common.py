@@ -1,3 +1,6 @@
+import autograder.assignment
+import autograder.util.timestamp
+
 BASE_USER_HEADERS = ['email', 'name', 'role']
 
 COURSE_USER_HEADERS = BASE_USER_HEADERS + ['lms-id']
@@ -39,6 +42,28 @@ USER_OP_ERROR_KEYS = [
 ALL_USER_OP_KEYS = [
     ('email', 'Email'),
 ] + USER_OP_KEYS + USER_OP_ERROR_KEYS
+
+def display_grading_result(result):
+    message = result.get('message', '')
+    if ((message is not None) and (message != '')):
+        # Replace any timestamps in the message.
+        message = autograder.util.timestamp.convert_message(message, pretty = True)
+
+        print("--- Message from Autograder ---")
+        print(message)
+        print("-------------------------------")
+
+    if (result['rejected']):
+        print("Submission was rejected by the autograder.")
+        return 1
+
+    if (not result['grading-success']):
+        print("Grading failed.")
+        return 2
+
+    submission = autograder.assignment.GradedAssignment.from_dict(result['result'])
+    print(submission.report())
+    return 0
 
 # Set course_users to True if listing course users, False for server users.
 # An error will be raised if a user of a different type is found.

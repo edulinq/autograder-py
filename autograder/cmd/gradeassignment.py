@@ -28,6 +28,7 @@ def run(args):
 
         with open(out_path, 'w') as file:
             json.dump(result.to_dict(), file, indent = 4)
+            file.write('\n')
 
     if (args.test_submission_path is not None):
         test_submission_path = os.path.abspath(args.test_submission_path)
@@ -38,6 +39,7 @@ def run(args):
 
         with open(test_submission_path, 'w') as file:
             json.dump(result.to_test_submission(), file, indent = 4)
+            file.write('\n')
 
     return 0
 
