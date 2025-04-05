@@ -2,6 +2,11 @@ import autograder.api.constants
 
 # Common CLI arguments.
 
+def add_submission_files_argument(parser):
+    parser.add_argument('files', metavar = 'FILE',
+        action = 'store', type = str, nargs = '+',
+        help = 'The path to your submission file(s).')
+
 def add_new_course_role_argument(parser, action):
     parser.add_argument('--new-course-role', dest = 'new-course-role',
         action = 'store', type = str, default = 'student',

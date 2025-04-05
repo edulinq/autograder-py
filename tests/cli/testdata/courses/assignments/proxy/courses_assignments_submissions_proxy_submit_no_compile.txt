@@ -1,0 +1,19 @@
+{
+    "cli": "autograder.cli.courses.assignments.submissions.proxy.submit",
+    "output-check": "content_equals_ignore_time",
+    "arguments": [
+        "--proxy-email", "course-student@test.edulinq.org",
+        "__DATA_DIR__(hw0_no_compile.py)"
+    ]
+}
+---
+Autograder transcript for assignment: HW0.
+Grading started at <TIME> and ended at <TIME>.
+Q1: 0 / 1
+   Submission could not be graded.
+Q2: 0 / 1
+   Submission could not be graded.
+Style: 0 / 0
+   Submission could not be graded.
+
+Total: 0 / 2

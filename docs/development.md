@@ -67,6 +67,10 @@ During CI, this script will use a Docker image for the test server:
 ```
 
 This method is not very fast, but should be consistent and portable to everywhere you can run docker.
+The Docker image we used is built by the server on every tagged release.
+The current version of the Docker image we used is specify in [.ci/backend.py](../.ci/backend.py) in the `DEFAULT_DOCKER_IMAGE` constant.
+When you are targeting a new server version (like if you added an API endpoint), make sure to update the image version.
+
 However, the Docker-based method is not as helpful for developers who also have changes pending on the server side
 (since the Docker image will not be updated until changes are accepted).
 This happens a lot when developers are adding a new API endpoint.

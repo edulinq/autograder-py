@@ -299,6 +299,20 @@ PARAM_OVERWRITE_CACHE = APIParam('overwrite-cache',
     required = False,
     parser_options = {'action': 'store_true', 'default': False})
 
+PARAM_PROXY_EMAIL = APIParam('proxy-email',
+    ('The email of the user the request is pretending to be made under'
+    + ' (the submission will be made on behalf of this user).'),
+    required = True)
+
+PARAM_PROXY_TIME = APIParam('proxy-time',
+    ('The proxy timestamp that will be applied to the request.'
+    + ' By default, the earlier time between now and'
+    + ' one minute before the due date will be used.'
+    + ' Use this option to manually set the proxy time.'
+    + ' Timestamps are milliseconds from the UNIX epoch'
+    + ' (https://en.wikipedia.org/wiki/Unix_time).'),
+    required = False, parser_options = {'action': 'store', 'type': int})
+
 PARAM_QUERY_LIMIT = APIParam('limit',
     'The maximum number of records to return.',
     required = False, parser_options = {'action': 'store', 'type': int})
@@ -378,6 +392,10 @@ PARAM_SKIP_UPDATES = APIParam('skip-updates',
     'Skip updates (default: False).',
     required = False,
     parser_options = {'action': 'store_true', 'default': False})
+
+PARAM_SUBMISSION_MESSAGE = APIParam('message',
+        'An optional message to attach to the submission.',
+        required = False)
 
 PARAM_SUBMISSION_SPECS = APIParam('submissions',
     ('A list of submission specifications to analyze.'
