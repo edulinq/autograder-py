@@ -1,0 +1,9 @@
+{
+    "cli": "autograder.cli.courses.assignments.submissions.proxy.resubmit",
+    "arguments": [
+        "--proxy-email", "zzz@test.edulinq.org"
+    ],
+    "exit-status": 3
+}
+---
+Proxy user not found.
