@@ -17,6 +17,7 @@ The canonical Python interface for the autograding server.
      - [Managing your Password](#managing-your-password)
    - [Commands for TAs and Instructors](#commands-for-tas-and-instructors)
      - [Proxy Submissions](#proxy-submissions)
+     - [Proxy Resubmissions](#proxy-resubmissions)
    - [Commands for Course Builders](#commands-for-course-builders)
 
 ## Resources
@@ -418,6 +419,69 @@ Style: 0 / 0
    Style is clean!
 
 Total: 100 / 100
+```
+
+#### Proxy Resubmissions
+
+The autograder allows course staff to resubmit on behalf of students using "proxy" submissions.
+The proxy resubmit command is very similar to [proxy submit](#proxy-submissions) and includes the `proxy-email` and `proxy-time` parameters.
+
+However, resubmissions target a previous submission ID instead of uploading files (code) like proxy submissions.
+By default, proxy resubmit targets the most recent submission:
+```sh
+python3 -m autograder.cli.courses.assignments.submissions.proxy.resubmit --proxy-email student@test.edulinq.org
+```
+
+The output may look like:
+```
+Autograder transcript for assignment: HO0.
+Grading started at 2025-04-02 12:45 and ended at 2025-04-02 12:45.
+Task 1.A (my_function): 40 / 40
+Task 2.A (test_my_function_value): 30 / 30
+Task 2.B (TestMyFunction): 30 / 30
+Style: 0 / 0
+   Style is clean!
+
+Total: 100 / 100
+```
+
+Extending the previous example, we can manually set the time of submission through `proxy-time`.
+We can use a [Unix Epoch time converter](https://www.epochconverter.com/) to change the target time
+of March, 4th 2025 at 12:00 PM Pacific Time to milliseconds from the Unix Epoch, `1741118400000`:
+```sh
+python3 -m autograder.cli.courses.assignments.submissions.proxy.resubmit --proxy-email student@test.edulinq.org --proxy-time 1741118400000
+```
+
+The output may look like (note the timestamp is the one we set):
+```
+Autograder transcript for assignment: HO0.
+Grading started at 2025-03-04 12:00 and ended at 2025-03-04 12:00.
+Task 1.A (my_function): 40 / 40
+Task 2.A (test_my_function_value): 30 / 30
+Task 2.B (TestMyFunction): 30 / 30
+Style: 0 / 0
+   Style is clean!
+
+Total: 100 / 100
+```
+
+Finally, we can target a specific submission through `target-submission`.
+Extending the initial example with a target submission ID of `123456789`:
+```sh
+python3 -m autograder.cli.courses.assignments.submissions.proxy.resubmit --proxy-email student@test.edulinq.org --target-submission 123456789
+```
+
+The output may look like (if the target submission was not complete):
+```
+Autograder transcript for assignment: HO0.
+Grading started at 2025-03-04 12:00 and ended at 2025-03-04 12:00.
+Task 1.A (my_function): 40 / 40
+Task 2.A (test_my_function_value): 30 / 30
+Task 2.B (TestMyFunction): 0 / 30
+Style: 0 / 0
+   Style is clean!
+
+Total: 70 / 100
 ```
 
 ### Commands for Course Builders
