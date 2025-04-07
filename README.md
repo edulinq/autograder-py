@@ -18,7 +18,7 @@ The canonical Python interface for the autograding server.
    - [Commands for TAs and Instructors](#commands-for-tas-and-instructors)
      - [Proxy Submissions](#proxy-submissions)
        - [Submitting Source Files for a Student](#submitting-source-files-for-a-student)
-       - [Resubmitting a Student's Code by ID](#resubmitting-a-student's-code-by-id)
+       - [Resubmitting a Student's Code by ID](#resubmitting-a-students-code-by-id)
    - [Commands for Course Builders](#commands-for-course-builders)
 
 ## Resources
