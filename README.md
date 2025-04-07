@@ -388,7 +388,7 @@ As the commands are issued by course staff, the submissions are not subject to s
 
 To proxy submit source files for a student, use the `autograder.cli.courses.assignments.submissions.proxy.submit` command.
 Here is an example where course staff submits code (`my_file.py`) on behalf of `student@test.edulinq.org`.
-The example does not set a `--proxy-time` so the command automatically sets a proxy time that does not mark the submissions as late.
+The example does not set a `--proxy-time` so the command automatically sets a proxy time that does not mark the submission as late.
 ```sh
 python3 -m autograder.cli.courses.assignments.submissions.proxy.submit --proxy-email student@test.edulinq.org my_file.py
 ```
@@ -406,15 +406,15 @@ Style: 0 / 0
 Total: 100 / 100
 ```
 
-Extending the previous example, we can manually set the time of submission through `proxy-time`.
+Extending the previous example, we can manually set the time of submission through `--proxy-time`.
 We will use the time `1741118400000` (March 4th, 2025 at 12:00 PM Pacific Time).
 ```sh
-python3 -m autograder.cli.courses.assignments.submissions.proxy.submit --proxy-email student@test.edulinq.org --proxy-time 1741118400000 my_file.py
+python3 -m autograder.cli.courses.assignments.submissions.proxy.submit --proxy-time 1741118400000 --proxy-email student@test.edulinq.org my_file.py
 ```
 
 ##### Resubmitting a Student's Code by ID
 
-To proxy resubmit a student's code by their previous submission ID, use the `autograder.cli.courses.assignments.submissions.proxy.resubmit` command.
+To proxy resubmit a student's code using their previous submission ID, use the `autograder.cli.courses.assignments.submissions.proxy.resubmit` command.
 By default, proxy resubmit targets the student's most recent submission:
 ```sh
 python3 -m autograder.cli.courses.assignments.submissions.proxy.resubmit --proxy-email student@test.edulinq.org
@@ -435,9 +435,9 @@ Total: 100 / 100
 
 We can target a specific submission ID using `--target-submission`.
 You can [get a history of all past submissions](#getting-a-history-of-all-past-submissions) to see a student's previous submission IDs and scores.
-Extending the previous example with a target submission ID of `123456789`:
+For example, we can extend the previous example with a target submission ID of `123456789`:
 ```sh
-python3 -m autograder.cli.courses.assignments.submissions.proxy.resubmit --proxy-email student@test.edulinq.org --target-submission 123456789
+python3 -m autograder.cli.courses.assignments.submissions.proxy.resubmit --target-submission 123456789 --proxy-email student@test.edulinq.org
 ```
 
 ### Commands for Course Builders
