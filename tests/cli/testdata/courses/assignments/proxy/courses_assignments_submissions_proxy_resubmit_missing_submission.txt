@@ -1,0 +1,10 @@
+{
+    "cli": "autograder.cli.courses.assignments.submissions.proxy.resubmit",
+    "arguments": [
+        "--proxy-email", "course-student@test.edulinq.org",
+        "--target-submission", "ZZZ"
+    ],
+    "exit-status": 4
+}
+---
+Target submission not found.

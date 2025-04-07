@@ -1,14 +1,12 @@
 {
-    "module": "autograder.api.courses.assignments.submissions.proxy.submit",
+    "module": "autograder.api.courses.assignments.submissions.proxy.resubmit",
     "read-write": true,
     "arguments": {
         "proxy-email": "zzz@test.edulinq.org"
     },
-    "files": [
-        "__DATA_DIR__(hw0_solution.py)"
-    ],
     "output": {
         "found-user": false,
+        "found-submission": false,
         "rejected": false,
         "message": "",
         "grading-success": false,
