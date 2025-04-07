@@ -7,7 +7,6 @@ API_PARAMS = [
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
     autograder.api.config.PARAM_ASSIGNMENT_ID,
-    autograder.api.config.PARAM_SUBMISSION_MESSAGE,
 
     autograder.api.config.PARAM_PROXY_EMAIL,
     autograder.api.config.PARAM_PROXY_TIME,

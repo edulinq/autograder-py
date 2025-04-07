@@ -17,7 +17,6 @@ The canonical Python interface for the autograding server.
      - [Managing your Password](#managing-your-password)
    - [Commands for TAs and Instructors](#commands-for-tas-and-instructors)
      - [Proxy Submissions](#proxy-submissions)
-     - [Proxy Resubmissions](#proxy-resubmissions)
    - [Commands for Course Builders](#commands-for-course-builders)
 
 ## Resources
@@ -374,15 +373,22 @@ will give a more in-depth description of the command and available options.
 #### Proxy Submissions
 
 The autograder allows course staff to submit on behalf of students using "proxy" submissions.
-The proxy submit command adds two parameters to the normal submission command:
+The proxy submit commands add two parameters to the normal submission command:
 
  - `proxy-email` -- The student that the course staff is submitting on behalf of.
  - `proxy-time` -- The "fudged" submission time that is automatically set to the earlier time between now and one minute before the due date.
    - If you want to set the time manually, time is the number of milliseconds from the [Unix Epoch](https://en.wikipedia.org/wiki/Unix_time).
 
+In future examples with `proxy-time`, we can use a [Unix Epoch time converter](https://www.epochconverter.com/) to change the target time
+of March, 4th 2025 at 12:00 PM Pacific Time to milliseconds from the Unix Epoch, `1741118400000`.
+
 As the commands come from course staff, the submissions are not subject to submission restrictions.
-Here is an example usage of `autograder.cli.courses.assignments.submissions.proxy.submit` where
-course staff submits code (`my_file.py`) on behalf of `student@test.edulinq.org`.
+
+##### Submitting Code Files for a Student
+
+Proxy submit files (code) for a student by using the `autograder.cli.courses.assignments.submissions.proxy.submit` command.
+
+Here is an example where course staff submits code (`my_file.py`) on behalf of `student@test.edulinq.org`.
 The example does not set a `proxy-time` so the command automatically sets one that does not mark the submissions as late.
 ```sh
 python3 -m autograder.cli.courses.assignments.submissions.proxy.submit --proxy-email student@test.edulinq.org my_file.py
@@ -402,8 +408,7 @@ Total: 100 / 100
 ```
 
 Extending the previous example, we can manually set the time of submission through `proxy-time`.
-We can use a [Unix Epoch time converter](https://www.epochconverter.com/) to change the target time
-of March, 4th 2025 at 12:00 PM Pacific Time to milliseconds from the Unix Epoch, `1741118400000`:
+We will use the Unix Epoch time `1741118400000` that we converted above.
 ```sh
 python3 -m autograder.cli.courses.assignments.submissions.proxy.submit --proxy-email student@test.edulinq.org --proxy-time 1741118400000 my_file.py
 ```
@@ -421,13 +426,10 @@ Style: 0 / 0
 Total: 100 / 100
 ```
 
-#### Proxy Resubmissions
+##### Resubmitting a Student's Code by ID
 
-The autograder allows course staff to resubmit on behalf of students using "proxy" submissions.
-The proxy resubmit command is very similar to [proxy submit](#proxy-submissions) and includes the `proxy-email` and `proxy-time` parameters.
-
-However, resubmissions target a previous submission ID instead of uploading files (code) like proxy submissions.
-By default, proxy resubmit targets the most recent submission:
+Proxy resubmit a student's code by their previous submission ID by using the `autograder.cli.courses.assignments.submissions.proxy.resubmit` command.
+By default, proxy resubmit targets the student's most recent submission:
 ```sh
 python3 -m autograder.cli.courses.assignments.submissions.proxy.resubmit --proxy-email student@test.edulinq.org
 ```
@@ -445,28 +447,9 @@ Style: 0 / 0
 Total: 100 / 100
 ```
 
-Extending the previous example, we can manually set the time of submission through `proxy-time`.
-We can use a [Unix Epoch time converter](https://www.epochconverter.com/) to change the target time
-of March, 4th 2025 at 12:00 PM Pacific Time to milliseconds from the Unix Epoch, `1741118400000`:
-```sh
-python3 -m autograder.cli.courses.assignments.submissions.proxy.resubmit --proxy-email student@test.edulinq.org --proxy-time 1741118400000
-```
-
-The output may look like (note the timestamp is the one we set):
-```
-Autograder transcript for assignment: HO0.
-Grading started at 2025-03-04 12:00 and ended at 2025-03-04 12:00.
-Task 1.A (my_function): 40 / 40
-Task 2.A (test_my_function_value): 30 / 30
-Task 2.B (TestMyFunction): 30 / 30
-Style: 0 / 0
-   Style is clean!
-
-Total: 100 / 100
-```
-
-Finally, we can target a specific submission through `target-submission`.
-Extending the initial example with a target submission ID of `123456789`:
+Finally, we can target a specific submission ID through `target-submission`.
+Use the `autograder.cli.courses.assignments.submissions.fetch.user.history` command to see a student's previous submission IDs and scores.
+Extending the previous example with a target submission ID of `123456789`:
 ```sh
 python3 -m autograder.cli.courses.assignments.submissions.proxy.resubmit --proxy-email student@test.edulinq.org --target-submission 123456789
 ```
