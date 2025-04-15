@@ -1,6 +1,8 @@
 {
     "cli": "autograder.cli.metadata.describe",
-    "arguments": []
+    "arguments": [
+        "--force-compute"
+    ]
 }
 ---
 {

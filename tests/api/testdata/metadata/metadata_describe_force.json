@@ -1,7 +1,7 @@
 {
     "module": "autograder.api.metadata.describe",
     "arguments": {
-        "force-compute": false
+        "force-compute": true
     },
     "output": {
         "endpoints": {
