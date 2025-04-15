@@ -17,7 +17,7 @@ import util
 DEFAULT_PORT = 8080
 WEB_URL = 'http://127.0.0.1'
 
-DEFAULT_DOCKER_IMAGE = 'ghcr.io/edulinq/autograder-server:3.4.8-prebuilt'
+DEFAULT_DOCKER_IMAGE = 'ghcr.io/edulinq/autograder-server:3.4.9-prebuilt'
 DOCKER_CONTAINER_NAME = 'autograder-py-verify-test-data'
 DOCKER_START_SLEEP_TIME_SECS = 0.25
 DOCKER_STOP_WAIT_TIME_SECS = 1
