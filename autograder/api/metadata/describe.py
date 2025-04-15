@@ -2,7 +2,12 @@ import autograder.api.common
 import autograder.api.config
 
 API_ENDPOINT = 'metadata/describe'
-API_PARAMS = []
+API_PARAMS = [
+    autograder.api.config.APIParam('force-compute',
+        'Force compute metadata descriptions, ignoring any existing cache.',
+        required = False,
+        parser_options = {'action': 'store_true', 'default': False})
+]
 
 DESCRIPTION = 'Describe all endpoints on the server.'
 
