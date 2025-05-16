@@ -176,7 +176,7 @@
                     },
                     {
                         "name": "results",
-                        "type": "[]*model.IndividualAnalysis"
+                        "type": "map[string]*model.IndividualAnalysis"
                     },
                     {
                         "name": "summary",
@@ -223,7 +223,7 @@
                     },
                     {
                         "name": "results",
-                        "type": "[]*model.PairwiseAnalysis"
+                        "type": "map[model.PairwiseKey]*model.PairwiseAnalysis"
                     },
                     {
                         "name": "summary",

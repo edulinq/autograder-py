@@ -12,11 +12,11 @@
     "options": {
         "dry-run": true,
         "overwrite-cache": false,
-        "wait-for-completion": false,
         "submissions": [
             "course101::hw0::course-student@test.edulinq.org::1697406256",
             "course101::hw0::course-student@test.edulinq.org::1697406265"
-        ]
+        ],
+        "wait-for-completion": false
     },
     "summary": {
         "complete": false,
@@ -34,5 +34,5 @@
             "max": 0
         }
     },
-    "results": []
+    "results": {}
 }
