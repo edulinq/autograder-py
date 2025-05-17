@@ -145,7 +145,7 @@
                         "type": "bool"
                     },
                     {
-                        "name": "overwrite-cache",
+                        "name": "overwrite-records",
                         "type": "bool"
                     },
                     {
@@ -181,6 +181,10 @@
                     {
                         "name": "summary",
                         "type": "*model.IndividualAnalysisSummary"
+                    },
+                    {
+                        "name": "work-errors",
+                        "type": "map[string]string"
                     }
                 ]
             },
@@ -192,7 +196,7 @@
                         "type": "bool"
                     },
                     {
-                        "name": "overwrite-cache",
+                        "name": "overwrite-records",
                         "type": "bool"
                     },
                     {
@@ -228,6 +232,10 @@
                     {
                         "name": "summary",
                         "type": "*model.PairwiseAnalysisSummary"
+                    },
+                    {
+                        "name": "work-errors",
+                        "type": "map[string]string"
                     }
                 ]
             },
@@ -1383,7 +1391,7 @@
                         "type": "bool"
                     },
                     {
-                        "name": "overwrite-cache",
+                        "name": "overwrite-records",
                         "type": "bool"
                     },
                     {
@@ -1921,6 +1929,10 @@
                         "type": "int"
                     },
                     {
+                        "name": "error-count",
+                        "type": "int"
+                    },
+                    {
                         "name": "failure-count",
                         "type": "int"
                     },
@@ -2442,6 +2454,10 @@
                         "type": "int"
                     },
                     {
+                        "name": "error-count",
+                        "type": "int"
+                    },
+                    {
                         "name": "failure-count",
                         "type": "int"
                     },
@@ -2538,6 +2554,10 @@
                     },
                     {
                         "name": "complete-count",
+                        "type": "int"
+                    },
+                    {
+                        "name": "error-count",
                         "type": "int"
                     },
                     {
