@@ -145,7 +145,7 @@
                     "type": "bool"
                 },
                 {
-                    "name": "overwrite-cache",
+                    "name": "overwrite-records",
                     "type": "bool"
                 },
                 {
@@ -181,6 +181,10 @@
                 {
                     "name": "summary",
                     "type": "*model.IndividualAnalysisSummary"
+                },
+                {
+                    "name": "work-errors",
+                    "type": "map[string]string"
                 }
             ]
         },
@@ -192,7 +196,7 @@
                     "type": "bool"
                 },
                 {
-                    "name": "overwrite-cache",
+                    "name": "overwrite-records",
                     "type": "bool"
                 },
                 {
@@ -228,6 +232,10 @@
                 {
                     "name": "summary",
                     "type": "*model.PairwiseAnalysisSummary"
+                },
+                {
+                    "name": "work-errors",
+                    "type": "map[string]string"
                 }
             ]
         },
@@ -1089,6 +1097,16 @@
                 }
             ]
         },
+        "metadata/heartbeat": {
+            "description": "Get server heartbeat.",
+            "input": [],
+            "output": [
+                {
+                    "name": "server-version",
+                    "type": "util.Version"
+                }
+            ]
+        },
         "stats/query": {
             "description": "Query stats for the server.",
             "input": [
@@ -1383,7 +1401,7 @@
                     "type": "bool"
                 },
                 {
-                    "name": "overwrite-cache",
+                    "name": "overwrite-records",
                     "type": "bool"
                 },
                 {
@@ -1821,6 +1839,24 @@
                 }
             ]
         },
+        "jobmanager.JobOptions": {
+            "category": "struct",
+            "description": "The user level options for a job, including an optional context.",
+            "fields": [
+                {
+                    "name": "dry-run",
+                    "type": "bool"
+                },
+                {
+                    "name": "overwrite-records",
+                    "type": "bool"
+                },
+                {
+                    "name": "wait-for-completion",
+                    "type": "bool"
+                }
+            ]
+        },
         "log.LogLevel": {
             "category": "alias",
             "alias-type": "int32"
@@ -1918,6 +1954,10 @@
                 },
                 {
                     "name": "complete-count",
+                    "type": "int"
+                },
+                {
+                    "name": "error-count",
                     "type": "int"
                 },
                 {
@@ -2442,6 +2482,10 @@
                     "type": "int"
                 },
                 {
+                    "name": "error-count",
+                    "type": "int"
+                },
+                {
                     "name": "failure-count",
                     "type": "int"
                 },
@@ -2538,6 +2582,10 @@
                 },
                 {
                     "name": "complete-count",
+                    "type": "int"
+                },
+                {
+                    "name": "error-count",
                     "type": "int"
                 },
                 {
@@ -2935,6 +2983,23 @@
         "util.FileSpecType": {
             "category": "alias",
             "alias-type": "string"
+        },
+        "util.Version": {
+            "category": "struct",
+            "fields": [
+                {
+                    "name": "base-version",
+                    "type": "string"
+                },
+                {
+                    "name": "git-hash",
+                    "type": "string"
+                },
+                {
+                    "name": "is-dirty",
+                    "type": "bool"
+                }
+            ]
         }
     }
 }
