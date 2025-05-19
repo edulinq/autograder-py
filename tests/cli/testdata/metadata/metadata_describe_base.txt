@@ -1097,6 +1097,16 @@
                 }
             ]
         },
+        "metadata/heartbeat": {
+            "description": "Get server heartbeat.",
+            "input": [],
+            "output": [
+                {
+                    "name": "server-version",
+                    "type": "util.Version"
+                }
+            ]
+        },
         "stats/query": {
             "description": "Query stats for the server.",
             "input": [
@@ -1826,6 +1836,24 @@
                 {
                     "name": "to",
                     "type": "[]string"
+                }
+            ]
+        },
+        "jobmanager.JobOptions": {
+            "category": "struct",
+            "description": "The user level options for a job, including an optional context.",
+            "fields": [
+                {
+                    "name": "dry-run",
+                    "type": "bool"
+                },
+                {
+                    "name": "overwrite-records",
+                    "type": "bool"
+                },
+                {
+                    "name": "wait-for-completion",
+                    "type": "bool"
                 }
             ]
         },
@@ -2955,6 +2983,23 @@
         "util.FileSpecType": {
             "category": "alias",
             "alias-type": "string"
+        },
+        "util.Version": {
+            "category": "struct",
+            "fields": [
+                {
+                    "name": "base-version",
+                    "type": "string"
+                },
+                {
+                    "name": "git-hash",
+                    "type": "string"
+                },
+                {
+                    "name": "is-dirty",
+                    "type": "bool"
+                }
+            ]
         }
     }
 }
