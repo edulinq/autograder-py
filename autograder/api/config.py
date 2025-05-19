@@ -293,8 +293,8 @@ PARAM_NEW_PASS = APIParam('new-pass',
     'The new password to set for the user that is the target of this request.',
     required = True, hash = True)
 
-PARAM_OVERWRITE_CACHE = APIParam('overwrite-cache',
-    ('Replace any existing cache entries that match the current operation'
+PARAM_OVERWRITE_RECORDS = APIParam('overwrite-records',
+    ('Replace any existing records that match the current operation'
         + ' (e.g. re-do existing results).'),
     required = False,
     parser_options = {'action': 'store_true', 'default': False})
