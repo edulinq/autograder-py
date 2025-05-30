@@ -12,7 +12,7 @@
     "complete": true,
     "options": {
         "dry-run": true,
-        "overwrite-cache": false,
+        "overwrite-records": false,
         "submissions": [
             "course101::hw0::course-student@test.edulinq.org::1697406256",
             "course101::hw0::course-student@test.edulinq.org::1697406265"
@@ -23,6 +23,7 @@
         "complete": true,
         "complete-count": 1,
         "pending-count": 0,
+        "error-count": 0,
         "failure-count": 0,
         "first-timestamp": 1234567890123,
         "last-timestamp": 1234567890123,
@@ -73,5 +74,6 @@
             },
             "total-mean-similarity": 0.13
         }
-    }
+    },
+    "work-errors": {}
 }
