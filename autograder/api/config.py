@@ -243,6 +243,20 @@ PARAM_COURSE_SOURCE = APIParam('source',
     'The source to use for the course.',
     required = False)
 
+PARAM_COURSE_USER_REFERENCES = APIParam('target-users',
+    ('A list of course user references.'
+    + ' Course user references may be specified in four ways:'
+    + ' 1) Email address of the requested user,'
+    + ' 2) "*" to request all users in the course,'
+    + ' 3) "<course role>" (e.g., student, grader)'
+    + ' to request all course users with that role.'
+    + ' and 4) any of the previous options preceded by a minus sign'
+    + ' (e.g., "-alice@test.edulinq.org", "-student")'
+    + ' to exclude that user or role from the request.'
+    + ' Default: All users in the course.'),
+    required = False,
+    parser_options = {'action': 'extend', 'type': _csv_to_list})
+
 PARAM_DRY_RUN = APIParam('dry-run',
     ('Do not commit/finalize the operation,'
     + ' just do all the steps and state what the result would look like.'),
