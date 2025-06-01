@@ -264,7 +264,8 @@ PARAM_DRY_RUN = APIParam('dry-run',
     parser_options = {'action': 'store_true', 'default': False})
 
 PARAM_EMAIL_BCC = APIParam('bcc',
-    'A list of bcc email addresses.',
+    ('A list of email addresses.'
+    + ' Accepts course user references.'),
     required = False,
     parser_options = {'action': 'extend', 'type': _csv_to_list})
 
@@ -273,7 +274,8 @@ PARAM_EMAIL_BODY = APIParam('body',
     required = False)
 
 PARAM_EMAIL_CC = APIParam('cc',
-    'A list of cc email addresses.',
+    ('A list of email addresses.'
+    + ' Accepts course user references.'),
     required = False,
     parser_options = {'action': 'extend', 'type': _csv_to_list})
 
@@ -286,7 +288,16 @@ PARAM_EMAIL_SUBJECT = APIParam('subject',
     required = True)
 
 PARAM_EMAIL_TO = APIParam('to',
-    'A list of email addresses.',
+    ('A list of email addresses.'
+    + ' Accepts course user references.'
+    + ' Course user references may be specified in four ways:'
+    + ' 1) Email address of the requested user,'
+    + ' 2) "*" to request all users in the course,'
+    + ' 3) "<course role>" (e.g., student, grader)'
+    + ' to request all course users with that role.'
+    + ' and 4) any of the previous options preceded by a minus sign'
+    + ' (e.g., "-alice@test.edulinq.org", "-student")'
+    + ' to exclude that user or role from the request.'),
     required = False,
     parser_options = {'action': 'extend', 'type': _csv_to_list})
 
