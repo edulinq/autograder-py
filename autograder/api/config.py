@@ -344,11 +344,11 @@ PARAM_QUERY_LIMIT = APIParam('limit',
 
 PARAM_QUERY_AFTER = APIParam('after',
     'If supplied, only return records after this timestamp.',
-    required = False)
+    required = False, parser_options = {'action': 'store', 'type': int})
 
 PARAM_QUERY_BEFORE = APIParam('before',
     'If supplied, only return records before this timestamp.',
-    required = False)
+    required = False, parser_options = {'action': 'store', 'type': int})
 
 PARAM_QUERY_SORT = APIParam('sort',
     'Sort the results. -1 for ascending, 0 for no sorting, 1 for descending.',
