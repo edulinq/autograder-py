@@ -1,0 +1,16 @@
+{
+    "cli": "autograder.cli.courses.users.list",
+    "arguments": [
+        "--target-users", "student,admin"
+    ]
+}
+---
+Email: course-admin@test.edulinq.org
+Name: course-admin
+Role: admin
+LMS ID: lms-course-admin@test.edulinq.org
+
+Email: course-student@test.edulinq.org
+Name: course-student
+Role: student
+LMS ID: lms-course-student@test.edulinq.org

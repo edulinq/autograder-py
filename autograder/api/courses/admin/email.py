@@ -8,9 +8,9 @@ API_PARAMS = [
 
     autograder.api.config.PARAM_COURSE_ID,
 
-    autograder.api.config.PARAM_EMAIL_TO,
-    autograder.api.config.PARAM_EMAIL_CC,
-    autograder.api.config.PARAM_EMAIL_BCC,
+    autograder.api.config.PARAM_COURSE_EMAIL_TO,
+    autograder.api.config.PARAM_COURSE_EMAIL_CC,
+    autograder.api.config.PARAM_COURSE_EMAIL_BCC,
     autograder.api.config.PARAM_EMAIL_SUBJECT,
     autograder.api.config.PARAM_EMAIL_BODY,
     autograder.api.config.PARAM_EMAIL_HTML,

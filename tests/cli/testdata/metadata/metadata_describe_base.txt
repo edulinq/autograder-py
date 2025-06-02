@@ -10,43 +10,53 @@
             "input": [
                 {
                     "name": "bcc",
-                    "type": "[]string"
+                    "type": "[]model.CourseUserReference",
+                    "required": false
                 },
                 {
                     "name": "body",
-                    "type": "string"
+                    "type": "string",
+                    "required": false
                 },
                 {
                     "name": "cc",
-                    "type": "[]string"
+                    "type": "[]model.CourseUserReference",
+                    "required": false
                 },
                 {
                     "name": "course-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "dry-run",
-                    "type": "bool"
+                    "type": "bool",
+                    "required": false
                 },
                 {
                     "name": "html",
-                    "type": "bool"
+                    "type": "bool",
+                    "required": false
                 },
                 {
                     "name": "subject",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "to",
-                    "type": "[]string"
+                    "type": "[]model.CourseUserReference",
+                    "required": false
                 },
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }
             ],
             "output": [
@@ -69,15 +79,18 @@
             "input": [
                 {
                     "name": "course-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }
             ],
             "output": [
@@ -92,19 +105,23 @@
             "input": [
                 {
                     "name": "assignment-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "course-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }
             ],
             "output": [
@@ -119,15 +136,18 @@
             "input": [
                 {
                     "name": "course-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }
             ],
             "output": [
@@ -142,27 +162,33 @@
             "input": [
                 {
                     "name": "dry-run",
-                    "type": "bool"
+                    "type": "bool",
+                    "required": false
                 },
                 {
                     "name": "overwrite-records",
-                    "type": "bool"
+                    "type": "bool",
+                    "required": false
                 },
                 {
                     "name": "submissions",
-                    "type": "[]string"
+                    "type": "[]string",
+                    "required": true
                 },
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "wait-for-completion",
-                    "type": "bool"
+                    "type": "bool",
+                    "required": false
                 }
             ],
             "output": [
@@ -193,27 +219,33 @@
             "input": [
                 {
                     "name": "dry-run",
-                    "type": "bool"
+                    "type": "bool",
+                    "required": false
                 },
                 {
                     "name": "overwrite-records",
-                    "type": "bool"
+                    "type": "bool",
+                    "required": false
                 },
                 {
                     "name": "submissions",
-                    "type": "[]string"
+                    "type": "[]string",
+                    "required": true
                 },
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "wait-for-completion",
-                    "type": "bool"
+                    "type": "bool",
+                    "required": false
                 }
             ],
             "output": [
@@ -244,23 +276,28 @@
             "input": [
                 {
                     "name": "assignment-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "course-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "filter-role",
-                    "type": "int"
+                    "type": "int",
+                    "required": false
                 },
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }
             ],
             "output": [
@@ -275,23 +312,28 @@
             "input": [
                 {
                     "name": "assignment-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "course-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "filter-role",
-                    "type": "int"
+                    "type": "int",
+                    "required": false
                 },
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }
             ],
             "output": [
@@ -306,27 +348,33 @@
             "input": [
                 {
                     "name": "assignment-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "course-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "target-email",
-                    "type": "core.TargetCourseUserSelfOrGrader"
+                    "type": "core.TargetCourseUserSelfOrGrader",
+                    "required": false
                 },
                 {
                     "name": "target-submission",
-                    "type": "string"
+                    "type": "string",
+                    "required": false
                 },
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }
             ],
             "output": [
@@ -349,23 +397,28 @@
             "input": [
                 {
                     "name": "assignment-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "course-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "target-email",
-                    "type": "core.TargetCourseUserSelfOrGrader"
+                    "type": "core.TargetCourseUserSelfOrGrader",
+                    "required": false
                 },
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }
             ],
             "output": [
@@ -384,23 +437,28 @@
             "input": [
                 {
                     "name": "assignment-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "course-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "target-email",
-                    "type": "core.TargetCourseUserSelfOrGrader"
+                    "type": "core.TargetCourseUserSelfOrGrader",
+                    "required": false
                 },
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }
             ],
             "output": [
@@ -419,27 +477,33 @@
             "input": [
                 {
                     "name": "assignment-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "course-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "target-email",
-                    "type": "core.TargetCourseUserSelfOrGrader"
+                    "type": "core.TargetCourseUserSelfOrGrader",
+                    "required": false
                 },
                 {
                     "name": "target-submission",
-                    "type": "string"
+                    "type": "string",
+                    "required": false
                 },
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }
             ],
             "output": [
@@ -462,31 +526,38 @@
             "input": [
                 {
                     "name": "assignment-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "course-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "proxy-email",
-                    "type": "core.TargetCourseUser"
+                    "type": "core.TargetCourseUser",
+                    "required": true
                 },
                 {
                     "name": "proxy-time",
-                    "type": "int64"
+                    "type": "int64",
+                    "required": false
                 },
                 {
                     "name": "target-submission",
-                    "type": "string"
+                    "type": "string",
+                    "required": false
                 },
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }
             ],
             "output": [
@@ -521,31 +592,38 @@
             "input": [
                 {
                     "name": "assignment-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "course-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "message",
-                    "type": "string"
+                    "type": "string",
+                    "required": false
                 },
                 {
                     "name": "proxy-email",
-                    "type": "core.TargetCourseUser"
+                    "type": "core.TargetCourseUser",
+                    "required": true
                 },
                 {
                     "name": "proxy-time",
-                    "type": "int64"
+                    "type": "int64",
+                    "required": false
                 },
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }
             ],
             "output": [
@@ -576,27 +654,33 @@
             "input": [
                 {
                     "name": "assignment-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "course-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "target-email",
-                    "type": "core.TargetCourseUserSelfOrGrader"
+                    "type": "core.TargetCourseUserSelfOrGrader",
+                    "required": false
                 },
                 {
                     "name": "target-submission",
-                    "type": "string"
+                    "type": "string",
+                    "required": false
                 },
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }
             ],
             "output": [
@@ -615,27 +699,33 @@
             "input": [
                 {
                     "name": "allow-late",
-                    "type": "bool"
+                    "type": "bool",
+                    "required": false
                 },
                 {
                     "name": "assignment-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "course-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "message",
-                    "type": "string"
+                    "type": "string",
+                    "required": false
                 },
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }
             ],
             "output": [
@@ -662,19 +752,23 @@
             "input": [
                 {
                     "name": "course-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "dry-run",
-                    "type": "bool"
+                    "type": "bool",
+                    "required": false
                 },
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }
             ],
             "output": [
@@ -693,39 +787,48 @@
             "input": [
                 {
                     "name": "after",
-                    "type": "int64"
+                    "type": "int64",
+                    "required": false
                 },
                 {
                     "name": "before",
-                    "type": "int64"
+                    "type": "int64",
+                    "required": false
                 },
                 {
                     "name": "course-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "limit",
-                    "type": "int"
+                    "type": "int",
+                    "required": false
                 },
                 {
                     "name": "sort",
-                    "type": "int"
+                    "type": "int",
+                    "required": false
                 },
                 {
                     "name": "type",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "where",
-                    "type": "map[stats.MetricAttribute]interface {}"
+                    "type": "map[stats.MetricAttribute]interface {}",
+                    "required": false
                 }
             ],
             "output": [
@@ -740,39 +843,48 @@
             "input": [
                 {
                     "name": "dry-run",
-                    "type": "bool"
+                    "type": "bool",
+                    "required": false
                 },
                 {
                     "name": "filespec",
-                    "type": "util.FileSpec"
+                    "type": "util.FileSpec",
+                    "required": true
                 },
                 {
                     "name": "skip-build-images",
-                    "type": "bool"
+                    "type": "bool",
+                    "required": false
                 },
                 {
                     "name": "skip-emails",
-                    "type": "bool"
+                    "type": "bool",
+                    "required": false
                 },
                 {
                     "name": "skip-lms-sync",
-                    "type": "bool"
+                    "type": "bool",
+                    "required": false
                 },
                 {
                     "name": "skip-source-sync",
-                    "type": "bool"
+                    "type": "bool",
+                    "required": false
                 },
                 {
                     "name": "skip-template-files",
-                    "type": "bool"
+                    "type": "bool",
+                    "required": false
                 },
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }
             ],
             "output": [
@@ -787,35 +899,43 @@
             "input": [
                 {
                     "name": "dry-run",
-                    "type": "bool"
+                    "type": "bool",
+                    "required": false
                 },
                 {
                     "name": "skip-build-images",
-                    "type": "bool"
+                    "type": "bool",
+                    "required": false
                 },
                 {
                     "name": "skip-emails",
-                    "type": "bool"
+                    "type": "bool",
+                    "required": false
                 },
                 {
                     "name": "skip-lms-sync",
-                    "type": "bool"
+                    "type": "bool",
+                    "required": false
                 },
                 {
                     "name": "skip-source-sync",
-                    "type": "bool"
+                    "type": "bool",
+                    "required": false
                 },
                 {
                     "name": "skip-template-files",
-                    "type": "bool"
+                    "type": "bool",
+                    "required": false
                 },
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }
             ],
             "output": [
@@ -830,19 +950,23 @@
             "input": [
                 {
                     "name": "course-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "target-email",
-                    "type": "core.TargetCourseUser"
+                    "type": "core.TargetCourseUser",
+                    "required": true
                 },
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }
             ],
             "output": [
@@ -857,35 +981,43 @@
             "input": [
                 {
                     "name": "course-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "dry-run",
-                    "type": "bool"
+                    "type": "bool",
+                    "required": false
                 },
                 {
                     "name": "raw-course-users",
-                    "type": "[]*model.RawCourseUserData"
+                    "type": "[]*model.RawCourseUserData",
+                    "required": true
                 },
                 {
                     "name": "send-emails",
-                    "type": "bool"
+                    "type": "bool",
+                    "required": false
                 },
                 {
                     "name": "skip-inserts",
-                    "type": "bool"
+                    "type": "bool",
+                    "required": false
                 },
                 {
                     "name": "skip-updates",
-                    "type": "bool"
+                    "type": "bool",
+                    "required": false
                 },
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }
             ],
             "output": [
@@ -900,19 +1032,23 @@
             "input": [
                 {
                     "name": "course-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "target-email",
-                    "type": "core.TargetCourseUserSelfOrGrader"
+                    "type": "core.TargetCourseUserSelfOrGrader",
+                    "required": false
                 },
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }
             ],
             "output": [
@@ -931,15 +1067,23 @@
             "input": [
                 {
                     "name": "course-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
+                },
+                {
+                    "name": "target-users",
+                    "type": "[]model.CourseUserReference",
+                    "required": false
                 },
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }
             ],
             "output": [
@@ -954,23 +1098,28 @@
             "input": [
                 {
                     "name": "assignment-lms-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "course-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "scores",
-                    "type": "[]upload.ScoreEntry"
+                    "type": "[]upload.ScoreEntry",
+                    "required": true
                 },
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }
             ],
             "output": [
@@ -997,19 +1146,23 @@
             "input": [
                 {
                     "name": "course-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "target-email",
-                    "type": "core.TargetCourseUser"
+                    "type": "core.TargetCourseUser",
+                    "required": true
                 },
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }
             ],
             "output": [
@@ -1032,35 +1185,43 @@
             "input": [
                 {
                     "name": "after",
-                    "type": "string"
+                    "type": "string",
+                    "required": false
                 },
                 {
                     "name": "level",
-                    "type": "string"
+                    "type": "string",
+                    "required": false
                 },
                 {
                     "name": "past",
-                    "type": "string"
+                    "type": "string",
+                    "required": false
                 },
                 {
                     "name": "target-assignment",
-                    "type": "string"
+                    "type": "string",
+                    "required": false
                 },
                 {
                     "name": "target-course",
-                    "type": "string"
+                    "type": "string",
+                    "required": false
                 },
                 {
                     "name": "target-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": false
                 },
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }
             ],
             "output": [
@@ -1083,7 +1244,8 @@
             "input": [
                 {
                     "name": "force-compute",
-                    "type": "bool"
+                    "type": "bool",
+                    "required": false
                 }
             ],
             "output": [
@@ -1112,35 +1274,43 @@
             "input": [
                 {
                     "name": "after",
-                    "type": "int64"
+                    "type": "int64",
+                    "required": false
                 },
                 {
                     "name": "before",
-                    "type": "int64"
+                    "type": "int64",
+                    "required": false
                 },
                 {
                     "name": "limit",
-                    "type": "int"
+                    "type": "int",
+                    "required": false
                 },
                 {
                     "name": "sort",
-                    "type": "int"
+                    "type": "int",
+                    "required": false
                 },
                 {
                     "name": "type",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "where",
-                    "type": "map[stats.MetricAttribute]interface {}"
+                    "type": "map[stats.MetricAttribute]interface {}",
+                    "required": false
                 }
             ],
             "output": [
@@ -1155,11 +1325,13 @@
             "input": [
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }
             ],
             "output": [
@@ -1178,11 +1350,13 @@
             "input": [
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }
             ],
             "output": [
@@ -1197,15 +1371,18 @@
             "input": [
                 {
                     "name": "target-email",
-                    "type": "core.TargetServerUserSelfOrAdmin"
+                    "type": "core.TargetServerUserSelfOrAdmin",
+                    "required": false
                 },
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }
             ],
             "output": [
@@ -1228,11 +1405,13 @@
             "input": [
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }
             ],
             "output": [
@@ -1247,15 +1426,18 @@
             "input": [
                 {
                     "name": "new-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }
             ],
             "output": [
@@ -1274,7 +1456,8 @@
             "input": [
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }
             ],
             "output": []
@@ -1284,15 +1467,18 @@
             "input": [
                 {
                     "name": "target-email",
-                    "type": "core.TargetServerUser"
+                    "type": "core.TargetServerUser",
+                    "required": true
                 },
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }
             ],
             "output": [
@@ -1307,15 +1493,18 @@
             "input": [
                 {
                     "name": "name",
-                    "type": "string"
+                    "type": "string",
+                    "required": false
                 },
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }
             ],
             "output": [
@@ -1334,15 +1523,18 @@
             "input": [
                 {
                     "name": "token-id",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }
             ],
             "output": [
@@ -1357,31 +1549,38 @@
             "input": [
                 {
                     "name": "dry-run",
-                    "type": "bool"
+                    "type": "bool",
+                    "required": false
                 },
                 {
                     "name": "raw-users",
-                    "type": "[]*model.RawServerUserData"
+                    "type": "[]*model.RawServerUserData",
+                    "required": true
                 },
                 {
                     "name": "send-emails",
-                    "type": "bool"
+                    "type": "bool",
+                    "required": false
                 },
                 {
                     "name": "skip-inserts",
-                    "type": "bool"
+                    "type": "bool",
+                    "required": false
                 },
                 {
                     "name": "skip-updates",
-                    "type": "bool"
+                    "type": "bool",
+                    "required": false
                 },
                 {
                     "name": "user-email",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 },
                 {
                     "name": "user-pass",
-                    "type": "string"
+                    "type": "string",
+                    "required": true
                 }
             ],
             "output": [
@@ -1431,6 +1630,19 @@
                 },
                 {
                     "name": "name",
+                    "type": "string"
+                }
+            ]
+        },
+        "core.BaseFieldDescription": {
+            "category": "struct",
+            "fields": [
+                {
+                    "name": "name",
+                    "type": "string"
+                },
+                {
+                    "name": "type",
                     "type": "string"
                 }
             ]
@@ -1491,7 +1703,7 @@
                 },
                 {
                     "name": "output",
-                    "type": "[]core.FieldDescription"
+                    "type": "[]core.BaseFieldDescription"
                 }
             ]
         },
@@ -1515,6 +1727,10 @@
                 {
                     "name": "name",
                     "type": "string"
+                },
+                {
+                    "name": "required",
+                    "type": "bool"
                 },
                 {
                     "name": "type",
@@ -1601,7 +1817,7 @@
                 },
                 {
                     "name": "fields",
-                    "type": "[]core.FieldDescription"
+                    "type": "[]core.BaseFieldDescription"
                 }
             ]
         },
@@ -1766,6 +1982,10 @@
                     "type": "[]model.AssignmentInfo"
                 }
             ]
+        },
+        "model.CourseUserReference": {
+            "category": "alias",
+            "alias-type": "string"
         },
         "model.CourseUserRole": {
             "category": "alias",

@@ -235,6 +235,32 @@ PARAM_ASSIGNMENT_ID = APIParam('assignment-id',
     'The ID of the assignment to make this request to.',
     config_key = 'assignment', required = True)
 
+PARAM_COURSE_EMAIL_BCC = APIParam('bcc',
+    ('A list of email addresses.'
+    + ' Accepts course user references.'),
+    required = False,
+    parser_options = {'action': 'extend', 'type': _csv_to_list})
+
+PARAM_COURSE_EMAIL_CC = APIParam('cc',
+    ('A list of email addresses.'
+    + ' Accepts course user references.'),
+    required = False,
+    parser_options = {'action': 'extend', 'type': _csv_to_list})
+
+PARAM_COURSE_EMAIL_TO = APIParam('to',
+    ('A list of email addresses.'
+    + ' Accepts course user references.'
+    + ' Course user references may be specified in four ways:'
+    + ' 1) Email address of the requested user,'
+    + ' 2) "*" to request all users in the course,'
+    + ' 3) "<course role>" (e.g., student, grader)'
+    + ' to request all course users with that role,'
+    + ' and 4) any of the previous options preceded by a minus sign'
+    + ' (e.g., "-alice@test.edulinq.org", "-student")'
+    + ' to exclude that user or role from the request.'),
+    required = False,
+    parser_options = {'action': 'extend', 'type': _csv_to_list})
+
 PARAM_COURSE_ID = APIParam('course-id',
     'The ID of the course to make this request to.',
     config_key = 'course', required = True)
@@ -243,25 +269,29 @@ PARAM_COURSE_SOURCE = APIParam('source',
     'The source to use for the course.',
     required = False)
 
+PARAM_COURSE_USER_REFERENCES = APIParam('target-users',
+    ('A list of course user references.'
+    + ' Course user references may be specified in four ways:'
+    + ' 1) Email address of the requested user,'
+    + ' 2) "*" to request all users in the course,'
+    + ' 3) "<course role>" (e.g., student, grader)'
+    + ' to request all course users with that role,'
+    + ' and 4) any of the previous options preceded by a minus sign'
+    + ' (e.g., "-alice@test.edulinq.org", "-student")'
+    + ' to exclude that user or role from the request.'
+    + ' Default: All users in the course.'),
+    required = False,
+    parser_options = {'action': 'extend', 'type': _csv_to_list})
+
 PARAM_DRY_RUN = APIParam('dry-run',
     ('Do not commit/finalize the operation,'
     + ' just do all the steps and state what the result would look like.'),
     required = False,
     parser_options = {'action': 'store_true', 'default': False})
 
-PARAM_EMAIL_BCC = APIParam('bcc',
-    'A list of bcc email addresses.',
-    required = False,
-    parser_options = {'action': 'extend', 'type': _csv_to_list})
-
 PARAM_EMAIL_BODY = APIParam('body',
     'The email body.',
     required = False)
-
-PARAM_EMAIL_CC = APIParam('cc',
-    'A list of cc email addresses.',
-    required = False,
-    parser_options = {'action': 'extend', 'type': _csv_to_list})
 
 PARAM_EMAIL_HTML = APIParam('html',
     'Indicates the email body contains HTML.',
@@ -270,11 +300,6 @@ PARAM_EMAIL_HTML = APIParam('html',
 PARAM_EMAIL_SUBJECT = APIParam('subject',
     'The email subject.',
     required = True)
-
-PARAM_EMAIL_TO = APIParam('to',
-    'A list of email addresses.',
-    required = False,
-    parser_options = {'action': 'extend', 'type': _csv_to_list})
 
 PARAM_FILTER_ROLE = APIParam('filter-role',
     'Only show results from users with this role (all roles if unknown (default)).',
