@@ -2,7 +2,10 @@
     "module": "autograder.api.users.list",
     "arguments": {
         "user": "server-admin@test.edulinq.org",
-        "pass": "server-admin"
+        "pass": "server-admin",
+        "target-users": [
+            "*"
+        ]
     },
     "output": {
         "users": [

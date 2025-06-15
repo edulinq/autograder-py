@@ -1,0 +1,13 @@
+{
+    "cli": "autograder.cli.users.list",
+    "arguments": [
+        "--user", "server-admin@test.edulinq.org",
+        "--pass", "server-admin",
+        "--target-users", "creator"
+    ]
+}
+---
+Email: server-creator@test.edulinq.org
+Name: server-creator
+Role: creator
+Courses:
