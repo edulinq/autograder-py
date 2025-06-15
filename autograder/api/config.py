@@ -383,6 +383,26 @@ PARAM_SEND_EMAILS = APIParam('send-emails',
     'Send any emails.',
     required = True, cli_param = False)
 
+PARAM_SERVER_USER_REFERENCES = APIParam('target-users',
+    ('A list of server user references.'
+    + ' Server user references may be specified in eight ways:'
+    + ' 1) Email address of the requested user,'
+    + ' 2) "*" to request all users in the server,'
+    + ' 3) "<server role>" (e.g., user, creator)'
+    + ' to request all users with that server role,'
+    + ' 4) "<course id>::<course role>" (e.g., course101::student)'
+    + ' to request all users in the target course with that course role,'
+    + ' 5) "*::<course role>" (e.g., *::student)'
+    + ' to request all users with that course role in any course,'
+    + ' 6) "<course id>::*" to request all users in the target course,'
+    + ' 7) "*::*" to request all users enrolled in at least one course,'
+    + ' and 8) any of the previous options preceded by a minus sign'
+    + ' (e.g., "-alice@test.edulinq.org", "-user", "-*::student")'
+    + ' to exclude that user or group from the request.'
+    + ' Default: All users in the server.'),
+    required = False,
+    parser_options = {'action': 'extend', 'type': _csv_to_list})
+
 PARAM_SKIP_BUILD_IMAGES = APIParam('skip-build-images',
     'Skip building assignment Docker images.',
     required = False,

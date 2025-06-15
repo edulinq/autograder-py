@@ -1,0 +1,21 @@
+{
+    "module": "autograder.api.users.list",
+    "arguments": {
+        "user": "server-admin@test.edulinq.org",
+        "pass": "server-admin",
+        "target-users": [
+            "creator"
+        ]
+    },
+    "output": {
+        "users": [
+            {
+                "type": "server",
+                "email": "server-creator@test.edulinq.org",
+                "name": "server-creator",
+                "role": "creator",
+                "courses": {}
+            }
+        ]
+    }
+}

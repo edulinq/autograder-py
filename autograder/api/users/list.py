@@ -5,6 +5,8 @@ API_ENDPOINT = 'users/list'
 API_PARAMS = [
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
+
+    autograder.api.config.PARAM_SERVER_USER_REFERENCES,
 ]
 
 DESCRIPTION = 'List the users on the server.'

@@ -1,0 +1,38 @@
+{
+    "module": "autograder.api.users.list",
+    "arguments": {
+        "user": "server-admin@test.edulinq.org",
+        "pass": "server-admin",
+        "target-users": [
+            "course-grader@test.edulinq.org",
+            "server-user@test.edulinq.org"
+        ]
+    },
+    "output": {
+        "users": [
+            {
+                "type": "server",
+                "email": "course-grader@test.edulinq.org",
+                "name": "course-grader",
+                "role": "user",
+                "courses": {
+                    "course-languages": {
+                        "id": "course-languages",
+                        "role": "grader"
+                    },
+                    "course101": {
+                        "id": "course101",
+                        "role": "grader"
+                    }
+                }
+            },
+            {
+                "type": "server",
+                "email": "server-user@test.edulinq.org",
+                "name": "server-user",
+                "role": "user",
+                "courses": {}
+            }
+        ]
+    }
+}
