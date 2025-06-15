@@ -19,7 +19,6 @@ course-owner@test.edulinq.org	course-owner	user	course-languages	owner
 course-owner@test.edulinq.org	course-owner	user	course101	owner
 course-student@test.edulinq.org	course-student	user	course-languages	student
 course-student@test.edulinq.org	course-student	user	course101	student
-root	root	root		
 server-admin@test.edulinq.org	server-admin	admin		
 server-creator@test.edulinq.org	server-creator	creator		
 server-owner@test.edulinq.org	server-owner	owner		
