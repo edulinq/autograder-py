@@ -2,7 +2,7 @@
     "cli": "autograder.cli.courses.assignments.submissions.fetch.course.scores",
     "output-check": "content_equals_ignore_time",
     "arguments": [
-        "--filter-role", "student"
+        "--target-users", "student"
     ]
 }
 ---

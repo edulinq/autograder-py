@@ -1,8 +1,6 @@
 {
     "module": "autograder.api.courses.assignments.submissions.fetch.course.attempts",
-    "arguments": {
-        "filter-role": "unknown"
-    },
+    "arguments": {},
     "output": {
         "grading-results": {
             "course-admin@test.edulinq.org": null,
