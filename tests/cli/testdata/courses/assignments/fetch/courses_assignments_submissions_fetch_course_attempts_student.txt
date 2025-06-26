@@ -2,7 +2,7 @@
     "cli": "autograder.cli.courses.assignments.submissions.fetch.course.attempts",
     "arguments": [
         "--out-dir", "__TEMP_DIR__()",
-        "--filter-role", "student"
+        "--target-users", "student"
     ]
 }
 ---

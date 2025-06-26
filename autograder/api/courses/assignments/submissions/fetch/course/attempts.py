@@ -8,7 +8,7 @@ API_PARAMS = [
     autograder.api.config.PARAM_USER_PASS,
     autograder.api.config.PARAM_ASSIGNMENT_ID,
 
-    autograder.api.config.PARAM_FILTER_ROLE,
+    autograder.api.config.PARAM_COURSE_USER_REFERENCES,
 ]
 
 DESCRIPTION = 'Get all recent submissions and grading information for this assignment.'

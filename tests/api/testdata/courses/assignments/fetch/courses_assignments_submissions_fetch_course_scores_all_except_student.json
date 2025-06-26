@@ -1,0 +1,17 @@
+{
+    "module": "autograder.api.courses.assignments.submissions.fetch.course.scores",
+    "arguments": {
+        "target-users": [
+            "*",
+            "-student"
+        ]
+    },
+    "output": {
+        "submission-infos": {
+            "course-admin@test.edulinq.org": null,
+            "course-grader@test.edulinq.org": null,
+            "course-other@test.edulinq.org": null,
+            "course-owner@test.edulinq.org": null
+        }
+    }
+}
