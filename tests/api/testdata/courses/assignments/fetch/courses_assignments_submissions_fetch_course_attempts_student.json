@@ -1,7 +1,9 @@
 {
     "module": "autograder.api.courses.assignments.submissions.fetch.course.attempts",
     "arguments": {
-        "filter-role": "student"
+        "target-users": [
+            "student"
+        ]
     },
     "output": {
         "grading-results": {
