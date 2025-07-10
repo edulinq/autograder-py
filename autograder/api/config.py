@@ -379,6 +379,15 @@ PARAM_QUERY_WHERE = APIParam('where',
         'nargs': '+',
     })
 
+PARAM_REGRADE_AFTER = APIParam('regrade-after',
+    ('The timestamp that will be applied to the request.'
+    + ' Every target user will have a new submission after this time.'
+    + ' By default, the current time will be used.'
+    + ' Use this option to manually set the regrade time.'
+    + ' Timestamps are milliseconds from the UNIX epoch'
+    + ' (https://en.wikipedia.org/wiki/Unix_time).'),
+    required = False, parser_options = {'action': 'store', 'type': int})
+
 PARAM_SEND_EMAILS = APIParam('send-emails',
     'Send any emails.',
     required = True, cli_param = False)

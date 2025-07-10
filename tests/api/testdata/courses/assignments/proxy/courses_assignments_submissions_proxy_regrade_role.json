@@ -1,0 +1,31 @@
+{
+    "module": "autograder.api.courses.assignments.submissions.proxy.regrade",
+    "read-write": true,
+    "arguments": {
+        "dry-run": false,
+        "overwrite-records": false,
+        "target-users": [
+            "student"
+        ],
+        "wait-for-completion": false
+    },
+    "output-modifier": "clean_output_timestamps_and_submission_ids",
+    "output": {
+		"options": {
+			"dry-run": false,
+			"overwrite-records": false,
+			"wait-for-completion": false,
+			"target-users": [
+				"student"
+			],
+			"regrade-after": 1234567890123
+		},
+		"regrade-after": 1234567890123,
+		"results": {},
+		"work-errors": {},
+		"complete": false,
+		"resolved-users": [
+			"course-student@test.edulinq.org"
+		]
+    }
+}
