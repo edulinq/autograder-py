@@ -9,7 +9,7 @@ API_PARAMS = [
     autograder.api.config.PARAM_ASSIGNMENT_ID,
 
     autograder.api.config.PARAM_COURSE_USER_REFERENCES,
-    autograder.api.config.PARAM_REGRADE_AFTER,
+    autograder.api.config.PARAM_REGRADE_CUTOFF,
 
     autograder.api.config.PARAM_DRY_RUN,
     autograder.api.config.PARAM_OVERWRITE_RECORDS,

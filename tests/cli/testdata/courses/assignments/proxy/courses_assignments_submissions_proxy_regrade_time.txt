@@ -2,7 +2,7 @@
     "cli": "autograder.cli.courses.assignments.submissions.proxy.regrade",
     "output-check": "content_equals_ignore_time",
     "arguments": [
-        "--regrade-after", "0"
+        "--regrade-cutoff", "0"
     ]
 }
 ---
@@ -14,9 +14,8 @@
         "target-users": [
             "*"
         ],
-        "regrade-after": 0
+        "regrade-cutoff": 0
     },
-    "regrade-after": 0,
     "results": {
         "course-student@test.edulinq.org": {
             "id": "course101::hw0::course-student@test.edulinq.org::1234567890",

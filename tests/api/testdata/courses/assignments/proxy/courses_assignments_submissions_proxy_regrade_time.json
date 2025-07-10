@@ -4,7 +4,7 @@
     "arguments": {
         "dry-run": false,
         "overwrite-records": false,
-        "regrade-after": 0,
+        "regrade-cutoff": 0,
         "wait-for-completion": false
     },
     "output-modifier": "clean_output_timestamps_and_submission_ids",
@@ -16,9 +16,8 @@
 			"target-users": [
 				"*"
 			],
-			"regrade-after": 0
+			"regrade-cutoff": 0
 		},
-		"regrade-after": 0,
 		"results": {
 			"course-student@test.edulinq.org": {
 				"id": "course101::hw0::course-student@test.edulinq.org::1234567890",

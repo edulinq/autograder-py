@@ -379,12 +379,10 @@ PARAM_QUERY_WHERE = APIParam('where',
         'nargs': '+',
     })
 
-PARAM_REGRADE_AFTER = APIParam('regrade-after',
-    ('The timestamp that will be applied to the request.'
-    + ' Every target user will have a new submission after this time.'
+PARAM_REGRADE_CUTOFF = APIParam('regrade-cutoff',
+    ('All submissions occuring before the cutoff time will be regraded.'
     + ' By default, the current time will be used.'
-    + ' Use this option to manually set the regrade time.'
-    + ' Timestamps are milliseconds from the UNIX epoch'
+    + ' Time is milliseconds from the UNIX epoch'
     + ' (https://en.wikipedia.org/wiki/Unix_time).'),
     required = False, parser_options = {'action': 'store', 'type': int})
 

@@ -15,9 +15,8 @@
             "*",
             "-course-admin@test.edulinq.org"
         ],
-        "regrade-after": 1234567890123
+        "regrade-cutoff": 1234567890123
     },
-    "regrade-after": 1234567890123,
     "results": {},
     "work-errors": {},
     "complete": false,
