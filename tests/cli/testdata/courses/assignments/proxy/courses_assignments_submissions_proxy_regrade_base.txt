@@ -1,0 +1,27 @@
+{
+    "cli": "autograder.cli.courses.assignments.submissions.proxy.regrade",
+    "output-check": "content_equals_ignore_time",
+    "arguments": []
+}
+---
+{
+    "options": {
+        "dry-run": false,
+        "overwrite-records": false,
+        "wait-for-completion": false,
+        "target-users": [
+            "*"
+        ],
+        "regrade-cutoff": 1234567890123
+    },
+    "results": {},
+    "work-errors": {},
+    "complete": false,
+    "resolved-users": [
+        "course-admin@test.edulinq.org",
+        "course-grader@test.edulinq.org",
+        "course-other@test.edulinq.org",
+        "course-owner@test.edulinq.org",
+        "course-student@test.edulinq.org"
+    ]
+}

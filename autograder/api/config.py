@@ -379,6 +379,13 @@ PARAM_QUERY_WHERE = APIParam('where',
         'nargs': '+',
     })
 
+PARAM_REGRADE_CUTOFF = APIParam('regrade-cutoff',
+    ('All submissions occuring before the cutoff time will be regraded.'
+    + ' By default, the current time will be used.'
+    + ' Time is milliseconds from the UNIX epoch'
+    + ' (https://en.wikipedia.org/wiki/Unix_time).'),
+    required = False, parser_options = {'action': 'store', 'type': int})
+
 PARAM_SEND_EMAILS = APIParam('send-emails',
     'Send any emails.',
     required = True, cli_param = False)

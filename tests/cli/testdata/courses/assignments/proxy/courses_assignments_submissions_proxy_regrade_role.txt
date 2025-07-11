@@ -1,0 +1,25 @@
+{
+    "cli": "autograder.cli.courses.assignments.submissions.proxy.regrade",
+    "output-check": "content_equals_ignore_time",
+    "arguments": [
+        "--target-users", "student"
+    ]
+}
+---
+{
+    "options": {
+        "dry-run": false,
+        "overwrite-records": false,
+        "wait-for-completion": false,
+        "target-users": [
+            "student"
+        ],
+        "regrade-cutoff": 1234567890123
+    },
+    "results": {},
+    "work-errors": {},
+    "complete": false,
+    "resolved-users": [
+        "course-student@test.edulinq.org"
+    ]
+}
