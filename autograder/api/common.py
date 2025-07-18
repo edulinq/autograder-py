@@ -27,7 +27,7 @@ def handle_api_request(arguments, params, endpoint, exit_on_error = False, files
         raise ex
 
 def _handle_api_request(arguments, params, endpoint, exit_on_error, files):
-    config = autograder.api.config.get_tiered_config(arguments)
+    config, _ = autograder.api.config.get_tiered_config(arguments)
     data, extra = autograder.api.config.parse_api_config(config, params,
             exit_on_error = exit_on_error)
 

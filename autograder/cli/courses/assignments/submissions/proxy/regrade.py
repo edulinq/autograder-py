@@ -2,8 +2,6 @@ import json
 import sys
 
 import autograder.api.courses.assignments.submissions.proxy.regrade
-import autograder.cli.common
-import autograder.cli.config
 
 def run(arguments):
     result = autograder.api.courses.assignments.submissions.proxy.regrade.send(

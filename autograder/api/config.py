@@ -1,6 +1,7 @@
 import argparse
 import json
 import os
+import pathlib
 import sys
 
 import platformdirs
@@ -98,6 +99,22 @@ def _parse_api_config(config, params, additional_required_keys, additional_optio
 
     return data, extra
 
+def _recursive_search_config_upwards(current_directory):
+
+    path = pathlib.Path(current_directory)
+    config_file_path = os.path.join(path, DEFAULT_CONFIG_FILENAME)
+
+    if path.parent == path:
+        if (os.path.isfile(config_file_path)):
+            return config_file_path
+        return None
+
+    if (os.path.isfile(config_file_path)):
+        return config_file_path
+
+    return _recursive_search_config_upwards(path.parent)
+
+
 def get_tiered_config(cli_arguments, skip_keys = [CONFIG_PATHS_KEY], show_sources = False):
     """
     Get all the tiered configuration options (from files and CLI).
@@ -111,12 +128,15 @@ def get_tiered_config(cli_arguments, skip_keys = [CONFIG_PATHS_KEY], show_source
     if (isinstance(cli_arguments, argparse.Namespace)):
         cli_arguments = vars(cli_arguments)
 
-    # Check the current directory config.
-    if (os.path.isfile(DEFAULT_CONFIG_FILENAME)):
-        with open(DEFAULT_CONFIG_FILENAME, 'r') as file:
+    # Check the current directory and the parent directories (until root) for config.
+    current_working_dir = os.getcwd()
+    config_file_path = _recursive_search_config_upwards(current_working_dir)
+
+    if config_file_path is not None:
+        with open(config_file_path, 'r') as file:
             for key, value in json.load(file).items():
                 config[key] = value
-                sources[key] = "<default config file>::" + DEFAULT_CONFIG_FILENAME
+                sources[key] = "<default config file>::" + config_file_path
 
     # Check the user config file.
     if (os.path.isfile(DEFAULT_USER_CONFIG_PATH)):
@@ -148,7 +168,7 @@ def get_tiered_config(cli_arguments, skip_keys = [CONFIG_PATHS_KEY], show_source
     if (show_sources):
         return config, sources
 
-    return config
+    return config, None
 
 def get_argument_parser(
         description = 'Send an API request to the autograder.',

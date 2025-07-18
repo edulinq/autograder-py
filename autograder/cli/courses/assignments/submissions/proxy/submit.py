@@ -2,7 +2,7 @@ import sys
 
 import autograder.api.courses.assignments.submissions.proxy.submit
 import autograder.cli.common
-import autograder.cli.config
+import autograder.cli.args
 
 def run(arguments):
     result = autograder.api.courses.assignments.submissions.proxy.submit.send(arguments,
@@ -20,7 +20,7 @@ def main():
 def _get_parser():
     parser = autograder.api.courses.assignments.submissions.proxy.submit._get_parser()
 
-    autograder.cli.config.add_submission_files_argument(parser)
+    autograder.cli.args.add_submission_files_argument(parser)
 
     return parser
 

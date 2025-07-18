@@ -3,7 +3,7 @@ import sys
 import autograder.api.config
 import autograder.api.users.upsert
 import autograder.cli.common
-import autograder.cli.config
+import autograder.cli.args
 
 def run(arguments):
     arguments = vars(arguments)
@@ -35,13 +35,13 @@ def main():
 def _get_parser():
     parser = autograder.api.users.upsert._get_parser()
 
-    autograder.cli.config.add_table_argument(parser)
-    autograder.cli.config.add_skip_emails_argument(parser)
+    autograder.cli.args.add_table_argument(parser)
+    autograder.cli.args.add_skip_emails_argument(parser)
 
-    autograder.cli.config.add_new_email_argument(parser, "upsert")
-    autograder.cli.config.add_new_name_argument(parser, "upsert")
-    autograder.cli.config.add_new_course_role_argument(parser, "upsert")
-    autograder.cli.config.add_new_lms_id_argument(parser, "upsert")
+    autograder.cli.args.add_new_email_argument(parser, "upsert")
+    autograder.cli.args.add_new_name_argument(parser, "upsert")
+    autograder.cli.args.add_new_course_role_argument(parser, "upsert")
+    autograder.cli.args.add_new_lms_id_argument(parser, "upsert")
 
     parser.add_argument('--new-role', dest = 'new-role',
         action = 'store', type = str, default = 'user',

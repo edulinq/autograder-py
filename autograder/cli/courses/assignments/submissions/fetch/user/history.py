@@ -1,7 +1,7 @@
 import sys
 
 import autograder.api.courses.assignments.submissions.fetch.user.history
-import autograder.cli.config
+import autograder.cli.args
 import autograder.submission
 
 def run(arguments):
@@ -43,7 +43,7 @@ def main():
 def _get_parser():
     parser = autograder.api.courses.assignments.submissions.fetch.user.history._get_parser()
 
-    autograder.cli.config.add_table_argument(parser)
+    autograder.cli.args.add_table_argument(parser)
 
     return parser
 
