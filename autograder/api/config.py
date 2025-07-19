@@ -128,9 +128,18 @@ def get_tiered_config(cli_arguments, skip_keys = [CONFIG_PATHS_KEY], show_source
     if (isinstance(cli_arguments, argparse.Namespace)):
         cli_arguments = vars(cli_arguments)
 
-    # Check the current directory and the parent directories (until root) for config.
+    # Check the user config file.
+    if (os.path.isfile(DEFAULT_USER_CONFIG_PATH)):
+        with open(DEFAULT_USER_CONFIG_PATH, 'r') as file:
+            for key, value in json.load(file).items():
+                config[key] = value
+                sources[key] = "<user config file>::" + DEFAULT_USER_CONFIG_PATH
+
+    # Check the parent directories (until root) for config.
+    # Stops at the first occurrence of config.json along the path to root.
     current_working_dir = os.getcwd()
-    config_file_path = _recursive_search_config_upwards(current_working_dir)
+    path = pathlib.Path(current_working_dir)
+    config_file_path = _recursive_search_config_upwards(path.parent)
 
     if config_file_path is not None:
         with open(config_file_path, 'r') as file:
@@ -138,12 +147,13 @@ def get_tiered_config(cli_arguments, skip_keys = [CONFIG_PATHS_KEY], show_source
                 config[key] = value
                 sources[key] = "<default config file>::" + config_file_path
 
-    # Check the user config file.
-    if (os.path.isfile(DEFAULT_USER_CONFIG_PATH)):
-        with open(DEFAULT_USER_CONFIG_PATH, 'r') as file:
+    # Check the current directory config.
+    local_config = os.path.join(current_working_dir, DEFAULT_CONFIG_FILENAME)
+    if (os.path.isfile(local_config)):
+        with open(local_config, 'r') as file:
             for key, value in json.load(file).items():
                 config[key] = value
-                sources[key] = "<user config file>::" + DEFAULT_USER_CONFIG_PATH
+                sources[key] = "<default config file>::" + local_config
 
     # Check the config files specified on the command-line.
     config_paths = cli_arguments.get(CONFIG_PATHS_KEY, [])
