@@ -11,7 +11,8 @@ import autograder.error
 import autograder.util.hash
 
 CONFIG_PATHS_KEY = 'config_paths'
-DEFAULT_CONFIG_FILENAME = 'config.json'
+OLD_CONFIG_FILENAME = 'config.json'
+DEFAULT_CONFIG_FILENAME = 'autograder.json'
 DEFAULT_USER_CONFIG_PATH = platformdirs.user_config_dir('autograder.json')
 CSV_TO_LIST_DELIMITER = ','
 MAP_KEY_VALUE_SEP = '='
@@ -100,7 +101,10 @@ def _parse_api_config(config, params, additional_required_keys, additional_optio
     return data, extra
 
 def _recursive_search_config_upwards(current_directory):
-
+    """
+    Check the parent directories (until root) for config.
+    Stops at the first occurrence of config.json along the path to root.
+    """
     path = pathlib.Path(current_directory)
     config_file_path = os.path.join(path, DEFAULT_CONFIG_FILENAME)
 
@@ -114,6 +118,20 @@ def _recursive_search_config_upwards(current_directory):
 
     return _recursive_search_config_upwards(path.parent)
 
+def check_local_config():
+
+    path = os.getcwd()
+    dir_path = pathlib.Path(path)
+    config_file_path = _recursive_search_config_upwards(dir_path.parent)
+
+    if (os.path.isfile(DEFAULT_CONFIG_FILENAME)):
+        return os.path.abspath(DEFAULT_CONFIG_FILENAME)
+    elif (os.path.isfile(OLD_CONFIG_FILENAME)):
+        return os.path.abspath(OLD_CONFIG_FILENAME)
+    elif (config_file_path is not None):
+        return config_file_path
+    else:
+        return None
 
 def get_tiered_config(cli_arguments, skip_keys = [CONFIG_PATHS_KEY], show_sources = False):
     """
@@ -128,41 +146,29 @@ def get_tiered_config(cli_arguments, skip_keys = [CONFIG_PATHS_KEY], show_source
     if (isinstance(cli_arguments, argparse.Namespace)):
         cli_arguments = vars(cli_arguments)
 
-    # Check the user config file.
+    # Check the global user config file.
     if (os.path.isfile(DEFAULT_USER_CONFIG_PATH)):
         with open(DEFAULT_USER_CONFIG_PATH, 'r') as file:
             for key, value in json.load(file).items():
                 config[key] = value
                 sources[key] = "<user config file>::" + DEFAULT_USER_CONFIG_PATH
 
-    # Check the parent directories (until root) for config.
-    # Stops at the first occurrence of config.json along the path to root.
-    current_working_dir = os.getcwd()
-    path = pathlib.Path(current_working_dir)
-    config_file_path = _recursive_search_config_upwards(path.parent)
-
-    if config_file_path is not None:
-        with open(config_file_path, 'r') as file:
+    # Check the local user config file.
+    local_config_path = check_local_config()
+    if local_config_path is not None:
+        with open(local_config_path, 'r') as file:
             for key, value in json.load(file).items():
                 config[key] = value
-                sources[key] = "<default config file>::" + config_file_path
+                sources[key] = "<default config file>::" + local_config_path
 
-    # Check the current directory config.
-    local_config = os.path.join(current_working_dir, DEFAULT_CONFIG_FILENAME)
-    if (os.path.isfile(local_config)):
-        with open(local_config, 'r') as file:
-            for key, value in json.load(file).items():
-                config[key] = value
-                sources[key] = "<default config file>::" + local_config
-
-    # Check the config files specified on the command-line.
+    # Check the config file specified on the command-line.
     config_paths = cli_arguments.get(CONFIG_PATHS_KEY, [])
     if (config_paths is not None):
         for path in config_paths:
             with open(path, 'r') as file:
                 for key, value in json.load(file).items():
                     config[key] = value
-                    sources[key] = "<cli config file>::" + path
+                    sources[key] = "<cli config file>::" + os.path.abspath(path)
 
     # Finally, any command-line options.
     for (key, value) in cli_arguments.items():
@@ -183,7 +189,8 @@ def get_tiered_config(cli_arguments, skip_keys = [CONFIG_PATHS_KEY], show_source
 def get_argument_parser(
         description = 'Send an API request to the autograder.',
         params = [],
-        include_assignment = True):
+        include_assignment = True,
+        skip_server = False):
     """
     Create an argparse parser that has all the standard options for API requests.
     """
@@ -203,13 +210,14 @@ def get_argument_parser(
             + " now any files specified using --config in the order they were specified,"
             + " and finally any variables specified directly on the command line (like --user).")
 
-    parser.add_argument('--server', dest = 'server',
-        action = 'store', type = str, default = None,
-        help = 'The URL of the server to submit to (default: %(default)s).')
+    if (not skip_server):
+        parser.add_argument('--server', dest = 'server',
+            action = 'store', type = str, default = None,
+            help = 'The URL of the server to submit to (default: %(default)s).')
 
     parser.add_argument('-v', '--verbose', dest = 'verbose',
         action = 'store_true', default = False,
-        help = 'Output detailed information about the API request and response'
+        help = 'Output detailed information about the operation and results.'
             + " (default: %(default)s).")
 
     for param in params:
