@@ -38,7 +38,7 @@
                         "standard-deviation": -1
                     },
                     {
-                        "question-name": "\u003cOverall\u003e",
+                        "question-name": "<Overall>",
                         "min": 1,
                         "max": 1,
                         "median": 1,
