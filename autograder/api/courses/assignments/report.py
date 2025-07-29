@@ -8,7 +8,7 @@ API_PARAMS = [
     autograder.api.config.PARAM_USER_PASS,
 ]
 
-DESCRIPTION = 'Fetch course report.'
+DESCRIPTION = 'Fetch an assignment grading report for a course.'
 
 def send(arguments, **kwargs):
     return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT, **kwargs)
