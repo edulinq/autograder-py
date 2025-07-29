@@ -10,17 +10,18 @@
     "complete": false,
     "options": {
         "dry-run": false,
-        "overwrite-cache": false,
-        "wait-for-completion": false,
+        "overwrite-records": false,
         "submissions": [
             "course101::hw0::course-student@test.edulinq.org::1697406256",
             "course101::hw0::course-student@test.edulinq.org::1697406265"
-        ]
+        ],
+        "wait-for-completion": false
     },
     "summary": {
         "complete": false,
         "complete-count": 0,
         "pending-count": 1,
+        "error-count": 0,
         "failure-count": 0,
         "first-timestamp": 0,
         "last-timestamp": 0,
@@ -33,5 +34,6 @@
             "max": 0
         }
     },
-    "results": []
+    "results": {},
+    "work-errors": {}
 }

@@ -1,0 +1,13 @@
+{
+    "module": "autograder.api.metadata.heartbeat",
+    "arguments": {
+    },
+    "output-modifier": "clean_version",
+    "output": {
+        "server-version": {
+            "base-version": "1.2.3",
+            "git-hash": "12345678",
+            "is-dirty": true
+        }
+    }
+}

@@ -7,7 +7,7 @@
             "course101::hw0::course-student@test.edulinq.org::1697406265"
         ],
         "dry-run": true,
-        "overwrite-cache": false,
+        "overwrite-records": false,
         "wait-for-completion": true
     },
     "output-modifier": "clean_output_timestamps",
@@ -15,17 +15,18 @@
         "complete": true,
         "options": {
             "dry-run": true,
-            "overwrite-cache": false,
-            "wait-for-completion": true,
+            "overwrite-records": false,
             "submissions": [
                 "course101::hw0::course-student@test.edulinq.org::1697406256",
                 "course101::hw0::course-student@test.edulinq.org::1697406265"
-            ]
+            ],
+            "wait-for-completion": true
         },
         "summary": {
             "complete": true,
             "complete-count": 1,
             "pending-count": 0,
+            "error-count": 0,
             "failure-count": 0,
             "first-timestamp": 1234567890123,
             "last-timestamp": 1234567890123,
@@ -46,8 +47,8 @@
                 "max": 0.13
             }
         },
-        "results": [
-            {
+        "results": {
+            "course101::hw0::course-student@test.edulinq.org::1697406256||course101::hw0::course-student@test.edulinq.org::1697406265": {
                 "options": {
                     "include-patterns": [
                         "submission.py"
@@ -60,10 +61,7 @@
                     ]
                 },
                 "analysis-timestamp": 1234567890123,
-                "submission-ids": [
-                    "course101::hw0::course-student@test.edulinq.org::1697406256",
-                    "course101::hw0::course-student@test.edulinq.org::1697406265"
-                ],
+                "submission-ids": "course101::hw0::course-student@test.edulinq.org::1697406256||course101::hw0::course-student@test.edulinq.org::1697406265",
                 "similarities": {
                     "submission.py": [
                         {
@@ -79,6 +77,7 @@
                 },
                 "total-mean-similarity": 0.13
             }
-        ]
+        },
+        "work-errors": {}
     }
 }

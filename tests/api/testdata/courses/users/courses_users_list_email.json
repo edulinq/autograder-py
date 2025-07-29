@@ -1,0 +1,27 @@
+{
+    "module": "autograder.api.courses.users.list",
+    "arguments": {
+        "target-users": [
+            "course-grader@test.edulinq.org",
+            "course-owner@test.edulinq.org"
+        ]
+    },
+    "output": {
+        "users": [
+            {
+                "type": "course",
+                "email": "course-grader@test.edulinq.org",
+                "name": "course-grader",
+                "role": "grader",
+                "lms-id": "lms-course-grader@test.edulinq.org"
+            },
+            {
+                "type": "course",
+                "email": "course-owner@test.edulinq.org",
+                "name": "course-owner",
+                "role": "owner",
+                "lms-id": "lms-course-owner@test.edulinq.org"
+            }
+        ]
+    }
+}

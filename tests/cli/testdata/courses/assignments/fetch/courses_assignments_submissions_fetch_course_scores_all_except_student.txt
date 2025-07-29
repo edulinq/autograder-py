@@ -2,9 +2,12 @@
     "cli": "autograder.cli.courses.assignments.submissions.fetch.course.scores",
     "output-check": "content_equals_ignore_time",
     "arguments": [
-        "--filter-role", "grader"
+        "--target-users", "*,-student"
     ]
 }
 ---
 email	has_submission	short-id	score	grading_start_time	message
+course-admin@test.edulinq.org	False				
 course-grader@test.edulinq.org	False				
+course-other@test.edulinq.org	False				
+course-owner@test.edulinq.org	False				

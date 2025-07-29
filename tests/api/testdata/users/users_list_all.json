@@ -1,0 +1,122 @@
+{
+    "module": "autograder.api.users.list",
+    "arguments": {
+        "user": "server-admin@test.edulinq.org",
+        "pass": "server-admin",
+        "target-users": [
+            "*"
+        ]
+    },
+    "output": {
+        "users": [
+            {
+                "type": "server",
+                "email": "course-admin@test.edulinq.org",
+                "name": "course-admin",
+                "role": "user",
+                "courses": {
+                    "course-languages": {
+                        "id": "course-languages",
+                        "role": "admin"
+                    },
+                    "course101": {
+                        "id": "course101",
+                        "role": "admin"
+                    }
+                }
+            },
+            {
+                "type": "server",
+                "email": "course-grader@test.edulinq.org",
+                "name": "course-grader",
+                "role": "user",
+                "courses": {
+                    "course-languages": {
+                        "id": "course-languages",
+                        "role": "grader"
+                    },
+                    "course101": {
+                        "id": "course101",
+                        "role": "grader"
+                    }
+                }
+            },
+            {
+                "type": "server",
+                "email": "course-other@test.edulinq.org",
+                "name": "course-other",
+                "role": "user",
+                "courses": {
+                    "course-languages": {
+                        "id": "course-languages",
+                        "role": "other"
+                    },
+                    "course101": {
+                        "id": "course101",
+                        "role": "other"
+                    }
+                }
+            },
+            {
+                "type": "server",
+                "email": "course-owner@test.edulinq.org",
+                "name": "course-owner",
+                "role": "user",
+                "courses": {
+                    "course-languages": {
+                        "id": "course-languages",
+                        "role": "owner"
+                    },
+                    "course101": {
+                        "id": "course101",
+                        "role": "owner"
+                    }
+                }
+            },
+            {
+                "type": "server",
+                "email": "course-student@test.edulinq.org",
+                "name": "course-student",
+                "role": "user",
+                "courses": {
+                    "course-languages": {
+                        "id": "course-languages",
+                        "role": "student"
+                    },
+                    "course101": {
+                        "id": "course101",
+                        "role": "student"
+                    }
+                }
+            },
+            {
+                "type": "server",
+                "email": "server-admin@test.edulinq.org",
+                "name": "server-admin",
+                "role": "admin",
+                "courses": {}
+            },
+            {
+                "type": "server",
+                "email": "server-creator@test.edulinq.org",
+                "name": "server-creator",
+                "role": "creator",
+                "courses": {}
+            },
+            {
+                "type": "server",
+                "email": "server-owner@test.edulinq.org",
+                "name": "server-owner",
+                "role": "owner",
+                "courses": {}
+            },
+            {
+                "type": "server",
+                "email": "server-user@test.edulinq.org",
+                "name": "server-user",
+                "role": "user",
+                "courses": {}
+            }
+        ]
+    }
+}

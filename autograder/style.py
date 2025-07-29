@@ -8,17 +8,24 @@ import autograder.code
 import autograder.question
 import autograder.util.dirent
 
+DEFAULT_MAX_LINE_LENGTH = 100
+
 # For codes, see:
 # flake8: https://flake8.pycqa.org/en/latest/user/error-codes.html
 # pycodestyle: https://pycodestyle.pycqa.org/en/latest/intro.html#error-codes
-STYLE_OPTIONS = {
-    'max_line_length': 100,
-    'max_doc_length': 100,
+BASE_STYLE_OPTIONS = {
+    'max_line_length': DEFAULT_MAX_LINE_LENGTH,
+    'max_doc_length': DEFAULT_MAX_LINE_LENGTH,
     'select': 'E,W,F',
     'show_source': True,
     'color': 'never',
     'ignore': [
+        # Allow flexibility for function closing parens.
+        'E123',
+        'E124',
+
         # Don't force continuation line alignment.
+        'E126',
         'E128',
 
         # Allow spaces around parameter/keyword equals.
@@ -54,8 +61,11 @@ class Style(autograder.question.Question):
     A question that can be added to assignments that checks style.
     """
 
-    def __init__(self, paths, ignore_paths = [],
-            max_points = 5, fake_path = None, shorten_path = True):
+    def __init__(self, paths, ignore_paths = None,
+            max_points = 5,
+            fake_path = None, shorten_path = True,
+            style_overrides = None,
+            **kwargs):
         super().__init__(max_points)
 
         if (isinstance(paths, str)):
@@ -65,16 +75,24 @@ class Style(autograder.question.Question):
             # Allow this to throw.
             paths = list(paths)
 
+        if (ignore_paths is None):
+            ignore_paths = []
+
+        if (style_overrides is None):
+            style_overrides = {}
+
         self._paths = paths
         self._ignore_paths = ignore_paths
         self._fake_path = fake_path
         self._shorten_paths = shorten_path
+        self._style_overrides = style_overrides
 
     def score_question(self, *args, **kwargs):
         error_count, style_output = check_paths(self._paths,
                 ignore_paths = self._ignore_paths,
                 fake_path = self._fake_path,
-                shorten_path = self._shorten_paths)
+                shorten_path = self._shorten_paths,
+                style_overrides = self._style_overrides)
 
         if (error_count == 0):
             self.full_credit(message = 'Style is clean!')
@@ -96,7 +114,7 @@ class Style(autograder.question.Question):
 def check_path(path, **kwargs):
     return check_paths([path], **kwargs)
 
-def check_paths(paths, ignore_paths = [], **kwargs):
+def check_paths(paths, ignore_paths = None, **kwargs):
     """
     Check the style of all the listed paths (recursivley) and return a two-item tuple of:
         - The total number of style violations.
@@ -104,6 +122,9 @@ def check_paths(paths, ignore_paths = [], **kwargs):
             - The path to a file with style violations.
             - A list of strings that describe the style issues.
     """
+
+    if (ignore_paths is None):
+        ignore_paths = []
 
     ignore_paths = [os.path.abspath(path) for path in ignore_paths]
 
@@ -127,7 +148,7 @@ def check_paths(paths, ignore_paths = [], **kwargs):
             if (os.path.splitext(path)[1] not in autograder.code.ALLOWED_EXTENSIONS):
                 continue
 
-            count, lines = _check_file(path, **kwargs)
+            count, lines = check_file(path, **kwargs)
             lines = [(path, lines)]
         else:
             dirents = [os.path.join(path, dirent) for dirent in os.listdir(path)]
@@ -139,7 +160,7 @@ def check_paths(paths, ignore_paths = [], **kwargs):
 
     return total_count, total_lines
 
-def _check_file(path, fake_path = None, shorten_path = False):
+def check_file(path, fake_path = None, shorten_path = False, style_overrides = None):
     """
     Check the style of a file and return a two-item tuple of:
         - The number of style violations.
@@ -182,7 +203,11 @@ def _check_file(path, fake_path = None, shorten_path = False):
     if (len(sys.argv) == 0):
         sys.argv = ['']
 
-    style_guide = flake8.get_style_guide(**STYLE_OPTIONS)
+    style_options = BASE_STYLE_OPTIONS.copy()
+    if (style_overrides is not None):
+        style_options.update(style_overrides)
+
+    style_guide = flake8.get_style_guide(**style_options)
 
     with open(output_path, 'w') as file:
         with contextlib.redirect_stdout(file):

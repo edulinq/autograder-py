@@ -1,0 +1,35 @@
+{
+    "module": "autograder.api.courses.assignments.submissions.proxy.regrade",
+    "read-write": true,
+    "arguments": {
+        "dry-run": false,
+        "overwrite-records": false,
+        "target-users": [
+            "*",
+            "-course-admin@test.edulinq.org"
+        ],
+        "wait-for-completion": false
+    },
+    "output-modifier": "clean_output_timestamps_and_submission_ids",
+    "output": {
+		"options": {
+			"dry-run": false,
+			"overwrite-records": false,
+			"wait-for-completion": false,
+			"target-users": [
+				"*",
+                "-course-admin@test.edulinq.org"
+			],
+			"regrade-cutoff": 1234567890123
+		},
+		"results": {},
+		"work-errors": {},
+		"complete": false,
+		"resolved-users": [
+			"course-grader@test.edulinq.org",
+			"course-other@test.edulinq.org",
+			"course-owner@test.edulinq.org",
+			"course-student@test.edulinq.org"
+		]
+    }
+}

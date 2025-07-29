@@ -144,11 +144,11 @@ class GradedAssignment(object):
         if (grading_end_time is not None):
             self.grading_end_time = autograder.util.timestamp.get(grading_end_time)
 
-        self.proxy_start_time = autograder.util.timestamp.MISSING_TIMESTAMP
+        self.proxy_start_time = None
         if (proxy_start_time is not None):
             self.proxy_start_time = autograder.util.timestamp.get(proxy_start_time)
 
-        self.proxy_end_time = autograder.util.timestamp.MISSING_TIMESTAMP
+        self.proxy_end_time = None
         if (proxy_end_time is not None):
             self.proxy_end_time = autograder.util.timestamp.get(proxy_end_time)
 

@@ -1,0 +1,78 @@
+{
+    "cli": "autograder.cli.users.list",
+    "arguments": [
+        "--user", "server-admin@test.edulinq.org",
+        "--pass", "server-admin",
+        "--target-users", "*"
+    ]
+}
+---
+Email: course-admin@test.edulinq.org
+Name: course-admin
+Role: user
+Courses:
+    ID: course-languages
+    Role: admin
+
+    ID: course101
+    Role: admin
+
+Email: course-grader@test.edulinq.org
+Name: course-grader
+Role: user
+Courses:
+    ID: course-languages
+    Role: grader
+
+    ID: course101
+    Role: grader
+
+Email: course-other@test.edulinq.org
+Name: course-other
+Role: user
+Courses:
+    ID: course-languages
+    Role: other
+
+    ID: course101
+    Role: other
+
+Email: course-owner@test.edulinq.org
+Name: course-owner
+Role: user
+Courses:
+    ID: course-languages
+    Role: owner
+
+    ID: course101
+    Role: owner
+
+Email: course-student@test.edulinq.org
+Name: course-student
+Role: user
+Courses:
+    ID: course-languages
+    Role: student
+
+    ID: course101
+    Role: student
+
+Email: server-admin@test.edulinq.org
+Name: server-admin
+Role: admin
+Courses:
+
+Email: server-creator@test.edulinq.org
+Name: server-creator
+Role: creator
+Courses:
+
+Email: server-owner@test.edulinq.org
+Name: server-owner
+Role: owner
+Courses:
+
+Email: server-user@test.edulinq.org
+Name: server-user
+Role: user
+Courses:

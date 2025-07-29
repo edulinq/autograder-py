@@ -235,6 +235,32 @@ PARAM_ASSIGNMENT_ID = APIParam('assignment-id',
     'The ID of the assignment to make this request to.',
     config_key = 'assignment', required = True)
 
+PARAM_COURSE_EMAIL_BCC = APIParam('bcc',
+    ('A list of email addresses.'
+    + ' Accepts course user references.'),
+    required = False,
+    parser_options = {'action': 'extend', 'type': _csv_to_list})
+
+PARAM_COURSE_EMAIL_CC = APIParam('cc',
+    ('A list of email addresses.'
+    + ' Accepts course user references.'),
+    required = False,
+    parser_options = {'action': 'extend', 'type': _csv_to_list})
+
+PARAM_COURSE_EMAIL_TO = APIParam('to',
+    ('A list of email addresses.'
+    + ' Accepts course user references.'
+    + ' Course user references may be specified in four ways:'
+    + ' 1) Email address of the requested user,'
+    + ' 2) "*" to request all users in the course,'
+    + ' 3) "<course role>" (e.g., student, grader)'
+    + ' to request all course users with that role,'
+    + ' and 4) any of the previous options preceded by a minus sign'
+    + ' (e.g., "-alice@test.edulinq.org", "-student")'
+    + ' to exclude that user or role from the request.'),
+    required = False,
+    parser_options = {'action': 'extend', 'type': _csv_to_list})
+
 PARAM_COURSE_ID = APIParam('course-id',
     'The ID of the course to make this request to.',
     config_key = 'course', required = True)
@@ -243,25 +269,29 @@ PARAM_COURSE_SOURCE = APIParam('source',
     'The source to use for the course.',
     required = False)
 
+PARAM_COURSE_USER_REFERENCES = APIParam('target-users',
+    ('A list of course user references.'
+    + ' Course user references may be specified in four ways:'
+    + ' 1) Email address of the requested user,'
+    + ' 2) "*" to request all users in the course,'
+    + ' 3) "<course role>" (e.g., student, grader)'
+    + ' to request all course users with that role,'
+    + ' and 4) any of the previous options preceded by a minus sign'
+    + ' (e.g., "-alice@test.edulinq.org", "-student")'
+    + ' to exclude that user or role from the request.'
+    + ' Default: All users in the course.'),
+    required = False,
+    parser_options = {'action': 'extend', 'type': _csv_to_list})
+
 PARAM_DRY_RUN = APIParam('dry-run',
     ('Do not commit/finalize the operation,'
     + ' just do all the steps and state what the result would look like.'),
     required = False,
     parser_options = {'action': 'store_true', 'default': False})
 
-PARAM_EMAIL_BCC = APIParam('bcc',
-    'A list of bcc email addresses.',
-    required = False,
-    parser_options = {'action': 'extend', 'type': _csv_to_list})
-
 PARAM_EMAIL_BODY = APIParam('body',
     'The email body.',
     required = False)
-
-PARAM_EMAIL_CC = APIParam('cc',
-    'A list of cc email addresses.',
-    required = False,
-    parser_options = {'action': 'extend', 'type': _csv_to_list})
 
 PARAM_EMAIL_HTML = APIParam('html',
     'Indicates the email body contains HTML.',
@@ -270,11 +300,6 @@ PARAM_EMAIL_HTML = APIParam('html',
 PARAM_EMAIL_SUBJECT = APIParam('subject',
     'The email subject.',
     required = True)
-
-PARAM_EMAIL_TO = APIParam('to',
-    'A list of email addresses.',
-    required = False,
-    parser_options = {'action': 'extend', 'type': _csv_to_list})
 
 PARAM_FILTER_ROLE = APIParam('filter-role',
     'Only show results from users with this role (all roles if unknown (default)).',
@@ -293,8 +318,8 @@ PARAM_NEW_PASS = APIParam('new-pass',
     'The new password to set for the user that is the target of this request.',
     required = True, hash = True)
 
-PARAM_OVERWRITE_CACHE = APIParam('overwrite-cache',
-    ('Replace any existing cache entries that match the current operation'
+PARAM_OVERWRITE_RECORDS = APIParam('overwrite-records',
+    ('Replace any existing records that match the current operation'
         + ' (e.g. re-do existing results).'),
     required = False,
     parser_options = {'action': 'store_true', 'default': False})
@@ -319,11 +344,11 @@ PARAM_QUERY_LIMIT = APIParam('limit',
 
 PARAM_QUERY_AFTER = APIParam('after',
     'If supplied, only return records after this timestamp.',
-    required = False)
+    required = False, parser_options = {'action': 'store', 'type': int})
 
 PARAM_QUERY_BEFORE = APIParam('before',
     'If supplied, only return records before this timestamp.',
-    required = False)
+    required = False, parser_options = {'action': 'store', 'type': int})
 
 PARAM_QUERY_SORT = APIParam('sort',
     'Sort the results. -1 for ascending, 0 for no sorting, 1 for descending.',
@@ -354,9 +379,36 @@ PARAM_QUERY_WHERE = APIParam('where',
         'nargs': '+',
     })
 
+PARAM_REGRADE_CUTOFF = APIParam('regrade-cutoff',
+    ('All submissions occuring before the cutoff time will be regraded.'
+    + ' By default, the current time will be used.'
+    + ' Time is milliseconds from the UNIX epoch'
+    + ' (https://en.wikipedia.org/wiki/Unix_time).'),
+    required = False, parser_options = {'action': 'store', 'type': int})
+
 PARAM_SEND_EMAILS = APIParam('send-emails',
     'Send any emails.',
     required = True, cli_param = False)
+
+PARAM_SERVER_USER_REFERENCES = APIParam('target-users',
+    ('A list of server user references.'
+    + ' Server user references may be specified in eight ways:'
+    + ' 1) Email address of the requested user,'
+    + ' 2) "*" to request all users in the server,'
+    + ' 3) "<server role>" (e.g., user, creator)'
+    + ' to request all users with that server role,'
+    + ' 4) "<course id>::<course role>" (e.g., course101::student)'
+    + ' to request all users in the target course with that course role,'
+    + ' 5) "*::<course role>" (e.g., *::student)'
+    + ' to request all users with that course role in any course,'
+    + ' 6) "<course id>::*" to request all users in the target course,'
+    + ' 7) "*::*" to request all users enrolled in at least one course,'
+    + ' and 8) any of the previous options preceded by a minus sign'
+    + ' (e.g., "-alice@test.edulinq.org", "-user", "-*::student")'
+    + ' to exclude that user or group from the request.'
+    + ' Default: All users in the server.'),
+    required = False,
+    parser_options = {'action': 'extend', 'type': _csv_to_list})
 
 PARAM_SKIP_BUILD_IMAGES = APIParam('skip-build-images',
     'Skip building assignment Docker images.',

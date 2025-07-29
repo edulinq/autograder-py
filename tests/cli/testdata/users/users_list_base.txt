@@ -56,11 +56,6 @@ Courses:
     ID: course101
     Role: student
 
-Email: root
-Name: root
-Role: root
-Courses:
-
 Email: server-admin@test.edulinq.org
 Name: server-admin
 Role: admin

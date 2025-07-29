@@ -412,4 +412,11 @@ def fake_system_stacks(output):
         ]
     }
 
+def clean_version(output):
+    output['server-version']['base-version'] = '1.2.3'
+    output['server-version']['git-hash'] = '12345678'
+    output['server-version']['is-dirty'] = True
+
+    return output
+
 _discover_api_tests()

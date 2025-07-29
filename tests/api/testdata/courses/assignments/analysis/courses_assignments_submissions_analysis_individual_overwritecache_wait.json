@@ -7,7 +7,7 @@
             "course101::hw0::course-student@test.edulinq.org::1697406265"
         ],
         "dry-run": false,
-        "overwrite-cache": true,
+        "overwrite-records": true,
         "wait-for-completion": true
     },
     "output-modifier": "clean_output_timestamps",
@@ -15,17 +15,18 @@
         "complete": true,
         "options": {
             "dry-run": false,
-            "overwrite-cache": true,
-            "wait-for-completion": true,
+            "overwrite-records": true,
             "submissions": [
                 "course101::hw0::course-student@test.edulinq.org::1697406256",
                 "course101::hw0::course-student@test.edulinq.org::1697406265"
-            ]
+            ],
+            "wait-for-completion": true
         },
         "summary": {
             "complete": true,
             "complete-count": 2,
             "pending-count": 0,
+            "error-count": 0,
             "failure-count": 0,
             "first-timestamp": 1234567890123,
             "last-timestamp": 1234567890123,
@@ -88,8 +89,8 @@
                 "max": 360
             }
         },
-        "results": [
-            {
+        "results": {
+            "course101::hw0::course-student@test.edulinq.org::1697406256": {
                 "options": {
                     "include-patterns": [
                         "submission.py"
@@ -116,7 +117,7 @@
                 ],
                 "lines-of-code": 4
             },
-            {
+            "course101::hw0::course-student@test.edulinq.org::1697406265": {
                 "options": {
                     "include-patterns": [
                         "submission.py"
@@ -147,6 +148,7 @@
                 "score-delta": 1,
                 "score-per-hour": 360
             }
-        ]
+        },
+        "work-errors": {}
     }
 }
