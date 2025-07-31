@@ -2,7 +2,7 @@ import sys
 
 import autograder.api.config
 
-DESCRIPTION = "List configurations."
+DESCRIPTION = "List your current configuration options."
 
 def run(args):
     arguments = {
@@ -11,6 +11,7 @@ def run(args):
         "show_sources": args.show_origin,
     }
 
+    configs_list = []
     configs, sources  = autograder.api.config.get_tiered_config(**arguments)
     for config, cred in configs.items():
         config_str = ''
@@ -20,7 +21,9 @@ def run(args):
             config_str = config_str + source_path + "\t"
 
         config_str = config_str + f'{config}: {cred}'
-        print(config_str)
+        configs_list.append(config_str)
+
+    print("\n".join(configs_list))
     return 0
 
 def _get_parser():

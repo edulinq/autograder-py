@@ -11,7 +11,7 @@ import autograder.error
 import autograder.util.hash
 
 CONFIG_PATHS_KEY = 'config_paths'
-OLD_CONFIG_FILENAME = 'config.json'
+LOCAL_CONFIG_FILENAME = 'config.json'
 DEFAULT_CONFIG_FILENAME = 'autograder.json'
 DEFAULT_USER_CONFIG_PATH = platformdirs.user_config_dir('autograder.json')
 CSV_TO_LIST_DELIMITER = ','
@@ -100,15 +100,16 @@ def _parse_api_config(config, params, additional_required_keys, additional_optio
 
     return data, extra
 
-def _recursive_search_config_upwards(current_directory):
+def _get_config_path(current_directory):
     """
-    Check the parent directories (until root) for config.
+    Check the parent directories (until root) for a config file and returns the path.
     Stops at the first occurrence of config.json along the path to root.
+    Returns None if no config file is found.
     """
-    path = pathlib.Path(current_directory)
-    config_file_path = os.path.join(path, DEFAULT_CONFIG_FILENAME)
+    current_path = pathlib.Path(current_directory)
+    config_file_path = os.path.join(current_path, DEFAULT_CONFIG_FILENAME)
 
-    if path.parent == path:
+    if current_path.parent == current_path:
         if (os.path.isfile(config_file_path)):
             return config_file_path
         return None
@@ -116,24 +117,26 @@ def _recursive_search_config_upwards(current_directory):
     if (os.path.isfile(config_file_path)):
         return config_file_path
 
-    return _recursive_search_config_upwards(path.parent)
+    return _get_config_path(current_path.parent)
 
-def check_local_config():
-
-    path = os.getcwd()
-    dir_path = pathlib.Path(path)
-    config_file_path = _recursive_search_config_upwards(dir_path.parent)
+def get_local_config_path():
+    """
+    Searches for a configuration file in a hierarchical order, starting with ./autograder.json,
+    then ./config.json, and continuing up the directory tree looking for autograder.json.
+    Returns the path to the first valid config file found. If no configuration file is found, returns None.
+    """
+    current_path = os.getcwd()
+    dir_path = pathlib.Path(current_path)
+    config_file_path = _get_config_path(dir_path.parent)
 
     if (os.path.isfile(DEFAULT_CONFIG_FILENAME)):
         return os.path.abspath(DEFAULT_CONFIG_FILENAME)
-    elif (os.path.isfile(OLD_CONFIG_FILENAME)):
-        return os.path.abspath(OLD_CONFIG_FILENAME)
-    elif (config_file_path is not None):
-        return config_file_path
+    elif (os.path.isfile(LOCAL_CONFIG_FILENAME)):
+        return os.path.abspath(LOCAL_CONFIG_FILENAME)
     else:
-        return None
+        return config_file_path
 
-def get_tiered_config(cli_arguments, skip_keys = [CONFIG_PATHS_KEY], show_sources = False):
+def get_tiered_config(cli_arguments, skip_keys = [CONFIG_PATHS_KEY], show_sources = False, global_config_path = DEFAULT_USER_CONFIG_PATH):
     """
     Get all the tiered configuration options (from files and CLI).
     If |show_sources| is True, then an addition dict will be returned that shows each key,
@@ -147,19 +150,20 @@ def get_tiered_config(cli_arguments, skip_keys = [CONFIG_PATHS_KEY], show_source
         cli_arguments = vars(cli_arguments)
 
     # Check the global user config file.
-    if (os.path.isfile(DEFAULT_USER_CONFIG_PATH)):
-        with open(DEFAULT_USER_CONFIG_PATH, 'r') as file:
+    if (os.path.isfile(global_config_path)):
+        with open(global_config_path, 'r') as file:
             for key, value in json.load(file).items():
                 config[key] = value
-                sources[key] = "<user config file>::" + DEFAULT_USER_CONFIG_PATH
+                sources[key] = f"<user config file>:: {global_config_path}"
+
 
     # Check the local user config file.
-    local_config_path = check_local_config()
+    local_config_path = get_local_config_path()
     if local_config_path is not None:
         with open(local_config_path, 'r') as file:
             for key, value in json.load(file).items():
                 config[key] = value
-                sources[key] = "<default config file>::" + local_config_path
+                sources[key] = f"<default config file>:: {local_config_path}"
 
     # Check the config file specified on the command-line.
     config_paths = cli_arguments.get(CONFIG_PATHS_KEY, [])
@@ -168,7 +172,7 @@ def get_tiered_config(cli_arguments, skip_keys = [CONFIG_PATHS_KEY], show_source
             with open(path, 'r') as file:
                 for key, value in json.load(file).items():
                     config[key] = value
-                    sources[key] = "<cli config file>::" + os.path.abspath(path)
+                    sources[key] = f"<cli config file>:: {os.path.abspath(path)}"
 
     # Finally, any command-line options.
     for (key, value) in cli_arguments.items():
