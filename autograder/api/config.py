@@ -156,7 +156,6 @@ def get_tiered_config(cli_arguments, skip_keys = [CONFIG_PATHS_KEY], show_source
                 config[key] = value
                 sources[key] = f"<user config file>:: {global_config_path}"
 
-
     # Check the local user config file.
     local_config_path = get_local_config_path()
     if local_config_path is not None:
