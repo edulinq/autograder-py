@@ -1,9 +1,11 @@
 import argparse
-import unittest
-import os
 import json
-import autograder.util.dirent
+import os
+import unittest
+
 import autograder.api.config
+import autograder.util.dir
+import autograder.util.dirent
 
 EXPECTED_CONFIG = { 
     "course": "course101",
@@ -13,7 +15,7 @@ EXPECTED_CONFIG = {
     "pass": "course-student"
 }
 
-def write_config(data, config_path, config_name = "config.json"):
+def write_config(data, config_path, config_name):
     config_file = os.path.join(config_path, config_name)
     with open(config_file, 'w') as file:
         json.dump(data, file, indent = 4)
@@ -21,143 +23,64 @@ def write_config(data, config_path, config_name = "config.json"):
     return config_file
 
 class TestConfig(unittest.TestCase):
-    def test_base_local(self):
-        temp_dir = autograder.util.dirent.get_temp_path('autograder-test-config-')
-        os.mkdir(temp_dir)
+    def test_base(self):
+            cwd = os.getcwd()
+            temp_dir = autograder.util.dirent.get_temp_path('autograder-test-config-')
+            global_config_dir_path = os.path.join(temp_dir, "global")
+            config_dir_path = os.path.join(temp_dir, "config")
+            ancestor_config_dir_path = os.path.join(temp_dir, "code")
+            test_assignment_dir_path= os.path.join(ancestor_config_dir_path, "course101", "hw1")
 
-        path_to_config = os.path.join(temp_dir, "path")
-        os.mkdir(path_to_config)
+            test_cases = [
+                ((ancestor_config_dir_path, "autograder.json"), "<default config file>", os.path.join(ancestor_config_dir_path, "autograder.json"), False, False),
+                ((test_assignment_dir_path, "config.json"), "<default config file>", os.path.join(test_assignment_dir_path, "config.json"), False, False),
+                ((test_assignment_dir_path, "autograder.json"), "<default config file>", os.path.join(test_assignment_dir_path, "autograder.json"), False, False),
+                ((None), "<user config file>", os.path.join(global_config_dir_path, "autograder.json"),False, True),
+                ((None), "<cli config file>", os.path.join(config_dir_path, "test-config.json"), True, False),
+                ((test_assignment_dir_path, "autograder.json"), "<cli config file>", os.path.join(config_dir_path, "test-config.json"), True, True)
+            ]
 
-        path_course101 = os.path.join(path_to_config, "to", "course", "course101")
-        os.makedirs(path_course101, exist_ok = True)
-        os.chdir(path_course101)
+            for test_case in test_cases:
+                (local_config), config_type, expected_config_path, cli_config_exists, global_config_exists = test_case
 
-        config_path = write_config(EXPECTED_CONFIG, path_to_config, "autograder.json")
-        expected_source = {
-            "course": f"<default config file>:: {config_path}",
-            "assignment": f"<default config file>:: {config_path}",
-            "server": f"<default config file>:: {config_path}",
-            "user": f"<default config file>:: {config_path}",
-            "pass": f"<default config file>:: {config_path}"
-        }
+                autograder.util.dir.mkdir(temp_dir)
+                autograder.util.dir.mkdir(global_config_dir_path)
+                autograder.util.dir.mkdir(config_dir_path)
+                autograder.util.dir.mkdir(ancestor_config_dir_path)
+                autograder.util.dir.mkdir(test_assignment_dir_path)
 
-        actual_configs, actual_sources = autograder.api.config.get_tiered_config(argparse.Namespace(config_paths = None), show_sources = True, global_config_path = temp_dir)
+                os.chdir(test_assignment_dir_path)
 
-        self.assertEqual(actual_configs, EXPECTED_CONFIG)
-        self.assertEqual(actual_sources, expected_source)
+                if local_config is not None:
+                    path_to_local_config, name_config = local_config
+                    write_config(EXPECTED_CONFIG, path_to_local_config, name_config)
 
-        config_path = write_config(EXPECTED_CONFIG, path_course101)
-        expected_source = {
-            "course": f"<default config file>:: {config_path}",
-            "assignment": f"<default config file>:: {config_path}",
-            "server": f"<default config file>:: {config_path}",
-            "user": f"<default config file>:: {config_path}",
-            "pass": f"<default config file>:: {config_path}"
-        }
+                config_paths = None
+                if cli_config_exists:
+                    cli_config = write_config(EXPECTED_CONFIG, config_dir_path, "test-config.json")
+                    config_paths = [cli_config]
 
-        actual_configs, actual_sources = autograder.api.config.get_tiered_config(argparse.Namespace(config_paths = None), show_sources = True, global_config_path = temp_dir)
+                global_file_path = global_config_dir_path
+                if global_config_exists:
+                    global_file_path = write_config(EXPECTED_CONFIG, global_config_dir_path, "autograder.json")
 
-        self.assertEqual(actual_configs, EXPECTED_CONFIG)
-        self.assertEqual(actual_sources, expected_source)
+                expected_source = {
+                    "course": f"{config_type}:: {expected_config_path}",
+                    "assignment": f"{config_type}:: {expected_config_path}",
+                    "server": f"{config_type}:: {expected_config_path}",
+                    "user": f"{config_type}:: {expected_config_path}",
+                    "pass": f"{config_type}:: {expected_config_path}"
+                }
 
-        config_path = write_config(EXPECTED_CONFIG, path_course101, "autograder.json")
-        expected_source = {
-            "course": f"<default config file>:: {config_path}",
-            "assignment": f"<default config file>:: {config_path}",
-            "server": f"<default config file>:: {config_path}",
-            "user": f"<default config file>:: {config_path}",
-            "pass": f"<default config file>:: {config_path}"
-        }
+                actual_configs, actual_sources = autograder.api.config.get_tiered_config(
+                    argparse.Namespace(config_paths = config_paths),
+                    show_sources = True,
+                    global_config_path = global_file_path
+                )
 
-        actual_configs, actual_sources = autograder.api.config.get_tiered_config(argparse.Namespace(config_paths = None), show_sources = True, global_config_path = temp_dir)
+                self.assertEqual(actual_configs, EXPECTED_CONFIG)
+                self.assertEqual(actual_sources, expected_source)
 
-        self.assertEqual(actual_configs, EXPECTED_CONFIG)
-        self.assertEqual(actual_sources, expected_source)
-
-
-    def test_base_global(self):
-        temp_dir = autograder.util.dirent.get_temp_path('autograder-test-config-')
-        os.mkdir(temp_dir)
-
-        path_global = os.path.join(temp_dir, "global")
-        os.mkdir(path_global) 
-
-        path_course101 = os.path.join(temp_dir, "course101")
-        os.mkdir(path_course101)
-        os.chdir(path_course101)
-
-        config_path = write_config(EXPECTED_CONFIG, path_global, config_name = "autograder.json")
-
-        expected_source = {
-            "course": f"<user config file>:: {config_path}",
-            "assignment": f"<user config file>:: {config_path}",
-            "server": f"<user config file>:: {config_path}",
-            "user": f"<user config file>:: {config_path}",
-            "pass": f"<user config file>:: {config_path}"
-        }
-
-        actual_configs, actual_sources = autograder.api.config.get_tiered_config(argparse.Namespace(config_paths = None), show_sources = True, global_config_path = config_path)
-
-        self.assertEqual(actual_configs, EXPECTED_CONFIG)
-        self.assertEqual(actual_sources, expected_source)
-
-    def test_base_cli_config(self):
-        temp_dir = autograder.util.dirent.get_temp_path('autograder-test-config-')
-        os.mkdir(temp_dir)
-
-        path_to_config = os.path.join(temp_dir, "path", "to", "config")
-        os.makedirs(path_to_config, exist_ok = True)
-
-        path_course101 = os.path.join(temp_dir, "course101")
-        os.mkdir(path_course101)
-        os.chdir(path_course101)
-
-        config_path = write_config(EXPECTED_CONFIG, path_to_config)
-
-        expected_source = {
-            "course": f"<cli config file>:: {config_path}",
-            "assignment": f"<cli config file>:: {config_path}",
-            "server": f"<cli config file>:: {config_path}",
-            "user": f"<cli config file>:: {config_path}",
-            "pass": f"<cli config file>:: {config_path}"
-        }
-
-        actual_configs, actual_sources = autograder.api.config.get_tiered_config(argparse.Namespace(config_paths = [config_path]), show_sources = True, global_config_path = temp_dir)
-
-        self.assertEqual(actual_configs, EXPECTED_CONFIG)
-        self.assertEqual(actual_sources, expected_source)
-
-    def test_all(self):
-        temp_dir = autograder.util.dirent.get_temp_path('autograder-test-config-')
-        os.mkdir(temp_dir)
-
-        path_course101 = os.path.join(temp_dir, "course101")
-        os.mkdir(path_course101)
-
-        path_global = os.path.join(temp_dir, "global")
-        os.mkdir(path_global) 
-
-        path_to_config = os.path.join(temp_dir, "path", "to", "config")
-        os.makedirs(path_to_config, exist_ok = True)
-
-        write_config(EXPECTED_CONFIG, path_course101, "autograder.json")
-        global_config_path = write_config(EXPECTED_CONFIG, path_global, "autograder.json")
-        config_path  =  write_config(EXPECTED_CONFIG, path_to_config, "config.json")
-
-        expected_source = {
-            "course": f"<cli config file>:: {config_path}",
-            "assignment": f"<cli config file>:: {config_path}",
-            "server": f"<cli config file>:: {config_path}",
-            "user": f"<cli config file>:: {config_path}",
-            "pass": f"<cli config file>:: {config_path}"
-        }
-
-        os.chdir(path_course101)
-        actual_configs, actual_sources = autograder.api.config.get_tiered_config(argparse.Namespace(config_paths = [config_path]), show_sources = True, global_config_path = global_config_path)
-
-        self.assertEqual(actual_configs, EXPECTED_CONFIG)
-        self.assertEqual(actual_sources, expected_source) 
-
-
-
+                autograder.util.dirent.remove(temp_dir)
+            os.chdir(cwd)
 
