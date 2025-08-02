@@ -111,6 +111,7 @@ class TestFileOp(unittest.TestCase):
             (ALREADY_EXISTS_FILE_POSIX_RELPATH, ALREADY_EXISTS_DIRNAME + "/a", None),
             (ALREADY_EXISTS_FILE_POSIX_RELPATH, "a/b", None),
             (ALREADY_EXISTS_FILE_POSIX_RELPATH, ALREADY_EXISTS_DIRNAME, None),
+            (ALREADY_EXISTS_FILENAME, ALREADY_EXISTS_DIRNAME, None),
             ("a", "b", "No such file or directory"),
             (ALREADY_EXISTS_DIRNAME, ALREADY_EXISTS_FILE_POSIX_RELPATH, "File exists"),
         ]
@@ -135,6 +136,7 @@ class TestFileOp(unittest.TestCase):
 
     @unittest.skipIf(sys.platform.startswith("win"), "fileops require POSIX")
     def test_fileop_exec_copy_glob(self):
+        # [(source, dest, expected_paths, not_expected_paths, error_substring), ...]
         test_cases = [
             (
                 ALREADY_EXISTS_DIRNAME + "/*",
@@ -234,9 +236,8 @@ class TestFileOp(unittest.TestCase):
             (ALREADY_EXISTS_DIRNAME, "a.txt", None),
             (ALREADY_EXISTS_FILE_POSIX_RELPATH, ALREADY_EXISTS_DIRNAME + "/a", None),
             ("a", "b", "No such file or directory"),
-            (ALREADY_EXISTS_FILE_POSIX_RELPATH, "a/b", "No such file or directory"),
-            (ALREADY_EXISTS_FILE_POSIX_RELPATH, ALREADY_EXISTS_DIRNAME, "already exists"),
             (ALREADY_EXISTS_DIRNAME, ALREADY_EXISTS_FILE_POSIX_RELPATH, "into itself"),
+            (ALREADY_EXISTS_FILENAME, ALREADY_EXISTS_DIRNAME, None),
         ]
 
         for i in range(len(test_cases)):
@@ -259,6 +260,7 @@ class TestFileOp(unittest.TestCase):
 
     @unittest.skipIf(sys.platform.startswith("win"), "fileops require POSIX")
     def test_fileop_exec_move_glob(self):
+        # [(source, dest, expected_paths, not_expected_paths, error_substring), ...]
         test_cases = [
             (
                 "*",
@@ -346,9 +348,16 @@ class TestFileOp(unittest.TestCase):
             (
                 "*",
                 ALREADY_EXISTS_DIRNAME,
-                [],
-                [],
-                "already exists"
+                [
+                    os.path.join(ALREADY_EXISTS_DIRNAME, STARTING_EMPTY_DIRNAME),
+                    ALREADY_EXISTS_FILE_RELPATH,
+                    ALREADY_EXISTS_FILE_ALT_RELPATH,
+                ],
+                [
+                    ALREADY_EXISTS_FILENAME,
+                    STARTING_EMPTY_DIRNAME,
+                ],
+                None,
             ),
         ]
 
