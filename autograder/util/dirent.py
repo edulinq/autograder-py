@@ -32,6 +32,21 @@ def remove(path):
         raise ValueError("Unknown type of dirent: '%s'." % (path))
 
 def move(source, dest):
+    # If dest is a dir, then resolve the path.
+    if (os.path.isdir(dest)):
+        dest = os.path.abspath(os.path.join(dest, os.path.basename(source)))
+
+    # Skip if this is self.
+    if (os.path.exists(dest) and os.path.samefile(source, dest)):
+        return
+
+    # Create any required parents.
+    os.makedirs(os.path.dirname(dest), exist_ok = True)
+
+    # Remove any existing dest.
+    if (os.path.exists(dest)):
+        remove(dest)
+
     shutil.move(source, dest)
 
 def copy(source, dest, dirs_exist_ok = False):

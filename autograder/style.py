@@ -1,4 +1,5 @@
 import contextlib
+import logging
 import os
 import sys
 
@@ -198,6 +199,9 @@ def check_file(path, fake_path = None, shorten_path = False, style_overrides = N
 
     output_path = autograder.util.dirent.get_temp_path(prefix = 'style_', suffix = '_output')
     cleanup_paths.append(output_path)
+
+    # Ignore most flak8 logging.
+    logging.getLogger("flake8").setLevel(logging.WARNING)
 
     # argparse (used by flake8) will look for a program name on sys.argv[0].
     if (len(sys.argv) == 0):
