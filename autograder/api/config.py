@@ -11,7 +11,7 @@ import autograder.error
 import autograder.util.hash
 
 CONFIG_PATHS_KEY = 'config_paths'
-LOCAL_CONFIG_FILENAME = 'config.json'
+LEGACY_CONFIG_FILENAME = 'config.json'
 DEFAULT_CONFIG_FILENAME = 'autograder.json'
 DEFAULT_USER_CONFIG_PATH = platformdirs.user_config_dir('autograder.json')
 CSV_TO_LIST_DELIMITER = ','
@@ -100,41 +100,22 @@ def _parse_api_config(config, params, additional_required_keys, additional_optio
 
     return data, extra
 
-def _get_config_path(current_directory):
-    """
-    Check the parent directories (until root) for a config file and returns the path.
-    Stops at the first occurrence of config.json along the path to root.
-    Returns None if no config file is found.
-    """
-    current_path = pathlib.Path(current_directory)
-    config_file_path = os.path.join(current_path, DEFAULT_CONFIG_FILENAME)
-
-    if current_path.parent == current_path:
-        if (os.path.isfile(config_file_path)):
-            return config_file_path
-        return None
-
-    if (os.path.isfile(config_file_path)):
-        return config_file_path
-
-    return _get_config_path(current_path.parent)
-
 def get_local_config_path():
     """
     Searches for a configuration file in a hierarchical order, starting with ./autograder.json,
     then ./config.json, and continuing up the directory tree looking for autograder.json.
-    Returns the path to the first valid config file found. If no configuration file is found, returns None.
+    Returns the path to the first valid configuration file found. If no configuration file is found, returns None.
     """
-    current_path = os.getcwd()
-    dir_path = pathlib.Path(current_path)
-    config_file_path = _get_config_path(dir_path.parent)
 
     if (os.path.isfile(DEFAULT_CONFIG_FILENAME)):
         return os.path.abspath(DEFAULT_CONFIG_FILENAME)
-    elif (os.path.isfile(LOCAL_CONFIG_FILENAME)):
-        return os.path.abspath(LOCAL_CONFIG_FILENAME)
+    elif (os.path.isfile(LEGACY_CONFIG_FILENAME)):
+        return os.path.abspath(LEGACY_CONFIG_FILENAME)
     else:
-        return config_file_path
+        current_path = os.getcwd()
+        dir_path = pathlib.Path(current_path)
+
+        return _get_config_path(dir_path.parent)
 
 def get_tiered_config(cli_arguments, skip_keys = [CONFIG_PATHS_KEY], show_sources = False, global_config_path = DEFAULT_USER_CONFIG_PATH):
     """
@@ -235,6 +216,24 @@ def get_argument_parser(
                 **param.parser_options)
 
     return parser
+
+def _get_config_path(current_directory):
+    """
+    Search through the parent directories (until root) for a configuration file.
+    Stops at the first occurrence of autograder.json along the path to root.
+    Returns the path if a configuration file is found. Otherwise, returns None.
+    """
+
+    current_path = pathlib.Path(current_directory)
+    config_file_path = os.path.join(current_path, DEFAULT_CONFIG_FILENAME)
+
+    if (os.path.isfile(config_file_path)):
+        return config_file_path
+
+    if current_path.parent == current_path:
+        return None
+
+    return _get_config_path(current_path.parent)
 
 def _submission_add_func(parser, param):
     parser.add_argument('submissions', metavar = 'SUBMISSION',

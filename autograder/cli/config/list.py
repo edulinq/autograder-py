@@ -12,15 +12,16 @@ def run(args):
     }
 
     configs_list = []
-    configs, sources  = autograder.api.config.get_tiered_config(**arguments)
+    configs, sources = autograder.api.config.get_tiered_config(**arguments)
+
     for config, cred in configs.items():
         config_str = ''
         if sources != None:
             raw_source = sources.get(config)
             source_path = raw_source.split("::")[1]
-            config_str = config_str + source_path + "\t"
+            config_str = source_path + "\t"
 
-        config_str = config_str + f'{config}: {cred}'
+        config_str += f'{config}: {cred}'
         configs_list.append(config_str)
 
     print("\n".join(configs_list))

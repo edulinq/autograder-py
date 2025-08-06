@@ -1,6 +1,6 @@
 """
-The `autograder.cli.config` package contains tools for viewing and changing
-autograder configurations.
+The `autograder.cli.config` package contains tools
+for viewing and changing autograder configurations.
 """
 
 import sys
