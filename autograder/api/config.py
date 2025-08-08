@@ -224,14 +224,15 @@ def _get_config_path(current_directory, local_scope = None):
     Returns the path if a configuration file is found. Otherwise, returns None.
     """
     current_path = pathlib.Path(current_directory)
-    local_scope_path = pathlib.Path(local_scope)
     config_file_path = os.path.join(current_path, DEFAULT_CONFIG_FILENAME)
 
     if (os.path.isfile(config_file_path)):
         return config_file_path
 
-    if local_scope_path == current_path:
-        return None
+    if local_scope != None:
+        local_scope_path = pathlib.Path(local_scope)
+        if local_scope_path == current_path:
+            return None
 
     if current_path.parent == current_path:
         return None
