@@ -16,7 +16,7 @@ def run(args):
 
     for config, cred in configs.items():
         config_str = ''
-        if sources != None:
+        if sources is not None:
             raw_source = sources.get(config)
             source_path = raw_source.split("::")[1]
             config_str = source_path + "\t"

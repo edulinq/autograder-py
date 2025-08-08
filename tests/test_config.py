@@ -18,7 +18,10 @@ class TestConfig(unittest.TestCase):
         }
 
         expected_source = {
-            "user": f"<default config file>:: {os.path.join('TEMP_DIR', config_dir, 'autograder.json')}"
+            "user": (
+                f"<default config file>:: "
+                f"{os.path.join('TEMP_DIR', config_dir, 'autograder.json')}"
+            )
         }
 
         self._evaluate_test_config(config_dir, expected_config, expected_source)
@@ -31,21 +34,26 @@ class TestConfig(unittest.TestCase):
         }
 
         expected_source = {
-            "user": f"<default config file>:: {os.path.join('TEMP_DIR', config_dir, 'config.json')}"
+            "user": (
+                f"<default config file>:: "
+                f"{os.path.join('TEMP_DIR', config_dir, 'config.json')}"
+            )
         }
 
         self._evaluate_test_config(config_dir, expected_config, expected_source)
 
     def test_local_ancestor_dir(self):
-        config_dir = os.path.join("nested","nest1","nest2")
-
+        config_dir = os.path.join("nested", "nest1", "nest2")
 
         expected_config = {
             "user": "user@test.edulinq.org"
         }
 
         expected_source = {
-            "user": f"<default config file>:: {os.path.join('TEMP_DIR', os.path.join('nested'), 'autograder.json')}"
+            "user": (
+                f"<default config file>:: "
+                f"{os.path.join('TEMP_DIR', os.path.join('nested'), 'autograder.json')}"
+            )
         }
 
         self._evaluate_test_config(config_dir, expected_config, expected_source)

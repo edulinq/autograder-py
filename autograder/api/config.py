@@ -104,7 +104,8 @@ def get_local_config_path(local_scope = None):
     """
     Searches for a configuration file in a hierarchical order, starting with ./autograder.json,
     then ./config.json, and continuing up the directory tree looking for autograder.json.
-    Returns the path to the first valid configuration file found. If no configuration file is found, returns None.
+    Returns the path to the first valid configuration file found.
+    If no configuration file is found, returns None.
     """
 
     if (os.path.isfile(DEFAULT_CONFIG_FILENAME)):
@@ -117,7 +118,12 @@ def get_local_config_path(local_scope = None):
 
         return _get_config_path(dir_path.parent, local_scope = local_scope)
 
-def get_tiered_config(cli_arguments, skip_keys = [CONFIG_PATHS_KEY], show_sources = False, global_config_path = DEFAULT_USER_CONFIG_PATH, local_scope = None):
+def get_tiered_config(
+        cli_arguments,
+        skip_keys = [CONFIG_PATHS_KEY],
+        show_sources = False,
+        global_config_path = DEFAULT_USER_CONFIG_PATH,
+        local_scope = None):
     """
     Get all the tiered configuration options (from files and CLI).
     If |show_sources| is True, then an addition dict will be returned that shows each key,
@@ -229,7 +235,7 @@ def _get_config_path(current_directory, local_scope = None):
     if (os.path.isfile(config_file_path)):
         return config_file_path
 
-    if local_scope != None:
+    if local_scope is not None:
         local_scope_path = pathlib.Path(local_scope)
         if local_scope_path == current_path:
             return None
@@ -237,7 +243,7 @@ def _get_config_path(current_directory, local_scope = None):
     if current_path.parent == current_path:
         return None
 
-    return _get_config_path(current_path.parent,local_scope = local_scope)
+    return _get_config_path(current_path.parent, local_scope = local_scope)
 
 def _submission_add_func(parser, param):
     parser.add_argument('submissions', metavar = 'SUBMISSION',
