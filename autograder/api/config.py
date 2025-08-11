@@ -223,14 +223,15 @@ def get_argument_parser(
 
     return parser
 
-def _get_config_path(current_directory, local_scope = None):
+def _get_config_path(current_directory, local_scope = None, config_name = DEFAULT_CONFIG_FILENAME):
     """
     Search through the parent directories (until root) for a configuration file.
-    Stops at the first occurrence of autograder.json along the path to root.
-    Returns the path if a configuration file is found. Otherwise, returns None.
+    Stops at the first occurrence of specified config name (default: autograder.json)
+    along the path to root. Returns the path if a configuration file is found.
+    Otherwise, returns None.
     """
     current_path = pathlib.Path(current_directory)
-    config_file_path = os.path.join(current_path, DEFAULT_CONFIG_FILENAME)
+    config_file_path = os.path.join(current_path, config_name)
 
     if (os.path.isfile(config_file_path)):
         return config_file_path
