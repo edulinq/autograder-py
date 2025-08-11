@@ -153,11 +153,12 @@ def get_tiered_config(
 
     # Check the config file specified on the command-line.
     config_paths = cli_arguments.get(CONFIG_PATHS_KEY, [])
-    for path in config_paths:
-        with open(path, 'r') as file:
-            for key, value in json.load(file).items():
-                config[key] = value
-                sources[key] = f"<cli config file>:: {os.path.abspath(path)}"
+    if (config_paths is not None):
+        for path in config_paths:
+            with open(path, 'r') as file:
+                for key, value in json.load(file).items():
+                    config[key] = value
+                    sources[key] = f"<cli config file>:: {os.path.abspath(path)}"
 
     # Finally, any command-line options.
     for (key, value) in cli_arguments.items():

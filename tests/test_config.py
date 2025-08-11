@@ -19,8 +19,8 @@ class TestConfig(unittest.TestCase):
 
         expected_source = {
             "user": (
-                f"<default config file>:: "
-                f"{os.path.join('TEMP_DIR', 'simple', 'autograder.json')}"
+                "<default config file>:: %s"
+                % os.path.join('TEMP_DIR', 'simple', 'autograder.json')
             )
         }
 
@@ -35,8 +35,8 @@ class TestConfig(unittest.TestCase):
 
         expected_source = {
             "user": (
-                f"<default config file>:: "
-                f"{os.path.join('TEMP_DIR', 'old-name', 'config.json')}"
+                "<default config file>:: %s"
+                % os.path.join('TEMP_DIR', 'old-name', 'config.json')
             )
         }
 
@@ -51,8 +51,8 @@ class TestConfig(unittest.TestCase):
 
         expected_source = {
             "server": (
-                f"<default config file>:: "
-                f"{os.path.join('TEMP_DIR', 'nested', 'autograder.json')}"
+                "<default config file>:: %s"
+                % os.path.join('TEMP_DIR', 'nested', 'autograder.json')
             )
         }
 
@@ -66,14 +66,15 @@ class TestConfig(unittest.TestCase):
         }
 
         expected_source = {
-            "user": (
-                f"<default config file>:: "
-                f"{
-                    os.path.join(
-                    'TEMP_DIR',
-                    'nested', 'nest1', 'nest2.2',
-                    'autograder.json'
-                )}"
+            "user": "%s %s" % (
+                "<default config file>::",
+                os.path.join(
+                    "TEMP_DIR",
+                    "nested",
+                    "nest1",
+                    "nest2.2",
+                    "autograder.json"
+                )
             )
         }
 
@@ -88,8 +89,8 @@ class TestConfig(unittest.TestCase):
 
         expected_source = {
             "user": (
-                f"<user config file>:: "
-                f"{os.path.join('TEMP_DIR', 'global', 'autograder.json')}"
+                "<user config file>:: %s"
+                % os.path.join('TEMP_DIR', 'global', 'autograder.json')
             )
         }
 
@@ -107,8 +108,8 @@ class TestConfig(unittest.TestCase):
 
         expected_source = {
             "user": (
-                f"<cli config file>:: "
-                f"{os.path.join('TEMP_DIR', 'simple', 'autograder.json')}"
+                "<cli config file>:: %s"
+                % os.path.join('TEMP_DIR', 'simple', 'autograder.json')
             )
         }
 
@@ -132,12 +133,12 @@ class TestConfig(unittest.TestCase):
 
         expected_source = {
             "user": (
-                f"<cli config file>:: "
-                f"{os.path.join('TEMP_DIR', 'simple', 'autograder.json')}"
+                "<cli config file>:: %s"
+                % os.path.join('TEMP_DIR', 'simple', 'autograder.json')
             ),
             "server": (
-                f"<cli config file>:: "
-                f"{os.path.join('TEMP_DIR', 'nested', 'autograder.json')}"
+                "<cli config file>:: %s"
+                % os.path.join('TEMP_DIR', 'nested', 'autograder.json')
             )
         }
 
@@ -160,8 +161,8 @@ class TestConfig(unittest.TestCase):
 
         expected_source = {
             "user": (
-                f"<default config file>:: "
-                f"{os.path.join('TEMP_DIR', 'simple', 'autograder.json')}"
+                "<default config file>:: %s"
+                % os.path.join('TEMP_DIR', 'simple', 'autograder.json')
             )
         }
 
@@ -179,8 +180,8 @@ class TestConfig(unittest.TestCase):
 
         expected_source = {
             "user": (
-                f"<cli config file>:: "
-                f"{os.path.join('TEMP_DIR', 'simple', 'autograder.json')}"
+                "<cli config file>:: %s"
+                % os.path.join('TEMP_DIR', 'simple', 'autograder.json')
             )
         }
 
@@ -201,8 +202,8 @@ class TestConfig(unittest.TestCase):
 
         expected_source = {
             "user": (
-                f"<cli config file>:: "
-                f"{os.path.join('TEMP_DIR', 'old-name', 'config.json')}"
+                "<cli config file>:: %s"
+                % os.path.join('TEMP_DIR', 'old-name', 'config.json')
             )
         }
 
@@ -222,8 +223,8 @@ class TestConfig(unittest.TestCase):
 
         expected_source = {
             "user": (
-                f"<cli config file>:: "
-                f"{os.path.join('TEMP_DIR', 'old-name', 'config.json')}"
+                "<cli config file>:: %s"
+                % os.path.join('TEMP_DIR', 'old-name', 'config.json')
             )
         }
 
