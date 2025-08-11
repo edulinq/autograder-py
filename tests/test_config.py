@@ -68,7 +68,8 @@ class TestConfig(unittest.TestCase):
         expected_source = {
             "user": (
                 f"<default config file>:: "
-                f"{os.path.join(
+                f"{
+                    os.path.join(
                     'TEMP_DIR',
                     'nested', 'nest1', 'nest2.2',
                     'autograder.json'
