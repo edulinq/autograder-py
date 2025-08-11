@@ -160,14 +160,29 @@ However, it will generally be more convenient to hold these common options in a 
 There are several other places that config options can be specified,
 with each later location overriding any earlier options.
 Here are the places options can be specified in the order that they are checked:
- 1. `./config.json` -- If a `config.json` exists in the current directory, it is loaded.
- 2. `<platform-specific user config location>/autograder.json` -- A directory which is considered the "proper" place to store user-related config for the platform you are using (according to [platformdirs](https://github.com/platformdirs/platformdirs)). Use `--help` to see the exact place in your specific case. This is a great place to store login credentials.
- 3. Files specified by `--config` -- These files are loaded in the order they appear on the command-line.
- 4. Bare Options -- Options specified directly like `--user` or `--pass`. These will override all previous options.
 
-A base config file (`config.json`) is often distributed with assignments that contains most the settings you need.
+1. Global Configuration --
+`<platform-specific user config location>/autograder.json` which is considered the "proper" place to store user-related config for the platform you are using (according to [platformdirs](https://github.com/platformdirs/platformdirs)). Use `--help` to see the exact place in your specific case. This is a great place to store login credentials.
+
+2. Local Configuration --
+   If a local configuration file is found , it is used, and no other local files are considered.
+   The search order for a local config file is:
+   1. `./autograder.json`
+   2. `./config.json`
+   3. `.../autograder.json` (in a ancestor directory) ascend directories (until root) to find any config.
+
+   **Important:** The first file found in this order becomes your local configuration.
+   There is no overwriting options the first match is used in full.
+
+3. CLI Specified --
+   Any files passed using `--config` are loaded in the order they appear on the command line.
+
+4. Bare Options --
+   Options specified directly like `--user` or `--pass`. These will override all previous options.
+
+A base config file (`autograder.json`) is often distributed with assignments that contains most the settings you need.
 You can modify this config to include your settings and use that for setting all your configuration options.
-A `config.json` file may look something like:
+A `autograder.json` file may look something like:
 ```json
 {
     "course": "my-course",
@@ -178,9 +193,9 @@ A `config.json` file may look something like:
 }
 ```
 
-Using the default config file (`config.json`):
+Using the default config file (`autograder.json`):
 ```sh
-# `./config.json` will be looked for and loaded if it exists.
+# `./autograder.json` will be looked for and loaded if it exists.
 python3 -m autograder.run.submit my_file.py
 ```
 
@@ -193,8 +208,8 @@ python3 -m autograder.run.submit --config my_config.json my_file.py
 You can also use multiple config files (latter files will override settings from previous ones).
 This is useful if you want to use the config files provided with assignments, but keep your user credentials in a more secure location:
 ```sh
-# Use the default config file (config.json), but then override any settings in there with another config file:
-python3 -m autograder.run.submit --config config.json --config ~/.secrets/autograder.json my_file.py
+# Use the default config file (autograder.json), but then override any settings in there with another config file:
+python3 -m autograder.run.submit --config autograder.json --config ~/.secrets/autograder.json my_file.py
 ```
 
 For brevity, all future commands in this document will assume that all standard config options are in the default
