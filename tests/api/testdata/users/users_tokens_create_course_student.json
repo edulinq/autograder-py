@@ -1,0 +1,13 @@
+{
+    "module": "autograder.api.users.tokens.create",
+    "read-write": true,
+    "arguments": {
+        "user": "course-student@test.edulinq.org",
+        "pass": "course-student"
+    },
+    "output-modifier": "clean_token",
+    "output": {
+        "token-id": "<TOKEN_ID>",
+        "token-cleartext": "<TOKEN_CLEARTEXT>"
+    }
+}

@@ -1,0 +1,18 @@
+{
+    "module": "autograder.api.users.get",
+    "arguments": {
+        "user": "server-creator@test.edulinq.org",
+        "pass": "server-creator"
+    },
+    "output": {
+        "found": true,
+        "user": {
+            "type": "server",
+            "email": "server-creator@test.edulinq.org",
+            "name": "server-creator",
+            "role": "creator",
+            "courses": {}
+        },
+        "courses": {}
+    }
+}
