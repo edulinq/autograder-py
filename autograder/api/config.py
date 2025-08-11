@@ -113,9 +113,7 @@ def get_local_config_path(local_scope = None):
     elif (os.path.isfile(LEGACY_CONFIG_FILENAME)):
         return os.path.abspath(LEGACY_CONFIG_FILENAME)
     else:
-        current_path = os.getcwd()
-        dir_path = pathlib.Path(current_path)
-
+        dir_path = pathlib.Path(os.getcwd())
         return _get_config_path(dir_path.parent, local_scope = local_scope)
 
 def get_tiered_config(
@@ -207,7 +205,7 @@ def get_argument_parser(
 
     parser.add_argument('-v', '--verbose', dest = 'verbose',
         action = 'store_true', default = False,
-        help = 'Output detailed information about the operation and results.'
+        help = 'Output detailed information about the operation and results'
             + " (default: %(default)s).")
 
     for param in params:
@@ -223,15 +221,16 @@ def get_argument_parser(
 
     return parser
 
-def _get_config_path(current_directory, local_scope = None, config_name = DEFAULT_CONFIG_FILENAME):
+def _get_config_path(current_directory, config_file = DEFAULT_CONFIG_FILENAME, local_scope = None):
     """
     Search through the parent directories (until root) for a configuration file.
-    Stops at the first occurrence of specified config name (default: autograder.json)
-    along the path to root. Returns the path if a configuration file is found.
+    Stops at the first occurrence of the specified config file
+    (default: autograder.json) along the path to root.
+    Returns the path if a configuration file is found.
     Otherwise, returns None.
     """
     current_path = pathlib.Path(current_directory)
-    config_file_path = os.path.join(current_path, config_name)
+    config_file_path = os.path.join(current_path, config_file)
 
     if (os.path.isfile(config_file_path)):
         return config_file_path
@@ -244,7 +243,11 @@ def _get_config_path(current_directory, local_scope = None, config_name = DEFAUL
     if current_path.parent == current_path:
         return None
 
-    return _get_config_path(current_path.parent, local_scope = local_scope)
+    return _get_config_path(
+        current_path.parent,
+        config_file = config_file,
+        local_scope = local_scope
+    )
 
 def _submission_add_func(parser, param):
     parser.add_argument('submissions', metavar = 'SUBMISSION',
