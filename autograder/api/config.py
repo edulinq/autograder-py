@@ -1,7 +1,6 @@
 import argparse
 import json
 import os
-import pathlib
 import sys
 
 import platformdirs
@@ -100,7 +99,9 @@ def _parse_api_config(config, params, additional_required_keys, additional_optio
 
     return data, extra
 
-def get_local_config_path(local_scope = None):
+# The local_config_search_limit input limits config search depth during testing,
+# preventing detection of unrelated autograder.json files in higher directories.
+def get_local_config_path(local_config_search_limit = None):
     """
     Searches for a configuration file in a hierarchical order, starting with ./autograder.json,
     then ./config.json, and continuing up the directory tree looking for autograder.json.
@@ -108,20 +109,26 @@ def get_local_config_path(local_scope = None):
     If no configuration file is found, returns None.
     """
 
+    # autograder.json file in current directory
     if (os.path.isfile(DEFAULT_CONFIG_FILENAME)):
         return os.path.abspath(DEFAULT_CONFIG_FILENAME)
-    elif (os.path.isfile(LEGACY_CONFIG_FILENAME)):
+
+    # config.json file in current directory
+    if (os.path.isfile(LEGACY_CONFIG_FILENAME)):
         return os.path.abspath(LEGACY_CONFIG_FILENAME)
-    else:
-        dir_path = pathlib.Path(os.getcwd())
-        return _get_config_path(dir_path.parent, local_scope = local_scope)
+
+    #  An autograder.json file located in any ancestor directory on the path to root.
+    parent_dir = os.path.dirname(os.getcwd())
+    return _get_ancestor_config_file_path(
+        parent_dir,
+        local_config_search_limit = local_config_search_limit
+    )
 
 def get_tiered_config(
         cli_arguments,
         skip_keys = [CONFIG_PATHS_KEY],
-        show_sources = False,
         global_config_path = DEFAULT_USER_CONFIG_PATH,
-        local_scope = None):
+        local_config_search_limit = None):
     """
     Get all the tiered configuration options (from files and CLI).
     If |show_sources| is True, then an addition dict will be returned that shows each key,
@@ -136,27 +143,18 @@ def get_tiered_config(
 
     # Check the global user config file.
     if (os.path.isfile(global_config_path)):
-        with open(global_config_path, 'r') as file:
-            for key, value in json.load(file).items():
-                config[key] = value
-                sources[key] = f"<user config file>:: {global_config_path}"
+        _load_configs_and_sources(global_config_path, config, sources, "<global config file>")
 
     # Check the local user config file.
-    local_config_path = get_local_config_path(local_scope = local_scope)
+    local_config_path = get_local_config_path(local_config_search_limit = local_config_search_limit)
     if local_config_path is not None:
-        with open(local_config_path, 'r') as file:
-            for key, value in json.load(file).items():
-                config[key] = value
-                sources[key] = f"<default config file>:: {local_config_path}"
+        _load_configs_and_sources(local_config_path, config, sources, "<local config file>")
 
     # Check the config file specified on the command-line.
     config_paths = cli_arguments.get(CONFIG_PATHS_KEY, [])
     if (config_paths is not None):
         for path in config_paths:
-            with open(path, 'r') as file:
-                for key, value in json.load(file).items():
-                    config[key] = value
-                    sources[key] = f"<cli config file>:: {os.path.abspath(path)}"
+            _load_configs_and_sources(path, config, sources, "<cli config file>")
 
     # Finally, any command-line options.
     for (key, value) in cli_arguments.items():
@@ -169,10 +167,7 @@ def get_tiered_config(
         config[key] = value
         sources[key] = "<cli argument>"
 
-    if (show_sources):
-        return config, sources
-
-    return config, None
+    return config, sources
 
 def get_argument_parser(
         description = 'Send an API request to the autograder.',
@@ -221,33 +216,41 @@ def get_argument_parser(
 
     return parser
 
-def _get_config_path(current_directory, config_file = DEFAULT_CONFIG_FILENAME, local_scope = None):
+def _load_configs_and_sources(config_path, config, sources, type_of_config):
+    with open(config_path, 'r') as file:
+        for key, value in json.load(file).items():
+            config[key] = value
+            sources[key] = "%s::%s" % (type_of_config, os.path.abspath(config_path))
+
+def _get_ancestor_config_file_path(
+        current_directory,
+        config_file = DEFAULT_CONFIG_FILENAME,
+        local_config_search_limit = None):
     """
     Search through the parent directories (until root) for a configuration file.
     Stops at the first occurrence of the specified config file
-    (default: autograder.json) along the path to root.
+    (default: DEFAULT_CONFIG_FILENAME) along the path to root.
     Returns the path if a configuration file is found.
     Otherwise, returns None.
     """
-    current_path = pathlib.Path(current_directory)
-    config_file_path = os.path.join(current_path, config_file)
 
-    if (os.path.isfile(config_file_path)):
-        return config_file_path
+    while True:
+        parent_dir = os.path.dirname(current_directory)
+        config_file_path = os.path.join(current_directory, config_file)
 
-    if local_scope is not None:
-        local_scope_path = pathlib.Path(local_scope)
-        if local_scope_path == current_path:
-            return None
+        if (os.path.isfile(config_file_path)):
+            return config_file_path
 
-    if current_path.parent == current_path:
-        return None
+        if local_config_search_limit == current_directory:
+            break
 
-    return _get_config_path(
-        current_path.parent,
-        config_file = config_file,
-        local_scope = local_scope
-    )
+        if parent_dir == current_directory:
+            break
+
+        current_directory = os.path.dirname(current_directory)
+
+    return None
+
 
 def _submission_add_func(parser, param):
     parser.add_argument('submissions', metavar = 'SUBMISSION',
