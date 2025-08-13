@@ -165,14 +165,11 @@ Here are the places options can be specified in the order that they are checked:
 `<platform-specific user config location>/autograder.json` which is considered the "proper" place to store user-related config for the platform you are using (according to [platformdirs](https://github.com/platformdirs/platformdirs)). Use `--help` to see the exact place in your specific case. This is a great place to store login credentials.
 
 2. Local Configuration --
-   If a local configuration file is found , it is used, and no other local files are considered.
+   Local configuration files can be found in different locations, the first file found will be used and no other locations are searched.
    The search order for a local config file is:
    1. `./autograder.json`
    2. `./config.json`
-   3. `.../autograder.json` (in a ancestor directory) ascend directories (until root) to find any config.
-
-   **Important:** The first file found in this order becomes your local configuration.
-   There is no overwriting options the first match is used in full.
+   3. An `autograder.json` file located in any ancestor directory on the path to root.
 
 3. CLI Specified --
    Any files passed using `--config` are loaded in the order they appear on the command line.
