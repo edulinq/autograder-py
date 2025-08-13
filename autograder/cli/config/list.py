@@ -9,12 +9,10 @@ def run(args):
         "cli_arguments": args,
         "skip_keys": [
             'show_origin', 'verbose',
-            autograder.api.config.CONFIG_PATHS_KEY, 'global_config_path'
-        ]
+            autograder.api.config.CONFIG_PATHS_KEY, 'global_config_path',
+        ],
+        "global_config_path": args.global_config_path
     }
-
-    if args.global_config_path != '':
-        arguments["global_config_path"] = args.global_config_path
 
     config_list = []
     config, sources = autograder.api.config.get_tiered_config(**arguments)
@@ -40,8 +38,8 @@ def _get_parser():
         action = 'store_true', help = 'Show origin of configs.')
 
     parser.add_argument("--global-config", dest = 'global_config_path',
-        action = 'store', type = str, help = 'Path to the global configuration file.',
-        default = '')
+        action = 'store', type = str, default = autograder.api.config.DEFAULT_GLOBAL_CONFIG_PATH,
+        help = 'Path to the global configuration file. (default: %(default)s)')
 
     return parser
 

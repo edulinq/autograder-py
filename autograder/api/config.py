@@ -11,8 +11,8 @@ import autograder.util.hash
 
 CONFIG_PATHS_KEY = 'config_paths'
 LEGACY_CONFIG_FILENAME = 'config.json'
-DEFAULT_CONFIG_FILENAME = 'autograder.json'
-DEFAULT_USER_CONFIG_PATH = platformdirs.user_config_dir('autograder.json')
+DEFAULT_LOCAL_CONFIG_FILENAME = 'autograder.json'
+DEFAULT_GLOBAL_CONFIG_PATH = platformdirs.user_config_dir('autograder.json')
 CSV_TO_LIST_DELIMITER = ','
 MAP_KEY_VALUE_SEP = '='
 
@@ -110,8 +110,8 @@ def get_local_config_path(local_config_search_limit = None):
     """
 
     # autograder.json file in current directory
-    if (os.path.isfile(DEFAULT_CONFIG_FILENAME)):
-        return os.path.abspath(DEFAULT_CONFIG_FILENAME)
+    if (os.path.isfile(DEFAULT_LOCAL_CONFIG_FILENAME)):
+        return os.path.abspath(DEFAULT_LOCAL_CONFIG_FILENAME)
 
     # config.json file in current directory
     if (os.path.isfile(LEGACY_CONFIG_FILENAME)):
@@ -127,7 +127,7 @@ def get_local_config_path(local_config_search_limit = None):
 def get_tiered_config(
         cli_arguments,
         skip_keys = [CONFIG_PATHS_KEY],
-        global_config_path = DEFAULT_USER_CONFIG_PATH,
+        global_config_path = DEFAULT_GLOBAL_CONFIG_PATH,
         local_config_search_limit = None):
     """
     Get all the tiered configuration options (from files and CLI).
@@ -188,8 +188,8 @@ def get_argument_parser(
             + " Can be specified multiple times with later values overriding earlier ones."
             + " Config values can be specified in multiple places"
             + " (with later values overriding earlier values):"
-            + " First './%s'," % (DEFAULT_CONFIG_FILENAME)
-            + " then '%s'," % (DEFAULT_USER_CONFIG_PATH)
+            + " First './%s'," % (DEFAULT_LOCAL_CONFIG_FILENAME)
+            + " then '%s'," % (DEFAULT_GLOBAL_CONFIG_PATH)
             + " now any files specified using --config in the order they were specified,"
             + " and finally any variables specified directly on the command line (like --user).")
 
@@ -224,12 +224,12 @@ def _load_configs_and_sources(config_path, config, sources, type_of_config):
 
 def _get_ancestor_config_file_path(
         current_directory,
-        config_file = DEFAULT_CONFIG_FILENAME,
+        config_file = DEFAULT_LOCAL_CONFIG_FILENAME,
         local_config_search_limit = None):
     """
     Search through the parent directories (until root) for a configuration file.
     Stops at the first occurrence of the specified config file
-    (default: DEFAULT_CONFIG_FILENAME) along the path to root.
+    (default: DEFAULT_LOCAL_CONFIG_FILENAME) along the path to root.
     Returns the path if a configuration file is found.
     Otherwise, returns None.
     """
