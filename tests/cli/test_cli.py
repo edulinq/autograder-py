@@ -107,7 +107,7 @@ class CLITest(tests.server.base.ServerBaseTest):
 
 def _prepare_string(text, temp_dir):
     replacements = [
-        (tests.server.base.DATA_DIR_ID, DATA_DIR),
+        (tests.server.base.DATA_DIR_ID, os.path.abspath(DATA_DIR)),
         (TEMP_DIR_ID, temp_dir),
     ]
 

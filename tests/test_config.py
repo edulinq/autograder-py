@@ -1,6 +1,6 @@
 import argparse
 import os
-import unittest
+import tests.base
 
 import autograder.api.config
 import autograder.util.dir
@@ -9,178 +9,196 @@ import autograder.util.dirent
 THIS_DIR = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
 CONFIGS_DIR = os.path.join(THIS_DIR, "data", "configs")
 
-TESTS = {
-    "test_local_autograder_json_current_dir": {
-        "test_work_dir": "simple",
-        "expected_config": {
-            "user": "user@test.edulinq.org"
-        },
-        "expected_source": {
-            "user": (
-                "<default config file>:: %s"
-                % os.path.join('TEMP_DIR', 'simple', 'autograder.json')
-            )
-        }
-    },
-    "test_local_config_json_current_dir": {
-        "test_work_dir": "old-name",
-        "expected_config": {
-            "user": "user@test.edulinq.org"
-        },
-        "expected_source": {
-            "user": (
-                "<default config file>:: %s"
-                % os.path.join('TEMP_DIR', 'old-name', 'config.json')
-            )
-        }
-    },
-    "test_local_ancestor_dir": {
-        "test_work_dir": os.path.join("nested", "nest1", "nest2.1"),
-        "expected_config": {
-            "server": "http://testserver.edu"
-        },
-        "expected_source": {
-            "server": (
-                "<default config file>:: %s"
-                % os.path.join('TEMP_DIR', 'nested', 'autograder.json')
-            )
-        }
-    },
-    "test_local_all": {
-        "test_work_dir": os.path.join("nested", "nest1", "nest2.2"),
-        "expected_config": {
-            "user": "user@test.edulinq.org"
-        },
-        "expected_source": {
-            "user": "%s %s" % (
-                "<default config file>::",
-                os.path.join(
-                    "TEMP_DIR",
-                    "nested",
-                    "nest1",
-                    "nest2.2",
-                    "autograder.json"
-                )
-            )
-        }
-    },
-    "test_global": {
-        "test_work_dir": "empty-dir",
-        "expected_config": {
-            "user": "user@test.edulinq.org"
-        },
-        "expected_source": {
-            "user": (
-                "<user config file>:: %s"
-                % os.path.join('TEMP_DIR', 'global', 'autograder.json')
-            )
-        },
-        "config_global": os.path.join("global", "autograder.json")
-    },
-    "test_cli_provided_overriding": {
-        "test_work_dir": "empty-dir",
-        "expected_config": {
-            "user": "user@test.edulinq.org"
-        },
-        "expected_source": {
-            "user": (
-                "<cli config file>:: %s"
-                % os.path.join('TEMP_DIR', 'simple', 'autograder.json')
-            )
-        },
-        "config_paths": [
-            os.path.join("global", "autograder.json"),
-            os.path.join("simple", "autograder.json")
-        ]
-    },
-    "test_cli_provided": {
-        "test_work_dir": "empty-dir",
-        "expected_config": {
-            "user": "user@test.edulinq.org",
-            "server": "http://testserver.edu"
-        },
-        "expected_source": {
-            "user": (
-                "<cli config file>:: %s"
-                % os.path.join('TEMP_DIR', 'simple', 'autograder.json')
-            ),
-            "server": (
-                "<cli config file>:: %s"
-                % os.path.join('TEMP_DIR', 'nested', 'autograder.json')
-            )
-        },
-        "config_paths": [
-            os.path.join("nested", "autograder.json"),
-            os.path.join("simple", "autograder.json")
-        ]
-    },
-    "test_global_local": {
-        "test_work_dir": "simple",
-        "expected_config": {
-            "user": "user@test.edulinq.org"
-        },
-        "expected_source": {
-            "user": (
-                "<default config file>:: %s"
-                % os.path.join('TEMP_DIR', 'simple', 'autograder.json')
-            )
-        },
-        "config_global": os.path.join("global", "autograder.json")
-    },
-    "test_cli_global": {
-        "test_work_dir": "empty-dir",
-        "expected_config": {
-            "user": "user@test.edulinq.org"
-        },
-        "expected_source": {
-            "user": (
-                "<cli config file>:: %s"
-                % os.path.join('TEMP_DIR', 'simple', 'autograder.json')
-            )
-        },
-        "config_paths": [os.path.join("simple", "autograder.json")],
-        "config_global": os.path.join("global", "autograder.json")
-    },
-    "test_local_cli": {
-        "test_work_dir": "simple",
-        "expected_config": {
-            "user": "user@test.edulinq.org"
-        },
-        "expected_source": {
-            "user": (
-                "<cli config file>:: %s"
-                % os.path.join('TEMP_DIR', 'old-name', 'config.json')
-            )
-        },
-        "config_paths": [os.path.join("old-name", "config.json")],
-    },
-    "test_local_cli_global": {
-        "test_work_dir": "simple",
-        "expected_config": {
-            "user": "user@test.edulinq.org"
-        },
-        "expected_source": {
-            "user": (
-                "<cli config file>:: %s"
-                % os.path.join('TEMP_DIR', 'old-name', 'config.json')
-            )
-        },
-        "config_paths": [os.path.join("old-name", "config.json")],
-        "config_global": os.path.join("global", "autograder.json")
-    }
-}
-
-class TestConfig(unittest.TestCase):
+class TestConfig(tests.base.BaseTest):
     def test_all(self):
-        for test in TESTS:
-            self._evaluate_test_config(**TESTS.get(test))
+        test_cases = [
+            (
+                "simple",
+                {
+                    "user": "user@test.edulinq.org"
+                },
+                {
+                    "user": (
+                        "<local config file>::%s"
+                        % os.path.join('TEMP_DIR', 'simple', 'autograder.json')
+                    )
+                },
+                "",
+                None
+            ),
+            (
+                "old-name",
+                {
+                    "user": "user@test.edulinq.org"
+                },
+                {
+                    "user": (
+                        "<local config file>::%s"
+                        % os.path.join('TEMP_DIR', 'old-name', 'config.json')
+                    )
+                },
+                "",
+                None
+            ),
+            (
+                os.path.join("nested", "nest1", "nest2a"),
+                {
+                    "server": "http://test.edulinq.org"
+                },
+                {
+                    "server": (
+                        "<local config file>::%s"
+                        % os.path.join('TEMP_DIR', 'nested', 'autograder.json')
+                    )
+                },
+                "",
+                None
+            ),
+            (
+                os.path.join("nested", "nest1", "nest2b"),
+                {
+                    "user": "user@test.edulinq.org"
+                },
+                {
+                    "user": "%s%s" % (
+                        "<local config file>::",
+                        os.path.join(
+                            "TEMP_DIR",
+                            "nested",
+                            "nest1",
+                            "nest2b",
+                            "autograder.json"
+                        )
+                    )
+                },
+                "",
+                None
+            ),
+            (
+                "empty-dir",
+                {
+                    "user": "user@test.edulinq.org"
+                },
+                {
+                    "user": (
+                        "<global config file>::%s"
+                        % os.path.join('TEMP_DIR', 'global', 'autograder.json')
+                    )
+                },
+                os.path.join("global", "autograder.json"),
+                None
+            ),
+            (
+                "empty-dir",
+                {
+                    "user": "user@test.edulinq.org"
+                },
+                {
+                    "user": (
+                        "<cli config file>::%s"
+                        % os.path.join('TEMP_DIR', 'simple', 'autograder.json')
+                    )
+                },
+                "",
+                [
+                    os.path.join("global", "autograder.json"),
+                    os.path.join("simple", "autograder.json")
+                ]
+            ),
+            (
+                "empty-dir",
+                {
+                    "user": "user@test.edulinq.org",
+                    "server": "http://test.edulinq.org"
+                },
+                {
+                    "user": (
+                        "<cli config file>::%s"
+                        % os.path.join('TEMP_DIR', 'simple', 'autograder.json')
+                    ),
+                    "server": (
+                        "<cli config file>::%s"
+                        % os.path.join('TEMP_DIR', 'nested', 'autograder.json')
+                    )
+                },
+                "",
+                [
+                    os.path.join("nested", "autograder.json"),
+                    os.path.join("simple", "autograder.json")
+                ]
+            ),
+            (
+                "simple",
+                {
+                    "user": "user@test.edulinq.org"
+                },
+                {
+                    "user": (
+                        "<local config file>::%s"
+                        % os.path.join('TEMP_DIR', 'simple', 'autograder.json')
+                    )
+                },
+                os.path.join("global", "autograder.json"),
+                None
+            ),
+            (
+                "empty-dir",
+                {
+                    "user": "user@test.edulinq.org"
+                },
+                {
+                    "user": (
+                        "<cli config file>::%s"
+                        % os.path.join('TEMP_DIR', 'simple', 'autograder.json')
+                    )
+                },
+                os.path.join("global", "autograder.json"),
+                [os.path.join("simple", "autograder.json")]
+            ),
+            (
+                "simple",
+                {
+                    "user": "user@test.edulinq.org"
+                },
+                {
+                    "user": (
+                        "<cli config file>::%s"
+                        % os.path.join('TEMP_DIR', 'old-name', 'config.json')
+                    )
+                },
+                "",
+                [os.path.join("old-name", "config.json")]
+            ),
+            (
+                "simple",
+                {
+                    "user": "user@test.edulinq.org"
+                },
+                {
+                    "user": (
+                        "<cli config file>::%s"
+                        % os.path.join('TEMP_DIR', 'old-name', 'config.json')
+                    )
+                },
+                os.path.join("global", "autograder.json"),
+                [os.path.join("old-name", "config.json")]
+            )
+        ]
+
+        for test_case in test_cases:
+            test_work_dir, expected_config, expected_source, config_global, config_paths = test_case
+
+            self._evaluate_test_config(
+                test_work_dir, expected_config,
+                expected_source, config_global, config_paths
+            )
 
     def _evaluate_test_config(
             self, test_work_dir, expected_config,
             expected_source, config_global = "",
             config_paths = None):
         """
-        Prepares testing environment while normalizes cli config paths,
+        Prepares testing environment and normalizes cli config paths,
         global config path and expected source paths. Evaluates the given expected and
         source configs with actual get_tiered_config() output.
         """
@@ -197,15 +215,14 @@ class TestConfig(unittest.TestCase):
 
         autograder.util.dirent.copy_contents(CONFIGS_DIR, temp_dir)
 
-        cwd = os.path.join(temp_dir, test_work_dir)
-        os.chdir(cwd)
+        initial_work_directory = os.path.join(temp_dir, test_work_dir)
+        os.chdir(initial_work_directory)
 
         try:
             actual_configs, actual_sources = autograder.api.config.get_tiered_config(
                 argparse.Namespace(config_paths = abs_config_paths),
-                show_sources = True,
                 global_config_path = global_config,
-                local_scope = temp_dir
+                local_config_search_limit = temp_dir
             )
         finally:
             os.chdir(previous_work_directory)
@@ -213,5 +230,5 @@ class TestConfig(unittest.TestCase):
         for key, value in actual_sources.items():
             actual_sources[key] = value.replace(temp_dir, "TEMP_DIR")
 
-        self.assertEqual(actual_configs, expected_config)
-        self.assertEqual(actual_sources, expected_source)
+        self.assertDictEqual(actual_configs, expected_config)
+        self.assertDictEqual(actual_sources, expected_source)
