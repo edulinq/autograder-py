@@ -5,9 +5,10 @@ FORMAT_STR = "\n--- Expected ---\n%s\n--- Actual ---\n%s\n---\n"
 
 class BaseTest(unittest.TestCase):
     """
-    A base class for tests.
+    A base class for unit tests.
     """
 
+    # TestCase variable to show full diffs in assertion errors
     maxDiff = None
 
     def assertListEqual(self, a, b):

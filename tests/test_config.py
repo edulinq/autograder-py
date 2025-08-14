@@ -10,7 +10,7 @@ THIS_DIR = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
 CONFIGS_DIR = os.path.join(THIS_DIR, "data", "configs")
 
 class TestConfig(tests.base.BaseTest):
-    def test_all(self):
+    def test_base(self):
         test_cases = [
             (
                 "simple",
@@ -144,7 +144,7 @@ class TestConfig(tests.base.BaseTest):
         ]
 
         for test_case in test_cases:
-            test_work_dir, expected_config, expected_source, config_global, config_paths = test_case
+            (test_work_dir, expected_config, expected_source, config_global, config_paths) = test_case
 
             self._evaluate_test_config(
                 test_work_dir, expected_config,
@@ -153,7 +153,7 @@ class TestConfig(tests.base.BaseTest):
 
     def _evaluate_test_config(
             self, test_work_dir, expected_config,
-            expected_source, config_global = "",
+            expected_source, global_config_path = None,
             config_paths = None):
         """
         Prepares testing environment and normalizes cli config paths,
@@ -162,7 +162,10 @@ class TestConfig(tests.base.BaseTest):
         """
 
         temp_dir = autograder.util.dir.get_temp_dir(prefix = 'autograder-test-config-')
-        global_config = os.path.join(temp_dir, config_global)
+        global_config = os.path.join(temp_dir)
+
+        if (global_config_path is not None):
+            global_config = os.path.join(temp_dir, global_config_path)
 
         abs_config_paths = []
         if (config_paths is not None):

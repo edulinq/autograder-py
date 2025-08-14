@@ -16,13 +16,12 @@ def run(args):
 
     config_list = []
     for (key, value) in config.items():
-        config_str = ''
-        if args.show_origin:
+        config_str = f"{key}\t{value}"
+        if (args.show_origin):
             raw_source = sources.get(key)
             source_path = raw_source.split(autograder.api.config.CONFIG_TYPE_DELIMITER)[1]
-            config_str = source_path + "\t"
+            config_str += f"\t{source_path}"
 
-        config_str += "%s: %s" % (key, value)
         config_list.append(config_str)
 
     print("\n".join(config_list))

@@ -6,4 +6,4 @@
     ]
 }
 ---
-user: user@test.edulinq.org
+user	user@test.edulinq.org
