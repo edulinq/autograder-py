@@ -161,7 +161,7 @@ class TestConfig(tests.base.BaseTest):
         source configs with actual get_tiered_config() output.
         """
 
-        temp_dir = os.path.realpath(autograder.util.dir.get_temp_dir(prefix = 'autograder-test-config-'))
+        temp_dir = autograder.util.dir.get_temp_dir(prefix = 'autograder-test-config-')
         global_config = os.path.join(temp_dir, config_global)
 
         abs_config_paths = []
