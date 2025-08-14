@@ -15,6 +15,9 @@ DEFAULT_CONFIG_FILENAME = 'autograder.json'
 DEFAULT_GLOBAL_CONFIG_PATH = platformdirs.user_config_dir('autograder.json')
 CSV_TO_LIST_DELIMITER = ','
 MAP_KEY_VALUE_SEP = '='
+DEPTH_LIMIT = 10000
+CONFIG_TYPE_DELIMITER = "::"
+
 
 class APIParam(object):
     def __init__(self, key, description,
@@ -99,36 +102,37 @@ def _parse_api_config(config, params, additional_required_keys, additional_optio
 
     return data, extra
 
-# The local_config_search_limit input limits config search depth.
-# This helps to prevent detection of autograder.json files in higher directories during testing.
-def get_local_config_path(local_config_search_limit = None):
+def get_local_config_path(local_config_root_cutoff = None):
     """
-    Searches for a configuration file in a hierarchical order, starting with ./autograder.json,
-    then ./config.json, and continuing up the directory tree looking for autograder.json.
+    Searches for a configuration file in a hierarchical order,
+    starting with DEFAULT_CONFIG_FILENAME, then LEGACY_CONFIG_FILENAME,
+    and continuing up the directory tree looking for DEFAULT_CONFIG_FILENAME.
     Returns the path to the first valid configuration file found.
-    If no configuration file is found, returns None.
+
+    If no configuration file is found, returns None. The cutoff limits config search depth.
+    This helps to prevent detection of DEFAULT_CONFIG_FILENAME files in higher directories during testing.
     """
 
-    # autograder.json file in current directory
+    # The case where DEFAULT_CONFIG_FILENAME file in current directory.
     if (os.path.isfile(DEFAULT_CONFIG_FILENAME)):
         return os.path.abspath(DEFAULT_CONFIG_FILENAME)
 
-    # config.json file in current directory
+    # The case where LEGACY_CONFIG_FILENAME file in current directory.
     if (os.path.isfile(LEGACY_CONFIG_FILENAME)):
         return os.path.abspath(LEGACY_CONFIG_FILENAME)
 
-    #  An autograder.json file located in any ancestor directory on the path to root.
+    #  The case where a DEFAULT_CONFIG_FILENAME file located in any ancestor directory on the path to root.
     parent_dir = os.path.dirname(os.getcwd())
     return _get_ancestor_config_file_path(
         parent_dir,
-        local_config_search_limit = local_config_search_limit
+        local_config_root_cutoff = local_config_root_cutoff
     )
 
 def get_tiered_config(
         cli_arguments,
         skip_keys = [CONFIG_PATHS_KEY],
         global_config_path = DEFAULT_GLOBAL_CONFIG_PATH,
-        local_config_search_limit = None):
+        local_config_root_cutoff = None):
     """
     Get all the tiered configuration options (from files and CLI).
     If |show_sources| is True, then an addition dict will be returned that shows each key,
@@ -146,8 +150,8 @@ def get_tiered_config(
         _load_configs_and_sources(global_config_path, config, sources, "<global config file>")
 
     # Check the local user config file.
-    local_config_path = get_local_config_path(local_config_search_limit = local_config_search_limit)
-    if local_config_path is not None:
+    local_config_path = get_local_config_path(local_config_root_cutoff = local_config_root_cutoff)
+    if (local_config_path is not None):
         _load_configs_and_sources(local_config_path, config, sources, "<local config file>")
 
     # Check the config file specified on the command-line.
@@ -220,37 +224,38 @@ def _load_configs_and_sources(config_path, config, sources, type_of_config):
     with open(config_path, 'r') as file:
         for key, value in json.load(file).items():
             config[key] = value
-            sources[key] = "%s::%s" % (type_of_config, os.path.abspath(config_path))
+            sources[key] = f"{type_of_config}::{os.path.abspath(config_path)}"
 
 def _get_ancestor_config_file_path(
         current_directory,
         config_file = DEFAULT_CONFIG_FILENAME,
-        local_config_search_limit = None):
+        local_config_root_cutoff = None):
     """
-    Search through the parent directories (until root) for a configuration file.
-    Stops at the first occurrence of the specified config file
+    Search through the parent directories (until root or a given cutoff directory)
+    for a configuration file. Stops at the first occurrence of the specified config file
     (default: DEFAULT_CONFIG_FILENAME) along the path to root.
     Returns the path if a configuration file is found.
     Otherwise, returns None.
     """
 
-    while True:
-        parent_dir = os.path.dirname(current_directory)
-        config_file_path = os.path.join(current_directory, config_file)
+    current_directory = os.path.abspath(current_directory)
 
+    # DEPTH_LIMIT ensures termination on filesystems where the root directory is not equal to its parent.
+    for _ in range(DEPTH_LIMIT):
+        config_file_path = os.path.join(current_directory, config_file)
         if (os.path.isfile(config_file_path)):
             return config_file_path
 
-        if local_config_search_limit == current_directory:
+        if (local_config_root_cutoff == current_directory):
             break
 
-        if parent_dir == current_directory:
+        parent_dir = os.path.dirname(current_directory)
+        if (parent_dir == current_directory):
             break
 
-        current_directory = os.path.dirname(current_directory)
+        current_directory = parent_dir
 
     return None
-
 
 def _submission_add_func(parser, param):
     parser.add_argument('submissions', metavar = 'SUBMISSION',

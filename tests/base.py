@@ -8,6 +8,8 @@ class BaseTest(unittest.TestCase):
     A base class for tests.
     """
 
+    maxDiff = None
+
     def assertListEqual(self, a, b):
         a_json = json.dumps(a, indent = 4)
         b_json = json.dumps(b, indent = 4)

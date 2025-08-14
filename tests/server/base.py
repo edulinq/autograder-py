@@ -15,8 +15,6 @@ class ServerBaseTest(tests.base.BaseTest):
     A base tests that need to call the mock server.
     """
 
-    maxDiff = None
-
     _server_process = None
     _port = None
 

@@ -7,4 +7,4 @@
     ]
 }
 ---
-__DATA_DIR__(configs/simple/autograder.json)	user: user@test.edulinq.org
+__ABS_DATA_DIR__(configs/simple/autograder.json)	user: user@test.edulinq.org

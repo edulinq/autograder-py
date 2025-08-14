@@ -18,10 +18,7 @@ class TestConfig(tests.base.BaseTest):
                     "user": "user@test.edulinq.org"
                 },
                 {
-                    "user": (
-                        "<local config file>::%s"
-                        % os.path.join('TEMP_DIR', 'simple', 'autograder.json')
-                    )
+                    "user": f"<local config file>::{os.path.join('TEMP_DIR', 'simple', 'autograder.json')}"
                 },
                 "",
                 None
@@ -32,10 +29,7 @@ class TestConfig(tests.base.BaseTest):
                     "user": "user@test.edulinq.org"
                 },
                 {
-                    "user": (
-                        "<local config file>::%s"
-                        % os.path.join('TEMP_DIR', 'old-name', 'config.json')
-                    )
+                    "user": f"<local config file>::{os.path.join('TEMP_DIR', 'old-name', 'config.json')}"
                 },
                 "",
                 None
@@ -46,10 +40,7 @@ class TestConfig(tests.base.BaseTest):
                     "server": "http://test.edulinq.org"
                 },
                 {
-                    "server": (
-                        "<local config file>::%s"
-                        % os.path.join('TEMP_DIR', 'nested', 'autograder.json')
-                    )
+                    "server": f"<local config file>::{os.path.join('TEMP_DIR', 'nested', 'autograder.json')}"
                 },
                 "",
                 None
@@ -60,16 +51,7 @@ class TestConfig(tests.base.BaseTest):
                     "user": "user@test.edulinq.org"
                 },
                 {
-                    "user": "%s%s" % (
-                        "<local config file>::",
-                        os.path.join(
-                            "TEMP_DIR",
-                            "nested",
-                            "nest1",
-                            "nest2b",
-                            "autograder.json"
-                        )
-                    )
+                    "user": f"<local config file>::{os.path.join('TEMP_DIR', 'nested', 'nest1', 'nest2b', 'autograder.json')}"
                 },
                 "",
                 None
@@ -80,10 +62,7 @@ class TestConfig(tests.base.BaseTest):
                     "user": "user@test.edulinq.org"
                 },
                 {
-                    "user": (
-                        "<global config file>::%s"
-                        % os.path.join('TEMP_DIR', 'global', 'autograder.json')
-                    )
+                    "user": f"<global config file>::{os.path.join('TEMP_DIR', 'global', 'autograder.json')}"
                 },
                 os.path.join("global", "autograder.json"),
                 None
@@ -94,10 +73,7 @@ class TestConfig(tests.base.BaseTest):
                     "user": "user@test.edulinq.org"
                 },
                 {
-                    "user": (
-                        "<cli config file>::%s"
-                        % os.path.join('TEMP_DIR', 'simple', 'autograder.json')
-                    )
+                    "user": f"<cli config file>::{os.path.join('TEMP_DIR', 'simple', 'autograder.json')}"
                 },
                 "",
                 [
@@ -112,14 +88,8 @@ class TestConfig(tests.base.BaseTest):
                     "server": "http://test.edulinq.org"
                 },
                 {
-                    "user": (
-                        "<cli config file>::%s"
-                        % os.path.join('TEMP_DIR', 'simple', 'autograder.json')
-                    ),
-                    "server": (
-                        "<cli config file>::%s"
-                        % os.path.join('TEMP_DIR', 'nested', 'autograder.json')
-                    )
+                    "user": f"<cli config file>::{os.path.join('TEMP_DIR', 'simple', 'autograder.json')}",
+                    "server": f"<cli config file>::{os.path.join('TEMP_DIR', 'nested', 'autograder.json')}"
                 },
                 "",
                 [
@@ -133,10 +103,7 @@ class TestConfig(tests.base.BaseTest):
                     "user": "user@test.edulinq.org"
                 },
                 {
-                    "user": (
-                        "<local config file>::%s"
-                        % os.path.join('TEMP_DIR', 'simple', 'autograder.json')
-                    )
+                    "user": f"<local config file>::{os.path.join('TEMP_DIR', 'simple', 'autograder.json')}"
                 },
                 os.path.join("global", "autograder.json"),
                 None
@@ -147,10 +114,7 @@ class TestConfig(tests.base.BaseTest):
                     "user": "user@test.edulinq.org"
                 },
                 {
-                    "user": (
-                        "<cli config file>::%s"
-                        % os.path.join('TEMP_DIR', 'simple', 'autograder.json')
-                    )
+                    "user": f"<cli config file>::{os.path.join('TEMP_DIR', 'simple', 'autograder.json')}"
                 },
                 os.path.join("global", "autograder.json"),
                 [os.path.join("simple", "autograder.json")]
@@ -161,10 +125,7 @@ class TestConfig(tests.base.BaseTest):
                     "user": "user@test.edulinq.org"
                 },
                 {
-                    "user": (
-                        "<cli config file>::%s"
-                        % os.path.join('TEMP_DIR', 'old-name', 'config.json')
-                    )
+                    "user": f"<cli config file>::{os.path.join('TEMP_DIR', 'old-name', 'config.json')}"
                 },
                 "",
                 [os.path.join("old-name", "config.json")]
@@ -175,10 +136,7 @@ class TestConfig(tests.base.BaseTest):
                     "user": "user@test.edulinq.org"
                 },
                 {
-                    "user": (
-                        "<cli config file>::%s"
-                        % os.path.join('TEMP_DIR', 'old-name', 'config.json')
-                    )
+                    "user": f"<cli config file>::{os.path.join('TEMP_DIR', 'old-name', 'config.json')}"
                 },
                 os.path.join("global", "autograder.json"),
                 [os.path.join("old-name", "config.json")]
@@ -203,18 +161,17 @@ class TestConfig(tests.base.BaseTest):
         source configs with actual get_tiered_config() output.
         """
 
-        previous_work_directory = os.getcwd()
-
-        temp_dir = autograder.util.dir.get_temp_dir(prefix = 'autograder-test-config-')
+        temp_dir = os.path.realpath(autograder.util.dir.get_temp_dir(prefix = 'autograder-test-config-'))
         global_config = os.path.join(temp_dir, config_global)
 
         abs_config_paths = []
-        if config_paths is not None:
+        if (config_paths is not None):
             for rel_config_path in config_paths:
                 abs_config_paths.append(os.path.join(temp_dir, rel_config_path))
-
+   
         autograder.util.dirent.copy_contents(CONFIGS_DIR, temp_dir)
 
+        previous_work_directory = os.getcwd()
         initial_work_directory = os.path.join(temp_dir, test_work_dir)
         os.chdir(initial_work_directory)
 
@@ -222,12 +179,12 @@ class TestConfig(tests.base.BaseTest):
             actual_configs, actual_sources = autograder.api.config.get_tiered_config(
                 argparse.Namespace(config_paths = abs_config_paths),
                 global_config_path = global_config,
-                local_config_search_limit = temp_dir
+                local_config_root_cutoff = temp_dir
             )
         finally:
             os.chdir(previous_work_directory)
 
-        for key, value in actual_sources.items():
+        for (key, value) in actual_sources.items():
             actual_sources[key] = value.replace(temp_dir, "TEMP_DIR")
 
         self.assertDictEqual(actual_configs, expected_config)

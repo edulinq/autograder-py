@@ -18,7 +18,7 @@ def get_temp_path(prefix = '', suffix = '', rm = True):
     if (rm):
         atexit.register(remove, path)
 
-    return os.path.realpath(path)
+    return path
 
 def remove(path):
     if (not os.path.exists(path)):

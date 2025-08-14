@@ -162,7 +162,9 @@ with each later location overriding any earlier options.
 Here are the places options can be specified in the order that they are checked:
 
 1. Global Configuration --
-`<platform-specific user config location>/autograder.json` which is considered the "proper" place to store user-related config for the platform you are using (according to [platformdirs](https://github.com/platformdirs/platformdirs)). Use `--help` to see the exact place in your specific case. This is a great place to store login credentials.
+`<platform-specific user config location>/autograder.json` which is considered the "proper" place to store user-related config
+for the platform you are using (according to [platformdirs](https://github.com/platformdirs/platformdirs)).
+Use `--help` to see the exact place in your specific case. This is a great place to store login credentials.
 
 2. Local Configuration --
    Local configuration files can be found in different locations, the first file found will be used and no other locations are searched.
@@ -179,7 +181,7 @@ Here are the places options can be specified in the order that they are checked:
 
 A base config file (`autograder.json`) is often distributed with assignments that contains most the settings you need.
 You can modify this config to include your settings and use that for setting all your configuration options.
-A `autograder.json` file may look something like:
+An `autograder.json` file may look something like:
 ```json
 {
     "course": "my-course",
