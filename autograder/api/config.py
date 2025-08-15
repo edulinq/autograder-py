@@ -101,33 +101,6 @@ def _parse_api_config(config, params, additional_required_keys, additional_optio
 
     return data, extra
 
-def get_local_config_path(local_config_root_cutoff = None):
-    """
-    Searches for a configuration file in a hierarchical order,
-    starting with DEFAULT_CONFIG_FILENAME, then LEGACY_CONFIG_FILENAME,
-    and continuing up the directory tree looking for DEFAULT_CONFIG_FILENAME.
-    Returns the path to the first configuration file found.
-
-    If no configuration file is found, returns None.
-    The cutoff limits config search depth.
-    This helps to prevent detection of a config file in higher directories during testing.
-    """
-
-    # The case where DEFAULT_CONFIG_FILENAME file in current directory.
-    if (os.path.isfile(DEFAULT_CONFIG_FILENAME)):
-        return os.path.abspath(DEFAULT_CONFIG_FILENAME)
-
-    # The case where LEGACY_CONFIG_FILENAME file in current directory.
-    if (os.path.isfile(LEGACY_CONFIG_FILENAME)):
-        return os.path.abspath(LEGACY_CONFIG_FILENAME)
-
-    #  The case where a DEFAULT_CONFIG_FILENAME file located in any ancestor directory on the path to root.
-    parent_dir = os.path.dirname(os.getcwd())
-    return _get_ancestor_config_file_path(
-        parent_dir,
-        local_config_root_cutoff = local_config_root_cutoff
-    )
-
 def get_tiered_config(
         cli_arguments,
         skip_keys = [CONFIG_PATHS_KEY],
@@ -150,7 +123,7 @@ def get_tiered_config(
         _load_config_file(global_config_path, config, sources, "<global config file>")
 
     # Check the local user config file.
-    local_config_path = get_local_config_path(local_config_root_cutoff = local_config_root_cutoff)
+    local_config_path = _get_local_config_path(local_config_root_cutoff = local_config_root_cutoff)
     if (local_config_path is not None):
         _load_config_file(local_config_path, config, sources, "<local config file>")
 
@@ -225,6 +198,33 @@ def _load_config_file(config_path, config, sources, source_label):
         for (key, value) in json.load(file).items():
             config[key] = value
             sources[key] = f"{source_label}{CONFIG_TYPE_DELIMITER}{os.path.abspath(config_path)}"
+
+def _get_local_config_path(local_config_root_cutoff = None):
+    """
+    Searches for a configuration file in a hierarchical order,
+    starting with DEFAULT_CONFIG_FILENAME, then LEGACY_CONFIG_FILENAME,
+    and continuing up the directory tree looking for DEFAULT_CONFIG_FILENAME.
+    Returns the path to the first configuration file found.
+
+    If no configuration file is found, returns None.
+    The cutoff limits config search depth.
+    This helps to prevent detection of a config file in higher directories during testing.
+    """
+
+    # The case where DEFAULT_CONFIG_FILENAME file in current directory.
+    if (os.path.isfile(DEFAULT_CONFIG_FILENAME)):
+        return os.path.abspath(DEFAULT_CONFIG_FILENAME)
+
+    # The case where LEGACY_CONFIG_FILENAME file in current directory.
+    if (os.path.isfile(LEGACY_CONFIG_FILENAME)):
+        return os.path.abspath(LEGACY_CONFIG_FILENAME)
+
+    #  The case where a DEFAULT_CONFIG_FILENAME file located in any ancestor directory on the path to root.
+    parent_dir = os.path.dirname(os.getcwd())
+    return _get_ancestor_config_file_path(
+        parent_dir,
+        local_config_root_cutoff = local_config_root_cutoff
+    )
 
 def _get_ancestor_config_file_path(
         current_directory,
