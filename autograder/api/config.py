@@ -110,7 +110,7 @@ def get_local_config_path(local_config_root_cutoff = None):
 
     If no configuration file is found, returns None.
     The cutoff limits config search depth.
-    This helps to prevent detection of config files in higher directories during testing.
+    This helps to prevent detection of a config file in higher directories during testing.
     """
 
     # The case where DEFAULT_CONFIG_FILENAME file in current directory.
@@ -224,7 +224,7 @@ def _load_config_file(config_path, config, sources, source_label):
     with open(config_path, 'r') as file:
         for (key, value) in json.load(file).items():
             config[key] = value
-            sources[key] = f"{source_label}::{os.path.abspath(config_path)}"
+            sources[key] = f"{source_label}{CONFIG_TYPE_DELIMITER}{os.path.abspath(config_path)}"
 
 def _get_ancestor_config_file_path(
         current_directory,
@@ -238,7 +238,7 @@ def _get_ancestor_config_file_path(
     """
 
     current_directory = os.path.abspath(current_directory)
-    if local_config_root_cutoff is not None:
+    if (local_config_root_cutoff is not None):
         local_config_root_cutoff = os.path.abspath(local_config_root_cutoff)
 
     for _ in range(DEPTH_LIMIT):

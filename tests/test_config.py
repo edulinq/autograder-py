@@ -216,8 +216,8 @@ class TestConfig(tests.base.BaseTest):
         """
 
         temp_dir = autograder.util.dir.get_temp_dir(prefix = 'autograder-test-config-')
-        global_config = os.path.join(temp_dir)
 
+        global_config = os.path.join(temp_dir)
         if (global_config_path is not None):
             global_config = os.path.join(temp_dir, global_config_path)
 
@@ -235,7 +235,7 @@ class TestConfig(tests.base.BaseTest):
         os.chdir(initial_work_directory)
 
         try:
-            actual_configs, actual_sources = autograder.api.config.get_tiered_config(
+            (actual_configs, actual_sources) = autograder.api.config.get_tiered_config(
                 cli_arguments = cli_args,
                 global_config_path = global_config,
                 local_config_root_cutoff = temp_dir,

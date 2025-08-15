@@ -5,7 +5,7 @@ import autograder.api.config
 DESCRIPTION = "List your current configuration options."
 
 def run(args):
-    config, sources = autograder.api.config.get_tiered_config(
+    (config, sources) = autograder.api.config.get_tiered_config(
         cli_arguments = args,
         skip_keys = [
             'show_origin', 'verbose',
