@@ -18,7 +18,6 @@ MAP_KEY_VALUE_SEP = '='
 DEPTH_LIMIT = 10000
 CONFIG_TYPE_DELIMITER = "::"
 
-
 class APIParam(object):
     def __init__(self, key, description,
             config_key = None, required = True, cli_param = True,

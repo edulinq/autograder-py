@@ -11,6 +11,7 @@ CONFIGS_DIR = os.path.join(THIS_DIR, "data", "configs")
 
 class TestConfig(tests.base.BaseTest):
     def test_base(self):
+        # [(work directory, expected config, expected source, global config path, cli config paths), ...]
         test_cases = [
             (
                 "simple",
