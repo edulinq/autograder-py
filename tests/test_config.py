@@ -79,15 +79,16 @@ class TestConfig(tests.base.BaseTest):
                 }
             ),
             (
-                "simple",
+                "empty-dir",
                 {
                     "user": "user@test.edulinq.org"
                 },
                 {
-                    "user": f"<local config file>::{os.path.join('TEMP_DIR', 'simple', 'autograder.json')}"
+                    "user": "<cli argument>"
                 },
                 {
                     "cli_args": {
+                        "user": "user@test.edulinq.org",
                         "pass": "user"
                     },
                     "skip_keys": [
@@ -175,15 +176,23 @@ class TestConfig(tests.base.BaseTest):
             (
                 "simple",
                 {
-                    "user": "user@test.edulinq.org"
+                    "user": "user@test.edulinq.org",
+                    "pass": "user"
                 },
                 {
-                    "user": f"<cli config file>::{os.path.join('TEMP_DIR', 'old-name', 'config.json')}"
+                    "user": f"<cli config file>::{os.path.join('TEMP_DIR', 'old-name', 'config.json')}",
+                    "pass": "<cli argument>"
                 },
                 {
                     "cli_args": {
-                        autograder.api.config.CONFIG_PATHS_KEY: [os.path.join("old-name", "config.json")]
+                        autograder.api.config.CONFIG_PATHS_KEY: [os.path.join("old-name", "config.json")],
+                        "pass": "user",
+                        "server": "http://test.edulinq.org"
                     },
+                    "skip_keys": [
+                        "server",
+                        autograder.api.config.CONFIG_PATHS_KEY
+                    ],
                     "global_config_path": os.path.join("global", "autograder.json")
                 }
             )
