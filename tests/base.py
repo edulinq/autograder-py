@@ -8,7 +8,7 @@ class BaseTest(unittest.TestCase):
     A base class for unit tests.
     """
 
-    # TestCase variable to show full diffs in assertion errors.
+    # Don't limit the size of diffs.
     maxDiff = None
 
     def assertListEqual(self, a, b):
