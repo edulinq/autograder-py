@@ -2,7 +2,7 @@ import sys
 
 import autograder.api.users.get
 import autograder.cli.common
-import autograder.cli.config
+import autograder.cli.args
 
 def run(arguments):
     result = autograder.api.users.get.send(arguments, exit_on_error = True)
@@ -21,7 +21,7 @@ def main():
 def _get_parser():
     parser = autograder.api.users.get._get_parser()
 
-    autograder.cli.config.add_table_argument(parser)
+    autograder.cli.args.add_table_argument(parser)
 
     parser.add_argument('--normalize', dest = 'normalize',
         action = 'store_true', default = False,

@@ -3,7 +3,7 @@ import sys
 import autograder.api.constants
 import autograder.api.courses.users.enroll
 import autograder.cli.common
-import autograder.cli.config
+import autograder.cli.args
 import autograder.util.hash
 import autograder.util.load
 
@@ -65,8 +65,8 @@ def _get_parser():
 
     parser.description = ('Enroll users to the course from a TSV file.')
 
-    autograder.cli.config.add_table_argument(parser)
-    autograder.cli.config.add_skip_emails_argument(parser)
+    autograder.cli.args.add_table_argument(parser)
+    autograder.cli.args.add_skip_emails_argument(parser)
 
     parser.add_argument('path', metavar = 'PATH',
         action = 'store', type = str,

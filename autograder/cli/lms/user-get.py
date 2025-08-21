@@ -2,7 +2,7 @@ import sys
 
 import autograder.api.lms.userget
 import autograder.cli.common
-import autograder.cli.config
+import autograder.cli.args
 
 def run(arguments):
     result = autograder.api.lms.userget.send(arguments, exit_on_error = True)
@@ -24,7 +24,7 @@ def main():
 def _get_parser():
     parser = autograder.api.lms.userget._get_parser()
 
-    autograder.cli.config.add_table_argument(parser)
+    autograder.cli.args.add_table_argument(parser)
 
     return parser
 

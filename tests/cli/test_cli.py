@@ -18,6 +18,7 @@ DATA_DIR = os.path.join(THIS_DIR, '..', "data")
 
 TEST_CASE_SEP = '---'
 TEMP_DIR_ID = '__TEMP_DIR__'
+ABS_DATA_DIR_ID = '__ABS_DATA_DIR__'
 
 DEFAULT_OUTPUT_CHECK = 'content_equals'
 
@@ -109,6 +110,7 @@ def _prepare_string(text, temp_dir):
     replacements = [
         (tests.server.base.DATA_DIR_ID, DATA_DIR),
         (TEMP_DIR_ID, temp_dir),
+        (ABS_DATA_DIR_ID, os.path.abspath(DATA_DIR))
     ]
 
     for (key, base_dir) in replacements:

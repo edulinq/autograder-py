@@ -9,7 +9,7 @@ import autograder.code
 import autograder.question
 import autograder.util.dirent
 
-DEFAULT_MAX_LINE_LENGTH = 100
+DEFAULT_MAX_LINE_LENGTH = 150
 
 # For codes, see:
 # flake8: https://flake8.pycqa.org/en/latest/user/error-codes.html
