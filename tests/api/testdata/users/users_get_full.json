@@ -33,8 +33,8 @@
                         "name": "A Simple Bash Assignment",
                         "due-date": 0
                     },
-                    "cpp-simple": {
-                        "id": "cpp-simple",
+                    "cpp": {
+                        "id": "cpp",
                         "name": "A Simple C++ Assignment"
                     },
                     "java": {

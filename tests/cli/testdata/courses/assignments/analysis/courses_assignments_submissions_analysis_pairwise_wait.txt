@@ -54,7 +54,16 @@
                         "type": "path",
                         "path": "test-submissions/not_implemented/submission.py"
                     }
-                ]
+                ],
+                "engine-options": {
+                    "dolos": {
+                        "kgram-length": 22,
+                        "kgrams-in-window": 18
+                    },
+                    "jplag": {
+                        "min-tokens": 5
+                    }
+                }
             },
             "analysis-timestamp": 1234567890123,
             "submission-ids": "course101::hw0::course-student@test.edulinq.org::1697406256||course101::hw0::course-student@test.edulinq.org::1697406265",
