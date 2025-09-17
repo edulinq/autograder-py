@@ -154,9 +154,14 @@ def _get_test_method(test_name, path):
         old_args = sys.argv
         sys.argv = [module.__file__] + cli_arguments
 
+        actual_exit_status = 0
+        actual_output = ''
+
         try:
             with contextlib.redirect_stdout(io.StringIO()) as output:
-                actual_exit_status = module.main()
+                with contextlib.redirect_stderr(io.StringIO()) as _:
+                    actual_exit_status = module.main()
+
             actual_output = output.getvalue()
 
             if (is_error):
@@ -182,11 +187,11 @@ def _get_test_method(test_name, path):
                 ex = ex.__context__
 
             self.assertEqual(expected_output, str(ex), msg = "error output")
+            return
         finally:
             sys.argv = old_args
 
         self.assertEqual(expected_exit_status, actual_exit_status, msg = "exit status")
-
         output_check(self, expected_output, actual_output)
 
     return __method

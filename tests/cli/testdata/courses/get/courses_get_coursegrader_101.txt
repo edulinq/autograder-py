@@ -1,0 +1,22 @@
+{
+    "cli": "autograder.cli.courses.get",
+    "arguments": [
+        "--user", "course-grader@test.edulinq.org",
+        "--pass", "course-grader",
+        "--course", "course101"
+    ]
+}
+---
+{
+    "found": true,
+    "course": {
+        "id": "course101",
+        "name": "Course 101",
+        "assignments": {
+            "hw0": {
+                "id": "hw0",
+                "name": "Homework 0"
+            }
+        }
+    }
+}

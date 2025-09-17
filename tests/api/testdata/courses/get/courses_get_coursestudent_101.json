@@ -1,0 +1,21 @@
+{
+    "module": "autograder.api.courses.get",
+    "arguments": {
+        "user": "course-student@test.edulinq.org",
+        "pass": "course-student",
+        "course": "course101"
+    },
+    "output": {
+        "found": true,
+        "course": {
+            "id": "course101",
+            "name": "Course 101",
+            "assignments": {
+                "hw0": {
+                    "id": "hw0",
+                    "name": "Homework 0"
+                }
+            }
+        }
+    }
+}

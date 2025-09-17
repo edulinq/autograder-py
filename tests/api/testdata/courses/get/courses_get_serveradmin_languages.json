@@ -1,0 +1,30 @@
+{
+    "module": "autograder.api.courses.get",
+    "arguments": {
+        "user": "server-admin@test.edulinq.org",
+        "pass": "server-admin",
+        "course": "course-languages"
+    },
+    "output": {
+        "found": true,
+        "course": {
+            "id": "course-languages",
+            "name": "Course Using Different Languages",
+            "assignments": {
+                "bash": {
+                    "id": "bash",
+                    "name": "A Simple Bash Assignment",
+                    "due-date": 0
+                },
+                "cpp": {
+                    "id": "cpp",
+                    "name": "A Simple C++ Assignment"
+                },
+                "java": {
+                    "id": "java",
+                    "name": "A Simple Java Assignment"
+                }
+            }
+        }
+    }
+}

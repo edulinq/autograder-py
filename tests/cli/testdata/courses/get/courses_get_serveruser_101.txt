@@ -1,0 +1,11 @@
+{
+    "cli": "autograder.cli.courses.get",
+    "arguments": [
+        "--user", "server-user@test.edulinq.org",
+        "--pass", "server-user",
+        "--course", "course101"
+    ],
+    "error": true
+}
+---
+Failed to complete operation: User 'server-user@test.edulinq.org' is not enolled in course 'course101'.

@@ -1,0 +1,14 @@
+{
+    "module": "autograder.api.courses.get",
+    "arguments": {
+        "user": "server-user@test.edulinq.org",
+        "pass": "server-user",
+        "course": "course101"
+    },
+    "error": true,
+    "output": {
+        "code": 400,
+        "message": "User 'server-user@test.edulinq.org' is not enolled in course 'course101'.",
+        "python-message": "Failed to complete operation: User 'server-user@test.edulinq.org' is not enolled in course 'course101'."
+    }
+}
