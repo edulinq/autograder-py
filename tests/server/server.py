@@ -35,7 +35,7 @@ DATA_DIR_ID = '__DATA_DIR__'
 INITIAL_BASE_ARGUMENTS = {
     'user': 'course-admin@test.edulinq.org',
     'pass': 'course-admin',
-    'course': 'COURSE101',
+    'course': 'course101',
     'assignment': 'hw0',
 
     # Will be set with the correct port when the test is run.
