@@ -1,0 +1,9 @@
+{
+    "cli": "autograder.cli.config.list",
+    "arguments": [
+        "--config", "__DATA_DIR__(configs/simple/autograder.json)",
+        "--global-config", "__DATA_DIR__(configs/empty)"
+    ]
+}
+---
+user	user@test.edulinq.org

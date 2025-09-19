@@ -2,7 +2,6 @@ import sys
 
 import autograder.api.courses.assignments.submissions.proxy.resubmit
 import autograder.cli.common
-import autograder.cli.config
 
 def run(arguments):
     result = autograder.api.courses.assignments.submissions.proxy.resubmit.send(arguments,

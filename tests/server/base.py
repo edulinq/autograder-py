@@ -1,22 +1,19 @@
-import json
 import os
-import unittest
 import re
 
 import autograder.error
 import tests.server.server
+import tests.base
 
 SERVER_URL_FORMAT = "http://127.0.0.1:%s"
 FORMAT_STR = "\n--- Expected ---\n%s\n--- Actual ---\n%s\n---\n"
 
 DATA_DIR_ID = tests.server.server.DATA_DIR_ID
 
-class ServerBaseTest(unittest.TestCase):
+class ServerBaseTest(tests.base.BaseTest):
     """
     A base tests that need to call the mock server.
     """
-
-    maxDiff = None
 
     _server_process = None
     _port = None
@@ -41,18 +38,6 @@ class ServerBaseTest(unittest.TestCase):
 
     def get_base_arguments(self):
         return ServerBaseTest._base_arguments.copy()
-
-    def assertDictEqual(self, a, b):
-        a_json = json.dumps(a, indent = 4)
-        b_json = json.dumps(b, indent = 4)
-
-        super().assertDictEqual(a, b, FORMAT_STR % (a_json, b_json))
-
-    def assertListEqual(self, a, b):
-        a_json = json.dumps(a, indent = 4)
-        b_json = json.dumps(b, indent = 4)
-
-        super().assertListEqual(a, b, FORMAT_STR % (a_json, b_json))
 
 def replace_path(text, key, base_dir):
     match = re.search(r'%s\(([^)]*)\)' % (key), text)

@@ -220,7 +220,7 @@ def _create_request_lookup_key(api_module_info, arguments, files, normalize_args
         full_arguments['server'] = 'dummy'
 
         # Pass the arguments through the same infrastructure as the API.
-        config = autograder.api.config.get_tiered_config(full_arguments)
+        config, _ = autograder.api.config.get_tiered_config(full_arguments)
         arguments, _ = autograder.api.config.parse_api_config(config, api_module_info['params'])
 
     key = {

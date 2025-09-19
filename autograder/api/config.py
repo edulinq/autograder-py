@@ -10,10 +10,13 @@ import autograder.error
 import autograder.util.hash
 
 CONFIG_PATHS_KEY = 'config_paths'
-DEFAULT_CONFIG_FILENAME = 'config.json'
-DEFAULT_USER_CONFIG_PATH = platformdirs.user_config_dir('autograder.json')
+LEGACY_CONFIG_FILENAME = 'config.json'
+DEFAULT_CONFIG_FILENAME = 'autograder.json'
+DEFAULT_GLOBAL_CONFIG_PATH = platformdirs.user_config_dir(DEFAULT_CONFIG_FILENAME)
 CSV_TO_LIST_DELIMITER = ','
 MAP_KEY_VALUE_SEP = '='
+DEPTH_LIMIT = 10000
+CONFIG_TYPE_DELIMITER = "::"
 
 class APIParam(object):
     def __init__(self, key, description,
@@ -98,7 +101,11 @@ def _parse_api_config(config, params, additional_required_keys, additional_optio
 
     return data, extra
 
-def get_tiered_config(cli_arguments, skip_keys = [CONFIG_PATHS_KEY], show_sources = False):
+def get_tiered_config(
+        cli_arguments,
+        skip_keys = [CONFIG_PATHS_KEY],
+        global_config_path = DEFAULT_GLOBAL_CONFIG_PATH,
+        local_config_root_cutoff = None):
     """
     Get all the tiered configuration options (from files and CLI).
     If |show_sources| is True, then an addition dict will be returned that shows each key,
@@ -111,28 +118,20 @@ def get_tiered_config(cli_arguments, skip_keys = [CONFIG_PATHS_KEY], show_source
     if (isinstance(cli_arguments, argparse.Namespace)):
         cli_arguments = vars(cli_arguments)
 
-    # Check the current directory config.
-    if (os.path.isfile(DEFAULT_CONFIG_FILENAME)):
-        with open(DEFAULT_CONFIG_FILENAME, 'r') as file:
-            for key, value in json.load(file).items():
-                config[key] = value
-                sources[key] = "<default config file>::" + DEFAULT_CONFIG_FILENAME
+    # Check the global user config file.
+    if (os.path.isfile(global_config_path)):
+        _load_config_file(global_config_path, config, sources, "<global config file>")
 
-    # Check the user config file.
-    if (os.path.isfile(DEFAULT_USER_CONFIG_PATH)):
-        with open(DEFAULT_USER_CONFIG_PATH, 'r') as file:
-            for key, value in json.load(file).items():
-                config[key] = value
-                sources[key] = "<user config file>::" + DEFAULT_USER_CONFIG_PATH
+    # Check the local user config file.
+    local_config_path = _get_local_config_path(local_config_root_cutoff = local_config_root_cutoff)
+    if (local_config_path is not None):
+        _load_config_file(local_config_path, config, sources, "<local config file>")
 
-    # Check the config files specified on the command-line.
+    # Check the config file specified on the command-line.
     config_paths = cli_arguments.get(CONFIG_PATHS_KEY, [])
     if (config_paths is not None):
         for path in config_paths:
-            with open(path, 'r') as file:
-                for key, value in json.load(file).items():
-                    config[key] = value
-                    sources[key] = "<cli config file>::" + path
+            _load_config_file(path, config, sources, "<cli config file>")
 
     # Finally, any command-line options.
     for (key, value) in cli_arguments.items():
@@ -145,15 +144,13 @@ def get_tiered_config(cli_arguments, skip_keys = [CONFIG_PATHS_KEY], show_source
         config[key] = value
         sources[key] = "<cli argument>"
 
-    if (show_sources):
-        return config, sources
-
-    return config
+    return config, sources
 
 def get_argument_parser(
         description = 'Send an API request to the autograder.',
         params = [],
-        include_assignment = True):
+        include_assignment = True,
+        skip_server = False):
     """
     Create an argparse parser that has all the standard options for API requests.
     """
@@ -168,18 +165,19 @@ def get_argument_parser(
             + " Can be specified multiple times with later values overriding earlier ones."
             + " Config values can be specified in multiple places"
             + " (with later values overriding earlier values):"
-            + " First './%s'," % (DEFAULT_CONFIG_FILENAME)
-            + " then '%s'," % (DEFAULT_USER_CONFIG_PATH)
+            + f" First '{DEFAULT_CONFIG_FILENAME}',"
+            + f" then '{DEFAULT_GLOBAL_CONFIG_PATH}',"
             + " now any files specified using --config in the order they were specified,"
             + " and finally any variables specified directly on the command line (like --user).")
 
-    parser.add_argument('--server', dest = 'server',
-        action = 'store', type = str, default = None,
-        help = 'The URL of the server to submit to (default: %(default)s).')
+    if (not skip_server):
+        parser.add_argument('--server', dest = 'server',
+            action = 'store', type = str, default = None,
+            help = 'The URL of the server to submit to (default: %(default)s).')
 
     parser.add_argument('-v', '--verbose', dest = 'verbose',
         action = 'store_true', default = False,
-        help = 'Output detailed information about the API request and response'
+        help = 'Output detailed information about the operation and results'
             + " (default: %(default)s).")
 
     for param in params:
@@ -194,6 +192,70 @@ def get_argument_parser(
                 **param.parser_options)
 
     return parser
+
+def _load_config_file(config_path, config, sources, source_label):
+    with open(config_path, 'r') as file:
+        for (key, value) in json.load(file).items():
+            config[key] = value
+            sources[key] = f"{source_label}{CONFIG_TYPE_DELIMITER}{os.path.abspath(config_path)}"
+
+def _get_local_config_path(local_config_root_cutoff = None):
+    """
+    Searches for a configuration file in a hierarchical order,
+    starting with DEFAULT_CONFIG_FILENAME, then LEGACY_CONFIG_FILENAME,
+    and continuing up the directory tree looking for DEFAULT_CONFIG_FILENAME.
+    Returns the path to the first configuration file found.
+
+    If no configuration file is found, returns None.
+    The cutoff limits config search depth.
+    This helps to prevent detection of a config file in higher directories during testing.
+    """
+
+    # The case where DEFAULT_CONFIG_FILENAME file in current directory.
+    if (os.path.isfile(DEFAULT_CONFIG_FILENAME)):
+        return os.path.abspath(DEFAULT_CONFIG_FILENAME)
+
+    # The case where LEGACY_CONFIG_FILENAME file in current directory.
+    if (os.path.isfile(LEGACY_CONFIG_FILENAME)):
+        return os.path.abspath(LEGACY_CONFIG_FILENAME)
+
+    #  The case where a DEFAULT_CONFIG_FILENAME file located in any ancestor directory on the path to root.
+    parent_dir = os.path.dirname(os.getcwd())
+    return _get_ancestor_config_file_path(
+        parent_dir,
+        local_config_root_cutoff = local_config_root_cutoff
+    )
+
+def _get_ancestor_config_file_path(
+        current_directory,
+        config_file = DEFAULT_CONFIG_FILENAME,
+        local_config_root_cutoff = None):
+    """
+    Search through the parent directories (until root or a given cutoff directory(inclusive)) for a configuration file.
+    Stops at the first occurrence of the specified config file (default: DEFAULT_CONFIG_FILENAME) along the path to root.
+    Returns the path if a configuration file is found.
+    Otherwise, returns None.
+    """
+
+    current_directory = os.path.abspath(current_directory)
+    if (local_config_root_cutoff is not None):
+        local_config_root_cutoff = os.path.abspath(local_config_root_cutoff)
+
+    for _ in range(DEPTH_LIMIT):
+        config_file_path = os.path.join(current_directory, config_file)
+        if (os.path.isfile(config_file_path)):
+            return config_file_path
+
+        if (local_config_root_cutoff == current_directory):
+            break
+
+        parent_dir = os.path.dirname(current_directory)
+        if (parent_dir == current_directory):
+            break
+
+        current_directory = parent_dir
+
+    return None
 
 def _submission_add_func(parser, param):
     parser.add_argument('submissions', metavar = 'SUBMISSION',
