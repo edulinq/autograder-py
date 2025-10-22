@@ -5,10 +5,13 @@ import traceback
 
 import requests
 
+import autograder
 import autograder.api.config
 import autograder.api.constants
 import autograder.error
 import autograder.util.timestamp
+
+SOURCE_NAME = 'edq-autograder-py'
 
 def handle_api_request(arguments, params, endpoint, exit_on_error = False, files = []):
     """
@@ -48,6 +51,10 @@ def send_api_request(endpoint, server = None, verbose = False, data = {}, files 
     endpoint = endpoint.lstrip('/')
 
     url = "%s/api/%s/%s" % (server, autograder.api.constants.API_VERSION, endpoint)
+
+    # Add source information.
+    data['source'] = SOURCE_NAME
+    data['source-version'] = autograder.__version__
 
     post_files = {}
     for path in files:

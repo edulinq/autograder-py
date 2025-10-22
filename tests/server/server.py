@@ -42,6 +42,11 @@ INITIAL_BASE_ARGUMENTS = {
     'server': None,
 }
 
+LOOKUP_SKIP_KEYS = {
+    'source',
+    'source-version',
+}
+
 _server = None
 _startup_barrier = threading.Barrier(2)
 
@@ -222,6 +227,9 @@ def _create_request_lookup_key(api_module_info, arguments, files, normalize_args
         # Pass the arguments through the same infrastructure as the API.
         config = autograder.api.config.get_tiered_config(full_arguments)
         arguments, _ = autograder.api.config.parse_api_config(config, api_module_info['params'])
+
+    for key in LOOKUP_SKIP_KEYS:
+        arguments.pop(key, None)
 
     key = {
         'endpoint': api_module_info['endpoint'],
