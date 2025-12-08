@@ -187,12 +187,17 @@ def _list_sync_users(sync_users):
 def _list_sync_users_table(sync_users):
     print("\t".join(SYNC_HEADERS))
 
+    rows = []
     for (key, _, op) in SYNC_USERS_KEYS:
         users = sync_users[key]
         for user in users:
             user['operation'] = op
+            row = [str(value) for value in user.values()]  # all properties in order
+            rows.append(row)
+        # smash all the user's information into one row and eventually append to rows
+        
+    _print_tsv(rows, header = True, header_keys = SYNC_HEADERS)
 
-        _list_users_table(users, True, header = False, keys = SYNC_HEADERS)
 
 def list_add_users(result, table = False):
     errors = result['errors']

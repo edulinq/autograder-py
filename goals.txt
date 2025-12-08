@@ -1,0 +1,85 @@
+For slower devices, .ci/verify_test_api_requests.py may fail with a networking error. This has been traced to the current sleep time not being long enough. Locally, it can be solved by increasing this variable:
+
+autograder-py/.ci/backend.py
+
+Line 26 in c570655
+
+ SOURCE_START_SLEEP_TIME_SECS = 0.25 
+A solution would be to call the metadata/heartbeat endpoint and wait until a response has been received before running tests instead of sleeping for a static amount of time.
+
+
+
+
+
+
+
+
+
+
+frank@FranklinsLaptop MINGW64 ~/Desktop/3. Projects/3. UCSC Autograder/autograder-py (slow-start-server-fix-1)
+$ ./.ci/verify_test_api_requests.py --docker
+Python was not found; run without arguments to install from the Microsoft Store, or disable this shortcut from Settings > Apps > Advanced app settings > App execution aliases.
+
+frank@FranklinsLaptop MINGW64 ~/Desktop/3. Projects/3. UCSC Autograder/autograder-py (slow-start-server-fix-1)
+$ python --version
+Python 3.13.7
+
+frank@FranklinsLaptop MINGW64 ~/Desktop/3. Projects/3. UCSC Autograder/autograder-py (slow-start-server-fix-1)
+$ python ./.ci/verify_test_api_requests.py --docker
+Traceback (most recent call last):
+  File "C:\Users\frank\Desktop\3. Projects\3. UCSC Autograder\autograder-py\.ci\verify_test_api_requests.py", line 35, in <module>
+    import backend
+  File "C:\Users\frank\Desktop\3. Projects\3. UCSC Autograder\autograder-py\.ci\backend.py", line 15, in <module>
+    import util
+  File "C:\Users\frank\Desktop\3. Projects\3. UCSC Autograder\autograder-py\.ci\util.py", line 12, in <module>
+    import tests.server.server
+ModuleNotFoundError: No module named 'tests.server'
+
+frank@FranklinsLaptop MINGW64 ~/Desktop/3. Projects/3. UCSC Autograder/autograder-py (slow-start-server-fix-1)
+$ python -m .ci.verify_test_api_requests --docker
+C:\Python313\python.exe: Relative module names not supported
+
+frank@FranklinsLaptop MINGW64 ~/Desktop/3. Projects/3. UCSC Autograder/autograder-py (slow-start-server-fix-1)
+$ python -m .ci.verify_test_api_requests --docker
+C:\Python313\python.exe: Relative module names not supported
+
+frank@FranklinsLaptop MINGW64 ~/Desktop/3. Projects/3. UCSC Autograder/autograder-py (slow-start-server-fix-1)
+$ python -m ci.verify_test_api_requests --docker
+C:\Python313\python.exe: Error while finding module specification for 'ci.verify_test_api_requests' (ModuleNotFoundError: No module named 'ci')
+
+frank@FranklinsLaptop MINGW64 ~/Desktop/3. Projects/3. UCSC Autograder/autograder-py (slow-start-server-fix-1)
+$ export PYTHONPATH="C:/Users/frank/Desktop/3. Projects/3. UCSC Autograder/autograder-py"
+python .ci/verify_test_api_requests.py --docker
+Pulling Latest Image ...
+--- stdout ---
+b''
+--------------
+--- stderr ---
+b'error during connect: Post "http://%2F%2F.%2Fpipe%2FdockerDesktopLinuxEngine/v1.51/images/create?fromImage=ghcr.io%2Fedulinq%2Fautograder-server&tag=3.6.0-prebuilt": open //./pipe/dockerDesktopLinuxEngine: The system cannot find the file specified.\n'   
+--------------
+Traceback (most recent call last):
+  File "C:\Users\frank\Desktop\3. Projects\3. UCSC Autograder\autograder-py\.ci\verify_test_api_requests.py", line 162, in <module>
+    sys.exit(main())
+             ~~~~^^
+  File "C:\Users\frank\Desktop\3. Projects\3. UCSC Autograder\autograder-py\.ci\verify_test_api_requests.py", line 159, in main 
+    return run(parser.parse_args())
+  File "C:\Users\frank\Desktop\3. Projects\3. UCSC Autograder\autograder-py\.ci\verify_test_api_requests.py", line 92, in run   
+    server = backend.DockerServer(port = arguments.port, image = arguments.image)
+  File "C:\Users\frank\Desktop\3. Projects\3. UCSC Autograder\autograder-py\.ci\backend.py", line 71, in __init__
+    self._pull_image()
+    ~~~~~~~~~~~~~~~~^^
+  File "C:\Users\frank\Desktop\3. Projects\3. UCSC Autograder\autograder-py\.ci\backend.py", line 118, in _pull_image
+    util.run(['docker', 'pull', self._image])
+    ~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\frank\Desktop\3. Projects\3. UCSC Autograder\autograder-py\.ci\util.py", line 38, in run
+    raise ex
+  File "C:\Users\frank\Desktop\3. Projects\3. UCSC Autograder\autograder-py\.ci\util.py", line 29, in run
+    subprocess.run(args, cwd = cwd, check = raise_on_error, capture_output = (not print_output))
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Python313\Lib\subprocess.py", line 577, in run       
+    raise CalledProcessError(retcode, process.args,
+                             output=stdout, stderr=stderr)      
+subprocess.CalledProcessError: Command '['docker', 'pull', 'ghcr.io/edulinq/autograder-server:3.6.0-prebuilt']' returned non-zero exit status 1.
+
+frank@FranklinsLaptop MINGW64 ~/Desktop/3. Projects/3. UCSC Autograder/autograder-py (slow-start-server-fix-1)
+$
