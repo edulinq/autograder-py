@@ -1,8 +1,8 @@
-import unittest
+import edq.testing.unittest
 
 import autograder.util.timestamp
 
-class TestTimestamp(unittest.TestCase):
+class TestTimestamp(edq.testing.unittest.BaseTest):
     def test_timestamp_conversions(self):
         # [(input, normal, pretty), ...]
         test_cases = [
