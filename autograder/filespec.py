@@ -8,7 +8,8 @@ or git repos (git FileSpec).
 import os
 import urllib.parse
 
-import autograder.util.dirent
+import edq.util.dirent
+
 import autograder.util.git
 import autograder.util.http
 
@@ -158,9 +159,9 @@ def _copy_path(path, dest, base_dir, dest_dir, only_contents):
         dest_path = os.path.join(dest_dir, filename)
 
     if (only_contents):
-        autograder.util.dirent.copy_contents(source_path, dest_path)
+        edq.util.dirent.copy_contents(source_path, dest_path)
     else:
-        autograder.util.dirent.copy(source_path, dest_path)
+        edq.util.dirent.copy(source_path, dest_path)
 
 def _copy_git(path, dest, dest_dir, reference = '', username = '', token = ''):
     if (reference == ''):

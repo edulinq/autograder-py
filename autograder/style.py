@@ -3,11 +3,11 @@ import logging
 import os
 import sys
 
+import edq.util.dirent
 from flake8.api import legacy as flake8
 
 import autograder.code
 import autograder.question
-import autograder.util.dirent
 
 DEFAULT_MAX_LINE_LENGTH = 100
 
@@ -178,7 +178,7 @@ def check_file(path, fake_path = None, shorten_path = False, style_overrides = N
     elif (path.endswith('.ipynb')):
         contents = autograder.code.extract_notebook_code(path)
 
-        temp_path = autograder.util.dirent.get_temp_path(prefix = 'style_', suffix = '_notebook')
+        temp_path = edq.util.dirent.get_temp_path(prefix = 'style_', suffix = '_notebook')
         cleanup_paths.append(temp_path)
         with open(temp_path, 'w') as file:
             file.write(contents)
@@ -197,7 +197,7 @@ def check_file(path, fake_path = None, shorten_path = False, style_overrides = N
     if (shorten_path):
         replacement_path = os.path.basename(replacement_path)
 
-    output_path = autograder.util.dirent.get_temp_path(prefix = 'style_', suffix = '_output')
+    output_path = edq.util.dirent.get_temp_path(prefix = 'style_', suffix = '_output')
     cleanup_paths.append(output_path)
 
     # Ignore most flak8 logging.
@@ -226,6 +226,6 @@ def check_file(path, fake_path = None, shorten_path = False, style_overrides = N
         lines = [line.replace(path, replacement_path) for line in lines]
 
     for path in cleanup_paths:
-        autograder.util.dirent.remove(path)
+        edq.util.dirent.remove(path)
 
     return (report._application.result_count, lines)

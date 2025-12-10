@@ -12,8 +12,8 @@ import glob
 import os
 import re
 
-import autograder.util.dir
-import autograder.util.dirent
+import edq.util.dirent
+
 import autograder.util.path
 
 FILE_OP_LONG_COPY = "copy"
@@ -117,17 +117,17 @@ def execute(operation, base_dir):
         dest_path = _resolve_path(operation[2], base_dir)
 
         _handle_glob_file_operation(
-            source_path, dest_path, autograder.util.dirent.copy, dirs_exist_ok = True
+            source_path, dest_path, edq.util.dirent.copy,
         )
     elif (command == FILE_OP_LONG_MOVE):
         source_path = _resolve_path(operation[1], base_dir)
         dest_path = _resolve_path(operation[2], base_dir)
 
-        _handle_glob_file_operation(source_path, dest_path, autograder.util.dirent.move)
+        _handle_glob_file_operation(source_path, dest_path, edq.util.dirent.move)
     elif (command == FILE_OP_LONG_MKDIR):
         path = _resolve_path(operation[1], base_dir)
 
-        autograder.util.dir.mkdir(path)
+        edq.util.dirent.mkdir(path)
     elif (command == FILE_OP_LONG_REMOVE):
         path_glob = _resolve_path(operation[1], base_dir)
 
@@ -156,13 +156,19 @@ def _handle_glob_file_operation(source_path_glob, dest_path, operation, **kwargs
         if (source_path == dest_path):
             continue
 
-        operation(source_path, dest_path, **kwargs)
+        resolved_dest_path = dest_path
+
+        # Check for an operation into a dir.
+        if (os.path.isdir(dest_path)):
+            resolved_dest_path = os.path.join(dest_path, os.path.basename(source_path))
+
+        operation(source_path, resolved_dest_path, **kwargs)
 
 def _handle_glob_remove(path_glob):
     paths = glob.glob(path_glob)
 
     for path in paths:
-        autograder.util.dirent.remove(path)
+        edq.util.dirent.remove(path)
 
 def _prep_for_globs(source_path_glob, dest_path):
     source_paths = glob.glob(source_path_glob)

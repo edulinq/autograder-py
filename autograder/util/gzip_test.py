@@ -2,7 +2,6 @@ import os
 
 import edq.testing.unittest
 
-import autograder.util.dirent
 import autograder.util.gzip
 
 THIS_DIR = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))

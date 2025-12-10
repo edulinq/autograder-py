@@ -3,10 +3,9 @@ import unittest
 import sys
 
 import edq.testing.unittest
+import edq.util.dirent
 
 import autograder.fileop
-import autograder.util.dir
-import autograder.util.file
 
 ALREADY_EXISTS_DIRNAME = "already_exists"
 ALREADY_EXISTS_FILENAME = "already_exists.txt"
@@ -115,7 +114,7 @@ class TestFileOp(edq.testing.unittest.BaseTest):
             (ALREADY_EXISTS_FILE_POSIX_RELPATH, ALREADY_EXISTS_DIRNAME, None),
             (ALREADY_EXISTS_FILENAME, ALREADY_EXISTS_DIRNAME, None),
             ("a", "b", "No such file or directory"),
-            (ALREADY_EXISTS_DIRNAME, ALREADY_EXISTS_FILE_POSIX_RELPATH, "File exists"),
+            (ALREADY_EXISTS_DIRNAME, ALREADY_EXISTS_FILE_POSIX_RELPATH, "Source of copy cannot contain the destination"),
         ]
 
         for i in range(len(test_cases)):
@@ -204,9 +203,12 @@ class TestFileOp(edq.testing.unittest.BaseTest):
             (
                 ALREADY_EXISTS_DIRNAME,
                 ALREADY_EXISTS_FILENAME,
+                [
+                    ALREADY_EXISTS_DIRNAME,
+                    ALREADY_EXISTS_FILENAME,
+                ],
                 [],
-                [],
-                "File exists"
+                None,
             ),
         ]
 
@@ -390,8 +392,8 @@ class TestFileOp(edq.testing.unittest.BaseTest):
             ("a/../b", None),
             (ALREADY_EXISTS_DIRNAME, None),
             (ALREADY_EXISTS_DIRNAME + "/a", None),
-            (ALREADY_EXISTS_FILE_POSIX_RELPATH, "File exists"),
-            (ALREADY_EXISTS_FILE_POSIX_RELPATH + "/a", "Not a directory"),
+            (ALREADY_EXISTS_FILE_POSIX_RELPATH, "already exists"),
+            (ALREADY_EXISTS_FILE_POSIX_RELPATH + "/a", "exists and is not a dir"),
         ]
 
         for i in range(len(test_cases)):
@@ -464,14 +466,14 @@ class TestFileOp(edq.testing.unittest.BaseTest):
                 self._run_fileop_exec_test(operation, error_substring, post_check)
 
     def _run_fileop_exec_test(self, operation, error_substring, post_exec):
-        temp_dir = autograder.util.dir.get_temp_dir(prefix = "ag-py-testing-fileop-execute-")
+        temp_dir = edq.util.dirent.get_temp_dir(prefix = "ag-py-testing-fileop-execute-")
 
         # Make some existing entries.
-        autograder.util.dir.mkdir(os.path.join(temp_dir, ALREADY_EXISTS_DIRNAME))
-        autograder.util.file.write(os.path.join(temp_dir, ALREADY_EXISTS_FILE_RELPATH), "AAA")
-        autograder.util.file.write(os.path.join(temp_dir, ALREADY_EXISTS_FILE_ALT_RELPATH), "BBB")
-        autograder.util.file.write(os.path.join(temp_dir, ALREADY_EXISTS_FILENAME), "CCC")
-        autograder.util.dir.mkdir(os.path.join(temp_dir, STARTING_EMPTY_DIRNAME))
+        edq.util.dirent.mkdir(os.path.join(temp_dir, ALREADY_EXISTS_DIRNAME))
+        edq.util.dirent.write_file(os.path.join(temp_dir, ALREADY_EXISTS_FILE_RELPATH), "AAA")
+        edq.util.dirent.write_file(os.path.join(temp_dir, ALREADY_EXISTS_FILE_ALT_RELPATH), "BBB")
+        edq.util.dirent.write_file(os.path.join(temp_dir, ALREADY_EXISTS_FILENAME), "CCC")
+        edq.util.dirent.mkdir(os.path.join(temp_dir, STARTING_EMPTY_DIRNAME))
 
         try:
             autograder.fileop.execute(operation, temp_dir)

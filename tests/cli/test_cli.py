@@ -7,10 +7,11 @@ import os
 import re
 import sys
 
+import edq.util.dirent
+
 import tests.server.base
 import tests.server.server
 import autograder.error
-import autograder.util.dirent
 
 THIS_DIR = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
 TEST_CASES_DIR = os.path.join(THIS_DIR, "testdata")
@@ -35,7 +36,7 @@ class CLITest(tests.server.base.ServerBaseTest):
     Test CLI tools.
     """
 
-    _base_temp_dir = autograder.util.dirent.get_temp_path('autograder_CLITest_')
+    _base_temp_dir = edq.util.dirent.get_temp_path('autograder_CLITest_')
 
     def _get_test_info(self, test_name, path):
         options, expected_output = _read_test_file(path)

@@ -5,10 +5,11 @@ import subprocess
 import sys
 import traceback
 
+import edq.util.dirent
+
 import autograder.assignment
 import autograder.fileop
 import autograder.filespec
-import autograder.util.dirent
 import autograder.util.timestamp
 
 TEST_SUBMISSION_FILENAME = 'test-submission.json'
@@ -72,8 +73,7 @@ def prep_grading_dir(assignment_config_path, submission_dir, grading_dir = None,
     """
 
     if (grading_dir is None):
-        grading_dir = autograder.util.dirent.get_temp_path(prefix = 'autograder-submission-',
-                rm = (not debug))
+        grading_dir = edq.util.dirent.get_temp_path(prefix = 'ag-py-submission-', rm = (not debug))
 
     os.makedirs(grading_dir, exist_ok = True)
 
