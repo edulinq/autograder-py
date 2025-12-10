@@ -1,10 +1,11 @@
 import sys
 
+import edq.util.hash
+
 import autograder.api.constants
 import autograder.api.users.upsert
 import autograder.cli.common
 import autograder.cli.config
-import autograder.util.hash
 import autograder.util.load
 
 def run(arguments):
@@ -31,7 +32,7 @@ def _load_users(path):
         if (len(row) > 0):
             password = row.pop(0)
             if (password != ''):
-                password = autograder.util.hash.sha256_hex(password)
+                password = edq.util.hash.sha256_hex(password)
 
         name = ''
         if (len(row) > 0):

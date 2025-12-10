@@ -3,11 +3,11 @@ import json
 import os
 import sys
 
+import edq.util.hash
 import platformdirs
 
 import autograder.api.constants
 import autograder.error
-import autograder.util.hash
 
 CONFIG_PATHS_KEY = 'config_paths'
 DEFAULT_CONFIG_FILENAME = 'config.json'
@@ -80,7 +80,7 @@ def _parse_api_config(config, params, additional_required_keys, additional_optio
 
         value = config[param.config_key]
         if (param.hash and (value != '')):
-            value = autograder.util.hash.sha256_hex(value)
+            value = edq.util.hash.sha256_hex(value)
 
         data[param.key] = value
 

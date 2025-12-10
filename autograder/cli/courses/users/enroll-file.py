@@ -4,7 +4,6 @@ import autograder.api.constants
 import autograder.api.courses.users.enroll
 import autograder.cli.common
 import autograder.cli.config
-import autograder.util.hash
 import autograder.util.load
 
 def run(arguments):

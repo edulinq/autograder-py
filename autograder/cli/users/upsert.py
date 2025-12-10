@@ -1,5 +1,7 @@
 import sys
 
+import edq.util.hash
+
 import autograder.api.config
 import autograder.api.users.upsert
 import autograder.cli.common
@@ -10,7 +12,7 @@ def run(arguments):
 
     password = arguments['new-pass']
     if (password != ''):
-        password = autograder.util.hash.sha256_hex(password)
+        password = edq.util.hash.sha256_hex(password)
 
     arguments['raw-users'] = [{
         'email': arguments['new-email'],
