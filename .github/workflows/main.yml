@@ -43,8 +43,7 @@ jobs:
 
       - name: Check Types
         shell: bash
-        # TEST
-        run: ./scripts/check_types.sh || true
+        run: ./scripts/check_types.sh
 
       - name: Check Lint
         shell: bash

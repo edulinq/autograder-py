@@ -1,8 +1,10 @@
+import typing
+
 import autograder.api.common
 import autograder.api.config
 
 API_ENDPOINT = 'metadata/heartbeat'
-API_PARAMS = []
+API_PARAMS: typing.List[autograder.api.config.APIParam] = []
 
 DESCRIPTION = 'Get server heartbeat.'
 
