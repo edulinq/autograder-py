@@ -2,6 +2,8 @@ import os
 import unittest
 import sys
 
+import edq.testing.unittest
+
 import autograder.fileop
 import autograder.util.dir
 import autograder.util.file
@@ -15,7 +17,7 @@ ALREADY_EXISTS_FILE_ALT_POSIX_RELPATH = ALREADY_EXISTS_DIRNAME + "/" + ALREADY_E
 ALREADY_EXISTS_FILE_ALT_RELPATH = os.path.join(ALREADY_EXISTS_DIRNAME, ALREADY_EXISTS_FILENAME_ALT)
 STARTING_EMPTY_DIRNAME = "empty_start"
 
-class TestFileOp(unittest.TestCase):
+class TestFileOp(edq.testing.unittest.BaseTest):
     @unittest.skipIf(sys.platform.startswith("win"), "fileops require POSIX")
     def test_fileop_validation(self):
         test_cases = [

@@ -1,12 +1,13 @@
 import os
-import unittest
+
+import edq.testing.unittest
 
 import autograder.code
 
 THIS_DIR = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
-DATA_DIR = os.path.join(THIS_DIR, "data", 'base')
+DATA_DIR = os.path.join(THIS_DIR, 'testdata', 'code')
 
-class TestImport(unittest.TestCase):
+class TestCode(edq.testing.unittest.BaseTest):
     """
     Test the utilities for importing code.
     """

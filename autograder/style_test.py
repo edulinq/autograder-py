@@ -1,5 +1,6 @@
 import os
-import unittest
+
+import edq.testing.unittest
 
 import autograder.style
 import autograder.util.dirent
@@ -7,7 +8,7 @@ import autograder.util.file
 
 THIS_PATH = os.path.realpath(__file__)
 
-class TestFileOp(unittest.TestCase):
+class TestStyle(edq.testing.unittest.BaseTest):
     def test_style_override(self):
         temp_dir = autograder.util.dirent.get_temp_path('autograder-test-style-')
 

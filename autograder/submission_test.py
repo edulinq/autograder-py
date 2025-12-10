@@ -1,19 +1,20 @@
 import os
-import unittest
+
+import edq.testing.unittest
 
 import autograder.util.submission
 
 THIS_DIR = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
-DATA_DIR = os.path.join(THIS_DIR, "data", 'base')
+DATA_DIR = os.path.join(THIS_DIR, 'testdata')
 
-class TestImport(unittest.TestCase):
+class TestSubmission(edq.testing.unittest.BaseTest):
     """
-    Test the utilities for preparing submissions.
+    Tests for autograder submissions.
     """
 
-    def test_simple(self):
+    def test_prepare_simple(self):
         for ext in ['py', 'ipynb']:
-            path = os.path.join(DATA_DIR, 'simple.' + ext)
+            path = os.path.join(DATA_DIR, 'code', 'simple.' + ext)
             submission = autograder.util.submission.prepare(path)
 
             self.assertIn('__all__', dir(submission))
@@ -24,9 +25,9 @@ class TestImport(unittest.TestCase):
             self.assertIn('SOME_CONSTANT', dir(submission.simple))
             self.assertEqual(submission.simple.SOME_CONSTANT, 1)
 
-    def test_nested(self):
+    def test_prepare_nested(self):
         for ext in ['py', 'ipynb']:
-            path = os.path.join(DATA_DIR, 'nested')
+            path = os.path.join(DATA_DIR, 'submission', 'nested')
             submission = autograder.util.submission.prepare(path)
 
             self.assertIn('__all__', dir(submission))

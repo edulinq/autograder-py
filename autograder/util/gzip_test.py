@@ -1,15 +1,16 @@
 import os
-import unittest
+
+import edq.testing.unittest
 
 import autograder.util.dirent
 import autograder.util.gzip
 
 THIS_DIR = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
-DATA_DIR = os.path.join(THIS_DIR, "data")
+DATA_DIR = os.path.join(THIS_DIR, 'testdata', 'gzip')
 
-class TestGzip(unittest.TestCase):
+class TestGzip(edq.testing.unittest.BaseTest):
     def test_base(self):
-        input_path = os.path.join(DATA_DIR, 'hw0_solution.py')
+        input_path = os.path.join(DATA_DIR, 'test.txt')
         with open(input_path, 'rb') as file:
             raw_data = file.read()
 

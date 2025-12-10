@@ -1,6 +1,7 @@
 import json
-import unittest
 import time
+
+import edq.testing.unittest
 
 import autograder.question
 import autograder.assignment
@@ -10,7 +11,7 @@ BASE_ERROR_MESSAGE = "Bad result for question."
 HARD_FAIL_ERROR_MESSAGE = "Fix your code! Hard failing..."
 SKIPPING_QUESTION_MESSAGE = "Grading stopped because of a hard error, skipping question..."
 
-class TestAssignment(unittest.TestCase):
+class TestAssignment(edq.testing.unittest.BaseTest):
     class QuestionBase(autograder.question.Question):
         def score_question(self, submission):
             result = submission()
