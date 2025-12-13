@@ -17,7 +17,7 @@ API_PARAMS = [
 
     autograder.api.config.APIParam('filespec',
         'The specification of the file to upload.',
-        required = True, cli_param = False),
+        required = True, cli = False),
 ]
 
 DESCRIPTION = 'Upsert a course using a filespec.'

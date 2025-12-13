@@ -15,7 +15,7 @@ API_PARAMS = [
 
     autograder.api.config.APIParam('raw-course-users',
         'A list of users to enroll.',
-        required = True, cli_param = False),
+        required = True, cli = False),
 ]
 
 DESCRIPTION = 'Enroll one or more users to the course.'

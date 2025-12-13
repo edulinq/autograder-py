@@ -14,7 +14,7 @@ API_PARAMS = [
 
     autograder.api.config.APIParam('raw-users',
         'A list of users to upsert.',
-        required = True, cli_param = False),
+        required = True, cli = False),
 ]
 
 DESCRIPTION = 'Upsert one or more users to the server (update if exists, insert otherwise).'

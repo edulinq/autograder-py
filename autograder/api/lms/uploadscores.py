@@ -13,7 +13,7 @@ API_PARAMS = [
 
     autograder.api.config.APIParam('scores',
         'A list of scores to upload.',
-        required = True, cli_param = False),
+        required = True, cli = False),
 ]
 
 DESCRIPTION = ("Upload scores from a tab-separated file to the course's LMS."
