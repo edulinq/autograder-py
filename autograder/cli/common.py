@@ -1,3 +1,4 @@
+''' TEST
 import autograder.assignment
 import autograder.util.timestamp
 
@@ -250,3 +251,4 @@ def _print_tsv(rows, header, header_keys):
         lines.append("\t".join([str(value) for value in row]))
 
     print("\n".join(lines))
+'''

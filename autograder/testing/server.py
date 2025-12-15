@@ -15,10 +15,8 @@ CLI_DATA_DIR: str = os.path.join(CLI_TESTDATA_DIR, 'data')
 CLI_GLOBAL_CONFG_PATH: str = os.path.join(CLI_DATA_DIR, 'testing-autograder.json')
 
 BASE_ARGUMENTS = {
-    'user': 'course-admin@test.edulinq.org',
-    'pass': 'course-admin',
-    'course': 'course101',
-    'assignment': 'hw0',
+    'user': 'course-owner@test.edulinq.org',
+    'pass': 'course-owner',
 
     # Will be set with the correct port when the test is run.
     'server': None,
@@ -54,19 +52,19 @@ class ServerTest(edq.testing.httpserver.HTTPServerTest):
             ) -> None:
         """
         A common test for the base API functionality.
-        Test cases are passed in as: `[(args (and overrides), expected, error substring), ...]`.
+        Test cases are passed in as: `[(configs (and overrides), kwargs, expected, error substring), ...]`.
         """
 
         for (i, test_case) in enumerate(test_cases):
-            (extra_kwargs, expected, error_substring) = test_case
+            (config, kwargs, expected, error_substring) = test_case
 
             with self.subTest(msg = f"Case {i}:"):
                 args = BASE_ARGUMENTS.copy()
                 args['server'] = self.get_server_url()
-                args.update(extra_kwargs)
+                args.update(config)
 
                 try:
-                    actual = api_function(args)
+                    actual = api_function(args, **kwargs)
                 except Exception as ex:
                     error_string = self.format_error_string(ex)
                     if (error_substring is None):

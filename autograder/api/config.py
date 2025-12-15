@@ -282,9 +282,17 @@ PARAM_REGRADE_CUTOFF = APIParam('regrade_cutoff',
     + ' (https://en.wikipedia.org/wiki/Unix_time).'),
     required = False, parser_options = {'action': 'store', 'type': int})
 
+# TEST - We can make this a CLI param, but we want it to default false and be `--skip-emails`.
 PARAM_SEND_EMAILS = APIParam('send_emails',
     'Send any emails.',
     required = True, cli = False)
+''' TEST
+def add_skip_emails_argument(parser):
+    parser.add_argument('--skip-emails', dest = 'skip-emails',
+        action = 'store_true', default = False,
+        help = 'Skip sending any emails. Be aware that this may result in inaccessible'
+        + ' information (default: %(default)s).')
+'''
 
 PARAM_SERVER = APIParam('server',
     'The URL of the autograder server to communicate with.',

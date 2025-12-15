@@ -47,8 +47,7 @@ jobs:
 
       - name: Check Lint
         shell: bash
-        # TEST
-        run: ./scripts/check_lint.sh || true
+        run: ./scripts/check_lint.sh
 
       - name: Run Tests
         shell: bash

@@ -8,22 +8,14 @@ import edq.util.json
 import requests
 
 CLEAN_REMOVE_CONTENT_KEYS: typing.List[str] = [
-    'created_at',
-    'ics',
-    'last_activity_at',
-    'lti_context_id',
-    'preview_url',
-    'secure_params',
-    'total_activity_time',
-    'updated_at',
-    'url',
-    'uuid',
+    'source',
+    'source-version',
 ]
 """ Keys to remove from API responses. """
 
 def clean_api_response(response: requests.Response, body: str) -> str:
     """
-    Clean autograder API responses.
+    Clean autograder API responses (so they can be stored consistently).
     """
 
     # Most responses are JSON.
