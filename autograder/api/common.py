@@ -79,14 +79,14 @@ def _verify_payload(
         value = api_param.clean_value(raw_payload.get(api_param.config_key, None))
 
         if (value is None):
-            if (api_param.required):
+            if (api_param.api_required):
                 raise autograder.error.APIError(None,
-                    f"Required parameter '{param.config_key}' not found.")
+                    f"Required parameter '{api_param.config_key}' not found.")
 
             if (api_param.omit_empty):
                 continue
 
-        payload[api_param.payload_key] = value
+        payload[api_param.api_key] = value
 
     return payload
 
@@ -154,7 +154,7 @@ def send_api_request(
             # Replace any timestamps in the message.
             message = autograder.util.timestamp.convert_message(message, pretty = True)
 
-        code = response_body.get(API_RESPONSE_KEY_STATUS, None)
+        code = response_body.get(autograder.api.constants.API_RESPONSE_KEY_STATUS, None)
         raise autograder.error.APIError(code, message)
 
     return response_body[autograder.api.constants.API_RESPONSE_KEY_CONTENT]

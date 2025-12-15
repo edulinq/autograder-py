@@ -49,10 +49,10 @@ def get_parser(
     or the name of the action to include in the help messages.
     """
 
-    config_options = {
+    config_options: typing.Dict[str, typing.Any] = {
         'config_filename': CONFIG_FILENAME,
         'legacy_config_filename': DEPRECATED_CONFIG_FILENAME,
-        'cli_arg_config_map': {},
+        'cli_arg_config_map': dict(),
     }
 
     # Ensure that all relevant CLI params are copied over to the config.
@@ -102,19 +102,7 @@ def get_parser(
 
     # Add arguments according to the given API params.
     for api_param in api_params:
-        # Only include CLI params.
-        if (not api_param.cli):
-            continue
-
-        # Check if there is a specialized function for this param.
-        if (api_param.parser_add_func is not None):
-            api_param.parser_add_func(parser, api_param)
-            continue
-
-        parser.add_argument(f'--{api_param.cli_flag}', dest = api_param.config_key,
-            required = api_param.cli_required,
-            help = api_param.description,
-            **api_param.parser_options)
+        api_param.add_to_parser(parser)
 
     if (include_submission_files):
         parser.add_argument('files', metavar = 'FILE',
