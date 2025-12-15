@@ -23,12 +23,6 @@ def send(config: typing.Dict[str, typing.Any], **kwargs: typing.Any) -> typing.L
 
     response = autograder.api.common.make_api_request(API_ENDPOINT, config, API_PARAMS, **kwargs)
 
-    # TEST
-    import json
-    print('---')
-    print(json.dumps(response, indent = 4))
-    print('---')
-
     users = []
     for raw_user in response['users']:
         raw_user['id'] = raw_user['email']

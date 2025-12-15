@@ -5,6 +5,8 @@ import edq.testing.cli
 import edq.testing.httpserver
 import lms.model.base
 
+import autograder.api.common
+
 THIS_DIR: str = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
 ROOT_DIR: str = os.path.join(THIS_DIR, '..', '..')
 EXCHANGES_DIR: str = os.path.join(ROOT_DIR, 'testdata', 'autograder-testdata')
@@ -29,6 +31,11 @@ class ServerTest(edq.testing.httpserver.HTTPServerTest):
 
     def __init__(self, *args: typing.Any, **kwargs: typing.Any) -> None:
         super().__init__(*args, **kwargs)
+
+    @classmethod
+    def child_class_setup(cls):
+        # Make the API request source information consistent.
+        autograder.api.common.set_testing_source_info()
 
     @classmethod
     def setup_server(cls, server: edq.testing.httpserver.HTTPTestServer) -> None:

@@ -12,7 +12,23 @@ import autograder.api.constants
 import autograder.error
 import autograder.util.timestamp
 
-SOURCE_NAME: str = 'edq-autograder-py'
+DEFAULT_SOURCE_NAME: str = 'edq-autograder-py'
+DEFAULT_SOURCE_VERSION: str = autograder.__version__
+
+TESTING_SOURCE_NAME: str = 'testing'
+TESTING_SOURCE_VERSION: str = '0.0.0'
+
+_source_name: str = DEFAULT_SOURCE_NAME
+_source_version: str = DEFAULT_SOURCE_VERSION
+
+def set_testing_source_info() -> None:
+    """ Set source info for API requests to consistent values for testing. """
+
+    global _source_name
+    global _source_version
+
+    _source_name = TESTING_SOURCE_NAME
+    _source_version = TESTING_SOURCE_VERSION
 
 def make_api_request(
         endpoint: str,
@@ -100,8 +116,8 @@ def send_api_request(
     url = "%s/api/%s/%s" % (server, autograder.api.constants.API_VERSION, endpoint)
 
     # Add source information.
-    payload['source'] = SOURCE_NAME
-    payload['source-version'] = autograder.__version__
+    payload['source'] = _source_name
+    payload['source-version'] = _source_version
 
     post_files = {}
     for path in post_paths:

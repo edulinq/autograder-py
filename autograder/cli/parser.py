@@ -11,6 +11,7 @@ import edq.util.reflection
 import lms.model.constants
 
 import autograder
+import autograder.api.common
 import autograder.util.net
 
 CONFIG_FILENAME: str = 'autograder.json'
@@ -19,6 +20,15 @@ DEPRECATED_CONFIG_FILENAME: str = 'config.json'
 DEFAULT_SKIP_ROWS: int = 0
 
 _set_exchanges_clean_func: bool = True  # pylint: disable=invalid-name
+
+def _post_parse(
+        parser: argparse.ArgumentParser,
+        args: argparse.Namespace,
+        extra_state: typing.Dict[str, typing.Any]) -> None:
+    """ Called after argument parsing. """
+
+    if (args.testing_mode):
+        autograder.api.common.set_testing_source_info()
 
 def get_parser(
         description: str,
@@ -55,6 +65,12 @@ def get_parser(
             include_net = include_net,
             config_options = config_options,
     )
+
+    parser.register_callbacks('autograder-py', None, _post_parse)
+
+    parser.add_argument('--testing-mode', dest = 'testing_mode',
+        action = 'store_true', default = False,
+        help = 'Run as if a test is being run (default: %(default)s).')
 
     # Ensure that responses are cleaned as API responses.
     if (include_net):
