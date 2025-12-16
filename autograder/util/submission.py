@@ -1,11 +1,12 @@
 import os
 import types
+import typing
 
 import autograder.code
 
-ALL_SUBMISSION_KEY = '__all__'
+ALL_SUBMISSION_KEY: str = '__all__'
 
-def prepare(path, raise_on_collision = False):
+def prepare(path: str, raise_on_collision: bool = False) -> object:
     """
     Get a submission from a path, prepare it for grading,
     and return a submission namespace that contains all parsed entities.
@@ -26,7 +27,7 @@ def prepare(path, raise_on_collision = False):
             If raise_on_collision is True, an error will be raised if a key already exists.
     """
 
-    submission = {}
+    submission: typing.Dict[str, typing.Any] = {}
 
     if (os.path.isfile(path)):
         _prepare_submission_file(submission, path, [], raise_on_collision)
@@ -35,7 +36,14 @@ def prepare(path, raise_on_collision = False):
 
     return _dict_to_namespace(submission)
 
-def _prepare_submission_dir(submission, path, prefix, raise_on_collision):
+def _prepare_submission_dir(
+        submission: typing.Dict[str, typing.Any],
+        path: str,
+        prefix: typing.List[str],
+        raise_on_collision: bool,
+        ) -> None:
+    """ Prepare a submission directory. """
+
     if (not os.path.isdir(path)):
         raise ValueError("Preparation target must be a dir: '%s'." % path)
 
@@ -50,7 +58,14 @@ def _prepare_submission_dir(submission, path, prefix, raise_on_collision):
         else:
             _prepare_submission_dir(submission, dirent_path, prefix + [dirent], raise_on_collision)
 
-def _prepare_submission_file(submission, path, prefix, raise_on_collision):
+def _prepare_submission_file(
+        submission: typing.Dict[str, typing.Any],
+        path: str,
+        prefix: typing.List[str],
+        raise_on_collision: bool,
+        ) -> None:
+    """ Prepare a submission file. """
+
     if (not os.path.isfile(path)):
         raise ValueError("Preparation target must be a file: '%s'." % path)
 
@@ -85,7 +100,9 @@ def _prepare_submission_file(submission, path, prefix, raise_on_collision):
 
     context.update(defs)
 
-def _dict_to_namespace(root):
+def _dict_to_namespace(root: typing.Union[typing.Dict, object]) -> object:
+    """ Recursively convert a dict to a namespace. """
+
     if (not isinstance(root, dict)):
         return root
 

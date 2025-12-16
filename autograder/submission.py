@@ -242,7 +242,7 @@ def run_python_grader(grader_path: str, grading_dir: str) -> typing.Union[autogr
     output_dir = os.path.join(grading_dir, OUTPUT_DIRNAME)
     work_dir = os.path.join(grading_dir, WORK_DIRNAME)
 
-    assignment_class = autograder.assignment.fetch_assignment(grader_path)
+    assignment_class = autograder.assignment.fetch_assignment_class(grader_path)
     if (assignment_class is None):
         print("Failed to fetch assignment class from '%s'." % (grader_path))
         return None
