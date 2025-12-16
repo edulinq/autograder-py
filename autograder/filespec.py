@@ -14,16 +14,16 @@ import edq.util.dirent
 import autograder.util.git
 import autograder.util.http
 
-FILESPEC_TYPE_EMPTY = "empty"
-FILESPEC_TYPE_NIL = "nil"
-FILESPEC_TYPE_PATH = "path"
-FILESPEC_TYPE_GIT = "git"
-FILESPEC_TYPE_URL = "url"
+FILESPEC_TYPE_EMPTY: str = "empty"
+FILESPEC_TYPE_NIL: str = "nil"
+FILESPEC_TYPE_PATH: str = "path"
+FILESPEC_TYPE_GIT: str = "git"
+FILESPEC_TYPE_URL: str = "url"
 
 FileSpec: typing.TypeAlias = typing.Dict[str, str]
 """ Alias file specs until they are formalized in a more robust class. """
 
-def parse(data):
+def parse(data: typing.Union[None, str, typing.Dict[str, str], FileSpec]) -> FileSpec:
     """
     Parse and validate a FileSpec.
     Return a properly formatted FileSpec.
@@ -80,17 +80,23 @@ def parse(data):
     else:
         raise FileSpecError("FileSpec has unkown type ('%s'): '%s'." % (spec_type, data))
 
-def get_empty():
+def get_empty() -> FileSpec:
+    """ Get an empty filespec. """
+
     return {
         "type": FILESPEC_TYPE_EMPTY,
     }
 
-def get_nil():
+def get_nil() -> FileSpec:
+    """ Get a nil filespec. """
+
     return {
         "type": FILESPEC_TYPE_NIL,
     }
 
-def get_path(path, dest = ''):
+def get_path(path: str, dest: str = '') -> FileSpec:
+    """ Get a filespec that points to the given file system path. """
+
     if (dest == ''):
         dest = os.path.basename(path)
 
@@ -100,7 +106,9 @@ def get_path(path, dest = ''):
         "dest": dest,
     }
 
-def get_git(path, dest = '', reference = '', username = '', token = ''):
+def get_git(path: str, dest: str = '', reference: str = '', username: str = '', token: str = '') -> FileSpec:
+    """ Get a filespec that points to the given Git reference. """
+
     if (dest == ''):
         dest = os.path.splitext(os.path.basename(path))[0]
 
@@ -117,7 +125,9 @@ def get_git(path, dest = '', reference = '', username = '', token = ''):
         "token": token,
     }
 
-def get_url(path, dest = ''):
+def get_url(path: str, dest: str = '') -> FileSpec:
+    """ Get a filespec that points to the given URL. """
+
     if (dest == ''):
         url = urllib.parse.urlparse(path)
         dest = os.path.basename(url.path)
@@ -128,11 +138,13 @@ def get_url(path, dest = ''):
         "dest": dest,
     }
 
-def copy(filespec, base_dir, dest_dir, only_contents):
+def copy(filespec: FileSpec, base_dir: str, dest_dir: str, only_contents: bool) -> None:
+    """ Copy the filespec from the source to the given destination dir. """
+
     spec_type = filespec['type']
     if (spec_type in [FILESPEC_TYPE_EMPTY, FILESPEC_TYPE_NIL]):
-        # no-op.
-        return
+        # noop
+        pass
     elif (spec_type == FILESPEC_TYPE_PATH):
         _copy_path(filespec['path'], filespec['dest'], base_dir, dest_dir, only_contents)
     elif (spec_type == FILESPEC_TYPE_GIT):
@@ -145,7 +157,9 @@ def copy(filespec, base_dir, dest_dir, only_contents):
     else:
         raise FileSpecError("FileSpec has unkown type ('%s'): '%s'." % (spec_type, filespec))
 
-def _copy_path(path, dest, base_dir, dest_dir, only_contents):
+def _copy_path(path: str, dest: str, base_dir: str, dest_dir: str, only_contents: bool) -> None:
+    """ Copy a path filespec. """
+
     source_path = path
     if ((not os.path.isabs(source_path)) and (base_dir != '')):
         source_path = os.path.join(base_dir, path)
@@ -167,7 +181,13 @@ def _copy_path(path, dest, base_dir, dest_dir, only_contents):
     else:
         edq.util.dirent.copy(source_path, dest_path)
 
-def _copy_git(path, dest, dest_dir, reference = '', username = '', token = ''):
+def _copy_git(path: str, dest: str, dest_dir: str,
+        reference: typing.Union[str, None] = None,
+        username: typing.Union[str, None] = None,
+        token: typing.Union[str, None] = None,
+        ) -> None:
+    """ Copy a Git filespec. """
+
     if (reference == ''):
         reference = None
 
@@ -182,9 +202,13 @@ def _copy_git(path, dest, dest_dir, reference = '', username = '', token = ''):
     autograder.util.git.ensure_repo(path, dest_path, update = True,
         ref = reference, username = username, token = token)
 
-def _copy_url(path, dest, dest_dir):
+def _copy_url(path: str, dest: str, dest_dir: str) -> None:
+    """ Copy a URL filespec. """
+
     dest_path = os.path.join(dest_dir, dest)
     autograder.util.http.get(path, dest_path)
 
 class FileSpecError(ValueError):
+    """ Error for the validation and execution of filespecs. """
+
     pass

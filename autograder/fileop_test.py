@@ -19,6 +19,8 @@ STARTING_EMPTY_DIRNAME = "empty_start"
 class TestFileOp(edq.testing.unittest.BaseTest):
     @unittest.skipIf(sys.platform.startswith("win"), "fileops require POSIX")
     def test_fileop_validation(self):
+        """ Test validating a fileop. """
+
         test_cases = [
             # Base
             (["copy", "a", "b"], ["copy", "a", "b"], None),
@@ -104,6 +106,8 @@ class TestFileOp(edq.testing.unittest.BaseTest):
 
     @unittest.skipIf(sys.platform.startswith("win"), "fileops require POSIX")
     def test_fileop_exec_copy(self):
+        """ Test executing copy fileops. """
+
         test_cases = [
             (ALREADY_EXISTS_FILE_POSIX_RELPATH, "a", None),
             (ALREADY_EXISTS_FILE_POSIX_RELPATH, "a.txt", None),
@@ -137,6 +141,8 @@ class TestFileOp(edq.testing.unittest.BaseTest):
 
     @unittest.skipIf(sys.platform.startswith("win"), "fileops require POSIX")
     def test_fileop_exec_copy_glob(self):
+        """ Test executing copy fileops with globs. """
+
         # [(source, dest, expected_paths, not_expected_paths, error_substring), ...]
         test_cases = [
             (
@@ -233,6 +239,8 @@ class TestFileOp(edq.testing.unittest.BaseTest):
 
     @unittest.skipIf(sys.platform.startswith("win"), "fileops require POSIX")
     def test_fileop_exec_move(self):
+        """ Test executing move fileops. """
+
         test_cases = [
             (ALREADY_EXISTS_FILE_POSIX_RELPATH, "a", None),
             (ALREADY_EXISTS_FILE_POSIX_RELPATH, "a.txt", None),
@@ -264,6 +272,8 @@ class TestFileOp(edq.testing.unittest.BaseTest):
 
     @unittest.skipIf(sys.platform.startswith("win"), "fileops require POSIX")
     def test_fileop_exec_move_glob(self):
+        """ Test executing move fileops with globs. """
+
         # [(source, dest, expected_paths, not_expected_paths, error_substring), ...]
         test_cases = [
             (
@@ -386,6 +396,8 @@ class TestFileOp(edq.testing.unittest.BaseTest):
 
     @unittest.skipIf(sys.platform.startswith("win"), "fileops require POSIX")
     def test_fileop_exec_mkdir(self):
+        """ Test executing mkdir fileops. """
+
         test_cases = [
             ("a", None),
             ("a/b", None),
@@ -412,6 +424,8 @@ class TestFileOp(edq.testing.unittest.BaseTest):
 
     @unittest.skipIf(sys.platform.startswith("win"), "fileops require POSIX")
     def test_fileop_exec_remove(self):
+        """ Test executing remove fileops. """
+
         test_cases = [
             ("a", None, None),
             ("a/b", None, None),
@@ -466,6 +480,8 @@ class TestFileOp(edq.testing.unittest.BaseTest):
                 self._run_fileop_exec_test(operation, error_substring, post_check)
 
     def _run_fileop_exec_test(self, operation, error_substring, post_exec):
+        """ Run a single fileop test case. """
+
         temp_dir = edq.util.dirent.get_temp_dir(prefix = "ag-py-testing-fileop-execute-")
 
         # Make some existing entries.
