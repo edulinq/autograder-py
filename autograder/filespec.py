@@ -7,6 +7,7 @@ or git repos (git FileSpec).
 
 import os
 import urllib.parse
+import typing
 
 import edq.util.dirent
 
@@ -18,6 +19,9 @@ FILESPEC_TYPE_NIL = "nil"
 FILESPEC_TYPE_PATH = "path"
 FILESPEC_TYPE_GIT = "git"
 FILESPEC_TYPE_URL = "url"
+
+FileSpec: typing.TypeAlias = typing.Dict[str, str]
+""" Alias file specs until they are formalized in a more robust class. """
 
 def parse(data):
     """

@@ -12,8 +12,7 @@ def run(args):
     assignment_config_path = os.path.abspath(args.assignment)
     submission_path = os.path.abspath(args.submission)
 
-    grading_dir = autograder.submission.prep_grading_dir(assignment_config_path,
-        submission_path, debug = args.debug)
+    grading_dir = autograder.submission.prep_grading_dir(assignment_config_path, submission_path)
 
     result = autograder.submission.run_submission(grading_dir,
             assignment_config_path = assignment_config_path)
@@ -70,10 +69,6 @@ def _get_parser():
         help = 'Create a test submission file at the specified path.'
             + ' If an existing dir is provided,'
             + ' a \'%s\' file will be created inside that dir.' % TEST_SUBMISSION_FILENAME)
-
-    parser.add_argument('-d', '--debug', dest = 'debug',
-        action = 'store_true', default = False,
-        help = 'Enable additional output and leave behind artifacts (default: %(default)s).')
 
     return parser
 

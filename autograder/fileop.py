@@ -11,6 +11,7 @@ import fnmatch
 import glob
 import os
 import re
+import typing
 
 import edq.util.dirent
 
@@ -50,6 +51,9 @@ fileop_num_args = {
     FILE_OP_LONG_MKDIR: 1,
     FILE_OP_LONG_REMOVE: 1,
 }
+
+FileOp: typing.TypeAlias = typing.List[str]
+""" Alias file operations until they are formalized in a more robust class. """
 
 def validate(operation):
     if (operation is None):
