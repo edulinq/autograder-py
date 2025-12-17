@@ -3,50 +3,62 @@ Utilities for extracting and working with Python source code.
 """
 
 import ast
-import importlib.util
-import json
 import os
 import sys
 import types
-import uuid
+import typing
 
-import edq.util.dirent
+import edq.util.json
 
-ALLOWED_EXTENSIONS = ['.py', '.ipynb']
-AST_NODE_WHITELIST = [ast.Import, ast.ImportFrom, ast.FunctionDef, ast.ClassDef]
+DEFAULT_MODULE_AST_ALLOWED_NODES: typing.List[typing.Type] = [
+    ast.Import,
+    ast.ImportFrom,
+    ast.FunctionDef,
+    ast.ClassDef,
+]
 
 # TODO(eriq): Code from a python file should be cleaned using an AST as well.
-def extract_code(path):
+def extract_code(path: str) -> str:
     """
     Gets the source code out of a path (to either a notebook or vanilla python).
+    All code will be cleaned in some way (for uncleaned code, just read the file normally).
     """
 
     code = None
 
-    if (path.endswith('.ipynb')):
+    if (path.lower().endswith('.ipynb')):
         code = extract_notebook_code(path)
-    elif (path.endswith('.py')):
-        with open(path, 'r') as file:
-            lines = file.readlines()
-        lines = [line.rstrip() for line in lines]
-
-        code = "\n".join(lines) + "\n"
+    elif (path.lower().endswith('.py')):
+        code = extract_python_code(path)
     else:
         raise ValueError("Unknown extension for extracting code: '%s'." % (path))
 
     return code.strip()
 
-def extract_notebook_code(path):
+def extract_python_code(path: str) -> str:
+    """
+    Gets the source code out of a Python code file.
+    Each line will be stripped of trailing whitespace and joined with a single newline.
+    This may change the contents of multiline strings.
+    """
+
+    with open(path, 'r') as file:
+        lines = file.readlines()
+
+    lines = [line.rstrip() for line in lines]
+    code = "\n".join(lines)
+
+    return code.strip()
+
+def extract_notebook_code(path: str) -> str:
     """
     Extract all the code cells from an iPython notebook.
     A concatenation of all the cells (with a newline between each cell) will be output.
     """
 
-    with open(path, 'r') as file:
-        notebook = json.load(file)
+    notebook = edq.util.json.load_path(path, strict = True)
 
     contents = []
-
     for cell in notebook['cells']:
         if (cell['cell_type'] != 'code'):
             continue
@@ -61,67 +73,67 @@ def extract_notebook_code(path):
 
     return "\n".join(contents) + "\n"
 
-def import_path(path, module_name = None):
-    if (module_name is None):
-        module_name = str(uuid.uuid4()).replace('-', '')
-
-    # If it's a notebook, extract the code first and put it in a temp file.
-    if (path.endswith('.ipynb')):
-        source_code = extract_code(path)
-        path = edq.util.dirent.get_temp_path(suffix = '.py')
-        with open(path, 'w') as file:
-            file.write(source_code)
-
-    spec = importlib.util.spec_from_file_location(module_name, path)
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-
-    return module
-
-def sanitize_and_import_path(path, syspath = None, **kwargs):
-    """
-    Get the code from a source file, sanitize it, exec it, and return it as a namespace (module).
-    Sanitization in this context means removing things that are not
-    imports, functions, constants, and classes.
-    A "constant" will be considered an assignment where the LHS is a single variable all in caps.
-    """
-
-    if (syspath is None):
-        syspath = os.path.dirname(os.path.abspath(path))
+def sanitize_and_import_path(path: str, **kwargs: typing.Any) -> typing.Any:
+    """ Get the code from a source file and call sanitize_and_import_code() with it. """
 
     source_code = extract_code(path)
+    return sanitize_and_import_code(source_code, code_path = path, **kwargs)
 
-    return sanitize_and_import_code(source_code, path, syspath = syspath, **kwargs)
-
-def sanitize_and_import_code(source_code, path, as_dict = False, syspath = None):
+def sanitize_and_import_code(
+        source_code: str,
+        code_path: str = '<unspecified>',
+        syspath: typing.Union[str, None] = None,
+        **kwargs: typing.Any) -> typing.Any:
     """
-    See sanitize_and_import_path().
+    Sanitize the given code, exec it, and return it as a namespace or dict.
+    The code is assumed to be a module.
+    See parse_module_code() for sanitization details and kwargs.
+    Prefer sanitize_and_import_path() over this function, because file and path information will be automatically set.
     """
 
     if (syspath is None):
         syspath = os.path.dirname(os.path.abspath(os.getcwd()))
 
-    module_ast = sanitize_code(source_code)
+    module_ast = parse_module_code(source_code, **kwargs)
 
-    globals_defs = {}
+    globals_defs: typing.Dict[str, typing.Any] = {}
 
     try:
         sys.path.append(syspath)
-        exec(compile(module_ast, filename = path, mode = "exec"), globals_defs)
+        exec(compile(module_ast, filename = code_path, mode = "exec"), globals_defs)
     finally:
         sys.path.pop()
 
-    if (as_dict):
-        return globals_defs
-
     return types.SimpleNamespace(**globals_defs)
 
-def sanitize_code(source_code):
-    module_ast = ast.parse(source_code)
+def parse_module_code(
+        source_code: str,
+        sanitize: bool = True,
+        allowed_module_nodes: typing.Union[typing.List[typing.Type], None] = None,
+        **kwargs: typing.Any) -> ast.Module:
+    """
+    Parse a Python module's (file's) code, optionally sanitize it, and return an AST.
+    Sanitization in this context means removing things that are not
+    imports, functions, constants, and classes.
+    A "constant" will be considered an assignment where the LHS is a single variable all in caps.
+    """
+
+    if (allowed_module_nodes is None):
+        allowed_module_nodes = DEFAULT_MODULE_AST_ALLOWED_NODES
+
+    raw_ast = ast.parse(source_code)
+
+    if (not isinstance(raw_ast, ast.Module)):
+        raise ValueError(f"Provided code for parsing is not a Python module, found: '{type(raw_ast)}'.")
+
+    module_ast = typing.cast(ast.Module, raw_ast)
+
+    if (not sanitize):
+        return module_ast
 
     keep_nodes = []
     for node in module_ast.body:
-        if (type(node) in AST_NODE_WHITELIST):
+        if (type(node) in DEFAULT_MODULE_AST_ALLOWED_NODES):
             keep_nodes.append(node)
             continue
 
@@ -139,11 +151,7 @@ def sanitize_code(source_code):
     module_ast.body = keep_nodes
     return module_ast
 
-def ast_to_source(module_ast):
-    """
-    Get code from an AST.
-    Note that this function requires Python 3.9 (greater than our declared Python version,
-    and should not be used in any core functionality.
-    """
+def ast_to_source(code_ast: ast.AST) -> str:
+    """ Get code from a Python AST. """
 
-    return ast.unparse(module_ast)
+    return ast.unparse(code_ast)

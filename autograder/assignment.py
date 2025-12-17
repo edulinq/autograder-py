@@ -12,136 +12,6 @@ import autograder.question
 import autograder.util.submission
 import autograder.util.timestamp
 
-class Assignment:
-    """
-    A collection of questions to be scored.
-    """
-
-    def __init__(self,
-            name: typing.Union[str, None] = None,
-            questions: typing.Union[typing.List[autograder.question.Question], None] = None,
-            input_dir: str = '.',
-            output_dir: str = '.',
-            work_dir: str = '.',
-            prep_submission: bool = True,
-            additional_data: typing.Union[typing.Dict[str, typing.Any], None] = None,
-            **kwargs: typing.Any) -> None:
-        if (name is None):
-            name = type(self).__name__
-
-        self.name: str = name
-        """
-        The display name for this assignment.
-        Defaults to the (unqualified) name of this class.
-        """
-
-        if (questions is None):
-            questions = []
-
-        self.questions = questions
-        """ The questions for this assignment. """
-
-        self.input_dir: str = input_dir
-        """ The base directory that houses student inputs for this assignment. """
-
-        self.output_dir: str = output_dir
-        """
-        The base directory where output will be written for this assignment.
-        A successful grading should result in a `result.json` created in this directory.
-        """
-
-        self.work_dir: str = work_dir
-        """ The base directory that the grader is run in. """
-
-        self.prep_submission: bool = prep_submission
-        """ Whether or not to call self.prepare_submission() to prepare the input directory before grading. """
-
-        if (additional_data is None):
-            additional_data = {}
-
-        self.additional_data: typing.Dict[str, typing.Any] = additional_data
-        """ Additional data that can be passed to the grader. """
-
-        self.result: typing.Union[GradedAssignment, None] = None
-        """ The result of grading. """
-
-    def grade(self, **kwargs: typing.Any) -> GradedAssignment:
-        """ Grade this assignment. """
-
-        try:
-            return self._grade_submission(self._prepare_submission(), **kwargs)
-        except Exception:
-            now = autograder.util.timestamp.get()
-
-            questions = []
-            for question in self.questions:
-                questions.append(autograder.question.GradedQuestion(
-                    name = question.name,
-                    max_points = question.max_points, score = 0,
-                    message = "Submission could not be graded.",
-                    grading_start_time = now, grading_end_time = now))
-
-            epilogue = ("\nSubmission could not be graded because of the following error:"
-                    + "\n---\n%s---" % (traceback.format_exc()))
-
-            return GradedAssignment(
-                name = self.name,
-                questions = questions,
-                grading_start_time = now, grading_end_time = now,
-                epilogue = epilogue)
-
-    def _grade_submission(self,
-            submission: typing.Union[object, None],
-            show_exceptions: bool = False,
-            **kwargs: typing.Any) -> GradedAssignment:
-        """
-        Grade an assignment by grading all the questions.
-
-        The submission argument is the result of _prepare_submission().
-        """
-
-        self.result = GradedAssignment(name = self.name, questions = [])
-        self.result.grading_start_time = autograder.util.timestamp.get()
-
-        stop_grading = False
-        for question in self.questions:
-            if (stop_grading):
-                now = autograder.util.timestamp.get()
-
-                self.result.questions.append(autograder.question.GradedQuestion(
-                    name = question.name,
-                    max_points = question.max_points, score = 0,
-                    message = "Grading stopped because of a hard error, skipping question...",
-                    grading_start_time = now, grading_end_time = now,
-                    skipped = True))
-            else:
-                result = question.grade(submission,
-                    additional_data = self.additional_data,
-                    show_exceptions = show_exceptions)
-
-                self.result.questions.append(result)
-
-                stop_grading = result.hard_fail
-
-        self.result.grading_end_time = autograder.util.timestamp.get()
-
-        return self.result
-
-    def _prepare_submission(self) -> typing.Union[object, None]:
-        """
-        Prepare the submission in the input directory for grading.
-        The result of this is what will be passed to grade().
-        Child classes may leave this default behavior or override.
-
-        This implementation will check the prep_submission argument passed in the constructor.
-        If true the input directory will be prepared, otherwise None will be returned.
-        """
-
-        if (self.prep_submission):
-            return autograder.util.submission.prepare(self.input_dir)
-
-        return None
-
 # TEST - Timestamps.
 class GradedAssignment:
     """
@@ -330,6 +200,136 @@ class GradedAssignment:
                 return False
 
         return True
+
+class Assignment:
+    """
+    A collection of questions to be scored.
+    """
+
+    def __init__(self,
+            name: typing.Union[str, None] = None,
+            questions: typing.Union[typing.List[autograder.question.Question], None] = None,
+            input_dir: str = '.',
+            output_dir: str = '.',
+            work_dir: str = '.',
+            prep_submission: bool = True,
+            additional_data: typing.Union[typing.Dict[str, typing.Any], None] = None,
+            **kwargs: typing.Any) -> None:
+        if (name is None):
+            name = type(self).__name__
+
+        self.name: str = name
+        """
+        The display name for this assignment.
+        Defaults to the (unqualified) name of this class.
+        """
+
+        if (questions is None):
+            questions = []
+
+        self.questions = questions
+        """ The questions for this assignment. """
+
+        self.input_dir: str = input_dir
+        """ The base directory that houses student inputs for this assignment. """
+
+        self.output_dir: str = output_dir
+        """
+        The base directory where output will be written for this assignment.
+        A successful grading should result in a `result.json` created in this directory.
+        """
+
+        self.work_dir: str = work_dir
+        """ The base directory that the grader is run in. """
+
+        self.prep_submission: bool = prep_submission
+        """ Whether or not to call self.prepare_submission() to prepare the input directory before grading. """
+
+        if (additional_data is None):
+            additional_data = {}
+
+        self.additional_data: typing.Dict[str, typing.Any] = additional_data
+        """ Additional data that can be passed to the grader. """
+
+        self.result: typing.Union[GradedAssignment, None] = None
+        """ The result of grading. """
+
+    def grade(self, **kwargs: typing.Any) -> GradedAssignment:
+        """ Grade this assignment. """
+
+        try:
+            return self._grade_submission(self._prepare_submission(), **kwargs)
+        except Exception:
+            now = autograder.util.timestamp.get()
+
+            questions = []
+            for question in self.questions:
+                questions.append(autograder.question.GradedQuestion(
+                    name = question.name,
+                    max_points = question.max_points, score = 0,
+                    message = "Submission could not be graded.",
+                    grading_start_time = now, grading_end_time = now))
+
+            epilogue = ("\nSubmission could not be graded because of the following error:"
+                    + "\n---\n%s---" % (traceback.format_exc()))
+
+            return GradedAssignment(
+                name = self.name,
+                questions = questions,
+                grading_start_time = now, grading_end_time = now,
+                epilogue = epilogue)
+
+    def _grade_submission(self,
+            submission: typing.Union[object, None],
+            show_exceptions: bool = False,
+            **kwargs: typing.Any) -> GradedAssignment:
+        """
+        Grade an assignment by grading all the questions.
+
+        The submission argument is the result of _prepare_submission().
+        """
+
+        self.result = GradedAssignment(name = self.name, questions = [])
+        self.result.grading_start_time = autograder.util.timestamp.get()
+
+        stop_grading = False
+        for question in self.questions:
+            if (stop_grading):
+                now = autograder.util.timestamp.get()
+
+                self.result.questions.append(autograder.question.GradedQuestion(
+                    name = question.name,
+                    max_points = question.max_points, score = 0,
+                    message = "Grading stopped because of a hard error, skipping question...",
+                    grading_start_time = now, grading_end_time = now,
+                    skipped = True))
+            else:
+                result = question.grade(submission,
+                    additional_data = self.additional_data,
+                    show_exceptions = show_exceptions)
+
+                self.result.questions.append(result)
+
+                stop_grading = result.hard_fail
+
+        self.result.grading_end_time = autograder.util.timestamp.get()
+
+        return self.result
+
+    def _prepare_submission(self) -> typing.Union[object, None]:
+        """
+        Prepare the submission in the input directory for grading.
+        The result of this is what will be passed to grade().
+        Child classes may leave this default behavior or override.
+
+        This implementation will check the prep_submission argument passed in the constructor.
+        If true the input directory will be prepared, otherwise None will be returned.
+        """
+
+        if (self.prep_submission):
+            return autograder.util.submission.prepare(self.input_dir)
+
+        return None
 
 def load_assignment_classes(path: str) -> typing.List[typing.Type[Assignment]]:
     """

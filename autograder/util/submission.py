@@ -5,6 +5,7 @@ import typing
 import autograder.code
 
 ALL_SUBMISSION_KEY: str = '__all__'
+ALLOWED_EXTENSIONS: typing.List[str] = ['.py', '.ipynb']
 
 def prepare(path: str, raise_on_collision: bool = False) -> object:
     """
@@ -51,7 +52,7 @@ def _prepare_submission_dir(
         dirent_path = os.path.join(path, dirent)
 
         if (os.path.isfile(dirent_path)):
-            if (os.path.splitext(dirent)[1] not in autograder.code.ALLOWED_EXTENSIONS):
+            if (os.path.splitext(dirent)[1] not in ALLOWED_EXTENSIONS):
                 continue
 
             _prepare_submission_file(submission, dirent_path, prefix, raise_on_collision)
@@ -71,7 +72,7 @@ def _prepare_submission_file(
 
     basename = os.path.splitext(os.path.basename(path))[0]
 
-    defs = autograder.code.sanitize_and_import_path(path, as_dict = True)
+    defs = vars(autograder.code.sanitize_and_import_path(path))
 
     for (name, value) in defs.items():
         if (name.startswith('__')):
