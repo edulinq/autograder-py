@@ -137,7 +137,7 @@ class APIParam(object):
         Empty values will be returned as None.
         """
 
-        if (not self.skip_clean):
+        if (self.skip_clean):
             return value
 
         if (value is None):

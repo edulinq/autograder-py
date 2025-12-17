@@ -131,7 +131,8 @@ def send_api_request(
         raw_response, raw_body = edq.util.net.make_post(
             url,
             data = {autograder.api.constants.API_REQUEST_JSON_KEY: edq.util.json.dumps(payload)},
-            files = post_files)
+            files = post_files,
+            raise_for_status = False)
     except requests.exceptions.ConnectionError:
         raise autograder.error.ConnectionError((f"Could not connect to autograder server '{server}'."
             + " This is a networking issue (e.g., network down, server down, wrong server address), not an authentication issue."))
