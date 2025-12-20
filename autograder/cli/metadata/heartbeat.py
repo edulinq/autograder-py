@@ -1,13 +1,13 @@
 """
-List the users on the server.
+Get a heartbeat from the server.
 """
 
 import argparse
 import sys
 
-import lms.model.base
+import edq.util.json
 
-import autograder.api.users.list
+import autograder.api.metadata.heartbeat
 import autograder.cli.parser
 
 def run_cli(args: argparse.Namespace) -> int:
@@ -15,14 +15,8 @@ def run_cli(args: argparse.Namespace) -> int:
 
     config = args._config
 
-    users = autograder.api.users.list.send(config)
-
-    output = lms.model.base.base_list_to_output_format(users, args.output_format,
-            skip_headers = args.skip_headers,
-            pretty_headers = args.pretty_headers,
-            include_extra_fields = args.include_extra_fields,
-    )
-    print(output)
+    result = autograder.api.metadata.heartbeat.send(config)
+    print(edq.util.json.dumps(result, indent = 4))
 
     return 0
 
@@ -33,8 +27,8 @@ def main() -> int:
 def _get_parser() -> argparse.ArgumentParser:
     parser = autograder.cli.parser.get_parser(
         __doc__.strip(),
-        autograder.api.users.list.API_PARAMS,
-        include_output_format = True)
+        autograder.api.metadata.heartbeat.API_PARAMS,
+    )
 
     return parser
 
