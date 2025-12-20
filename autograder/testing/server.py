@@ -16,7 +16,7 @@ CLI_TESTS_DIR: str = os.path.join(CLI_TESTDATA_DIR, 'tests')
 CLI_DATA_DIR: str = os.path.join(CLI_TESTDATA_DIR, 'data')
 CLI_GLOBAL_CONFG_PATH: str = os.path.join(CLI_DATA_DIR, 'testing-autograder.json')
 
-BASE_ARGUMENTS = {
+BASE_ARGUMENTS: typing.Dict[str, typing.Any] = {
     'user': 'course-owner@test.edulinq.org',
     'pass': 'course-owner',
 

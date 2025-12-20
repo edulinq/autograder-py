@@ -13,7 +13,7 @@ def _clean_server_users() -> typing.Dict[str, lms.model.users.ServerUser]:
 
     users = lms.model.testdata.users.SERVER_USERS.copy()
     for user in users.values():
-        user.id = user.email
+        user.id = str(user.email)
 
     return users
 

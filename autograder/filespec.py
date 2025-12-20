@@ -20,7 +20,7 @@ FILESPEC_TYPE_PATH: str = "path"
 FILESPEC_TYPE_GIT: str = "git"
 FILESPEC_TYPE_URL: str = "url"
 
-FileSpec: typing.TypeAlias = typing.Dict[str, str]
+FileSpec = typing.Dict[str, str]
 """ Alias file specs until they are formalized in a more robust class. """
 
 def parse(data: typing.Union[None, str, typing.Dict[str, str], FileSpec]) -> FileSpec:

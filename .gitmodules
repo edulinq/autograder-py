@@ -1,0 +1,3 @@
+[submodule "testdata/autograder-testdata"]
+	path = testdata/autograder-testdata
+	url = https://github.com/edulinq/autograder-testdata.git

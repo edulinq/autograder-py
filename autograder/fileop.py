@@ -52,7 +52,7 @@ fileop_num_args: typing.Dict[str, int] = {
 }
 """ The number of operations for each file operation. """
 
-FileOp: typing.TypeAlias = typing.List[str]
+FileOp = typing.List[str]
 """ Alias file operations until they are formalized in a more robust class. """
 
 def validate(operation: typing.Union[None, typing.List[str], FileOp]) -> FileOp:

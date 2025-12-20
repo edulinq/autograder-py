@@ -16,7 +16,7 @@ function main() {
 
     cd "${ROOT_DIR}"
 
-    vermin --no-tips --no-parse-comments --exclude ast.unparse --target=3.8- --violations autograder
+    vermin --no-tips --no-parse-comments --target=3.9- --violations autograder
     return $?
 }
 

@@ -32,7 +32,7 @@ def _post_parse(
 
 def get_parser(
         description: str,
-        api_params: typing.List[autograder.api.config.APIParam],
+        api_params: typing.Union[typing.List[autograder.api.config.APIParam], None] = None,
         include_output_format: bool = False,
         include_net: bool = True,
         include_skip_rows: bool = False,
@@ -48,6 +48,9 @@ def get_parser(
     The `include_new_action_*` arguments expect either None (if they should not be included),
     or the name of the action to include in the help messages.
     """
+
+    if (api_params is None):
+        api_params = []
 
     config_options: typing.Dict[str, typing.Any] = {
         'config_filename': CONFIG_FILENAME,
