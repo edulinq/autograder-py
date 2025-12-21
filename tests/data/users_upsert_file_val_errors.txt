@@ -1,3 +1,0 @@
-error@test.edulinq.org			owner
-server-user@test.edulinq.org			owner
-server-owner@test.edulinq.org			user

@@ -1,7 +1,0 @@
-{
-    "cli": "autograder.run.history",
-    "arguments": [
-    ]
-}
----
-Found 0 submissions.

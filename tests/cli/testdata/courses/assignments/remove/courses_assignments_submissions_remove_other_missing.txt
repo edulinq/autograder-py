@@ -1,9 +1,0 @@
-{
-    "cli": "autograder.cli.courses.assignments.submissions.remove",
-    "arguments": [
-        "--target-email", "ZZZ"
-    ],
-    "exit-status": 1
-}
----
-No matching user found.
