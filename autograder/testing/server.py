@@ -1,7 +1,6 @@
 import os
 import typing
 
-import edq.testing.cli
 import edq.testing.httpserver
 import lms.model.base
 
@@ -11,15 +10,7 @@ THIS_DIR: str = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
 ROOT_DIR: str = os.path.join(THIS_DIR, '..', '..')
 EXCHANGES_DIR: str = os.path.join(ROOT_DIR, 'testdata', 'autograder-testdata')
 
-CLI_TESTDATA_DIR: str = os.path.join(ROOT_DIR, 'autograder', 'cli', 'testdata')
-CLI_TESTS_DIR: str = os.path.join(CLI_TESTDATA_DIR, 'tests')
-CLI_DATA_DIR: str = os.path.join(CLI_TESTDATA_DIR, 'data')
-CLI_GLOBAL_CONFG_PATH: str = os.path.join(CLI_DATA_DIR, 'testing-autograder.json')
-
 BASE_ARGUMENTS: typing.Dict[str, typing.Any] = {
-    'user': 'course-owner@test.edulinq.org',
-    'pass': 'course-owner',
-
     # Will be set with the correct port when the test is run.
     'server': None,
 }
@@ -28,9 +19,6 @@ class ServerTest(edq.testing.httpserver.HTTPServerTest):
     """
     A special test suite that is common across all tests that require a test autograder server.
     """
-
-    def __init__(self, *args: typing.Any, **kwargs: typing.Any) -> None:
-        super().__init__(*args, **kwargs)
 
     @classmethod
     def child_class_setup(cls):
@@ -41,14 +29,6 @@ class ServerTest(edq.testing.httpserver.HTTPServerTest):
     def setup_server(cls, server: edq.testing.httpserver.HTTPTestServer) -> None:
         edq.testing.httpserver.HTTPServerTest.setup_server(server)
         server.load_exchanges_dir(EXCHANGES_DIR)
-
-    def modify_cli_test_info(self, test_info: edq.testing.cli.CLITestInfo) -> None:
-        """ Adjust the CLI test info to include core info (like server information). """
-
-        test_info.arguments += [
-            '--config-global', CLI_GLOBAL_CONFG_PATH,
-            '--server', self.get_server_url(),
-        ]
 
     def base_api_test(self,
             api_function: typing.Callable,
@@ -116,25 +96,3 @@ class ServerTest(edq.testing.httpserver.HTTPServerTest):
                         self.assertJSONListEqual(expected_value, actual_value)
                     else:
                         self.assertEqual(expected_value, actual_value)
-
-    @classmethod
-    def get_test_basename(cls, path: str) -> str:
-        """ Get the test's name based off of its filename and location. """
-
-        path = os.path.abspath(path)
-
-        name = os.path.splitext(os.path.basename(path))[0]
-
-        ancestors = os.path.dirname(path).replace(CLI_TESTS_DIR, '')
-        prefix = ancestors.replace(os.sep, '_')
-
-        if (prefix.startswith('_')):
-            prefix = prefix.replace('_', '', 1)
-
-        if (len(prefix) > 0):
-            name =  f"{prefix}_{name}"
-
-        return name
-
-# Attach CLI tests.
-edq.testing.cli.discover_test_cases(ServerTest, CLI_TESTS_DIR, CLI_DATA_DIR)
