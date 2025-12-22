@@ -18,7 +18,7 @@ DEFAULT_CLI_ACTIONS: typing.Dict[typing.Type, str] = {
 }
 """ Map value types to default CLI actions. """
 
-class APIParam(object):
+class APIParam:
     """
     A definition for a parameter to the autograder API.
     This class also contains information for representing these parameters in

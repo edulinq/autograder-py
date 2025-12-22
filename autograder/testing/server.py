@@ -21,7 +21,7 @@ class ServerTest(edq.testing.httpserver.HTTPServerTest):
     """
 
     @classmethod
-    def child_class_setup(cls):
+    def child_class_setup(cls) -> None:
         # Make the API request source information consistent.
         autograder.api.common.set_testing_source_info()
 

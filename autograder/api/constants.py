@@ -1,20 +1,22 @@
-API_VERSION = 'v03'
+import typing
 
-API_REQUEST_JSON_KEY = 'content'
+API_VERSION: str = 'v03'
 
-API_RESPONSE_KEY_SUCCESS = 'success'
-API_RESPONSE_KEY_MESSAGE = 'message'
-API_RESPONSE_KEY_STATUS = 'status'
-API_RESPONSE_KEY_CONTENT = API_REQUEST_JSON_KEY
+API_REQUEST_JSON_KEY: str = 'content'
 
-SERVER_ROLES = [
+API_RESPONSE_KEY_SUCCESS: str = 'success'
+API_RESPONSE_KEY_MESSAGE: str = 'message'
+API_RESPONSE_KEY_STATUS: str = 'status'
+API_RESPONSE_KEY_CONTENT: str = API_REQUEST_JSON_KEY
+
+SERVER_ROLES: typing.List[str] = [
     'user',
     'creator',
     'admin',
     'owner',
 ]
 
-COURSE_ROLES = [
+COURSE_ROLES: typing.List[str] = [
     'unknown',
     'other',
     'student',

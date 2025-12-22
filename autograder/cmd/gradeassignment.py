@@ -6,7 +6,6 @@ in the assignment config, and the running machine must be configured to run them
 """
 
 import argparse
-import json
 import os
 import sys
 
@@ -71,9 +70,9 @@ def _get_parser() -> argparse.ArgumentParser:
 
     parser.add_argument('-t', '--test-submission-path', dest = 'test_submission_path',
         action = 'store', type = str, required = False, default = None,
-        help = 'Create a test submission file at the specified path.'
+        help = ('Create a test submission file at the specified path.'
             + ' If an existing dir is provided,'
-            + ' a \'%s\' file will be created inside that dir.' % TEST_SUBMISSION_FILENAME)
+            + f" a '{TEST_SUBMISSION_FILENAME}' file will be created inside that dir."))
 
     return parser
 

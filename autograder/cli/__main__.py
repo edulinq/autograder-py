@@ -8,7 +8,7 @@ import sys
 
 import autograder.util.cli
 
-def main():
+def main() -> int:
     return autograder.util.cli.main()
 
 if (__name__ == '__main__'):
