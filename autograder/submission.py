@@ -7,6 +7,7 @@ import traceback
 import typing
 
 import edq.util.dirent
+import edq.util.json
 
 import autograder.assignment
 import autograder.fileop
@@ -288,8 +289,7 @@ def run_external_grader(assignment_config_path: str, grading_dir: str) -> autogr
 
     return autograder.assignment.GradedAssignment.from_dict(result)
 
-# TEST - Convert to JSONDict?
-class SubmissionSummary:
+class SubmissionSummary(edq.util.json.DictConverter):
     """
     A summary of a grading submission.
     """
@@ -314,10 +314,6 @@ class SubmissionSummary:
             self.grading_start_time = autograder.util.timestamp.get(grading_start_time)
 
     def to_dict(self) -> typing.Dict[str, typing.Any]:
-        """
-        Convert to all simple structures that can be later converted to JSON.
-        """
-
         return {
             'id': self.id,
             'max_points': self.max_points,
@@ -328,10 +324,6 @@ class SubmissionSummary:
 
     @staticmethod
     def from_dict(data: typing.Dict[str, typing.Any]) -> 'SubmissionSummary':
-        """
-        Partner to to_dict().
-        """
-
         return SubmissionSummary(**data)
 
     def short_id(self) -> str:

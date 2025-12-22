@@ -1,14 +1,28 @@
+"""
+Grade an assignment (specified by an assignment JSON file) with the given submission.
+Non-Python assignments can be graded, but they require an "invocation" field'
+in the assignment config, and the running machine must be configured to run them'
+(e.g. have all the required software installed).
+"""
+
 import argparse
 import json
 import os
 import sys
 
+import edq.util.json
+
+import autograder.cli.parser
 import autograder.submission
 
-DEFAULT_ASSIGNMENT = 'assignment.json'
-TEST_SUBMISSION_FILENAME = 'test-submission.json'
+DEFAULT_ASSIGNMENT: str = 'assignment.json'
+TEST_SUBMISSION_FILENAME: str = 'test-submission.json'
 
-def run(args):
+def run(args: argparse.Namespace) -> int:
+    """
+    Grade an assignment, output the report, and optionally output additional out or test files.
+    """
+
     assignment_config_path = os.path.abspath(args.assignment)
     submission_path = os.path.abspath(args.submission)
 
@@ -25,9 +39,7 @@ def run(args):
         out_path = os.path.abspath(args.out_path)
         os.makedirs(os.path.dirname(os.path.abspath(out_path)), exist_ok = True)
 
-        with open(out_path, 'w') as file:
-            json.dump(result.to_dict(), file, indent = 4)
-            file.write('\n')
+        edq.util.json.dump_path(result, out_path, indent = 4)
 
     if (args.test_submission_path is not None):
         test_submission_path = os.path.abspath(args.test_submission_path)
@@ -36,21 +48,14 @@ def run(args):
 
         os.makedirs(os.path.dirname(test_submission_path), exist_ok = True)
 
-        with open(test_submission_path, 'w') as file:
-            json.dump(result.to_test_submission(), file, indent = 4)
-            file.write('\n')
+        edq.util.json.dump_path(result.to_test_submission(), test_submission_path, indent = 4)
 
     return 0
 
-def _create_test_submission(result):
-    result = result.to_dict()
+def _get_parser() -> argparse.ArgumentParser:
+    """ Get a parser for this operation. """
 
-def _get_parser():
-    parser = argparse.ArgumentParser(description =
-        ('Grade an assignment (specified by an assignment JSON file) with the given submission.'
-        + ' Non-Python assignments can be graded, but they require an "invocation" field'
-        + ' in the assignment config, and the running machine must be configured to run them'
-        + ' (e.g. have all the required software installed).'))
+    parser = autograder.cli.parser.get_parser(__doc__.strip())
 
     parser.add_argument('-a', '--assignment',
         action = 'store', type = str, required = False, default = DEFAULT_ASSIGNMENT,
@@ -72,7 +77,9 @@ def _get_parser():
 
     return parser
 
-def main():
+def main() -> int:
+    """ Get a parser, parse the args, and call run. """
+
     return run(_get_parser().parse_args())
 
 if (__name__ == '__main__'):

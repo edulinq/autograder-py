@@ -7,13 +7,15 @@ import json
 import traceback
 import typing
 
+import edq.util.json
+
 import autograder.code
 import autograder.question
 import autograder.util.submission
 import autograder.util.timestamp
 
 # TEST - Timestamps.
-class GradedAssignment:
+class GradedAssignment(edq.util.json.DictConverter):
     """
     The result of an assignment being graded with a submission.
     """
@@ -29,7 +31,7 @@ class GradedAssignment:
             proxy_end_time: typing.Union[typing.Any, None] = None,
             **kwargs: typing.Any) -> None:
         self.name: str = name
-        """ The name of the graded assignment. """
+        """ The name of the assignment. """
 
         self.questions: typing.List[autograder.question.GradedQuestion] = questions
         """ The result of grading for each question. """
@@ -65,10 +67,6 @@ class GradedAssignment:
         """ When proxy grading ended. """
 
     def to_dict(self) -> typing.Dict[str, typing.Any]:
-        """
-        Convert to all simple structures that can be later converted to JSON.
-        """
-
         return {
             'name': self.name,
             'questions': [question.to_dict() for question in self.questions],
@@ -77,6 +75,18 @@ class GradedAssignment:
             'proxy_start_time': self.proxy_start_time,
             'proxy_end_time': self.proxy_end_time,
         }
+
+    @staticmethod
+    def from_dict(data: typing.Dict[str, typing.Any]) -> 'GradedAssignment':
+        data = dict(data)
+
+        if ('questions' in data):
+            data['questions'] = [
+                autograder.question.GradedQuestion(**question)
+                for question in data['questions']
+            ]
+
+        return GradedAssignment(**data)
 
     def to_test_submission(self, options: typing.Union[typing.Dict[str, typing.Any], None] = None) -> typing.Dict[str, typing.Any]:
         """
@@ -105,29 +115,13 @@ class GradedAssignment:
 
         return test_submission
 
-    @staticmethod
-    def from_dict(data: typing.Dict[str, typing.Any]) -> 'GradedAssignment':
-        """
-        Partner to to_dict().
-        """
-
-        data = dict(data)
-
-        if ('questions' in data):
-            data['questions'] = [
-                autograder.question.GradedQuestion(**question)
-                for question in data['questions']
-            ]
-
-        return GradedAssignment(**data)
-
     def get_score(self) -> typing.Tuple[float, float]:
         """
         Return (total score, max score).
         """
 
-        total_score = 0
-        max_score = 0
+        total_score: float = 0
+        max_score: float = 0
 
         for question in self.questions:
             total_score += question.score
@@ -154,8 +148,8 @@ class GradedAssignment:
                 autograder.util.timestamp.get(self.grading_end_time, pretty = True))
         ]
 
-        total_score = 0
-        max_score = 0
+        total_score: float = 0
+        max_score: float = 0
 
         for question in self.questions:
             total_score += question.score
@@ -181,12 +175,6 @@ class GradedAssignment:
 
     def __eq__(self, other: object) -> bool:
         return self.equals(other)
-
-    def string(self, indent: typing.Any = None) -> str:
-        return json.dumps(self.to_dict(), indent = indent)
-
-    def __repr__(self) -> str:
-        return self.string()
 
     def equals(self, other: object, **kwargs: typing.Any) -> bool:
         if (not isinstance(other, GradedAssignment)):
