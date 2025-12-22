@@ -4,10 +4,12 @@ The `autograder.cli.users.tokens` package contains tools to manage user tokens.
 
 import sys
 
-import autograder.util.cli
+import edq.util.cli
 
 def main() -> int:
-    return autograder.util.cli.main()
+    """ List this CLI dir. """
+
+    return edq.util.cli.main()
 
 if (__name__ == '__main__'):
     sys.exit(main())
