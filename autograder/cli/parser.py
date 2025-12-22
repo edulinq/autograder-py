@@ -55,7 +55,7 @@ def get_parser(
     config_options: typing.Dict[str, typing.Any] = {
         'config_filename': CONFIG_FILENAME,
         'legacy_config_filename': DEPRECATED_CONFIG_FILENAME,
-        'cli_arg_config_map': dict(),
+        'cli_arg_config_map': {},
     }
 
     # Ensure that all relevant CLI params are copied over to the config.

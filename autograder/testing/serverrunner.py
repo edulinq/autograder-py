@@ -66,7 +66,7 @@ class ServerRunner(edq.testing.serverrunner.ServerRunner):
 
             try:
                 body = edq.util.json.loads(exchange.response_body)
-            except:
+            except Exception:
                 # Response is not from the autograder.
                 return
 

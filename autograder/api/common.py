@@ -24,8 +24,8 @@ _source_version: str = DEFAULT_SOURCE_VERSION
 def set_testing_source_info() -> None:
     """ Set source info for API requests to consistent values for testing. """
 
-    global _source_name
-    global _source_version
+    global _source_name  # pylint: disable=global-statement
+    global _source_version  # pylint: disable=global-statement
 
     _source_name = TESTING_SOURCE_NAME
     _source_version = TESTING_SOURCE_VERSION
@@ -113,7 +113,7 @@ def send_api_request(
     server = server.rstrip('/')
     endpoint = endpoint.lstrip('/')
 
-    url = "%s/api/%s/%s" % (server, autograder.api.constants.API_VERSION, endpoint)
+    url = f"{server}/api/{autograder.api.constants.API_VERSION}/{endpoint}"
 
     # Add source information.
     payload['source'] = _source_name
@@ -123,9 +123,9 @@ def send_api_request(
     for path in post_paths:
         filename = os.path.basename(path)
         if (filename in post_files):
-            raise autograder.error.APIError(None, "Cannot submit duplicate filenames ('%s')." % (filename))
+            raise autograder.error.APIError(None, f"Cannot submit duplicate filenames ('{filename}').")
 
-        post_files[filename] = open(path, 'rb')
+        post_files[filename] = open(path, 'rb')  # pylint: disable=consider-using-with
 
     try:
         raw_response, raw_body = edq.util.net.make_post(
@@ -134,7 +134,7 @@ def send_api_request(
             files = post_files,
             raise_for_status = False)
     except requests.exceptions.ConnectionError:
-        raise autograder.error.ConnectionError((f"Could not connect to autograder server '{server}'."
+        raise autograder.error.ConnectionError((f"Could not connect to autograder server '{server}'."  # pylint: disable=raise-missing-from
             + " This is a networking issue (e.g., network down, server down, wrong server address), not an authentication issue."))
 
     for file in post_files.values():
@@ -143,9 +143,11 @@ def send_api_request(
     try:
         response_body = edq.util.json.loads(raw_body)
     except Exception as ex:
-        raise autograder.error.APIError(None, "Autograder response does not contain valid JSON."
-            + " Contact a server admin with the following. Response:\n---\n%s\n---" % (
-                raw_response.text)) from ex
+        message = ("Autograder response does not contain valid JSON."
+            + " Contact a server admin with the following."
+            + f" Response:\n---\n{raw_response.text}\n---")
+
+        raise autograder.error.APIError(None, message) from ex
 
     if (not response_body.get(autograder.api.constants.API_RESPONSE_KEY_SUCCESS, False)):
         message = 'Request to the autograder failed.'

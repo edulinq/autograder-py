@@ -1,5 +1,3 @@
-import typing
-
 import autograder.api.config
 import autograder.api.metadata.heartbeat
 import autograder.testing.asserts
@@ -7,7 +5,11 @@ import autograder.testing.model
 import autograder.testing.server
 
 class TestHeartbeat(autograder.testing.server.ServerTest):
+    """ Test getting a heartbeat. """
+
     def test_base(self):
+        """ Test base functionality. """
+
         # [(config (and overrides), kwargs, expected, error substring), ...]
         test_cases = [
             (

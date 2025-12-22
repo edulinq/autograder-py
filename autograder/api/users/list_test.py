@@ -4,7 +4,11 @@ import autograder.testing.model
 import autograder.testing.server
 
 class TestUsersList(autograder.testing.server.ServerTest):
+    """ Test getting server users. """
+
     def test_base(self):
+        """ Test base functionality. """
+
         # [(config (and overrides), kwargs, expected, error substring), ...]
         test_cases = [
             (

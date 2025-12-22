@@ -204,23 +204,23 @@ class APIParam:
         parser.add_argument(f'--{self.cli_flag}', **kwargs)
 
 class ArgumentMap(argparse.Action):
+    """ An argparse Action for key/value pairs separated with MAP_KEY_VALUE_SEP. """
+
     def __call__(self, parser, namespace, raw_values, option_string = None):
         if (not hasattr(namespace, self.dest)):
             setattr(namespace, self.dest, {})
 
-        allValues = getattr(namespace, self.dest)
-        if (allValues is None):
-            allValues = {}
-            setattr(namespace, self.dest, allValues)
+        all_values = getattr(namespace, self.dest)
+        if (all_values is None):
+            all_values = {}
+            setattr(namespace, self.dest, all_values)
 
         for raw_value in raw_values:
             parts = raw_value.split(MAP_KEY_VALUE_SEP, 1)
             if (len(parts) != 2):
-                raise ValueError((
-                    "Argument map key/value pair ('%s') is missing a separator '%s'."
-                    % (raw_value, MAP_KEY_VALUE_SEP)))
+                raise ValueError(f"Argument map key/value pair ('{raw_value}') is missing a separator '{MAP_KEY_VALUE_SEP}'.")
 
-            allValues[parts[0].strip()] = parts[1].strip()
+            all_values[parts[0].strip()] = parts[1].strip()
 
 def _submission_add_func(parser, param):
     parser.add_argument('submissions', metavar = 'SUBMISSION',
