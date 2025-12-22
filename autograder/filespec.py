@@ -10,9 +10,9 @@ import urllib.parse
 import typing
 
 import edq.util.dirent
+import edq.util.net
 
 import autograder.util.git
-import autograder.util.http
 
 FILESPEC_TYPE_EMPTY: str = "empty"
 FILESPEC_TYPE_NIL: str = "nil"
@@ -206,7 +206,8 @@ def _copy_url(path: str, dest: str, dest_dir: str) -> None:
     """ Copy a URL filespec. """
 
     dest_path = os.path.join(dest_dir, dest)
-    autograder.util.http.get(path, dest_path)
+    response, body = edq.util.net.make_get(path)
+    edq.util.dirent.write_file(dest_path, body, encoding = response.encoding, strip = False, newline = False)
 
 class FileSpecError(ValueError):
     """ Error for the validation and execution of filespecs. """
