@@ -1,5 +1,4 @@
 import inspect
-import json
 import traceback
 import typing
 
@@ -150,7 +149,7 @@ class GradedAssignment(edq.util.json.DictConverter):
             output.append(question.scoring_report(prefix = prefix))
 
         output.append('')
-        output.append(prefix + "Total: %d / %d" % (total_score, max_score))
+        output.append(f"{prefix}Total: {total_score} / {max_score}")
 
         output += self._format_logue(self.epilogue, prefix)
 
@@ -169,14 +168,16 @@ class GradedAssignment(edq.util.json.DictConverter):
         return self.equals(other)
 
     def equals(self, other: object, **kwargs: typing.Any) -> bool:
+        """ Check two graded assignments for equality. """
+
         if (not isinstance(other, GradedAssignment)):
             return False
 
         if ((self.name != other.name) or (len(self.questions) != len(other.questions))):
             return False
 
-        for i in range(len(self.questions)):
-            if (not self.questions[i].equals(other.questions[i], **kwargs)):
+        for (i, question) in enumerate(self.questions):
+            if (not question.equals(other.questions[i], **kwargs)):
                 return False
 
         return True
@@ -346,10 +347,9 @@ def fetch_assignment_class(path: str) -> typing.Type[Assignment]:
     assignments = load_assignment_classes(path)
 
     if (len(assignments) == 0):
-        raise ValueError(("Assignment file (%s) does not contain any instances of"
-            + " autograder.assignment.Assignment.") % (path))
-    elif (len(assignments) > 1):
-        raise ValueError(("Assignment file (%s) contains more than one (%d) instances of"
-            + " autograder.assignment.Assignment.") % (path, len(assignments)))
+        raise ValueError(f"Assignment file ('{path}') does not contain any instances of autograder.assignment.Assignment.")
+
+    if (len(assignments) > 1):
+        raise ValueError(f"Assignment file ('{path}') contains more than one ({len(assignments)}) instances of autograder.assignment.Assignment.")
 
     return assignments[0]

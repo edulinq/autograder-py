@@ -1,9 +1,10 @@
 import os
 import shutil
+import typing
 
 import edq.util.dirent
 
-def archive_dir(path, **kwargs):
+def archive_dir(path: str, **kwargs: typing.Any) -> str:
     """
     Create an archive of the given dir in a temp directory,
     and return the path to the created archive.
@@ -11,7 +12,7 @@ def archive_dir(path, **kwargs):
     """
 
     if (not os.path.isdir(path)):
-        raise ValueError("Target archive path does not exist or is not a dir: '%s'." % (path))
+        raise ValueError(f"Target archive path does not exist or is not a dir: '{path}'.")
 
     temp_dir = edq.util.dirent.get_temp_dir(**kwargs)
 

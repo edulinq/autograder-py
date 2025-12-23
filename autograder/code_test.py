@@ -13,12 +13,16 @@ class TestCode(edq.testing.unittest.BaseTest):
     """
 
     def test_extract_base(self):
+        """ Test extracting code. """
+
         for ext in ['py', 'ipynb']:
             path = os.path.join(DATA_DIR, 'simple.' + ext)
             source_code = autograder.code.extract_code(path)
             self.assertEqual(source_code, "SOME_CONSTANT = 1")
 
     def test_sanitize_import_base(self):
+        """ Test sanitizing code. """
+
         for ext in ['py', 'ipynb']:
             for basename in ['base', 'base_with_raise']:
                 path = os.path.join(DATA_DIR, basename + '.' + ext)

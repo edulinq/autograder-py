@@ -4,7 +4,6 @@ A single question (test case) for an assignment.
 
 import abc
 import functools
-import json
 import numbers
 import traceback
 import typing
@@ -23,15 +22,11 @@ class AutograderFailError(RuntimeError):
     and execution should be stopped.
     """
 
-    pass
-
 class AutograderHardFailError(RuntimeError):
     """
     This error indicates that hard_fail() has been called on a question
     and execution should be stopped for all questions in the assignment.
     """
-
-    pass
 
 class GradedQuestion(edq.util.json.DictConverter):
     """
@@ -105,7 +100,7 @@ class GradedQuestion(edq.util.json.DictConverter):
         if ((prefix != '') and (not prefix.endswith(' '))):
             prefix += ' '
 
-        lines = ["%s%s: %d / %d" % (prefix, self.name, self.score, self.max_points)]
+        lines = [f"{prefix}{self.name}: {self.score} / {self.max_points}"]
         if (self.message != ''):
             for line in self.message.split("\n"):
                 lines.append(prefix + '   ' + line)
@@ -116,6 +111,8 @@ class GradedQuestion(edq.util.json.DictConverter):
         return self.equals(other)
 
     def equals(self, other: typing.Any, ignore_messages: bool = False, **kwargs) -> bool:
+        """ Check another graded question for equality. """
+
         if (not isinstance(other, GradedQuestion)):
             return False
 
@@ -154,8 +151,7 @@ class Question:
         """
 
         if ((not isinstance(max_points, numbers.Real)) or (max_points < 0)):
-            raise ValueError("max_points must be a real number, got '%s' (type: %s)." % (
-                max_points, type(max_points)))
+            raise ValueError("max_points must be a real number, got '{max_points}' (type: '{type(max_points)}).")
 
         self.max_points: float = max_points
         """ The maximum number of points possible for this question (does not include extra credit). """
@@ -177,8 +173,6 @@ class Question:
         The implementer has full access to instance variables.
         However, users should generally just call the grading methods to manipulate the result.
         """
-
-        pass
 
     def grade(self, submission: typing.Any,
             additional_data: typing.Union[typing.Dict[str, typing.Any], None] = None,
@@ -214,9 +208,9 @@ class Question:
 
         if (not success):
             if (value is None):
-                self.set_result(0, "Timeout (%d seconds)." % (self._timeout))
+                self.set_result(0, f"Timeout ({self._timeout} seconds).")
             else:
-                self.set_result(0, "Error during execution: " + value)
+                self.set_result(0, f"Error during execution: '{value}'.")
 
             return
 

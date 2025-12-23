@@ -46,7 +46,7 @@ def _prepare_submission_dir(
     """ Prepare a submission directory. """
 
     if (not os.path.isdir(path)):
-        raise ValueError("Preparation target must be a dir: '%s'." % path)
+        raise ValueError(f"Preparation target must be a dir: '{path}'.")
 
     for dirent in os.listdir(path):
         dirent_path = os.path.join(path, dirent)
@@ -68,7 +68,7 @@ def _prepare_submission_file(
     """ Prepare a submission file. """
 
     if (not os.path.isfile(path)):
-        raise ValueError("Preparation target must be a file: '%s'." % path)
+        raise ValueError(f"Preparation target must be a file: '{path}'.")
 
     basename = os.path.splitext(os.path.basename(path))[0]
 
@@ -79,20 +79,18 @@ def _prepare_submission_file(
             continue
 
         if ((name in submission) and (raise_on_collision)):
-            raise ValueError("Name collision ('%s') when importing all keys for '%s'." % (
-                name, path))
+            raise ValueError(f"Name collision ('{name}') when importing all keys for '{path}'.")
 
         if (ALL_SUBMISSION_KEY not in submission):
             submission[ALL_SUBMISSION_KEY] = {}
 
-        submission[ALL_SUBMISSION_KEY][name] = defs[name]
+        submission[ALL_SUBMISSION_KEY][name] = value
 
     # Place the defs into a structure that matches the path.
     context = submission
     for part in prefix + [basename]:
         if ((part in context) and (not isinstance(context[part], dict))):
-            raise ValueError("Name collision ('%s') when importing all keys for '%s'." % (
-                part, path))
+            raise ValueError(f"Name collision ('{part}') when importing all keys for '{path}'.")
 
         if (part not in context):
             context[part] = {}

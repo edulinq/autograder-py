@@ -1,19 +1,25 @@
 import os
+import typing
 
-THIS_DIR = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
+THIS_DIR: str = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
 
-# Reserved filenames (mainly on Windows).
-# See: https://github.com/python/cpython/blob/3.13/Lib/ntpath.py
-RESERVED_NAMES = frozenset(
+RESERVED_NAMES: typing.FrozenSet[str] = frozenset(
     {'CON', 'PRN', 'AUX', 'NUL', 'CONIN$', 'CONOUT$'} |  # noqa: W504
     {f'COM{c}' for c in '123456789\xb9\xb2\xb3'} |  # noqa: W504
     {f'LPT{c}' for c in '123456789\xb9\xb2\xb3'}
 )
+"""
+Reserved filenames (mainly on Windows).
+See: https://github.com/python/cpython/blob/3.13/Lib/ntpath.py
+"""
 
-# Try to see of a file is "local" using only lexical analysis.
-# See: https://pkg.go.dev/path/filepath#IsLocal
-# This is not robust and should not be used for any systems where security can be an issue.
-def is_local(path):
+def is_local(path: str) -> bool:
+    """
+    Try to see of a file is "local" using only lexical analysis.
+    See: https://pkg.go.dev/path/filepath#IsLocal
+    This is not robust and should not be used for any systems where security can be an issue.
+    """
+
     path = os.path.normpath(path.strip())
 
     if (path == ''):
@@ -41,7 +47,10 @@ def is_local(path):
 
     return True
 
-# A very weak version of ntpath.isreserved(path) (which was added in version 3.13).
-# https://docs.python.org/3/library/os.path.html#os.path.isreserved
-def _is_reserved(path):
+def _is_reserved(path: str) -> bool:
+    """
+    A very weak version of ntpath.isreserved(path) (which was added in version 3.13).
+    https://docs.python.org/3/library/os.path.html#os.path.isreserved
+    """
+
     return os.path.basename(path).upper() in RESERVED_NAMES

@@ -1,7 +1,7 @@
 import sys
 import typing
 
-_exit_on_error_for_testing: bool = True
+_exit_on_error_for_testing: bool = True  # pylint: disable=invalid-name
 """
 Control if exit_from_error() should actually exit.
 Testing infrastructure can set this to control exit behavior.
@@ -21,8 +21,6 @@ def exit_from_error(exit_status: int = 1) -> None:
 class AutograderError(Exception):
     """ General errors from the autograder (including this interface). """
 
-    pass
-
 class APIError(AutograderError):
     """ Errors that specifically come from the autograder server. """
 
@@ -34,5 +32,3 @@ class APIError(AutograderError):
 
 class ConnectionError(AutograderError):
     """ An error stemming from a bad network connection. """
-
-    pass

@@ -2,14 +2,20 @@ import multiprocessing
 import sys
 import time
 import traceback
+import typing
 
-REAP_TIME_SEC = 5
+REAP_TIME_SEC: float = 5
 
-# Return: (success, function return value)
-# On timeout, success will be false and the value will be None.
-# On error, success will be false and value will be the string stacktrace.
-# On successful completion, success will be true and value may be None (if nothing was returned).
-def with_timeout(timeout, function):
+def with_timeout(timeout: float, function: typing.Callable) -> typing.Tuple[bool, typing.Any]:
+    """
+    Run the given function in a differnet process with the given timeout.
+
+    Return: (success, function return value)
+    On timeout, success will be false and the value will be None.
+    On error, success will be false and value will be the string stacktrace.
+    On successful completion, success will be true and value may be None (if nothing was returned).
+    """
+
     if (not sys.platform.startswith('linux')):
         # Mac and Windows have some pickling issues with multiprocessing.
         # Just run them without a timeout.
@@ -23,7 +29,7 @@ def with_timeout(timeout, function):
 
         return (True, value)
 
-    result = multiprocessing.Queue(1)
+    result: multiprocessing.Queue = multiprocessing.Queue(1)
 
     # Note that we use processes instead of threads so they can be more completely killed.
     process = multiprocessing.Process(target = _invoke_helper, args = (result, function))
@@ -49,12 +55,14 @@ def with_timeout(timeout, function):
     value, error = result.get()
 
     if (error is not None):
-        exception, stacktrace = error
+        _, stacktrace = error
         return (False, stacktrace)
 
     return (True, value)
 
-def _invoke_helper(result, function):
+def _invoke_helper(result: multiprocessing.Queue, function: typing.Callable) -> None:
+    """ A helper function for running the given function. """
+
     value = None
     error = None
 
