@@ -109,15 +109,15 @@ def validate(operation: typing.Union[None, typing.List[str], FileOp]) -> FileOp:
             glob_pattern = fnmatch.translate(path)
             re.compile(glob_pattern)
         except Exception as error:
-            raise ValueError(f"Argument at index {i} ('{operation[i]}')"
-                + f" is an invalid glob pattern: {error}.")
+            raise ValueError(f"Argument at index {i} ('{operation[i]}') is an invalid glob pattern: {error}.")  # pylint: disable=raise-missing-from
 
         operation[i] = path
 
     return typing.cast(FileOp, operation)
 
-# Execute operation operation in the given directory.
 def execute(operation: FileOp, base_dir: str) -> None:
+    """ Execute operation operation in the given directory. """
+
     validate(operation)
 
     command = operation[0]

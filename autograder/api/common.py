@@ -18,8 +18,8 @@ DEFAULT_SOURCE_VERSION: str = autograder.__version__
 TESTING_SOURCE_NAME: str = 'testing'
 TESTING_SOURCE_VERSION: str = '0.0.0'
 
-_source_name: str = DEFAULT_SOURCE_NAME
-_source_version: str = DEFAULT_SOURCE_VERSION
+_source_name: str = DEFAULT_SOURCE_NAME  # pylint: disable=invalid-name
+_source_version: str = DEFAULT_SOURCE_VERSION  # pylint: disable=invalid-name
 
 def set_testing_source_info() -> None:
     """ Set source info for API requests to consistent values for testing. """

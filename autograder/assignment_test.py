@@ -1,5 +1,6 @@
 import json
 import time
+import typing
 
 import edq.testing.unittest
 
@@ -12,8 +13,12 @@ HARD_FAIL_ERROR_MESSAGE = "Fix your code! Hard failing..."
 SKIPPING_QUESTION_MESSAGE = "Grading stopped because of a hard error, skipping question..."
 
 class TestAssignment(edq.testing.unittest.BaseTest):
+    """ Test assignments. """
+
     class QuestionBase(autograder.question.Question):
-        def score_question(self, submission):
+        """ A testing question that is nothing special. """
+
+        def score_question(self, submission, **kwargs: typing.Any):
             result = submission()
 
             if (result):
@@ -22,23 +27,33 @@ class TestAssignment(edq.testing.unittest.BaseTest):
                 self.fail(BASE_ERROR_MESSAGE)
 
     class QuestionAlwaysPass(autograder.question.Question):
-        def score_question(self, submission):
+        """ A testing question that should always pass. """
+
+        def score_question(self, submission, **kwargs: typing.Any):
             self.full_credit()
 
     class QuestionAlwaysFail(autograder.question.Question):
-        def score_question(self, submission):
+        """ A testing question that should always fail. """
+
+        def score_question(self, submission, **kwargs: typing.Any):
             self.fail(BASE_ERROR_MESSAGE)
 
     class QuestionAlwaysHardFail(autograder.question.Question):
-        def score_question(self, submission):
+        """ A testing question that should always hard fail. """
+
+        def score_question(self, submission, **kwargs: typing.Any):
             self.hard_fail(HARD_FAIL_ERROR_MESSAGE)
 
     def test_base_full_credit(self):
+        """ Test getting full credit. """
+
         questions = [
             TestAssignment.QuestionBase(1),
         ]
 
         class TA(autograder.assignment.Assignment):
+            """ A test class representing a TA's example submission. """
+
             def _prepare_submission(self):
                 return lambda: True
 
@@ -51,11 +66,15 @@ class TestAssignment(edq.testing.unittest.BaseTest):
         self.assertEqual(max_score, 1)
 
     def test_base_fail(self):
+        """ Test failing. """
+
         questions = [
             TestAssignment.QuestionBase(1),
         ]
 
         class TA(autograder.assignment.Assignment):
+            """ A test class representing a TA's example submission. """
+
             def _prepare_submission(self):
                 return lambda: False
 
@@ -68,6 +87,8 @@ class TestAssignment(edq.testing.unittest.BaseTest):
         self.assertEqual(max_score, 1)
 
     def test_sleep_fail(self):
+        """ Test failing because of timing out. """
+
         questions = [
             TestAssignment.QuestionBase(1, timeout = 0.05),
         ]
@@ -77,6 +98,8 @@ class TestAssignment(edq.testing.unittest.BaseTest):
             return True
 
         class TA(autograder.assignment.Assignment):
+            """ A test class representing a TA's example submission. """
+
             def _prepare_submission(self):
                 return submission
 
@@ -96,6 +119,8 @@ class TestAssignment(edq.testing.unittest.BaseTest):
         self.assertEqual(max_score, 1)
 
     def test_hard_fail(self):
+        """ Test hard failing. """
+
         # Each test case is a tuple of question, question, graded_question, graded_question.
         test_cases = [
             # 2 points, (success, success).
@@ -287,12 +312,14 @@ class TestAssignment(edq.testing.unittest.BaseTest):
         ]
 
         class TA(autograder.assignment.Assignment):
+            """ A test class representing a TA's example submission. """
+
             def _prepare_submission(self):
                 pass
 
-        for i in range(len(test_cases)):
+        for (i, test_case) in enumerate(test_cases):
             with self.subTest(i = i):
-                (question_a, question_b, graded_question_a, graded_question_b) = test_cases[i]
+                (question_a, question_b, graded_question_a, graded_question_b) = test_case
 
                 questions = [question_a, question_b]
 

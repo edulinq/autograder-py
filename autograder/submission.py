@@ -1,5 +1,4 @@
 import glob
-import json
 import os
 import subprocess
 import sys
@@ -73,8 +72,7 @@ def fetch_test_submissions(path: str) -> typing.List[str]:
 
     if (os.path.isfile(path)):
         if (os.path.basename(path) != TEST_SUBMISSION_FILENAME):
-            raise ValueError("Passed in submission is not named like a test submission ('%s')." % (
-                TEST_SUBMISSION_FILENAME))
+            raise ValueError(f"Passed in submission is not named like a test submission ('{TEST_SUBMISSION_FILENAME}').")
 
         test_submissions.append(path)
     else:
@@ -105,7 +103,7 @@ def prep_grading_dir(
 
     os.makedirs(grading_dir, exist_ok = True)
 
-    input_dir, output_dir, work_dir = make_core_dirs(grading_dir)
+    input_dir, _, work_dir = make_core_dirs(grading_dir)
 
     # Load the assignment config.
 
@@ -113,8 +111,7 @@ def prep_grading_dir(
     assignment_base_dir = os.path.dirname(assignment_config_path)
 
     try:
-        with open(assignment_config_path, 'r') as file:
-            assignment_config = json.load(file)
+        assignment_config = edq.util.json.load_path(assignment_config_path)
     except Exception as ex:
         raise ValueError("Failed to load assignment config: " + assignment_config_path) from ex
 
@@ -152,11 +149,11 @@ def make_core_dirs(base_dir: str) -> typing.Tuple[str, str, str]:
 def run_test_submission(assignment_config_path: str, submission_config_path: str) -> bool:
     """ Run a test submission and return if the output matches the expected submission output. """
 
-    print("Testing assignment '%s' and submission '%s'." % (assignment_config_path,
-        submission_config_path))
+    print(f"Testing assignment '{assignment_config_path}' and submission '{submission_config_path}'.")
 
     grading_dir = prep_grading_dir(assignment_config_path, os.path.dirname(submission_config_path))
 
+    old_module_keys = set()
     try:
         # Keep track of new top-level keys in sys.modules (imports) after the submission runs.
         # This is to prevent any import of submission code that gets cached.
@@ -191,8 +188,7 @@ def compare_test_submission(
     Return true if the two match.
     """
 
-    with open(test_config_path, 'r') as file:
-        test_config = json.load(file)
+    test_config = edq.util.json.load_path(test_config_path)
 
     expected_result = autograder.assignment.GradedAssignment.from_dict(test_config['result'])
     ignore_messages = test_config.get('ignore_messages', False)
@@ -200,7 +196,7 @@ def compare_test_submission(
     match = actual_result.equals(expected_result, ignore_messages = ignore_messages)
 
     if ((not match) and print_result):
-        print("Submission does not match expected output: '%s'." % (test_config_path))
+        print(f"Submission does not match expected output: '{test_config_path}'.")
         print('Expected:')
         print(expected_result.report(prefix = '    '))
         print('---')
@@ -245,16 +241,15 @@ def run_python_grader(grader_path: str, grading_dir: str) -> typing.Union[autogr
 
     assignment_class = autograder.assignment.fetch_assignment_class(grader_path)
     if (assignment_class is None):
-        print("Failed to fetch assignment class from '%s'." % (grader_path))
+        print("Failed to fetch assignment class from '{grader_path}'.")
         return None
 
     try:
         assignment = assignment_class(input_dir = input_dir, output_dir = output_dir,
                 work_dir = work_dir)
         return assignment.grade()
-    except Exception as ex:
-        print("Failed to run assignment (%s) on submission '%s': '%s'." % (
-            assignment_class.__name__, input_dir, ex))
+    except Exception:
+        print("Failed to run assignment ('{assignment_class.__name__}') on submission '{input_dir}': '{ex}'.")
         traceback.print_exc()
         return None
 
@@ -265,8 +260,7 @@ def run_external_grader(assignment_config_path: str, grading_dir: str) -> autogr
     output_dir = os.path.join(grading_dir, OUTPUT_DIRNAME)
 
     try:
-        with open(assignment_config_path, 'r') as file:
-            assignment_config = json.load(file)
+        assignment_config = edq.util.json.load_path(assignment_config_path)
     except Exception as ex:
         raise ValueError("Failed to load assignment config: " + assignment_config_path) from ex
 
@@ -279,11 +273,10 @@ def run_external_grader(assignment_config_path: str, grading_dir: str) -> autogr
 
     out_path = os.path.join(output_dir, GRADING_RESULT_FILENAME)
     if (not os.path.isfile(out_path)):
-        raise ValueError("Could not find result after external grader ran: '%s'." % (out_path))
+        raise ValueError(f"Could not find result after external grader ran: '{out_path}'.")
 
     try:
-        with open(out_path, 'r') as file:
-            result = json.load(file)
+        result = edq.util.json.load_path(out_path)
     except Exception as ex:
         raise ValueError("Failed to grading result: " + out_path) from ex
 
@@ -340,6 +333,6 @@ class SubmissionSummary(edq.util.json.DictConverter):
     def __repr__(self) -> str:
         message = '.'
         if ((self.message is not None) and (self.message != '')):
-            message = ", Message: '%s'." % (self.message)
+            message = f", Message: '{self.message}'."
 
         return f"Submission ID: {self.short_id()}, Score: {self.score} / {self.max_points}, Time: {self.grading_start_time.pretty()}{message}"

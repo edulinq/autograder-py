@@ -42,11 +42,10 @@ def parse(data: typing.Union[None, str, typing.Dict[str, str], FileSpec]) -> Fil
         return get_path(data)
 
     if (not isinstance(data, dict)):
-        raise FileSpecError("FileSpec is not the correct type (str ot dict): '%s' (%s)." % (
-            data, type(data)))
+        raise FileSpecError(f"FileSpec is not the correct type (str ot dict): '{data}' ({type(data)}).")
 
     if ('type' not in data):
-        raise FileSpecError("FileSpec is missing 'type' field: '%s'." % (data))
+        raise FileSpecError(f"FileSpec is missing 'type' field: '{data}'.")
 
     data['type'] = data['type'].strip().lower()
 
@@ -58,13 +57,13 @@ def parse(data: typing.Union[None, str, typing.Dict[str, str], FileSpec]) -> Fil
     elif (spec_type == FILESPEC_TYPE_PATH):
         path = data.get('path', '').strip()
         if (path == ''):
-            raise FileSpecError("Path FileSpec must have a non-empty path: '%s'." % (data))
+            raise FileSpecError(f"Path FileSpec must have a non-empty path: '{data}'.")
 
         return get_path(path, dest = data.get('dest', ''))
     elif (spec_type == FILESPEC_TYPE_GIT):
         path = data.get('path', '').strip()
         if (path == ''):
-            raise FileSpecError("Git FileSpec must have a non-empty path: '%s'." % (data))
+            raise FileSpecError(f"Git FileSpec must have a non-empty path: '{data}'.")
 
         return get_git(path,
             dest = data.get('dest', ''),
@@ -74,11 +73,11 @@ def parse(data: typing.Union[None, str, typing.Dict[str, str], FileSpec]) -> Fil
     elif (spec_type == FILESPEC_TYPE_URL):
         path = data.get('path', '').strip()
         if (path == ''):
-            raise FileSpecError("URL FileSpec must have a non-empty path: '%s'." % (data))
+            raise FileSpecError(f"URL FileSpec must have a non-empty path: '{data}'.")
 
         return get_url(path, dest = data.get('dest', ''))
     else:
-        raise FileSpecError("FileSpec has unkown type ('%s'): '%s'." % (spec_type, data))
+        raise FileSpecError(f"FileSpec has unkown type ('{spec_type}'): '{data}'.")
 
 def get_empty() -> FileSpec:
     """ Get an empty filespec. """
@@ -155,7 +154,7 @@ def copy(filespec: FileSpec, base_dir: str, dest_dir: str, only_contents: bool) 
     elif (spec_type == FILESPEC_TYPE_URL):
         _copy_url(filespec['path'], filespec['dest'], dest_dir)
     else:
-        raise FileSpecError("FileSpec has unkown type ('%s'): '%s'." % (spec_type, filespec))
+        raise FileSpecError(f"FileSpec has unkown type ('{spec_type}'): '{filespec}'.")
 
 def _copy_path(path: str, dest: str, base_dir: str, dest_dir: str, only_contents: bool) -> None:
     """ Copy a path filespec. """
@@ -211,5 +210,3 @@ def _copy_url(path: str, dest: str, dest_dir: str) -> None:
 
 class FileSpecError(ValueError):
     """ Error for the validation and execution of filespecs. """
-
-    pass

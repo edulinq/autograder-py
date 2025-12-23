@@ -8,6 +8,7 @@ import sys
 import types
 import typing
 
+import edq.util.dirent
 import edq.util.json
 
 DEFAULT_MODULE_AST_ALLOWED_NODES: typing.List[typing.Type] = [
@@ -31,7 +32,7 @@ def extract_code(path: str) -> str:
     elif (path.lower().endswith('.py')):
         code = extract_python_code(path)
     else:
-        raise ValueError("Unknown extension for extracting code: '%s'." % (path))
+        raise ValueError(f"Unknown extension for extracting code: '{path}'.")
 
     return code.strip()
 
@@ -42,7 +43,7 @@ def extract_python_code(path: str) -> str:
     This may change the contents of multiline strings.
     """
 
-    with open(path, 'r') as file:
+    with open(path, 'r', encoding = edq.util.dirent.DEFAULT_ENCODING) as file:
         lines = file.readlines()
 
     lines = [line.rstrip() for line in lines]
@@ -100,7 +101,7 @@ def sanitize_and_import_code(
 
     try:
         sys.path.append(syspath)
-        exec(compile(module_ast, filename = code_path, mode = "exec"), globals_defs)
+        exec(compile(module_ast, filename = code_path, mode = "exec"), globals_defs)  # pylint: disable=exec-used
     finally:
         sys.path.pop()
 

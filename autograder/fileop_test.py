@@ -16,7 +16,10 @@ ALREADY_EXISTS_FILE_ALT_POSIX_RELPATH = ALREADY_EXISTS_DIRNAME + "/" + ALREADY_E
 ALREADY_EXISTS_FILE_ALT_RELPATH = os.path.join(ALREADY_EXISTS_DIRNAME, ALREADY_EXISTS_FILENAME_ALT)
 STARTING_EMPTY_DIRNAME = "empty_start"
 
+# pylint: disable=cell-var-from-loop
 class TestFileOp(edq.testing.unittest.BaseTest):
+    """ Test file operations. """
+
     @unittest.skipIf(sys.platform.startswith("win"), "fileops require POSIX")
     def test_fileop_validation(self):
         """ Test validating a fileop. """
@@ -86,9 +89,9 @@ class TestFileOp(edq.testing.unittest.BaseTest):
             (["copy", "*/..", "b"], None, "cannot point just to the current directory"),
         ]
 
-        for i in range(len(test_cases)):
+        for (i, test_case) in enumerate(test_cases):
             with self.subTest(msg = f"Case {i}"):
-                (operation, expected, error_substring) = test_cases[i]
+                (operation, expected, error_substring) = test_case
 
                 try:
                     autograder.fileop.validate(operation)
@@ -121,13 +124,15 @@ class TestFileOp(edq.testing.unittest.BaseTest):
             (ALREADY_EXISTS_DIRNAME, ALREADY_EXISTS_FILE_POSIX_RELPATH, "Source of copy cannot contain the destination"),
         ]
 
-        for i in range(len(test_cases)):
+        for (i, test_case) in enumerate(test_cases):
             with self.subTest(msg = f"Case {i}"):
-                (source, dest, error_substring) = test_cases[i]
+                (source, dest, error_substring) = test_case
 
                 operation = ["cp", source, dest]
 
                 def post_check(operation, temp_dir):
+                    """ Check for after the operation is invoked. """
+
                     expected_source = os.path.normpath(os.path.join(temp_dir, source))
                     expected_dest = os.path.normpath(os.path.join(temp_dir, dest))
 
@@ -218,13 +223,15 @@ class TestFileOp(edq.testing.unittest.BaseTest):
             ),
         ]
 
-        for i in range(len(test_cases)):
+        for (i, test_case) in enumerate(test_cases):
             with self.subTest(msg = f"Case {i}"):
-                (source, dest, expected_paths, not_expected_paths, error_substring) = test_cases[i]
+                (source, dest, expected_paths, not_expected_paths, error_substring) = test_case
 
                 operation = ["cp", source, dest]
 
                 def post_check(operation, temp_dir):
+                    """ Check for after the operation is invoked. """
+
                     for expected_path in expected_paths:
                         path = os.path.normpath(os.path.join(temp_dir, expected_path))
                         self.assertTrue(os.path.exists(path),
@@ -252,13 +259,15 @@ class TestFileOp(edq.testing.unittest.BaseTest):
             (ALREADY_EXISTS_FILENAME, ALREADY_EXISTS_DIRNAME, None),
         ]
 
-        for i in range(len(test_cases)):
+        for (i, test_case) in enumerate(test_cases):
             with self.subTest(msg = f"Case {i}"):
-                (source, dest, error_substring) = test_cases[i]
+                (source, dest, error_substring) = test_case
 
                 operation = ["mv", source, dest]
 
                 def post_check(operation, temp_dir):
+                    """ Check for after the operation is invoked. """
+
                     expected_source = os.path.normpath(os.path.join(temp_dir, source))
                     expected_dest = os.path.normpath(os.path.join(temp_dir, dest))
 
@@ -375,13 +384,15 @@ class TestFileOp(edq.testing.unittest.BaseTest):
             ),
         ]
 
-        for i in range(len(test_cases)):
+        for (i, test_case) in enumerate(test_cases):
             with self.subTest(msg = f"Case {i}"):
-                (source, dest, expected_paths, not_expected_paths, error_substring) = test_cases[i]
+                (source, dest, expected_paths, not_expected_paths, error_substring) = test_case
 
                 operation = ["mv", source, dest]
 
                 def post_check(operation, temp_dir):
+                    """ Check for after the operation is invoked. """
+
                     for expected_path in expected_paths:
                         path = os.path.normpath(os.path.join(temp_dir, expected_path))
                         self.assertTrue(os.path.exists(path),
@@ -408,13 +419,15 @@ class TestFileOp(edq.testing.unittest.BaseTest):
             (ALREADY_EXISTS_FILE_POSIX_RELPATH + "/a", "exists and is not a dir"),
         ]
 
-        for i in range(len(test_cases)):
+        for (i, test_case) in enumerate(test_cases):
             with self.subTest(msg = f"Case {i}"):
-                (path, error_substring) = test_cases[i]
+                (path, error_substring) = test_case
 
                 operation = ["mkdir", path]
 
                 def post_check(operation, temp_dir):
+                    """ Check for after the operation is invoked. """
+
                     expected_path = os.path.normpath(os.path.join(temp_dir, path))
 
                     self.assertTrue(os.path.isdir(expected_path),
@@ -462,15 +475,17 @@ class TestFileOp(edq.testing.unittest.BaseTest):
             ),
         ]
 
-        for i in range(len(test_cases)):
+        for (i, test_case) in enumerate(test_cases):
             with self.subTest(msg = f"Case {i}"):
-                (path, expected_paths, error_substring) = test_cases[i]
+                (path, expected_paths, error_substring) = test_case
                 if (expected_paths is None):
                     expected_paths = [path]
 
                 operation = ["rm", path]
 
                 def post_check(operation, temp_dir):
+                    """ Check for after the operation is invoked. """
+
                     for rel_expected_path in expected_paths:
                         expected_path = os.path.normpath(os.path.join(temp_dir, rel_expected_path))
 
