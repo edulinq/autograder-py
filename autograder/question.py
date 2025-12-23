@@ -10,9 +10,9 @@ import traceback
 import typing
 
 import edq.util.json
+import edq.util.time
 
 import autograder.util.invoke
-import autograder.util.timestamp
 
 DEFAULT_TIMEOUT_SEC: float = 60
 """ Default timeout for grading a question. """
@@ -33,7 +33,6 @@ class AutograderHardFailError(RuntimeError):
 
     pass
 
-# TEST - Timestamps.
 class GradedQuestion(edq.util.json.DictConverter):
     """
     The result of a question being graded with a submission.
@@ -46,8 +45,8 @@ class GradedQuestion(edq.util.json.DictConverter):
             message: str = '',
             hard_fail: bool = False,
             skipped: bool = False,
-            grading_start_time: typing.Union[typing.Any, None] = None,
-            grading_end_time: typing.Union[typing.Any, None] = None,
+            grading_start_time: typing.Union[edq.util.time.Timestamp, int, None] = None,
+            grading_end_time: typing.Union[edq.util.time.Timestamp, int, None] = None,
             **kwargs: typing.Any) -> None:
         self.name: str = name
         """ The name of the question. """
@@ -68,18 +67,18 @@ class GradedQuestion(edq.util.json.DictConverter):
         """ Whether this question was skipped during grading. """
 
         # Default the grading time to deal with situations where the grader throws an exception.
-        now = autograder.util.timestamp.get()
+        now = edq.util.time.Timestamp.now()
 
         if (grading_start_time is None):
             grading_start_time = now
 
-        self.grading_start_time: typing.Any = autograder.util.timestamp.get(grading_start_time)
+        self.grading_start_time: typing.Any = edq.util.time.Timestamp(grading_start_time)
         """ When grading started. """
 
         if (grading_end_time is None):
             grading_end_time = now
 
-        self.grading_end_time: typing.Any = autograder.util.timestamp.get(grading_end_time)
+        self.grading_end_time: typing.Any = edq.util.time.Timestamp(grading_end_time)
         """ When grading ended. """
 
     def to_dict(self) -> typing.Dict[str, typing.Any]:
@@ -133,7 +132,6 @@ class GradedQuestion(edq.util.json.DictConverter):
 
         return self.message == other.message
 
-# TEST - Timeout
 class Question:
     """
     Questions are grade-able portions of an assignment.
@@ -144,7 +142,8 @@ class Question:
     def __init__(self,
             max_points: float = 0,
             name: typing.Union[str, None] = None,
-            timeout: float = DEFAULT_TIMEOUT_SEC) -> None:
+            timeout: float = DEFAULT_TIMEOUT_SEC,
+            ) -> None:
         if (name is None):
             name = type(self).__name__
 
@@ -241,7 +240,7 @@ class Question:
 
         self.result = GradedQuestion(name = self.name, max_points = self.max_points)
 
-        self.result.grading_start_time = autograder.util.timestamp.get()
+        self.result.grading_start_time = edq.util.time.Timestamp.now()
 
         try:
             self.score_question(submission, **additional_data)
@@ -252,7 +251,7 @@ class Question:
             # The question has been failed hard, signal to stop grading.
             self.result.hard_fail = True
 
-        self.result.grading_end_time = autograder.util.timestamp.get()
+        self.result.grading_end_time = edq.util.time.Timestamp.now()
 
         return self.result
 

@@ -4,13 +4,13 @@ import typing
 
 import edq.util.json
 import edq.util.net
+import edq.util.time
 import requests
 
 import autograder
 import autograder.api.config
 import autograder.api.constants
 import autograder.error
-import autograder.util.timestamp
 
 DEFAULT_SOURCE_NAME: str = 'edq-autograder-py'
 DEFAULT_SOURCE_VERSION: str = autograder.__version__
@@ -155,7 +155,7 @@ def send_api_request(
             message = f"Failed to complete operation: {response_body[autograder.api.constants.API_RESPONSE_KEY_MESSAGE]}"
 
             # Replace any timestamps in the message.
-            message = autograder.util.timestamp.convert_message(message, pretty = True)
+            message = edq.util.time.Timestamp.convert_embedded(message, pretty = True)
 
         code = response_body.get(autograder.api.constants.API_RESPONSE_KEY_STATUS, None)
         raise autograder.error.APIError(code, message)

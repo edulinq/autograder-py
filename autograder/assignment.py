@@ -1,7 +1,3 @@
-"""
-What is necessary to grade a single assignment.
-"""
-
 import inspect
 import json
 import traceback
@@ -12,9 +8,7 @@ import edq.util.json
 import autograder.code
 import autograder.question
 import autograder.util.submission
-import autograder.util.timestamp
 
-# TEST - Timestamps.
 class GradedAssignment(edq.util.json.DictConverter):
     """
     The result of an assignment being graded with a submission.
@@ -25,10 +19,10 @@ class GradedAssignment(edq.util.json.DictConverter):
             questions: typing.List[autograder.question.GradedQuestion],
             prologue: typing.Union[str, None] = None,
             epilogue: typing.Union[str, None] = None,
-            grading_start_time: typing.Union[typing.Any, None] = None,
-            grading_end_time: typing.Union[typing.Any, None] = None,
-            proxy_start_time: typing.Union[typing.Any, None] = None,
-            proxy_end_time: typing.Union[typing.Any, None] = None,
+            grading_start_time: typing.Union[edq.util.time.Timestamp, int, None] = None,
+            grading_end_time: typing.Union[edq.util.time.Timestamp, int, None] = None,
+            proxy_start_time: typing.Union[edq.util.time.Timestamp, int, None] = None,
+            proxy_end_time: typing.Union[edq.util.time.Timestamp, int, None] = None,
             **kwargs: typing.Any) -> None:
         self.name: str = name
         """ The name of the assignment. """
@@ -43,27 +37,27 @@ class GradedAssignment(edq.util.json.DictConverter):
         """ Text to include after the grading result. """
 
         if (grading_start_time is None):
-            grading_start_time = autograder.util.timestamp.MISSING_TIMESTAMP
+            grading_start_time = edq.util.time.Timestamp()
 
-        self.grading_start_time: typing.Any = autograder.util.timestamp.get(grading_start_time)
+        self.grading_start_time: typing.Any = edq.util.time.Timestamp(grading_start_time)
         """ When grading started. """
 
         if (grading_end_time is None):
-            grading_end_time = autograder.util.timestamp.MISSING_TIMESTAMP
+            grading_end_time = edq.util.time.Timestamp()
 
-        self.grading_end_time: typing.Any = autograder.util.timestamp.get(grading_end_time)
+        self.grading_end_time: typing.Any = edq.util.time.Timestamp(grading_end_time)
         """ When grading ended. """
 
         if (proxy_start_time is None):
-            proxy_start_time = autograder.util.timestamp.MISSING_TIMESTAMP
+            proxy_start_time = edq.util.time.Timestamp()
 
-        self.proxy_start_time: typing.Any = autograder.util.timestamp.get(proxy_start_time)
+        self.proxy_start_time: typing.Any = edq.util.time.Timestamp(proxy_start_time)
         """ When proxy grading started. """
 
         if (proxy_end_time is None):
-            proxy_end_time = autograder.util.timestamp.MISSING_TIMESTAMP
+            proxy_end_time = edq.util.time.Timestamp()
 
-        self.proxy_end_time: typing.Any = autograder.util.timestamp.get(proxy_end_time)
+        self.proxy_end_time: typing.Any = edq.util.time.Timestamp(proxy_end_time)
         """ When proxy grading ended. """
 
     def to_dict(self) -> typing.Dict[str, typing.Any]:
@@ -142,10 +136,8 @@ class GradedAssignment(edq.util.json.DictConverter):
         output += self._format_logue(self.prologue, prefix)
 
         output += [
-            prefix + "Autograder transcript for assignment: %s." % (self.name),
-            prefix + "Grading started at %s and ended at %s." % (
-                autograder.util.timestamp.get(self.grading_start_time, pretty = True),
-                autograder.util.timestamp.get(self.grading_end_time, pretty = True))
+            prefix + f"Autograder transcript for assignment: {self.name}",
+            prefix + f"Grading started at {self.grading_start_time.pretty()} and ended at {self.grading_end_time.pretty()}.",
         ]
 
         total_score: float = 0
@@ -248,23 +240,25 @@ class Assignment:
         try:
             return self._grade_submission(self._prepare_submission(), **kwargs)
         except Exception:
-            now = autograder.util.timestamp.get()
+            now = edq.util.time.Timestamp.now()
 
             questions = []
             for question in self.questions:
                 questions.append(autograder.question.GradedQuestion(
                     name = question.name,
-                    max_points = question.max_points, score = 0,
+                    max_points = question.max_points,
+                    score = 0,
                     message = "Submission could not be graded.",
-                    grading_start_time = now, grading_end_time = now))
+                    grading_start_time = now,
+                    grading_end_time = now))
 
-            epilogue = ("\nSubmission could not be graded because of the following error:"
-                    + "\n---\n%s---" % (traceback.format_exc()))
+            epilogue = (f"\nSubmission could not be graded because of the following error:\n---\n{traceback.format_exc()}---")
 
             return GradedAssignment(
                 name = self.name,
                 questions = questions,
-                grading_start_time = now, grading_end_time = now,
+                grading_start_time = now,
+                grading_end_time = now,
                 epilogue = epilogue)
 
     def _grade_submission(self,
@@ -278,18 +272,20 @@ class Assignment:
         """
 
         self.result = GradedAssignment(name = self.name, questions = [])
-        self.result.grading_start_time = autograder.util.timestamp.get()
+        self.result.grading_start_time = edq.util.time.Timestamp.now()
 
         stop_grading = False
         for question in self.questions:
             if (stop_grading):
-                now = autograder.util.timestamp.get()
+                now = edq.util.time.Timestamp.now()
 
                 self.result.questions.append(autograder.question.GradedQuestion(
                     name = question.name,
-                    max_points = question.max_points, score = 0,
+                    max_points = question.max_points,
+                    score = 0,
                     message = "Grading stopped because of a hard error, skipping question...",
-                    grading_start_time = now, grading_end_time = now,
+                    grading_start_time = now,
+                    grading_end_time = now,
                     skipped = True))
             else:
                 result = question.grade(submission,
@@ -300,7 +296,7 @@ class Assignment:
 
                 stop_grading = result.hard_fail
 
-        self.result.grading_end_time = autograder.util.timestamp.get()
+        self.result.grading_end_time = edq.util.time.Timestamp.now()
 
         return self.result
 

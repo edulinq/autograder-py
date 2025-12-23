@@ -8,11 +8,11 @@ import typing
 
 import edq.util.dirent
 import edq.util.json
+import edq.util.time
 
 import autograder.assignment
 import autograder.fileop
 import autograder.filespec
-import autograder.util.timestamp
 
 TEST_SUBMISSION_FILENAME: str = 'test-submission.json'
 GRADER_FILENAME: str = 'grader.py'
@@ -299,19 +299,25 @@ class SubmissionSummary(edq.util.json.DictConverter):
             max_points: float = 0,
             score: float = 0,
             message: str = '',
-            # TEST - Timestamp
-            grading_start_time = None,
-            **kwargs):
+            grading_start_time: typing.Union[edq.util.time.Timestamp, int, None] = None,
+            **kwargs: typing.Any):
         self.id: str = id
+        """ An identifier for this submission. """
 
         self.max_points: float = max_points
+        """ The maximum number of points possible for this assignment (excluding extra credit). """
+
         self.score: float = score
+        """ The score earned for this submission. """
 
         self.message: str = message
+        """ A message/feedback for the student. """
 
-        self.grading_start_time = autograder.util.timestamp.MISSING_TIMESTAMP
-        if (grading_start_time is not None):
-            self.grading_start_time = autograder.util.timestamp.get(grading_start_time)
+        if (grading_start_time is None):
+            grading_start_time = edq.util.time.Timestamp()
+
+        self.grading_start_time: typing.Any = edq.util.time.Timestamp(grading_start_time)
+        """ When grading started. """
 
     def to_dict(self) -> typing.Dict[str, typing.Any]:
         return {
@@ -327,22 +333,13 @@ class SubmissionSummary(edq.util.json.DictConverter):
         return SubmissionSummary(**data)
 
     def short_id(self) -> str:
+        """ Get the short ID for this submission. """
+
         return self.id.split('::')[-1]
 
-    # TEST - timestamp
-    def pretty_time(self):
-        return autograder.util.timestamp.get(self.grading_start_time, pretty = True)
-
     def __repr__(self) -> str:
-        """
-        Get a string that represents the summary.
-        """
-
         message = '.'
         if ((self.message is not None) and (self.message != '')):
             message = ", Message: '%s'." % (self.message)
 
-        return "Submission ID: %s, Score: %s / %s, Time: %s%s" % (
-            self.short_id(), self.score, self.max_points,
-            self.pretty_time(),
-            message)
+        return f"Submission ID: {self.short_id()}, Score: {self.score} / {self.max_points}, Time: {self.grading_start_time.pretty()}{message}"
