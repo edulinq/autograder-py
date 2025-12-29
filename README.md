@@ -1,6 +1,6 @@
-# Python Interface for Autograder
+# Python Interface for Lynx Grader
 
-The canonical Python interface for the autograding server.
+The canonical Python interface for EduLinq's [Lynx Grader server](https://github.com/edulinq/autograder-server).
 
 ## Quick Links
 
@@ -40,6 +40,20 @@ Standard Python requirements are listed in `pyproject.toml`.
 The project and Python dependencies can be installed from source with:
 ```
 pip3 install .
+```
+
+### Cloning
+
+This repository includes submodules.
+To fetch these submodules on clone, add the `--recurse-submodules` flag.
+For example:
+```sh
+git clone --recurse-submodules git@github.com:edulinq/autograder-py.git
+```
+
+To fetch the submodules after cloning, you can use:
+```sh
+git submodule update --init --recursive
 ```
 
 ## Quickstart
