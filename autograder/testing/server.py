@@ -20,6 +20,9 @@ class ServerTest(edq.testing.httpserver.HTTPServerTest):
     A special test suite that is common across all tests that require a test autograder server.
     """
 
+    # Use the same server for all test classes.
+    tear_down_server = False
+
     @classmethod
     def child_class_setup(cls) -> None:
         # Make the API request source information consistent.

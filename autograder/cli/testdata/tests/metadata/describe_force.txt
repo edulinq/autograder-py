@@ -1,0 +1,8 @@
+{
+    "cli": "autograder.cli.metadata.describe",
+    "stdout_assertion_func": "autograder.testing.asserts.equals_api_description",
+    "arguments": [
+        "--force-compute",
+    ],
+}
+---

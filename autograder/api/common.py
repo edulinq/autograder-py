@@ -141,7 +141,7 @@ def send_api_request(
         file.close()
 
     try:
-        response_body = edq.util.json.loads(raw_body)
+        response_body = edq.util.json.loads(raw_body, strict = True)
     except Exception as ex:
         message = ("Autograder response does not contain valid JSON."
             + " Contact a server admin with the following."

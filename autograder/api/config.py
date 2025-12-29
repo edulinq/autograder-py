@@ -3,6 +3,7 @@ import copy
 import typing
 
 import edq.util.hash
+import edq.util.parse
 
 import autograder.api.constants
 import autograder.error
@@ -60,7 +61,7 @@ class APIParam:
         """ A description used for this parameter. """
 
         if (api_key is None):
-            api_key = config_key
+            api_key = config_key.replace('_', '-')
 
         self.api_key: str = api_key
         """ The key in the API request payload for this parameter. """
@@ -143,6 +144,9 @@ class APIParam:
         if (value is None):
             return None
 
+        if (issubclass(self.value_type, bool)):
+            return edq.util.parse.boolean(value)
+
         if (issubclass(self.value_type, str)):
             value = str(value).strip()
             if (len(value) == 0):
@@ -185,10 +189,12 @@ class APIParam:
 
         kwargs = {
             'dest': self.config_key,
-            'type': self.cli_type,
             'action': self.cli_action,
             'help': self.description,
         }
+
+        if (not self.cli_action in {'store_true', 'store_false'}):
+            kwargs['type'] = self.cli_type
 
         if (self.cli_required):
             kwargs['required'] = True
