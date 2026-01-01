@@ -15,6 +15,9 @@ BASE_ARGUMENTS: typing.Dict[str, typing.Any] = {
     'server': None,
 }
 
+# Exchange tests are unnecessary.
+delattr(edq.testing.httpserver.HTTPServerTest, 'test_exchanges_base')
+
 class ServerTest(edq.testing.httpserver.HTTPServerTest):
     """
     A special test suite that is common across all tests that require a test autograder server.

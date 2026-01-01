@@ -8,6 +8,7 @@ import lms.model.users
 
 import autograder.api.common
 import autograder.api.config
+import autograder.api.model
 
 API_ENDPOINT: str = 'courses/users/list'
 API_PARAMS: typing.List[autograder.api.config.APIParam] = [
@@ -16,7 +17,7 @@ API_PARAMS: typing.List[autograder.api.config.APIParam] = [
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
 
-    autograder.api.config.PARAM_TARGET_USERS.optional(),
+    autograder.api.config.PARAM_TARGET_USERS,
 ]
 
 def send(config: typing.Dict[str, typing.Any], **kwargs: typing.Any) -> typing.List[lms.model.users.ServerUser]:
@@ -26,10 +27,6 @@ def send(config: typing.Dict[str, typing.Any], **kwargs: typing.Any) -> typing.L
 
     users = []
     for raw_user in response['users']:
-        raw_user['id'] = raw_user['email']
-        raw_user['raw_role'] = raw_user['role']
-        raw_user['role'] = lms.model.users.CourseRole(raw_user['raw_role'])
-
-        users.append(lms.model.users.CourseUser(**raw_user))
+        users.append(autograder.api.model.make_course_user(raw_user))
 
     return sorted(users)

@@ -257,6 +257,12 @@ PARAM_SERVER = APIParam(
     'The URL of the autograder server to communicate with.',
 )
 
+PARAM_TARGET_EMAIL_OR_SELF = APIParam(
+    'target_email',
+    'The email of the user that is the target of this request (defaults to you).',
+    api_required = False,
+)
+
 PARAM_TARGET_USERS = APIParam(
     'target_users',
     ('A list of server user references.'
@@ -515,10 +521,6 @@ PARAM_SUBMISSION_SPECS = APIParam('submissions',
 PARAM_TARGET_EMAIL = APIParam('target_email',
     'The email of the user that is the target of this request.',
     required = True)
-
-PARAM_TARGET_EMAIL_OR_SELF = APIParam('target_email',
-    'The email of the user that is the target of this request (defaults to you).',
-    required = False)
 
 PARAM_TARGET_PASS = APIParam('target_pass',
     'The password of the user that is the target of this request.',

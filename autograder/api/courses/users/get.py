@@ -1,5 +1,5 @@
 """
-List the users on the server.
+Get information about a course user.
 """
 
 import typing
@@ -10,22 +10,22 @@ import autograder.api.common
 import autograder.api.config
 import autograder.api.model
 
-API_ENDPOINT: str = 'users/list'
+API_ENDPOINT: str = 'courses/users/get'
 API_PARAMS: typing.List[autograder.api.config.APIParam] = [
     autograder.api.config.PARAM_SERVER,
+    autograder.api.config.PARAM_COURSE,
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
 
-    autograder.api.config.PARAM_TARGET_USERS,
+    autograder.api.config.PARAM_TARGET_EMAIL_OR_SELF,
 ]
 
-def send(config: typing.Dict[str, typing.Any], **kwargs: typing.Any) -> typing.List[lms.model.users.ServerUser]:
+def send(config: typing.Dict[str, typing.Any], **kwargs: typing.Any) -> typing.Union[lms.model.users.ServerUser, None]:
     """ Send a request to the autograder. """
 
     response = autograder.api.common.make_api_request(API_ENDPOINT, config, API_PARAMS, **kwargs)
 
-    users = []
-    for raw_user in response['users']:
-        users.append(autograder.api.model.make_server_user(raw_user))
+    if (not response.get('found', False)):
+        return None
 
-    return sorted(users)
+    return autograder.api.model.make_course_user(response['user'])

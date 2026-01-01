@@ -70,7 +70,8 @@ class ServerRunner(edq.testing.serverrunner.ServerRunner):
                 # Response is not from the autograder.
                 return
 
-            if (body.get('content', {}).get('endpoint', None) in WRITE_ENDPOINTS):
+            content = body.get('content', {})
+            if ((content is not None) and (content.get('endpoint', None) in WRITE_ENDPOINTS)):
                 self.restart()
 
         self._old_make_request_exchange_complete_func = edq.util.net._make_request_exchange_complete_func
