@@ -4,6 +4,7 @@ import typing
 
 import edq.util.hash
 import edq.util.parse
+import lms.model.users
 
 import autograder.api.constants
 import autograder.error
@@ -31,9 +32,10 @@ class APIParam:
             description: str,
             api_key: typing.Union[str, None] = None,
             cli_flag: typing.Union[str, None] = None,
-            api_required: bool = True,
-            cli_required: bool = False,
+            api: bool = True,
+            api_required: typing.Union[bool, None] = None,
             cli: bool = True,
+            cli_required: typing.Union[bool, None] = None,
             value_type: typing.Type = str,
             cli_type: typing.Union[typing.Any, None] = None,
             skip_clean: bool = False,
@@ -41,7 +43,7 @@ class APIParam:
             omit_empty: bool = True,
             cli_action: typing.Union[typing.Any, None] = None,
             cli_default_value: typing.Any = None,
-            cli_show_default: bool = True,
+            cli_show_default: typing.Union[bool, None] = None,
             cli_extra_options: typing.Union[typing.Dict[str, typing.Any], None] = None,
             cli_add_func: typing.Union[typing.Callable, None] = None,
             **kwargs: typing.Any) -> None:
@@ -72,14 +74,23 @@ class APIParam:
         self.cli_flag: str = cli_flag
         """ The flag used on the CLI for this parameter. """
 
+        self.api: bool = api
+        """ If this parameter should be included on the API payload. """
+
+        if (api_required is None):
+            api_required = api
+
         self.api_required: bool = api_required
         """ If this parameter is required when calling the API. """
 
-        self.cli_required: bool = cli_required
-        """ If this parameter is required on the CLI. """
-
         self.cli: bool = cli
         """ If this parameter should be included on the CLI. """
+
+        if (cli_required is None):
+            cli_required = False
+
+        self.cli_required: bool = cli_required
+        """ If this parameter is required on the CLI. """
 
         self.value_type: typing.Type = value_type
         """ The type that a clean value from this parameter should be. """
@@ -104,7 +115,7 @@ class APIParam:
         self.omit_empty: bool = omit_empty
         """ Do not include this parameter in the API payload if its value is empty. """
 
-        if (cli_action is None):
+        if (self.cli and (cli_action is None)):
             # Choose action based on the value's type.
             cli_action = DEFAULT_CLI_ACTIONS.get(self.value_type, None)
             if (cli_action is None):
@@ -115,6 +126,11 @@ class APIParam:
 
         self.cli_default_value: typing.Any = cli_default_value
         """ The default value for the CLI argument. """
+
+        if (cli_show_default is None):
+            # Usually we will want to show the default value,
+            # but boolean flags don't make much sense to show defaults with.
+            cli_show_default = (value_type != bool)
 
         self.cli_show_default: bool = cli_show_default
         """ Show the default value (in CLI's help) for a non-required param. """
@@ -252,9 +268,86 @@ PARAM_COURSE = APIParam(
     cli_show_default = False,
 )
 
+PARAM_DRY_RUN = APIParam(
+    'dry_run',
+    'Do not commit/finalize the operation, just do all the steps and state what the result would look like.',
+    api_required = False,
+    value_type = bool,
+    cli_default_value = False,
+)
+
+PARAM_FORCE_COMPUTE = APIParam(
+    'force_compute',
+    'Force the server to compute the result, ignoring any existing cache.',
+    api_required = False,
+    value_type = bool,
+    cli_default_value = False,
+)
+
+PARAM_RAW_COURSE_USERS = APIParam(
+    'raw_course_users',
+    'Raw course users to operate on.',
+    value_type = list,
+    cli = False,
+    skip_clean = True,
+)
+
+PARAM_NEW_USER_COURSE_ROLE = APIParam(
+    'new_course_role',
+    'The course role for the new user.',
+    api = False,
+    cli_default_value = lms.model.users.CourseRole.STUDENT.value,
+    cli_extra_options = {'choices': [role.value for role in lms.model.users.CourseRole]},
+)
+
+PARAM_NEW_USER_EMAIL = APIParam(
+    'new_email',
+    'The email for the new user.',
+    api = False,
+    cli_required = True,
+)
+
+PARAM_NEW_USER_NAME = APIParam(
+    'new_name',
+    'The name for the new user.',
+    api = False,
+    cli_default_value = '',
+    cli_show_default = False,
+)
+
+PARAM_NEW_USER_LMS_ID = APIParam(
+    'new_lms_id',
+    'The LMS ID for the new user.',
+    api = False,
+    cli_default_value = '',
+    cli_show_default = False,
+)
+
+PARAM_SEND_EMAILS = APIParam(
+    'send_emails',
+    'Send any relevant emails to users affected by this operation (e.g., a user being enrolled in a course).',
+    value_type = bool,
+    cli_default_value = False,
+)
+
 PARAM_SERVER = APIParam(
     'server',
     'The URL of the autograder server to communicate with.',
+    cli_show_default = False,
+)
+
+PARAM_SKIP_INSERTS = APIParam(
+    'skip_inserts',
+    'Skip insert operations.',
+    value_type = bool,
+    cli_default_value = False,
+)
+
+PARAM_SKIP_UPDATES = APIParam(
+    'skip_updates',
+    'Skip update operations.',
+    value_type = bool,
+    cli_default_value = False,
 )
 
 PARAM_TARGET_EMAIL_OR_SELF = APIParam(
@@ -351,12 +444,6 @@ PARAM_COURSE_USER_REFERENCES = APIParam('target_users',
     + ' Default: All users in the course.'),
     required = False,
     cli_options = {'action': 'extend', 'type': _csv_to_list})
-
-PARAM_DRY_RUN = APIParam('dry_run',
-    ('Do not commit/finalize the operation,'
-    + ' just do all the steps and state what the result would look like.'),
-    required = False,
-    cli_options = {'action': 'store_true', 'default': False})
 
 PARAM_EMAIL_BODY = APIParam('body',
     'The email body.',
@@ -455,11 +542,6 @@ PARAM_REGRADE_CUTOFF = APIParam('regrade_cutoff',
     + ' (https://en.wikipedia.org/wiki/Unix_time).'),
     required = False, cli_options = {'action': 'store', 'type': int})
 
-# TEST - We can make this a CLI param, but we want it to default false and be `--skip-emails`.
-PARAM_SEND_EMAILS = APIParam('send_emails',
-    'Send any emails.',
-    required = True, cli = False)
-
 def add_skip_emails_argument(parser):
     parser.add_argument('--skip-emails', dest = 'skip-emails',
         action = 'store_true', default = False,
@@ -476,11 +558,6 @@ PARAM_SKIP_EMAILS = APIParam('skip_emails',
     required = False,
     cli_options = {'action': 'store_true', 'default': False})
 
-PARAM_SKIP_INSERTS = APIParam('skip_inserts',
-    'Skip inserts (default: False).',
-    required = False,
-    cli_options = {'action': 'store_true', 'default': False})
-
 PARAM_SKIP_LMS_SYNC = APIParam('skip_lms_sync',
     'Skip syncing with the LMS.',
     required = False,
@@ -493,11 +570,6 @@ PARAM_SKIP_SOURCE_SYNC = APIParam('skip_source_sync',
 
 PARAM_SKIP_TASKS = APIParam('skip_tasks',
     'Skip starting course tasks.',
-    required = False,
-    cli_options = {'action': 'store_true', 'default': False})
-
-PARAM_SKIP_UPDATES = APIParam('skip_updates',
-    'Skip updates (default: False).',
     required = False,
     cli_options = {'action': 'store_true', 'default': False})
 

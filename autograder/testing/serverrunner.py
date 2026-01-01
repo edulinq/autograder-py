@@ -1,4 +1,5 @@
 import logging
+import re
 import typing
 
 import edq.testing.serverrunner
@@ -10,7 +11,9 @@ import autograder.cli.parser
 import autograder.error
 import autograder.util.net
 
-WRITE_ENDPOINTS: typing.Set[str] = set()
+WRITE_ENDPOINTS: typing.Set[str] = {
+    'courses/users/enroll',
+}
 """ Keep track of endpoints with a write component, so the server can be restarted after. """
 
 class ServerRunner(edq.testing.serverrunner.ServerRunner):
@@ -60,18 +63,8 @@ class ServerRunner(edq.testing.serverrunner.ServerRunner):
 
         def _make_request_callback(exchange: edq.util.net.HTTPExchange) -> None:
             # Restart if the request is a write.
-
-            if (exchange.response_body is None):
-                return
-
-            try:
-                body = edq.util.json.loads(exchange.response_body, strict = True)
-            except Exception:
-                # Response is not from the autograder.
-                return
-
-            content = body.get('content', {})
-            if ((content is not None) and (content.get('endpoint', None) in WRITE_ENDPOINTS)):
+            endpoint = re.sub(r'api/v\d+/', '', exchange.url_path)
+            if (endpoint in WRITE_ENDPOINTS):
                 self.restart()
 
         self._old_make_request_exchange_complete_func = edq.util.net._make_request_exchange_complete_func
