@@ -1,5 +1,5 @@
 """
-List the users on the server.
+List the users in a course.
 """
 
 import typing
@@ -9,9 +9,10 @@ import lms.model.users
 import autograder.api.common
 import autograder.api.config
 
-API_ENDPOINT: str = 'users/list'
+API_ENDPOINT: str = 'courses/users/list'
 API_PARAMS: typing.List[autograder.api.config.APIParam] = [
     autograder.api.config.PARAM_SERVER,
+    autograder.api.config.PARAM_COURSE,
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
 
@@ -26,6 +27,9 @@ def send(config: typing.Dict[str, typing.Any], **kwargs: typing.Any) -> typing.L
     users = []
     for raw_user in response['users']:
         raw_user['id'] = raw_user['email']
-        users.append(lms.model.users.ServerUser(**raw_user))
+        raw_user['raw_role'] = raw_user['role']
+        raw_user['role'] = lms.model.users.CourseRole(raw_user['raw_role'])
+
+        users.append(lms.model.users.CourseUser(**raw_user))
 
     return sorted(users)

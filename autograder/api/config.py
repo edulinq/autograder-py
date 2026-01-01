@@ -245,27 +245,19 @@ def _csv_to_list(arg):
 
 # Common API params.
 
+PARAM_COURSE = APIParam(
+    'course',
+    'The ID of the course to make this request to.',
+    api_key = 'course-id',
+    cli_show_default = False,
+)
+
 PARAM_SERVER = APIParam(
     'server',
     'The URL of the autograder server to communicate with.',
 )
 
-PARAM_USER_EMAIL = APIParam(
-    'user',
-    'The email of the user making this request.',
-    api_key = 'user-email',
-    cli_show_default = False,
-)
-
-PARAM_USER_PASS = APIParam(
-    'pass',
-    'The password of the user making this request.',
-    api_key = 'user-pass',
-    hash_value = True,
-    cli_show_default = False,
-)
-
-PARAM_SERVER_USER_REFERENCES = APIParam(
+PARAM_TARGET_USERS = APIParam(
     'target_users',
     ('A list of server user references.'
     + ' Server user references may be specified in eight ways:'
@@ -287,6 +279,21 @@ PARAM_SERVER_USER_REFERENCES = APIParam(
     value_type = list,
     cli_action = 'extend',
     cli_type = _csv_to_list,
+    cli_show_default = False,
+)
+
+PARAM_USER_EMAIL = APIParam(
+    'user',
+    'The email of the user making this request.',
+    api_key = 'user-email',
+    cli_show_default = False,
+)
+
+PARAM_USER_PASS = APIParam(
+    'pass',
+    'The password of the user making this request.',
+    api_key = 'user-pass',
+    hash_value = True,
     cli_show_default = False,
 )
 
@@ -320,10 +327,6 @@ PARAM_COURSE_EMAIL_TO = APIParam('to',
     + ' to exclude that user or role from the request.'),
     required = False,
     cli_options = {'action': 'extend', 'type': _csv_to_list})
-
-PARAM_COURSE_ID = APIParam('course_id',
-    'The ID of the course to make this request to.',
-    required = True)
 
 PARAM_COURSE_SOURCE = APIParam('source',
     'The source to use for the course.',
