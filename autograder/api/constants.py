@@ -9,6 +9,8 @@ API_RESPONSE_KEY_MESSAGE: str = 'message'
 API_RESPONSE_KEY_STATUS: str = 'status'
 API_RESPONSE_KEY_CONTENT: str = API_REQUEST_JSON_KEY
 
+HEADER_KEY_WRITE: str = 'edq-ag-write'
+
 SERVER_ROLES: typing.List[str] = [
     'user',
     'creator',

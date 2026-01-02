@@ -34,6 +34,7 @@ def make_api_request(
         endpoint: str,
         config: typing.Dict[str, typing.Any],
         api_params: typing.List[autograder.api.config.APIParam],
+        write: typing.Union[bool, None] = None,
         exit_on_error: bool = True,
         post_paths: typing.Union[typing.List[str], None] = None,
         ) -> typing.Dict[str, typing.Any]:
@@ -41,10 +42,14 @@ def make_api_request(
     Given arguments (usually from argparse), API params, and an endpoint,
     make an API request.
     Will raise an error on any error or error response.
+
+    Requests that MAY write data to the server should pass `write` as true.
+    When set, a header (autograder.api.constants.HEADER_KEY_WRITE) will be sent along with the API request.
+    This should only affect testing, and will allow server runners to restart when write operations are sent.
     """
 
     try:
-        return _make_api_request(endpoint, config, api_params, post_paths = post_paths)
+        return _make_api_request(endpoint, config, api_params, post_paths = post_paths, write = write)
     except autograder.error.AutograderError as ex:
         if (exit_on_error):
             print("ERROR: " + ex.args[0], file = sys.stderr)
@@ -56,13 +61,14 @@ def _make_api_request(
         endpoint: str,
         config: typing.Dict[str, typing.Any],
         api_params: typing.List[autograder.api.config.APIParam],
+        write: typing.Union[bool, None] = None,
         post_paths: typing.Union[typing.List[str], None] = None,
         ) -> typing.Dict[str, typing.Any]:
     """ Wrapped function for make_api_request(). """
 
     payload = _verify_payload(config, api_params)
 
-    return send_api_request(endpoint, payload, config, post_paths = post_paths)
+    return send_api_request(endpoint, payload, config, post_paths = post_paths, write = write)
 
 def _verify_payload(
         raw_payload: typing.Dict[str, typing.Any],
@@ -94,6 +100,7 @@ def send_api_request(
         endpoint: str,
         payload: typing.Dict[str, typing.Any],
         config: typing.Dict[str, typing.Any],
+        write: typing.Union[bool, None] = None,
         post_paths: typing.Union[typing.List[str], None] = None,
         ) -> typing.Dict[str, typing.Any]:
     """
@@ -119,6 +126,10 @@ def send_api_request(
     payload['source'] = _source_name
     payload['source-version'] = _source_version
 
+    headers = {}
+    if (write is not None):
+        headers[autograder.api.constants.HEADER_KEY_WRITE] = str(write).lower()
+
     post_files = {}
     for path in post_paths:
         filename = os.path.basename(path)
@@ -131,6 +142,7 @@ def send_api_request(
         raw_response, raw_body = edq.util.net.make_post(
             url,
             data = {autograder.api.constants.API_REQUEST_JSON_KEY: edq.util.json.dumps(payload)},
+            headers = headers,
             files = post_files,
             raise_for_status = False)
     except requests.exceptions.ConnectionError:
