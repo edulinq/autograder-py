@@ -12,6 +12,7 @@ import autograder.error
 import autograder.util.net
 
 WRITE_ENDPOINTS: typing.Set[str] = {
+    'courses/users/drop',
     'courses/users/enroll',
 }
 """ Keep track of endpoints with a write component, so the server can be restarted after. """

@@ -4,7 +4,7 @@ import autograder.testing.model
 import autograder.testing.server
 
 class TestUsersList(autograder.testing.server.ServerTest):
-    """ Test getting course users. """
+    """ Test listing course users. """
 
     def test_base(self):
         """ Test base functionality. """

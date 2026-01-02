@@ -350,6 +350,11 @@ PARAM_SKIP_UPDATES = APIParam(
     cli_default_value = False,
 )
 
+PARAM_TARGET_EMAIL = APIParam(
+    'target_email',
+    'The email of the user that is the target of this request.',
+)
+
 PARAM_TARGET_EMAIL_OR_SELF = APIParam(
     'target_email',
     'The email of the user that is the target of this request (defaults to you).',
@@ -589,10 +594,6 @@ PARAM_SUBMISSION_SPECS = APIParam('submissions',
     + ' for the most recent submission for all students.'),
     required = True,
     cli_add_func = _submission_add_func)
-
-PARAM_TARGET_EMAIL = APIParam('target_email',
-    'The email of the user that is the target of this request.',
-    required = True)
 
 PARAM_TARGET_PASS = APIParam('target_pass',
     'The password of the user that is the target of this request.',

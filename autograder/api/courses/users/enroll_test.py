@@ -3,7 +3,7 @@ import autograder.api.courses.users.enroll
 import autograder.testing.server
 
 class TestUsersEnroll(autograder.testing.server.ServerTest):
-    """ Test getting course users. """
+    """ Test enrolling course users. """
 
     def test_base(self):
         """ Test base functionality. """
