@@ -1,0 +1,13 @@
+{
+    "cli": "autograder.cli.users.remove",
+    "arguments": [
+        '--user', 'course-admin@test.edulinq.org',
+        '--pass', 'course-admin',
+        '--target-email', 'course-student@test.edulinq.org',
+    ],
+    "error": true,
+}
+---
+builtins.SystemExit: 1
++++
+autograder.error.APIError: Failed to complete operation: You have insufficient permissions for the requested operation.
