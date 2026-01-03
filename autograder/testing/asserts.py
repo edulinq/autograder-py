@@ -1,4 +1,5 @@
 import os
+import re
 import typing
 
 import edq.testing.unittest
@@ -13,6 +14,12 @@ API_DESCRIPTION_PATH: str = os.path.join(AUTOGRADER_SERVER_REPO, 'resources', 'a
 TEST_BASE_VERSION: str = '1.2.3'
 TEST_GIT_HASH: str = 'abcd1234'
 TEST_IS_DIRTY: bool = False
+
+TOKEN_CLEARTEXT_PATTERN: str = r'\w{32}'
+TOKEN_ID_PATTERN: str = r'\w{8}-\w{4}-\w{4}-\w{4}-\w{12}'
+
+TEST_TOKEN_CLEARTEXT: str = 'test-token-cleartext'
+TEST_TOKEN_ID: str = 'test-token-id'
 
 _cached_api_description: typing.Union[typing.Dict[str, typing.Any], None] = None  # pylint: disable=invalid-name
 
@@ -47,6 +54,7 @@ def normalize_dict(data: typing.Dict[str, typing.Any]) -> typing.Dict[str, typin
     """ Noramlize a dict that typically comes from testing output. """
 
     data = _noramlize_version(data)
+    data = _noramlize_tokens(data)
 
     return data
 
@@ -62,6 +70,17 @@ def _noramlize_version(data: typing.Dict[str, typing.Any]) -> typing.Dict[str, t
 
     return data
 
+def _noramlize_tokens(data: typing.Dict[str, typing.Any]) -> typing.Dict[str, typing.Any]:
+    """ Normalize token identifiers. """
+
+    if ('token-id' in data):
+        data['token-id'] = TEST_TOKEN_ID
+
+    if ('token-cleartext' in data):
+        data['token-cleartext'] = TEST_TOKEN_CLEARTEXT
+
+    return data
+
 def equals_api_description(test: edq.testing.unittest.BaseTest, expected: str, actual: str) -> None:
     """ A CLI test assertion function for the API description (read from a submodule). """
 
@@ -69,3 +88,14 @@ def equals_api_description(test: edq.testing.unittest.BaseTest, expected: str, a
     actual_dict = edq.util.json.loads(actual, strict = True)
 
     test.assertJSONDictEqual(expected_dict, actual_dict)
+
+def equals_clean_tokens(test: edq.testing.unittest.BaseTest, expected: str, actual: str) -> None:
+    """ A CLI test assertion function for text that contains tokens. """
+
+    expected = re.sub(TOKEN_CLEARTEXT_PATTERN, TEST_TOKEN_CLEARTEXT, expected)
+    expected = re.sub(TOKEN_ID_PATTERN, TEST_TOKEN_ID, expected)
+
+    actual = re.sub(TOKEN_CLEARTEXT_PATTERN, TEST_TOKEN_CLEARTEXT, actual)
+    actual = re.sub(TOKEN_ID_PATTERN, TEST_TOKEN_ID, actual)
+
+    test.assertEqual(expected, actual)

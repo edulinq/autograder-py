@@ -284,6 +284,12 @@ PARAM_FORCE_COMPUTE = APIParam(
     cli_default_value = False,
 )
 
+PARAM_NAME = APIParam(
+    'name',
+    'An optional name to use.',
+    api_required = False,
+)
+
 PARAM_NEW_PASS = APIParam(
     'new_pass',
     'The new password.',
