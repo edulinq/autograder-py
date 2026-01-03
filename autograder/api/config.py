@@ -284,12 +284,11 @@ PARAM_FORCE_COMPUTE = APIParam(
     cli_default_value = False,
 )
 
-PARAM_RAW_COURSE_USERS = APIParam(
-    'raw_course_users',
-    'Raw course users to operate on.',
-    value_type = list,
-    cli = False,
-    skip_clean = True,
+PARAM_NEW_PASS = APIParam(
+    'new_pass',
+    'The new password.',
+    hash_value = True,
+    cli_required = True,
 )
 
 PARAM_NEW_USER_COURSE_ROLE = APIParam(
@@ -321,6 +320,14 @@ PARAM_NEW_USER_LMS_ID = APIParam(
     api = False,
     cli_default_value = '',
     cli_show_default = False,
+)
+
+PARAM_RAW_COURSE_USERS = APIParam(
+    'raw_course_users',
+    'Raw course users to operate on.',
+    value_type = list,
+    cli = False,
+    skip_clean = True,
 )
 
 PARAM_SEND_EMAILS = APIParam(
@@ -474,10 +481,6 @@ PARAM_FORCE = APIParam('force',
     'Force the operation, overwriting any existing resources.',
     required = False,
     cli_options = {'action': 'store_true', 'default': False})
-
-PARAM_NEW_PASS = APIParam('new_pass',
-    'The new password to set for the user that is the target of this request.',
-    required = True, hash_value = True)
 
 PARAM_OVERWRITE_RECORDS = APIParam('overwrite_records',
     ('Replace any existing records that match the current operation'
