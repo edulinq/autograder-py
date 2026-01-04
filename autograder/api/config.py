@@ -399,6 +399,12 @@ PARAM_TARGET_USERS = APIParam(
     cli_show_default = False,
 )
 
+PARAM_TOKEN_ID = APIParam(
+    'token_id',
+    'The id of the token to target.',
+    cli_required = True,
+)
+
 PARAM_USER_EMAIL = APIParam(
     'user',
     'The email of the user making this request.',
