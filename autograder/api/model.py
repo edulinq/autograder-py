@@ -1,6 +1,20 @@
+import enum
 import typing
 
 import lms.model.users
+
+class ServerRole(enum.Enum):
+    """
+    Different roles a user can have on an autograder server.
+    """
+
+    USER = 'user'
+    CREATOR = 'creator'
+    ADMIN = 'admin'
+    OWNER = 'owner'
+
+    def __str__(self) -> str:
+        return str(self.value)
 
 def make_course_user(raw_user: typing.Dict[str, typing.Any]) -> lms.model.users.CourseUser:
     """

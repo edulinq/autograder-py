@@ -1,5 +1,5 @@
 """
-Enroll one or more users in a course.
+Upsert one or more server users.
 """
 
 import typing
@@ -7,11 +7,10 @@ import typing
 import autograder.api.common
 import autograder.api.config
 
-API_ENDPOINT: str = 'courses/users/enroll'
+API_ENDPOINT: str = 'users/upsert'
 API_WRITE: bool = True
 API_PARAMS: typing.List[autograder.api.config.APIParam] = [
     autograder.api.config.PARAM_SERVER,
-    autograder.api.config.PARAM_COURSE,
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
 
@@ -21,10 +20,13 @@ API_PARAMS: typing.List[autograder.api.config.APIParam] = [
 
     autograder.api.config.PARAM_SEND_EMAILS,
 
-    autograder.api.config.PARAM_RAW_COURSE_USERS,
+    autograder.api.config.PARAM_RAW_SERVER_USERS,
 
     autograder.api.config.PARAM_NEW_USER_EMAIL,
     autograder.api.config.PARAM_NEW_USER_NAME,
+    autograder.api.config.PARAM_NEW_USER_PASS,
+    autograder.api.config.PARAM_NEW_USER_SERVER_ROLE,
+    autograder.api.config.PARAM_NEW_USER_COURSE,
     autograder.api.config.PARAM_NEW_USER_COURSE_ROLE,
     autograder.api.config.PARAM_NEW_USER_LMS_ID,
 ]

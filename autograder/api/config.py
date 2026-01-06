@@ -7,6 +7,7 @@ import edq.util.parse
 import lms.model.users
 
 import autograder.api.constants
+import autograder.api.model
 import autograder.error
 
 CSV_TO_LIST_DELIMITER: str = ','
@@ -297,6 +298,14 @@ PARAM_NEW_PASS = APIParam(
     cli_required = True,
 )
 
+PARAM_NEW_USER_COURSE = APIParam(
+    'new_course',
+    'An optional course to enroll the new user in',
+    api = False,
+    cli_default_value = '',
+    cli_show_default = False,
+)
+
 PARAM_NEW_USER_COURSE_ROLE = APIParam(
     'new_course_role',
     'The course role for the new user.',
@@ -320,6 +329,14 @@ PARAM_NEW_USER_NAME = APIParam(
     cli_show_default = False,
 )
 
+PARAM_NEW_USER_PASS = APIParam(
+    'new_pass',
+    'The password for the new user (random if not supplied).',
+    api = False,
+    cli_default_value = '',
+    cli_show_default = False,
+)
+
 PARAM_NEW_USER_LMS_ID = APIParam(
     'new_lms_id',
     'The LMS ID for the new user.',
@@ -328,9 +345,25 @@ PARAM_NEW_USER_LMS_ID = APIParam(
     cli_show_default = False,
 )
 
+PARAM_NEW_USER_SERVER_ROLE = APIParam(
+    'new_role',
+    'The server role for the new user.',
+    api = False,
+    cli_default_value = autograder.api.model.ServerRole.USER.value,
+    cli_extra_options = {'choices': [role.value for role in autograder.api.model.ServerRole]},
+)
+
 PARAM_RAW_COURSE_USERS = APIParam(
     'raw_course_users',
     'Raw course users to operate on.',
+    value_type = list,
+    cli = False,
+    skip_clean = True,
+)
+
+PARAM_RAW_SERVER_USERS = APIParam(
+    'raw_users',
+    'Raw server users to operate on.',
     value_type = list,
     cli = False,
     skip_clean = True,
