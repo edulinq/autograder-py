@@ -1,23 +1,23 @@
 # pylint: disable=invalid-name
 
 """
-Enroll users from a TSV file into a course.
+Upsert server users from a TSV file.
 """
 
 import argparse
 import sys
 import typing
 
-import edq.util.json
+import edq.util.hash
 
 import autograder.api.config
-import autograder.api.courses.users.enroll
+import autograder.api.model
+import autograder.api.users.upsert
 import autograder.cli.parser
 import autograder.util.load
 
 API_PARAMS: typing.List[autograder.api.config.APIParam] = [
     autograder.api.config.PARAM_SERVER,
-    autograder.api.config.PARAM_COURSE,
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
 
@@ -27,16 +27,16 @@ API_PARAMS: typing.List[autograder.api.config.APIParam] = [
 
     autograder.api.config.PARAM_SEND_EMAILS,
 
-    autograder.api.config.PARAM_RAW_COURSE_USERS,
+    autograder.api.config.PARAM_RAW_SERVER_USERS,
 ]
 
 def run_cli(args: argparse.Namespace) -> int:
     """ Run the CLI. """
 
     config = args._config
-    config['raw_course_users'] = _load_users(args.path)
+    config['raw_users'] = _load_users(args.path)
 
-    result = autograder.api.courses.users.enroll.send(config)
+    result = autograder.api.users.upsert.send(config)
     print(edq.util.json.dumps(result, indent = 4))
 
     return 0
@@ -46,21 +46,36 @@ def _load_users(path: str) -> typing.List[typing.Dict[str, str]]:
 
     users = []
 
-    rows = autograder.util.load.load_tsv(path, 4)
+    rows = autograder.util.load.load_tsv(path, 7)
     for (lineno, row) in enumerate(rows):
         email = row.pop(0)
+
+        password = ''
+        if (len(row) > 0):
+            password = row.pop(0)
+            if (password != ''):
+                password = edq.util.hash.sha256_hex(password)
 
         name = ''
         if (len(row) > 0):
             name = row.pop(0)
 
-        course_role = ''
+        role = 'user'
+        if (len(row) > 0):
+            role = row.pop(0)
+            role = role.lower()
+
+        if (not autograder.api.model.ServerRole.has_value(role)):
+            raise ValueError(f"File ('{path}') line ({lineno}) has an invalid role '{role}'.")
+
+        course = ''
+        if (len(row) > 0):
+            course = row.pop(0)
+
+        course_role = 'unknown'
         if (len(row) > 0):
             course_role = row.pop(0)
             course_role = course_role.lower()
-
-        if (course_role == ''):
-            course_role = 'unknown'
 
         if (not autograder.api.model.CourseRole.has_value(course_role)):
             raise ValueError(f"File ('{path}') line ({lineno}) has an invalid course role '{course_role}'.")
@@ -71,7 +86,10 @@ def _load_users(path: str) -> typing.List[typing.Dict[str, str]]:
 
         users.append({
             'email': email,
+            'pass': password,
             'name': name,
+            'role': role,
+            'course': course,
             'course-role': course_role,
             'course-lms-id': course_lms_id,
         })
@@ -92,10 +110,11 @@ def _get_parser() -> argparse.ArgumentParser:
 
     parser.add_argument('path', metavar = 'PATH',
         action = 'store', type = str,
-        help = 'Path to a TSV file where each line contains up to four columns:'
-                + ' [email, name, course-role, lms-id].'
+        help = 'Path to a TSV file where each line contains up to seven columns:'
+                + ' [email, pass, name, role, course, course-role, lms-id].'
                 + ' Only the email is required. Leading and trailing whitespace is stripped'
-                + ' from all fields.')
+                + ' from all fields, including pass. If pass is empty, a password will be'
+                + ' randomly generated and emailed to the user.')
 
     return parser
 

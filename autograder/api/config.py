@@ -4,7 +4,6 @@ import typing
 
 import edq.util.hash
 import edq.util.parse
-import lms.model.users
 
 import autograder.api.constants
 import autograder.api.model
@@ -310,8 +309,8 @@ PARAM_NEW_USER_COURSE_ROLE = APIParam(
     'new_course_role',
     'The course role for the new user.',
     api = False,
-    cli_default_value = lms.model.users.CourseRole.STUDENT.value,
-    cli_extra_options = {'choices': [role.value for role in lms.model.users.CourseRole]},
+    cli_default_value = autograder.api.model.CourseRole.STUDENT.value,
+    cli_extra_options = {'choices': [role.value for role in autograder.api.model.CourseRole]},
 )
 
 PARAM_NEW_USER_EMAIL = APIParam(
@@ -520,7 +519,7 @@ PARAM_FILTER_ROLE = APIParam('filter_role',
     cli_options = {
         'action': 'store',
         'default': 'unknown',
-        'choices': autograder.api.constants.COURSE_ROLES})
+        'choices': [role.value for role in autograder.api.model.CourseRole]})
 
 PARAM_FORCE = APIParam('force',
     'Force the operation, overwriting any existing resources.',

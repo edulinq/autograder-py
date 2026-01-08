@@ -3,11 +3,36 @@ import typing
 
 import lms.model.users
 
+class CourseRole(enum.Enum):
+    """
+    Different roles a user can have on an autograder course.
+    """
+
+    UNKNOWN = 'unknown'
+    OTHER = 'other'
+    STUDENT = 'student'
+    GRADER = 'grader'
+    ADMIN = 'admin'
+    OWNER = 'owner'
+
+    def __str__(self) -> str:
+        return str(self.value)
+
+    @classmethod
+    def has_value(cls, value: typing.Any) -> bool:
+        """
+        Check if a value is present in the enum.
+        Required for older versions of Python.
+        """
+
+        return (value is not None) and (str(value).upper() in cls.__members__)
+
 class ServerRole(enum.Enum):
     """
     Different roles a user can have on an autograder server.
     """
 
+    UNKNOWN = 'unknown'
     USER = 'user'
     CREATOR = 'creator'
     ADMIN = 'admin'
@@ -15,6 +40,15 @@ class ServerRole(enum.Enum):
 
     def __str__(self) -> str:
         return str(self.value)
+
+    @classmethod
+    def has_value(cls, value: typing.Any) -> bool:
+        """
+        Check if a value is present in the enum.
+        Required for older versions of Python.
+        """
+
+        return (value is not None) and (str(value).upper() in cls.__members__)
 
 def make_course_user(raw_user: typing.Dict[str, typing.Any]) -> lms.model.users.CourseUser:
     """
@@ -46,6 +80,6 @@ def promote_server_user(user: lms.model.users.ServerUser) -> lms.model.users.Cou
 
     return lms.model.users.CourseUser(
         raw_role = 'owner',
-        role = lms.model.users.CourseRole.OWNER,
+        role = lms.model.users.CourseRole(CourseRole.OWNER.value),
         **vars(user),
     )

@@ -36,17 +36,9 @@ def get_parser(
         include_output_format: bool = False,
         include_net: bool = True,
         include_skip_rows: bool = False,
-        include_submission_files: bool = False,
-        include_new_action_course_role: typing.Union[str, None] = None,
-        include_new_action_email: typing.Union[str, None] = None,
-        include_new_action_lms_id: typing.Union[str, None] = None,
-        include_new_action_name: typing.Union[str, None] = None,
         ) -> argparse.ArgumentParser:
     """
     Get an argument parser specialized for autograder-py.
-
-    The `include_new_action_*` arguments expect either None (if they should not be included),
-    or the name of the action to include in the help messages.
     """
 
     if (api_params is None):
@@ -106,31 +98,5 @@ def get_parser(
     # Add arguments according to the given API params.
     for api_param in api_params:
         api_param.add_to_parser(parser)
-
-    if (include_submission_files):
-        parser.add_argument('files', metavar = 'FILE',
-            action = 'store', type = str, nargs = '+',
-            help = 'The path to your submission file(s).')
-
-    if (include_new_action_course_role is not None):
-        parser.add_argument('--new-course-role', dest = 'new-course-role',
-            action = 'store', type = str, default = 'student',
-            choices = autograder.api.constants.COURSE_ROLES,
-            help = f'The course role of the user to {include_new_action_course_role} (default: %(default)s).')
-
-    if (include_new_action_email is not None):
-        parser.add_argument('--new-email', dest = 'new-email',
-            action = 'store', type = str, required = True,
-            help = f'The email of the user to {include_new_action_email}.')
-
-    if (include_new_action_lms_id is not None):
-        parser.add_argument('--new-lms-id', dest = 'new-lms-id',
-            action = 'store', type = str, default = '',
-            help = f'The lms id of the user to {include_new_action_lms_id}.')
-
-    if (include_new_action_name is not None):
-        parser.add_argument('--new-name', dest = 'new-name',
-            action = 'store', type = str, default = '',
-            help = f'The name of the user to {include_new_action_name}.')
 
     return parser
