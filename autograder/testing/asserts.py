@@ -21,6 +21,8 @@ TOKEN_ID_PATTERN: str = r'\w{8}-\w{4}-\w{4}-\w{4}-\w{12}'
 TEST_TOKEN_CLEARTEXT: str = 'test-token-cleartext'
 TEST_TOKEN_ID: str = 'test-token-id'
 
+TEST_TIMESTAMP: int = 123
+
 _cached_api_description: typing.Union[typing.Dict[str, typing.Any], None] = None  # pylint: disable=invalid-name
 
 def get_expected_api_description() -> typing.Dict[str, typing.Any]:
@@ -55,6 +57,19 @@ def normalize_dict(data: typing.Dict[str, typing.Any]) -> typing.Dict[str, typin
 
     data = _noramlize_version(data)
     data = _noramlize_tokens(data)
+
+    return data
+
+def normalize_analysis(data: typing.Dict[str, typing.Any]) -> typing.Dict[str, typing.Any]:
+    """ Noramlize a dict that comes from an analysis result. """
+
+    for result in data.get('results', {}).values():
+        result['analysis-timestamp'] = TEST_TIMESTAMP
+
+    summary = data.get('summary', None)
+    if (summary is not None):
+        summary['first-timestamp'] = TEST_TIMESTAMP
+        summary['last-timestamp'] = TEST_TIMESTAMP
 
     return data
 

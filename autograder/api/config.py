@@ -8,6 +8,7 @@ import edq.util.parse
 import autograder.api.constants
 import autograder.api.model
 import autograder.error
+import autograder.util.parse
 
 CSV_TO_LIST_DELIMITER: str = ','
 MAP_KEY_VALUE_SEP: str = '='
@@ -33,9 +34,9 @@ class APIParam:
             api_key: typing.Union[str, None] = None,
             cli_flag: typing.Union[str, None] = None,
             api: bool = True,
-            api_required: typing.Union[bool, None] = None,
+            api_required: typing.Union[bool, None] = None,  # Default to the value of `api`.
             cli: bool = True,
-            cli_required: typing.Union[bool, None] = None,
+            cli_required: typing.Union[bool, None] = None,  # Default to false.
             value_type: typing.Type = str,
             cli_type: typing.Union[typing.Any, None] = None,
             skip_clean: bool = False,
@@ -115,15 +116,6 @@ class APIParam:
         self.omit_empty: bool = omit_empty
         """ Do not include this parameter in the API payload if its value is empty. """
 
-        if (self.cli and (cli_action is None)):
-            # Choose action based on the value's type.
-            cli_action = DEFAULT_CLI_ACTIONS.get(self.value_type, None)
-            if (cli_action is None):
-                raise ValueError(f"Unknown action for value type '{self.value_type}'.")
-
-        self.cli_action: typing.Any = cli_action
-        """ The value that value will be used as the `action` argument to `argparse.ArgumentParser.add_argument()`. """
-
         self.cli_default_value: typing.Any = cli_default_value
         """ The default value for the CLI argument. """
 
@@ -147,6 +139,15 @@ class APIParam:
         self.cli_add_func: typing.Union[typing.Callable, None] = cli_add_func
         """ A function that can be used to override the standard behavior in add_to_parser(). """
 
+        if (self.cli and (self.cli_add_func is None) and (cli_action is None)):
+            # Choose action based on the value's type.
+            cli_action = DEFAULT_CLI_ACTIONS.get(self.value_type, None)
+            if (cli_action is None):
+                raise ValueError(f"Unknown action for value type '{self.value_type}'.")
+
+        self.cli_action: typing.Any = cli_action
+        """ The value that value will be used as the `action` argument to `argparse.ArgumentParser.add_argument()`. """
+
     def clean_value(self, value: typing.Union[typing.Any, None]) -> typing.Union[typing.Any, None]:
         """
         Return a clean version of the given value (according to this API param).
@@ -162,6 +163,9 @@ class APIParam:
 
         if (issubclass(self.value_type, bool)):
             return edq.util.parse.boolean(value)
+
+        if (issubclass(self.value_type, list)):
+            return autograder.util.parse.string_list(value)
 
         if (issubclass(self.value_type, str)):
             value = str(value).strip()
@@ -246,7 +250,7 @@ class ArgumentMap(argparse.Action):
 
 def _submission_add_func(parser, param):
     parser.add_argument('submissions', metavar = 'SUBMISSION',
-        action = 'store', type = str, nargs = '+',
+        action = 'extend', type = str, nargs = '+',
         help = param.description)
 
 # This is used as an argparse argument type.
@@ -352,6 +356,13 @@ PARAM_NEW_USER_SERVER_ROLE = APIParam(
     cli_extra_options = {'choices': [role.value for role in autograder.api.model.ServerRole]},
 )
 
+PARAM_OVERWRITE_RECORDS = APIParam(
+    'overwrite_records',
+    'Replace any existing records that match the current operation (e.g. re-do existing results).',
+    value_type = bool,
+    cli_default_value = False,
+)
+
 PARAM_RAW_COURSE_USERS = APIParam(
     'raw_course_users',
     'Raw course users to operate on.',
@@ -393,6 +404,18 @@ PARAM_SKIP_UPDATES = APIParam(
     'Skip update operations.',
     value_type = bool,
     cli_default_value = False,
+)
+
+PARAM_SUBMISSION_SPECS = APIParam(
+    'submissions',
+    ('A list of submission specifications to analyze.'
+    + ' Submissions may span courses and assignments.'
+    + ' Submissions may be specified in three ways:'
+    + ' 1) "<course id>::<assignment id>::<user email>::<submission short id> for a specific submission,'
+    + ' 2) "<course id>::<assignment id>::<user email> for the given user\'s most recent submission to the given assignment,'
+    + ' and 3) "<course id>::<assignment id> for the most recent submission for all students.'),
+    value_type = list,
+    cli_add_func = _submission_add_func,
 )
 
 PARAM_TARGET_EMAIL = APIParam(
@@ -450,6 +473,13 @@ PARAM_USER_PASS = APIParam(
     api_key = 'user-pass',
     hash_value = True,
     cli_show_default = False,
+)
+
+PARAM_WAIT_FOR_COMPLETION = APIParam(
+    'wait_for_completion',
+    'Wait for the full job to complete before returning.',
+    value_type = bool,
+    cli_default_value = False,
 )
 
 ''' TEST
@@ -523,12 +553,6 @@ PARAM_FILTER_ROLE = APIParam('filter_role',
 
 PARAM_FORCE = APIParam('force',
     'Force the operation, overwriting any existing resources.',
-    required = False,
-    cli_options = {'action': 'store_true', 'default': False})
-
-PARAM_OVERWRITE_RECORDS = APIParam('overwrite_records',
-    ('Replace any existing records that match the current operation'
-        + ' (e.g. re-do existing results).'),
     required = False,
     cli_options = {'action': 'store_true', 'default': False})
 
@@ -629,19 +653,6 @@ PARAM_SUBMISSION_MESSAGE = APIParam('message',
         'An optional message to attach to the submission.',
         required = False)
 
-PARAM_SUBMISSION_SPECS = APIParam('submissions',
-    ('A list of submission specifications to analyze.'
-    + ' Submissions may span courses and assignments.'
-    + ' Submissions may be specified in three ways:'
-    + ' 1) "<course id>::<assignment id>::<user email>::<submission short id>"'
-    + ' for a specific submission,'
-    + ' 2) "<course id>::<assignment id>::<user email>"'
-    + ' for the given user\'s most recent submission to the given assignment,'
-    + ' and 3) "<course id>::<assignment id>"'
-    + ' for the most recent submission for all students.'),
-    required = True,
-    cli_add_func = _submission_add_func)
-
 PARAM_TARGET_PASS = APIParam('target_pass',
     'The password of the user that is the target of this request.',
     required = True, hash_value = True)
@@ -649,9 +660,4 @@ PARAM_TARGET_PASS = APIParam('target_pass',
 PARAM_TARGET_SUBMISSION_OR_RECENT = APIParam('target_submission',
     'The ID of the submission (default to the most recent submission).',
     required = False)
-
-PARAM_WAIT_FOR_COMPLETION = APIParam('wait_for_completion',
-    'Wait for the full analysis to complete before returning.',
-    required = False,
-    cli_options = {'action': 'store_true', 'default': False})
 '''

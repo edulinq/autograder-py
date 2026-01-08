@@ -3,7 +3,7 @@ import autograder.api.courses.assignments.report
 import autograder.testing.model
 import autograder.testing.server
 
-class TestUsersList(autograder.testing.server.ServerTest):
+class TestCoursesAssignmentsReport(autograder.testing.server.ServerTest):
     """ Test getting assignment reports. """
 
     def test_base(self):
