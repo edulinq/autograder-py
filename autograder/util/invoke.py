@@ -6,6 +6,22 @@ import typing
 
 REAP_TIME_SEC: float = 5
 
+_multiprocessing_initialized: bool = False  # pylint: disable=invalid-name
+
+def _init_multiprocessing() -> None:
+    """
+    Initialize Python multiprocessing.
+    Note that this should only be called on Linux code paths.
+    """
+
+    global _multiprocessing_initialized  # pylint: disable=global-statement
+
+    if (_multiprocessing_initialized):
+        return
+
+    multiprocessing.set_start_method('fork')
+    _multiprocessing_initialized = True
+
 def with_timeout(timeout: float, function: typing.Callable) -> typing.Tuple[bool, typing.Any]:
     """
     Run the given function in a differnet process with the given timeout.
@@ -28,6 +44,8 @@ def with_timeout(timeout: float, function: typing.Callable) -> typing.Tuple[bool
             return (False, None)
 
         return (True, value)
+
+    _init_multiprocessing()
 
     result: multiprocessing.Queue = multiprocessing.Queue(1)
 
