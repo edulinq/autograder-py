@@ -1,5 +1,6 @@
 {
     "cli": "autograder.cli.courses.assignments.submissions.analysis.pairwise",
+    "stdout_assertion_func": "autograder.testing.asserts.content_equals_noramlize_json",
     "arguments": [
         '--user', 'server-admin@test.edulinq.org',
         '--pass', 'server-admin',
@@ -33,8 +34,8 @@
         "complete-count": 0,
         "error-count": 0,
         "failure-count": 0,
-        "first-timestamp": 0,
-        "last-timestamp": 0,
+        "first-timestamp": 123456789,
+        "last-timestamp": 123456789,
         "pending-count": 1
     },
     "work-errors": {}

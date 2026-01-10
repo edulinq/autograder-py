@@ -21,7 +21,14 @@ TOKEN_ID_PATTERN: str = r'\w{8}-\w{4}-\w{4}-\w{4}-\w{12}'
 TEST_TOKEN_CLEARTEXT: str = 'test-token-cleartext'
 TEST_TOKEN_ID: str = 'test-token-id'
 
-TEST_TIMESTAMP: int = 123
+TEST_TIMESTAMP: int = 123456789
+
+NORMALIZE_TIMESTAMP_KEYS: typing.Set[str] = {
+    'analysis-timestamp',
+    'first-timestamp',
+    'last-timestamp',
+}
+""" Keys for timestamp values to normalize. """
 
 _cached_api_description: typing.Union[typing.Dict[str, typing.Any], None] = None  # pylint: disable=invalid-name
 
@@ -49,6 +56,7 @@ def content_equals_noramlize_json(test: edq.testing.unittest.BaseTest, expected:
 
     # Normalize the actual data (the expected should already be normalized (by the tester)).
     actual_dict = normalize_dict(actual_dict)
+    actual_dict = _normalize_timestamps(actual_dict)
 
     test.assertJSONDictEqual(expected_dict, actual_dict)
 
@@ -63,15 +71,7 @@ def normalize_dict(data: typing.Dict[str, typing.Any]) -> typing.Dict[str, typin
 def normalize_analysis(data: typing.Dict[str, typing.Any]) -> typing.Dict[str, typing.Any]:
     """ Noramlize a dict that comes from an analysis result. """
 
-    for result in data.get('results', {}).values():
-        result['analysis-timestamp'] = TEST_TIMESTAMP
-
-    summary = data.get('summary', None)
-    if (summary is not None):
-        summary['first-timestamp'] = TEST_TIMESTAMP
-        summary['last-timestamp'] = TEST_TIMESTAMP
-
-    return data
+    return _normalize_timestamps(data)
 
 def _noramlize_version(data: typing.Dict[str, typing.Any]) -> typing.Dict[str, typing.Any]:
     """ Normalize server version information. """
@@ -114,3 +114,22 @@ def equals_clean_tokens(test: edq.testing.unittest.BaseTest, expected: str, actu
     actual = re.sub(TOKEN_ID_PATTERN, TEST_TOKEN_ID, actual)
 
     test.assertEqual(expected, actual)
+
+def _normalize_timestamps(data: typing.Any) -> typing.Any:
+    """
+    Recursively normalize specified timestamps.
+    It is assumed that the specified data comes from JSON deserialization
+    (and therefore has a limited number of types).
+    """
+
+    if (isinstance(data, list)):
+        return [_normalize_timestamps(item) for item in data]
+
+    if (isinstance(data, dict)):
+        for (key, value) in data.items():
+            if (key in NORMALIZE_TIMESTAMP_KEYS):
+                data[key] = TEST_TIMESTAMP
+            else:
+                data[key] = _normalize_timestamps(value)
+
+    return data
