@@ -5,6 +5,22 @@ import traceback
 
 REAP_TIME_SEC = 5
 
+_multiprocessing_initialized: bool = False  # pylint: disable=invalid-name
+
+def _init_multiprocessing() -> None:
+    """
+    Initialize Python multiprocessing.
+    Note that this should only be called on Linux code paths.
+    """
+
+    global _multiprocessing_initialized  # pylint: disable=global-statement
+
+    if (_multiprocessing_initialized):
+        return
+
+    multiprocessing.set_start_method('fork')
+    _multiprocessing_initialized = True
+
 # Return: (success, function return value)
 # On timeout, success will be false and the value will be None.
 # On error, success will be false and value will be the string stacktrace.
@@ -22,6 +38,8 @@ def with_timeout(timeout, function):
             return (False, None)
 
         return (True, value)
+
+    _init_multiprocessing()
 
     result = multiprocessing.Queue(1)
 
