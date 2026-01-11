@@ -25,7 +25,7 @@ class APIParam:
     """
     A definition for a parameter to the autograder API.
     This class also contains information for representing these parameters in
-    config (dicts) and on the CLI (argparse options).
+    config (dicts), on the CLI (argparse options), and in the payload of autograder requests.
     """
 
     def __init__(self,
@@ -265,10 +265,34 @@ def _csv_to_list(arg):
 
 # Common API params.
 
+PARAM_ASSIGNMENT = APIParam(
+    'assignment',
+    'The ID of the assignment to make this request to.',
+    api_key = 'assignment-id',
+    cli_show_default = False,
+)
+
 PARAM_COURSE = APIParam(
     'course',
     'The ID of the course to make this request to.',
     api_key = 'course-id',
+    cli_show_default = False,
+)
+
+PARAM_COURSE_USER_REFERENCES = APIParam(
+    'target_users',
+    ('A list of course user references.'
+    + ' Course user references may be specified in four ways:'
+    + ' 1) Email address of the requested user,'
+    + ' 2) "*" to request all users in the course,'
+    + ' 3) "<course role>" (e.g., student, grader) to request all course users with that role,'
+    + ' and 4) any of the previous options preceded by a minus sign (e.g., "-alice@test.edulinq.org", "-student")'
+    + ' to exclude that user or role from the request.'
+    + ' Default: All users in the course.'),
+    api_required = False,
+    value_type = list,
+    cli_action = 'extend',
+    cli_type = _csv_to_list,
     cli_show_default = False,
 )
 
@@ -483,10 +507,6 @@ PARAM_WAIT_FOR_COMPLETION = APIParam(
 )
 
 ''' TEST
-PARAM_ASSIGNMENT_ID = APIParam('assignment_id',
-    'The ID of the assignment to make this request to.',
-    required = True)
-
 PARAM_COURSE_EMAIL_BCC = APIParam('bcc',
     ('A list of email addresses.'
     + ' Accepts course user references.'),
@@ -516,20 +536,6 @@ PARAM_COURSE_EMAIL_TO = APIParam('to',
 PARAM_COURSE_SOURCE = APIParam('source',
     'The source to use for the course.',
     required = False)
-
-PARAM_COURSE_USER_REFERENCES = APIParam('target_users',
-    ('A list of course user references.'
-    + ' Course user references may be specified in four ways:'
-    + ' 1) Email address of the requested user,'
-    + ' 2) "*" to request all users in the course,'
-    + ' 3) "<course role>" (e.g., student, grader)'
-    + ' to request all course users with that role,'
-    + ' and 4) any of the previous options preceded by a minus sign'
-    + ' (e.g., "-alice@test.edulinq.org", "-student")'
-    + ' to exclude that user or role from the request.'
-    + ' Default: All users in the course.'),
-    required = False,
-    cli_options = {'action': 'extend', 'type': _csv_to_list})
 
 PARAM_EMAIL_BODY = APIParam('body',
     'The email body.',
