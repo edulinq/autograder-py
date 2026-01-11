@@ -1,0 +1,34 @@
+{
+    "cli": "autograder.cli.courses.assignments.submissions.fetch.user.history",
+    "arguments": [
+        '--user', 'server-admin@test.edulinq.org',
+        '--pass', 'server-admin',
+        '--course', 'course101',
+        '--assignment', 'hw0',
+        '--target-email', 'course-student@test.edulinq.org',
+    ],
+}
+---
+id: course101::hw0::course-student@test.edulinq.org::1697406256
+user_query: course-student@test.edulinq.org
+assignment_query: hw0
+score: 0
+submission_date: 1697406256000
+graded_date: 1697406256000
+comment: 
+
+id: course101::hw0::course-student@test.edulinq.org::1697406265
+user_query: course-student@test.edulinq.org
+assignment_query: hw0
+score: 1
+submission_date: 1697406266000
+graded_date: 1697406266000
+comment: 
+
+id: course101::hw0::course-student@test.edulinq.org::1697406272
+user_query: course-student@test.edulinq.org
+assignment_query: hw0
+score: 2
+submission_date: 1697406273000
+graded_date: 1697406273000
+comment: 
