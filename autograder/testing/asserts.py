@@ -18,6 +18,9 @@ TEST_IS_DIRTY: bool = False
 TOKEN_CLEARTEXT_PATTERN: str = r'\w{32}'
 TOKEN_ID_PATTERN: str = r'\w{8}-\w{4}-\w{4}-\w{4}-\w{12}'
 
+PRETTY_TIME_PATTERN: str = r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d+[\+\-]\d+:\d+'
+PRETTY_TIME_REPLACEMENT: str = '<PRETTY TIME>'
+
 TEST_TOKEN_CLEARTEXT: str = 'test-token-cleartext'
 TEST_TOKEN_ID: str = 'test-token-id'
 
@@ -112,6 +115,13 @@ def equals_clean_tokens(test: edq.testing.unittest.BaseTest, expected: str, actu
 
     actual = re.sub(TOKEN_CLEARTEXT_PATTERN, TEST_TOKEN_CLEARTEXT, actual)
     actual = re.sub(TOKEN_ID_PATTERN, TEST_TOKEN_ID, actual)
+
+    test.assertEqual(expected, actual)
+
+def equals_clean_pretty_time(test: edq.testing.unittest.BaseTest, expected: str, actual: str) -> None:
+    """ A CLI test assertion function for text that contains pretty timestamps. """
+
+    actual = re.sub(PRETTY_TIME_PATTERN, PRETTY_TIME_REPLACEMENT, actual)
 
     test.assertEqual(expected, actual)
 

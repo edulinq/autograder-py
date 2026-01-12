@@ -4,7 +4,6 @@ import lms.model.scores
 
 import autograder.api.config
 import autograder.api.courses.assignments.submissions.fetch.user.history
-import autograder.testing.model
 import autograder.testing.server
 
 class TestCourseAssignmentsFetchUserHistory(autograder.testing.server.ServerTest):

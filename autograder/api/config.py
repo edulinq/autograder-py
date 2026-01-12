@@ -478,6 +478,12 @@ PARAM_TARGET_USERS = APIParam(
     cli_show_default = False,
 )
 
+PARAM_TARGET_SUBMISSION_OR_RECENT = APIParam(
+    'target_submission',
+    'The ID of the submission (default to the most recent submission).',
+    api_required = False,
+)
+
 PARAM_TOKEN_ID = APIParam(
     'token_id',
     'The id of the token to target.',
@@ -662,8 +668,4 @@ PARAM_SUBMISSION_MESSAGE = APIParam('message',
 PARAM_TARGET_PASS = APIParam('target_pass',
     'The password of the user that is the target of this request.',
     required = True, hash_value = True)
-
-PARAM_TARGET_SUBMISSION_OR_RECENT = APIParam('target_submission',
-    'The ID of the submission (default to the most recent submission).',
-    required = False)
 '''
