@@ -82,6 +82,9 @@ def _verify_payload(
     payload = {}
 
     for api_param in api_params:
+        if (not api_param.api):
+            continue
+
         value = api_param.clean_value(raw_payload.get(api_param.config_key, None))
 
         if (value is None):

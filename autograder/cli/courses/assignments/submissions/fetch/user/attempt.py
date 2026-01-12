@@ -1,20 +1,20 @@
 """
-Get a copy of the grading report for the specified submission.
-Does not submit a new submission.
+Get a submission along with all grading information.
 """
 
 import argparse
 import sys
 
-import autograder.api.courses.assignments.submissions.fetch.user.peek
+import autograder.api.courses.assignments.submissions.fetch.user.attempt
 import autograder.cli.parser
+import autograder.util.submission
 
 def run_cli(args: argparse.Namespace) -> int:
     """ Run the CLI. """
 
     config = args._config
 
-    found_user, found_submission, result = autograder.api.courses.assignments.submissions.fetch.user.peek.send(config)
+    found_user, found_submission, result = autograder.api.courses.assignments.submissions.fetch.user.attempt.send(config)
 
     if (not found_user):
         print(f"No matching user found: '{config.get('target_email', '')}'.", file = sys.stderr)
@@ -27,7 +27,8 @@ def run_cli(args: argparse.Namespace) -> int:
     if (result is None):
         raise ValueError("Existing submission was not provided by API.")
 
-    print(result.report())
+    out_path = autograder.util.submission.output_grading_result(result, base_dir = config['out_dir'])
+    print(f"Submission wrote to '{out_path}'.")
 
     return 0
 
@@ -41,7 +42,7 @@ def _get_parser() -> argparse.ArgumentParser:
 
     parser = autograder.cli.parser.get_parser(
         __doc__.strip(),
-        autograder.api.courses.assignments.submissions.fetch.user.peek.API_PARAMS)
+        autograder.api.courses.assignments.submissions.fetch.user.attempt.API_PARAMS)
 
     return parser
 

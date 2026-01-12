@@ -387,6 +387,13 @@ PARAM_OVERWRITE_RECORDS = APIParam(
     cli_default_value = False,
 )
 
+PARAM_OUT_DIR = APIParam(
+    'out_dir',
+    'A directory to write output in.',
+    api = False,
+    cli_default_value = '.',
+)
+
 PARAM_RAW_COURSE_USERS = APIParam(
     'raw_course_users',
     'Raw course users to operate on.',
