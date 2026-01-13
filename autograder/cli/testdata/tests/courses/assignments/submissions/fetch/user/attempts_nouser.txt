@@ -1,0 +1,13 @@
+{
+    "cli": "autograder.cli.courses.assignments.submissions.fetch.user.attempts",
+    "arguments": [
+        '--user', 'server-admin@test.edulinq.org',
+        '--pass', 'server-admin',
+        '--course', 'course101',
+        '--assignment', 'hw0',
+        '--target-email', 'ZZZ@test.edulinq.org',
+        '--out-dir', '__TEMP_DIR__()',
+    ],
+}
+---
+No matching user found: 'ZZZ@test.edulinq.org'.
