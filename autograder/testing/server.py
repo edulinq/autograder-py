@@ -5,6 +5,7 @@ import edq.testing.httpserver
 import lms.model.base
 
 import autograder.api.common
+import autograder.error
 
 THIS_DIR: str = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
 ROOT_DIR: str = os.path.join(THIS_DIR, '..', '..')
@@ -30,6 +31,9 @@ class ServerTest(edq.testing.httpserver.HTTPServerTest):
     def child_class_setup(cls) -> None:
         # Make the API request source information consistent.
         autograder.api.common.set_testing_source_info()
+
+        # Don't exit on error.
+        autograder.error._exit_on_error_for_testing = False
 
     @classmethod
     def setup_server(cls, server: edq.testing.httpserver.HTTPTestServer) -> None:

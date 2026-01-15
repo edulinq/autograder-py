@@ -248,7 +248,12 @@ class ArgumentMap(argparse.Action):
 
             all_values[parts[0].strip()] = parts[1].strip()
 
-def _submission_add_func(parser, param):
+def _cli_add_func_submission_files(parser, param):
+    parser.add_argument('files', metavar = 'FILE',
+        action = 'extend', type = str, nargs = '+',
+        help = param.description)
+
+def _cli_add_func_submission_specs(parser, param):
     parser.add_argument('submissions', metavar = 'SUBMISSION',
         action = 'extend', type = str, nargs = '+',
         help = param.description)
@@ -264,6 +269,13 @@ def _csv_to_list(arg):
     return [part.strip() for part in arg.split(CSV_TO_LIST_DELIMITER)]
 
 # Common API params.
+
+PARAM_ALLOW_LATE = APIParam(
+    'allow_late',
+    'Allow this submission to be graded, even if it is late.',
+    value_type = bool,
+    cli_default_value = False,
+)
 
 PARAM_ASSIGNMENT = APIParam(
     'assignment',
@@ -437,6 +449,20 @@ PARAM_SKIP_UPDATES = APIParam(
     cli_default_value = False,
 )
 
+PARAM_SUBMISSION_MESSAGE = APIParam(
+    'message',
+    'An optional message to attach to the submission.',
+    api_required = False,
+)
+
+PARAM_SUBMISSION_FILES = APIParam(
+    'files',
+    'The path to your submission file(s).',
+    value_type = list,
+    api = False,
+    cli_add_func = _cli_add_func_submission_files,
+)
+
 PARAM_SUBMISSION_SPECS = APIParam(
     'submissions',
     ('A list of submission specifications to analyze.'
@@ -446,7 +472,7 @@ PARAM_SUBMISSION_SPECS = APIParam(
     + ' 2) "<course id>::<assignment id>::<user email> for the given user\'s most recent submission to the given assignment,'
     + ' and 3) "<course id>::<assignment id> for the most recent submission for all students.'),
     value_type = list,
-    cli_add_func = _submission_add_func,
+    cli_add_func = _cli_add_func_submission_specs,
 )
 
 PARAM_TARGET_EMAIL = APIParam(
@@ -667,10 +693,6 @@ PARAM_SKIP_TASKS = APIParam('skip_tasks',
     'Skip starting course tasks.',
     required = False,
     cli_options = {'action': 'store_true', 'default': False})
-
-PARAM_SUBMISSION_MESSAGE = APIParam('message',
-        'An optional message to attach to the submission.',
-        required = False)
 
 PARAM_TARGET_PASS = APIParam('target_pass',
     'The password of the user that is the target of this request.',

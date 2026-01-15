@@ -1,0 +1,14 @@
+{
+    "cli": "autograder.cli.courses.assignments.submissions.submit",
+    "stdout_assertion_func": "autograder.testing.asserts.equals_clean_pretty_time",
+    "arguments": [
+        '--user', 'server-admin@test.edulinq.org',
+        '--pass', 'server-admin',
+        '--course', 'course-languages',
+        '--assignment', 'bash',
+        '__DATA_DIR__(ZZZ)',
+    ],
+    "error": true,
+}
+---
+autograder.error.APIError: Path does not exist, or is not a file: '__DATA_DIR__(ZZZ)'.

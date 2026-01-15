@@ -1,0 +1,14 @@
+{
+    "cli": "autograder.cli.courses.assignments.submissions.submit",
+    "platform_skip": "win",
+    "stdout_assertion_func": "autograder.testing.asserts.equals_clean_pretty_time",
+    "arguments": [
+        '--user', 'server-admin@test.edulinq.org',
+        '--pass', 'server-admin',
+        '--course', 'course-languages',
+        '--assignment', 'bash',
+        '__DATA_DIR__(../../../../testdata/autograder-testdata/autograder-server/testdata/course-languages/bash/test-submissions/solution/test-submission.json)',
+    ],
+}
+---
+Grading failed.

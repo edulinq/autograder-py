@@ -139,6 +139,9 @@ def send_api_request(
         if (filename in post_files):
             raise autograder.error.APIError(None, f"Cannot submit duplicate filenames ('{filename}').")
 
+        if (not os.path.isfile(path)):
+            raise autograder.error.APIError(None, f"Path does not exist, or is not a file: '{path}'.")
+
         post_files[filename] = open(path, 'rb')  # pylint: disable=consider-using-with
 
     try:
