@@ -406,6 +406,24 @@ PARAM_OUT_DIR = APIParam(
     cli_default_value = '.',
 )
 
+PARAM_PROXY_EMAIL = APIParam(
+    'proxy_email',
+    'The email of the user the request is pretending to be made under (the submission will be made on behalf of this user).',
+    cli_required = True,
+)
+
+PARAM_PROXY_TIME = APIParam(
+    'proxy_time',
+    ('The proxy timestamp that will be applied to the request.'
+    + ' By default, the earlier time between now and'
+    + ' one minute before the due date will be used.'
+    + ' Use this option to manually set the proxy time.'
+    + ' Timestamps are milliseconds from the UNIX epoch'
+    + ' (https://en.wikipedia.org/wiki/Unix_time).'),
+    value_type = int,
+    api_required = False,
+)
+
 PARAM_RAW_COURSE_USERS = APIParam(
     'raw_course_users',
     'Raw course users to operate on.',
@@ -600,20 +618,6 @@ PARAM_FORCE = APIParam('force',
     'Force the operation, overwriting any existing resources.',
     required = False,
     cli_options = {'action': 'store_true', 'default': False})
-
-PARAM_PROXY_EMAIL = APIParam('proxy_email',
-    ('The email of the user the request is pretending to be made under'
-    + ' (the submission will be made on behalf of this user).'),
-    required = True)
-
-PARAM_PROXY_TIME = APIParam('proxy_time',
-    ('The proxy timestamp that will be applied to the request.'
-    + ' By default, the earlier time between now and'
-    + ' one minute before the due date will be used.'
-    + ' Use this option to manually set the proxy time.'
-    + ' Timestamps are milliseconds from the UNIX epoch'
-    + ' (https://en.wikipedia.org/wiki/Unix_time).'),
-    required = False, cli_options = {'action': 'store', 'type': int})
 
 PARAM_QUERY_LIMIT = APIParam('limit',
     'The maximum number of records to return.',

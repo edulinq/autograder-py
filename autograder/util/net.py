@@ -18,6 +18,7 @@ CLEAN_REMOVE_HEADERS: typing.Set[str] = {
 
 GRADING_ENDPOINTS: typing.Set[str] = {
     'courses/assignments/submissions/submit',
+    'courses/assignments/submissions/proxy/submit',
 }
 """
 These endpoints need to have additional timestamps normalized.
