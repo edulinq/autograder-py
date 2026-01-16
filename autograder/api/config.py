@@ -443,6 +443,16 @@ PARAM_RAW_SERVER_USERS = APIParam(
     skip_clean = True,
 )
 
+PARAM_REGRADE_CUTOFF = APIParam(
+    'regrade_cutoff',
+    ('All submissions occurring before the cutoff time will be regraded.'
+    + ' By default, the current time will be used.'
+    + ' Time is milliseconds from the UNIX epoch'
+    + ' (https://en.wikipedia.org/wiki/Unix_time).'),
+    value_type = int,
+    api_required = False,
+)
+
 PARAM_SEND_EMAILS = APIParam(
     'send_emails',
     'Send any relevant emails to users affected by this operation (e.g., a user being enrolled in a course).',
@@ -662,13 +672,6 @@ PARAM_QUERY_WHERE = APIParam('where',
         'action': ArgumentMap,
         'nargs': '+',
     })
-
-PARAM_REGRADE_CUTOFF = APIParam('regrade_cutoff',
-    ('All submissions occurring before the cutoff time will be regraded.'
-    + ' By default, the current time will be used.'
-    + ' Time is milliseconds from the UNIX epoch'
-    + ' (https://en.wikipedia.org/wiki/Unix_time).'),
-    required = False, cli_options = {'action': 'store', 'type': int})
 
 def add_skip_emails_argument(parser):
     parser.add_argument('--skip-emails', dest = 'skip-emails',
