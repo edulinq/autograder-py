@@ -83,6 +83,8 @@ def clean_api_response(response: requests.Response, body: str) -> str:
                 parts[3] = str(autograder.testing.asserts.TEST_TIMESTAMP)
                 result['id'] = '::'.join(parts)
 
+                result['short-id'] = str(autograder.testing.asserts.TEST_TIMESTAMP)
+
     # Convert body back to a string.
     body = edq.util.json.dumps(data)
 
