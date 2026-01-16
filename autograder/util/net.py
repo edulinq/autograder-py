@@ -28,6 +28,8 @@ Note that the endpoint constants are copied to avoid cyclic dependencies.
 FULL_NORMALIZE_TIMESTAMP_KEYS: typing.Set[str] = autograder.testing.asserts.NORMALIZE_TIMESTAMP_KEYS | {
     'grading_end_time',
     'grading_start_time',
+    'proxy_end_time',
+    'proxy_start_time',
 }
 """ Keys for timestamp values to normalize. """
 
