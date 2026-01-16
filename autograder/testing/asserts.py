@@ -125,21 +125,24 @@ def equals_clean_pretty_time(test: edq.testing.unittest.BaseTest, expected: str,
 
     test.assertEqual(expected, actual)
 
-def _normalize_timestamps(data: typing.Any) -> typing.Any:
+def _normalize_timestamps(data: typing.Any, keys: typing.Union[typing.Set[str], None] = None) -> typing.Any:
     """
     Recursively normalize specified timestamps.
     It is assumed that the specified data comes from JSON deserialization
     (and therefore has a limited number of types).
     """
 
+    if (keys is None):
+        keys = NORMALIZE_TIMESTAMP_KEYS
+
     if (isinstance(data, list)):
-        return [_normalize_timestamps(item) for item in data]
+        return [_normalize_timestamps(item, keys = keys) for item in data]
 
     if (isinstance(data, dict)):
         for (key, value) in data.items():
-            if (key in NORMALIZE_TIMESTAMP_KEYS):
+            if (key in keys):
                 data[key] = TEST_TIMESTAMP
             else:
-                data[key] = _normalize_timestamps(value)
+                data[key] = _normalize_timestamps(value, keys = keys)
 
     return data
