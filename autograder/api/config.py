@@ -164,6 +164,9 @@ class APIParam:
         if (issubclass(self.value_type, bool)):
             return edq.util.parse.boolean(value)
 
+        if (issubclass(self.value_type, int)):
+            return int(value)
+
         if (issubclass(self.value_type, list)):
             return autograder.util.parse.string_list(value)
 

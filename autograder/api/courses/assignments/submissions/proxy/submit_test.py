@@ -55,6 +55,7 @@ class TestCourseAssignmentsProxySubmit(autograder.testing.server.ServerTest):
                     autograder.api.config.PARAM_COURSE.config_key: 'course-languages',
                     autograder.api.config.PARAM_ASSIGNMENT.config_key: 'bash',
                     autograder.api.config.PARAM_PROXY_EMAIL.config_key: 'course-student@test.edulinq.org',
+                    autograder.api.config.PARAM_PROXY_TIME.config_key: 12345,
                 },
                 {
                     'post_paths': [
