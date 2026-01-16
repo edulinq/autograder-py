@@ -1,0 +1,15 @@
+{
+    "cli": "autograder.cli.courses.assignments.submissions.proxy.resubmit",
+    "platform_skip": "win",
+    "stdout_assertion_func": "autograder.testing.asserts.equals_clean_pretty_time",
+    "arguments": [
+        '--user', 'server-admin@test.edulinq.org',
+        '--pass', 'server-admin',
+        '--course', 'course-languages',
+        '--assignment', 'bash',
+        '--proxy-email', 'course-student@test.edulinq.org',
+        '--target-submission', 'zzz',
+    ],
+}
+---
+Target submission not found.

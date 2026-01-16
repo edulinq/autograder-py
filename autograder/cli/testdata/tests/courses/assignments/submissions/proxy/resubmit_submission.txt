@@ -1,0 +1,20 @@
+{
+    "cli": "autograder.cli.courses.assignments.submissions.proxy.resubmit",
+    "platform_skip": "win",
+    "stdout_assertion_func": "autograder.testing.asserts.equals_clean_pretty_time",
+    "arguments": [
+        '--user', 'server-admin@test.edulinq.org',
+        '--pass', 'server-admin',
+        '--course', 'course-languages',
+        '--assignment', 'bash',
+        '--proxy-email', 'course-student@test.edulinq.org',
+        '--target-submission', '1768603646',
+    ],
+}
+---
+Autograder transcript for assignment: bash
+Grading started at <PRETTY TIME> and ended at <PRETTY TIME>.
+Task 1: add(): 0 / 10
+   Missed test case 'basic'. Missed test case 'one zero'. Missed test case 'all zero'. Missed test case 'one negative'. Missed test case 'all negative'. 
+
+Total: 0 / 10

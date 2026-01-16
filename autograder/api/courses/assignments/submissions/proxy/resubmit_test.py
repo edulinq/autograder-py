@@ -1,0 +1,146 @@
+import sys
+import typing
+import unittest
+
+import autograder.api.config
+import autograder.api.courses.assignments.submissions.proxy.resubmit
+import autograder.testing.server
+
+class TestCourseAssignmentsProxyResubmit(autograder.testing.server.ServerTest):
+    """ Test proxy resubmitting and assignment. """
+
+    @unittest.skipIf(sys.platform.startswith("win"), "Windows file hashes create different HTTP exchange queries")
+    def test_base(self):
+        """ Test base functionality. """
+
+        # [(config (and overrides), kwargs, expected, error substring), ...]
+        test_cases = [
+            # Base
+            (
+                {
+                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
+                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
+                    autograder.api.config.PARAM_COURSE.config_key: 'course-languages',
+                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'bash',
+                    autograder.api.config.PARAM_PROXY_EMAIL.config_key: 'course-student@test.edulinq.org',
+                },
+                {},
+                {
+                    'found-user': True,
+                    'found-submission': True,
+                    'rejected': False,
+                    'message': '',
+                    'grading-success': True,
+                    'result': 10,
+                },
+                None,
+            ),
+
+            # Submission
+            (
+                {
+                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
+                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
+                    autograder.api.config.PARAM_COURSE.config_key: 'course-languages',
+                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'bash',
+                    autograder.api.config.PARAM_PROXY_EMAIL.config_key: 'course-student@test.edulinq.org',
+                    autograder.api.config.PARAM_TARGET_SUBMISSION_OR_RECENT.config_key: '1768603646',
+                },
+                {},
+                {
+                    'found-user': True,
+                    'found-submission': True,
+                    'rejected': False,
+                    'message': '',
+                    'grading-success': True,
+                    'result': 0,
+                },
+                None,
+            ),
+
+            # Proxy Time
+            (
+                {
+                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
+                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
+                    autograder.api.config.PARAM_COURSE.config_key: 'course-languages',
+                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'bash',
+                    autograder.api.config.PARAM_PROXY_EMAIL.config_key: 'course-student@test.edulinq.org',
+                    autograder.api.config.PARAM_PROXY_TIME.config_key: 12345,
+                },
+                {},
+                {
+                    'found-user': True,
+                    'found-submission': True,
+                    'rejected': False,
+                    'message': '',
+                    'grading-success': True,
+                    'result': 10,
+                },
+                None,
+            ),
+
+            # Missing User
+            (
+                {
+                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
+                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
+                    autograder.api.config.PARAM_COURSE.config_key: 'course-languages',
+                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'bash',
+                    autograder.api.config.PARAM_PROXY_EMAIL.config_key: 'ZZZ@test.edulinq.org',
+                },
+                {},
+                {
+                    'found-user': False,
+                    'found-submission': False,
+                    'rejected': False,
+                    'message': '',
+                    'grading-success': False,
+                    'result': None,
+                },
+                None,
+            ),
+
+            # Missing Submission
+            (
+                {
+                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
+                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
+                    autograder.api.config.PARAM_COURSE.config_key: 'course-languages',
+                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'bash',
+                    autograder.api.config.PARAM_PROXY_EMAIL.config_key: 'course-student@test.edulinq.org',
+                    autograder.api.config.PARAM_TARGET_SUBMISSION_OR_RECENT.config_key: 'zzz',
+                },
+                {},
+                {
+                    'found-user': True,
+                    'found-submission': False,
+                    'rejected': False,
+                    'message': '',
+                    'grading-success': False,
+                    'result': None,
+                },
+                None,
+            ),
+        ]
+
+        self.base_api_test(autograder.api.courses.assignments.submissions.proxy.resubmit.send, test_cases, actual_clean_func = _clean_response)
+
+def _clean_response(actual: typing.Tuple[typing.Dict[str, typing.Any], typing.Union[autograder.assignment.GradedAssignment, None]]) -> typing.Any:
+    """ Clean the response to parse out just the data we care about. """
+
+    (response, assignment) = actual
+
+    data = {
+        'found-user': response['found-user'],
+        'found-submission': response['found-submission'],
+        'rejected': response['rejected'],
+        'message': response['message'],
+        'grading-success': response['grading-success'],
+        'result': None,
+    }
+
+    if (assignment is not None):
+        data['result'] = assignment.get_score()[0]
+
+    return data
