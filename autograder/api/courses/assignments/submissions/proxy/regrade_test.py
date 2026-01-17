@@ -2,9 +2,8 @@ import typing
 
 import autograder.api.config
 import autograder.api.courses.assignments.submissions.proxy.regrade
+import autograder.testing.asserts
 import autograder.testing.server
-
-TEST_CUTOFF: int = 100
 
 class TestCoursesAssignmentsSubmissionsProxyRegrade(autograder.testing.server.ServerTest):
     """ Test proxy regrades. """
@@ -32,7 +31,7 @@ class TestCoursesAssignmentsSubmissionsProxyRegrade(autograder.testing.server.Se
                     "options": {
                         "dry-run": False,
                         "overwrite-records": False,
-                        "regrade-cutoff": TEST_CUTOFF,
+                        "regrade-cutoff": autograder.testing.asserts.TEST_TIMESTAMP,
                         "target-users": [
                             "*"
                         ],
@@ -73,7 +72,7 @@ class TestCoursesAssignmentsSubmissionsProxyRegrade(autograder.testing.server.Se
                     "options": {
                         "dry-run": False,
                         "overwrite-records": False,
-                        "regrade-cutoff": TEST_CUTOFF,
+                        "regrade-cutoff": autograder.testing.asserts.TEST_TIMESTAMP,
                         "target-users": [
                             "student",
                         ],
@@ -96,7 +95,7 @@ class TestCoursesAssignmentsSubmissionsProxyRegrade(autograder.testing.server.Se
                     autograder.api.config.PARAM_COURSE.config_key: 'course-languages',
                     autograder.api.config.PARAM_ASSIGNMENT.config_key: 'bash',
 
-                    autograder.api.config.PARAM_REGRADE_CUTOFF.config_key: 10,
+                    autograder.api.config.PARAM_REGRADE_CUTOFF.config_key: autograder.testing.asserts.TEST_TIMESTAMP,
 
                     autograder.api.config.PARAM_DRY_RUN.config_key: False,
                     autograder.api.config.PARAM_OVERWRITE_RECORDS.config_key: False,
@@ -108,7 +107,7 @@ class TestCoursesAssignmentsSubmissionsProxyRegrade(autograder.testing.server.Se
                     "options": {
                         "dry-run": False,
                         "overwrite-records": False,
-                        "regrade-cutoff": 10,
+                        "regrade-cutoff": autograder.testing.asserts.TEST_TIMESTAMP,
                         "target-users": [
                             "*"
                         ],
@@ -129,7 +128,7 @@ class TestCoursesAssignmentsSubmissionsProxyRegrade(autograder.testing.server.Se
                         "course-student@test.edulinq.org": {
                             "assignment-id": "bash",
                             "course-id": "course-languages",
-                            "grading_start_time": 1768603685040,
+                            "grading_start_time": autograder.testing.asserts.TEST_TIMESTAMP,
                             "id": "course-languages::bash::course-student@test.edulinq.org::1768603685",
                             "max_points": 10,
                             "message": "",
@@ -152,7 +151,12 @@ class TestCoursesAssignmentsSubmissionsProxyRegrade(autograder.testing.server.Se
 def _clean_response(actual: typing.Dict[str, typing.Any]) -> typing.Any:
     """ Clean the response. """
 
-    if (actual['options']['regrade-cutoff'] > TEST_CUTOFF):
-        actual['options']['regrade-cutoff'] = TEST_CUTOFF
+    actual['options']['regrade-cutoff'] = autograder.testing.asserts.TEST_TIMESTAMP
+
+    for result in actual['results'].values():
+        if (result is None):
+            continue
+
+        result['grading_start_time'] = autograder.testing.asserts.TEST_TIMESTAMP
 
     return actual

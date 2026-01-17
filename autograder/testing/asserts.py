@@ -63,6 +63,19 @@ def content_equals_noramlize_json(test: edq.testing.unittest.BaseTest, expected:
 
     test.assertJSONDictEqual(expected_dict, actual_dict)
 
+def content_equals_noramlize_regrade(test: edq.testing.unittest.BaseTest, expected: str, actual: str) -> None:
+    """ A CLI test assertion function for regrade output. """
+
+    # Convert both to dicts.
+    expected_dict = edq.util.json.loads(expected, strict = True)
+    actual_dict = edq.util.json.loads(actual, strict = True)
+
+    # Normalize the actual data (the expected should already be normalized (by the tester)).
+    actual_dict = normalize_dict(actual_dict)
+    actual_dict = _normalize_timestamps(actual_dict, keys = {'grading_start_time', 'regrade-cutoff'})
+
+    test.assertJSONDictEqual(expected_dict, actual_dict)
+
 def normalize_dict(data: typing.Dict[str, typing.Any]) -> typing.Dict[str, typing.Any]:
     """ Noramlize a dict that typically comes from testing output. """
 

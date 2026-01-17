@@ -18,6 +18,8 @@ CLEAN_REMOVE_HEADERS: typing.Set[str] = {
 
 GRADING_ENDPOINTS: typing.Set[str] = {
     'courses/assignments/submissions/submit',
+    'courses/assignments/submissions/proxy/regrade',
+    'courses/assignments/submissions/proxy/resubmit',
     'courses/assignments/submissions/proxy/submit',
 }
 """
@@ -30,6 +32,7 @@ FULL_NORMALIZE_TIMESTAMP_KEYS: typing.Set[str] = autograder.testing.asserts.NORM
     'grading_start_time',
     'proxy_end_time',
     'proxy_start_time',
+    'regrade-cutoff',
 }
 """ Keys for timestamp values to normalize. """
 
