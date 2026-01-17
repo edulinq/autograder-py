@@ -20,8 +20,8 @@ FILESPEC_TYPE_PATH: str = "path"
 FILESPEC_TYPE_GIT: str = "git"
 FILESPEC_TYPE_URL: str = "url"
 
-FileSpec = typing.Dict[str, str]
-""" Alias file specs until they are formalized in a more robust class. """
+class FileSpec(typing.Dict[str, str]):
+    """ Alias file specs until they are formalized in a more robust class. """
 
 def parse(data: typing.Union[None, str, typing.Dict[str, str], FileSpec]) -> FileSpec:
     """
@@ -82,16 +82,16 @@ def parse(data: typing.Union[None, str, typing.Dict[str, str], FileSpec]) -> Fil
 def get_empty() -> FileSpec:
     """ Get an empty filespec. """
 
-    return {
+    return FileSpec({
         "type": FILESPEC_TYPE_EMPTY,
-    }
+    })
 
 def get_nil() -> FileSpec:
     """ Get a nil filespec. """
 
-    return {
+    return FileSpec({
         "type": FILESPEC_TYPE_NIL,
-    }
+    })
 
 def get_path(path: str, dest: str = '') -> FileSpec:
     """ Get a filespec that points to the given file system path. """
@@ -99,11 +99,11 @@ def get_path(path: str, dest: str = '') -> FileSpec:
     if (dest == ''):
         dest = os.path.basename(path)
 
-    return {
+    return FileSpec({
         "type": FILESPEC_TYPE_PATH,
         "path": path,
         "dest": dest,
-    }
+    })
 
 def get_git(path: str, dest: str = '', reference: str = '', username: str = '', token: str = '') -> FileSpec:
     """ Get a filespec that points to the given Git reference. """
@@ -115,14 +115,14 @@ def get_git(path: str, dest: str = '', reference: str = '', username: str = '', 
         raise FileSpecError(("If username is specified on a Git FileSpec,"
             + " then token must also be specified."))
 
-    return {
+    return FileSpec({
         "type": FILESPEC_TYPE_GIT,
         "path": path,
         "dest": dest,
         "reference": reference,
         "username": username,
         "token": token,
-    }
+    })
 
 def get_url(path: str, dest: str = '') -> FileSpec:
     """ Get a filespec that points to the given URL. """
@@ -131,11 +131,11 @@ def get_url(path: str, dest: str = '') -> FileSpec:
         url = urllib.parse.urlparse(path)
         dest = os.path.basename(url.path)
 
-    return {
+    return FileSpec({
         "type": FILESPEC_TYPE_URL,
         "path": path,
         "dest": dest,
-    }
+    })
 
 def copy(filespec: FileSpec, base_dir: str, dest_dir: str, only_contents: bool) -> None:
     """ Copy the filespec from the source to the given destination dir. """

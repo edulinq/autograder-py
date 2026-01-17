@@ -8,6 +8,7 @@ import edq.util.parse
 import autograder.api.constants
 import autograder.api.model
 import autograder.error
+import autograder.filespec
 import autograder.util.parse
 
 CSV_TO_LIST_DELIMITER: str = ','
@@ -178,6 +179,9 @@ class APIParam:
             if (self.hash_value):
                 value = edq.util.hash.sha256_hex(value)
 
+        if (issubclass(self.value_type, autograder.filespec.FileSpec)):
+            return autograder.filespec.parse(value)
+
         return value
 
     def optional(self) -> 'APIParam':
@@ -322,6 +326,53 @@ PARAM_DRY_RUN = APIParam(
     api_required = False,
     value_type = bool,
     cli_default_value = False,
+)
+
+PARAM_FILESPEC_PART_PATH = APIParam(
+    'filespec_path',
+    'The path the filespec points to.',
+    api = False,
+    cli_required = True,
+    cli_flag = 'path',
+    cli_default_value = '',
+    cli_show_default = False,
+)
+
+PARAM_FILESPEC_PART_REFERENCE = APIParam(
+    'filespec_reference',
+    'The reference (e.g., git commit/branch) of the filespec.',
+    api = False,
+    cli_flag = 'reference',
+    cli_default_value = '',
+    cli_show_default = False,
+)
+
+PARAM_FILESPEC_PART_TOKEN = APIParam(
+    'filespec_token',
+    'The token for filespec authentication.',
+    api = False,
+    cli_flag = 'token',
+    cli_default_value = '',
+    cli_show_default = False,
+)
+
+PARAM_FILESPEC_PART_TYPE = APIParam(
+    'filespec_type',
+    'The type of filespec.',
+    api = False,
+    cli_required = True,
+    cli_flag = 'type',
+    cli_default_value = '',
+    cli_show_default = False,
+)
+
+PARAM_FILESPEC_PART_USERNAME = APIParam(
+    'filespec_username',
+    'The username for filespec authentication.',
+    api = False,
+    cli_flag = 'username',
+    cli_default_value = '',
+    cli_show_default = False,
 )
 
 PARAM_FORCE_COMPUTE = APIParam(
@@ -592,6 +643,13 @@ PARAM_TOKEN_ID = APIParam(
     'token_id',
     'The id of the token to target.',
     cli_required = True,
+)
+
+PARAM_UPSERT_FILESPEC = APIParam(
+    'filespec',
+    'A filespec pointing to a course to upload.',
+    value_type = autograder.filespec.FileSpec,
+    cli = False,
 )
 
 PARAM_UPSERT_ZIP = APIParam(
