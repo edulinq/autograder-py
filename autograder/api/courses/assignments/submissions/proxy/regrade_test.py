@@ -141,8 +141,6 @@ class TestCoursesAssignmentsSubmissionsProxyRegrade(autograder.testing.server.Se
                 },
                 None,
             ),
-
-            # Wait for Completion
         ]
 
         self.base_api_test(autograder.api.courses.assignments.submissions.proxy.regrade.send, test_cases,

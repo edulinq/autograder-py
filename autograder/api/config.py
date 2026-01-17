@@ -261,6 +261,11 @@ def _cli_add_func_submission_specs(parser, param):
         action = 'extend', type = str, nargs = '+',
         help = param.description)
 
+def _cli_add_func_upsert_zip(parser, param):
+    parser.add_argument('path', metavar = 'PATH',
+        action = 'store', type = str,
+        help = param.description)
+
 # This is used as an argparse argument type.
 # See: https://docs.python.org/3/library/argparse.html#type
 # This converts a csv string and returns a list of strings,
@@ -466,9 +471,44 @@ PARAM_SERVER = APIParam(
     cli_show_default = False,
 )
 
+PARAM_SKIP_BUILD_IMAGES = APIParam(
+    'skip_build_images',
+    'Skip building assignment Docker images.',
+    value_type = bool,
+    cli_default_value = False,
+)
+
+PARAM_SKIP_EMAILS = APIParam(
+    'skip_emails',
+    'Skip sending any emails.',
+    value_type = bool,
+    cli_default_value = False,
+)
+
 PARAM_SKIP_INSERTS = APIParam(
     'skip_inserts',
     'Skip insert operations.',
+    value_type = bool,
+    cli_default_value = False,
+)
+
+PARAM_SKIP_LMS_SYNC = APIParam(
+    'skip_lms_sync',
+    'Skip syncing with the LMS.',
+    value_type = bool,
+    cli_default_value = False,
+)
+
+PARAM_SKIP_SOURCE_SYNC = APIParam(
+    'skip_source_sync',
+    'Skip syncing (updating with) the course source.',
+    value_type = bool,
+    cli_default_value = False,
+)
+
+PARAM_SKIP_TEMPLATE_FILES = APIParam(
+    'skip_template_files',
+    'Skip fetching assignment template files.',
     value_type = bool,
     cli_default_value = False,
 )
@@ -552,6 +592,15 @@ PARAM_TOKEN_ID = APIParam(
     'token_id',
     'The id of the token to target.',
     cli_required = True,
+)
+
+PARAM_UPSERT_ZIP = APIParam(
+    'path',
+    ('The path to your course material.'
+    + ' Either a zip file (with .zip extension) or directory (that will get zipped).'),
+    value_type = str,
+    api = False,
+    cli_add_func = _cli_add_func_upsert_zip,
 )
 
 PARAM_USER_EMAIL = APIParam(
@@ -678,26 +727,6 @@ def add_skip_emails_argument(parser):
         action = 'store_true', default = False,
         help = 'Skip sending any emails. Be aware that this may result in inaccessible'
         + ' information (default: %(default)s).')
-
-PARAM_SKIP_BUILD_IMAGES = APIParam('skip_build_images',
-    'Skip building assignment Docker images.',
-    required = False,
-    cli_options = {'action': 'store_true', 'default': False})
-
-PARAM_SKIP_EMAILS = APIParam('skip_emails',
-    'Skip sending any emails. Be aware that this may result in inaccessible information.',
-    required = False,
-    cli_options = {'action': 'store_true', 'default': False})
-
-PARAM_SKIP_LMS_SYNC = APIParam('skip_lms_sync',
-    'Skip syncing with the LMS.',
-    required = False,
-    cli_options = {'action': 'store_true', 'default': False})
-
-PARAM_SKIP_SOURCE_SYNC = APIParam('skip_source_sync',
-    'Skip syncing (updating with) the course source.',
-    required = False,
-    cli_options = {'action': 'store_true', 'default': False})
 
 PARAM_SKIP_TASKS = APIParam('skip_tasks',
     'Skip starting course tasks.',

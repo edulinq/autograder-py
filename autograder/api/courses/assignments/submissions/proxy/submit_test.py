@@ -1,18 +1,11 @@
-import os
 import sys
 import typing
 import unittest
 
 import autograder.api.config
 import autograder.api.courses.assignments.submissions.proxy.submit
+import autograder.testing.constants
 import autograder.testing.server
-
-THIS_DIR: str = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
-ROOT_DIR: str = os.path.join(THIS_DIR, '..', '..', '..', '..', '..', '..')
-SUBMODULE_DIR: str = os.path.join(ROOT_DIR, 'testdata', 'autograder-testdata', 'autograder-server')
-COURSE_DIR: str = os.path.join(SUBMODULE_DIR, 'testdata', 'course-languages')
-TEST_SOLUTION_PATH: str = os.path.join(COURSE_DIR, 'bash', 'test-submissions', 'solution', 'assignment.sh')
-TEST_BAD_PATH: str = os.path.join(COURSE_DIR, 'bash', 'test-submissions', 'solution', 'test-submission.json')
 
 class TestCourseAssignmentsProxySubmit(autograder.testing.server.ServerTest):
     """ Test proxy submitting and assignment. """
@@ -34,7 +27,7 @@ class TestCourseAssignmentsProxySubmit(autograder.testing.server.ServerTest):
                 },
                 {
                     'post_paths': [
-                        TEST_SOLUTION_PATH,
+                        autograder.testing.constants.TEST_SUBMISSIONS_BASH_SOLUTION_PATH,
                     ]
                 },
                 {
@@ -59,7 +52,7 @@ class TestCourseAssignmentsProxySubmit(autograder.testing.server.ServerTest):
                 },
                 {
                     'post_paths': [
-                        TEST_SOLUTION_PATH,
+                        autograder.testing.constants.TEST_SUBMISSIONS_BASH_SOLUTION_PATH,
                     ]
                 },
                 {
@@ -83,7 +76,7 @@ class TestCourseAssignmentsProxySubmit(autograder.testing.server.ServerTest):
                 },
                 {
                     'post_paths': [
-                        TEST_SOLUTION_PATH,
+                        autograder.testing.constants.TEST_SUBMISSIONS_BASH_SOLUTION_PATH,
                     ]
                 },
                 {
@@ -139,7 +132,7 @@ class TestCourseAssignmentsProxySubmit(autograder.testing.server.ServerTest):
                 },
                 {
                     'post_paths': [
-                        TEST_BAD_PATH,
+                        autograder.testing.constants.TEST_SUBMISSIONS_BASH_BAD_PATH,
                     ]
                 },
                 {
