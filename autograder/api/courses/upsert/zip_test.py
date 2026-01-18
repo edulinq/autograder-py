@@ -1,6 +1,5 @@
 import autograder.api.config
 import autograder.api.courses.upsert.zip
-import autograder.testing.asserts
 import autograder.testing.constants
 import autograder.testing.server
 

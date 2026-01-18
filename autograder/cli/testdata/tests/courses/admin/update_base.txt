@@ -1,0 +1,55 @@
+{
+    "cli": "autograder.cli.courses.admin.update",
+    "arguments": [
+        '--user', 'server-admin@test.edulinq.org',
+        '--pass', 'server-admin',
+        '--course', 'course101',
+        '--skip-build-images',
+    ],
+}
+---
+{
+    "result": {
+        "assignment-template-files": {
+            "hw0": [
+                "submission.py"
+            ]
+        },
+        "built-assignment-images": null,
+        "course-id": "course101",
+        "created": false,
+        "lms-sync-result": {
+            "assignment-sync": {
+                "ambiguous-matches": [],
+                "non-matched-assignments": [],
+                "synced-assignments": [],
+                "unchanged-assignments": []
+            },
+            "user-sync": [
+                {
+                    "email": "course-admin@test.edulinq.org",
+                    "skipped": true
+                },
+                {
+                    "email": "course-grader@test.edulinq.org",
+                    "skipped": true
+                },
+                {
+                    "email": "course-other@test.edulinq.org",
+                    "skipped": true
+                },
+                {
+                    "email": "course-owner@test.edulinq.org",
+                    "skipped": true
+                },
+                {
+                    "email": "course-student@test.edulinq.org",
+                    "skipped": true
+                }
+            ]
+        },
+        "message": "",
+        "success": true,
+        "updated": true
+    }
+}

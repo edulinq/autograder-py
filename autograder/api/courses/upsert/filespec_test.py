@@ -1,7 +1,5 @@
 import autograder.api.config
 import autograder.api.courses.upsert.filespec
-import autograder.testing.asserts
-import autograder.testing.constants
 import autograder.testing.server
 
 class TestCoursesUpsertFileSpec(autograder.testing.server.ServerTest):
