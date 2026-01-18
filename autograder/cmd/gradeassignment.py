@@ -79,7 +79,8 @@ def _get_parser() -> argparse.ArgumentParser:
 def main() -> int:
     """ Get a parser, parse the args, and call run. """
 
-    return run(_get_parser().parse_args())
+    args, _ = _get_parser().parse_known_args()
+    return run(args)
 
 if (__name__ == '__main__'):
     sys.exit(main())
