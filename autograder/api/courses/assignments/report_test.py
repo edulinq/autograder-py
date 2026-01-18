@@ -43,14 +43,6 @@ class TestCoursesAssignmentsReport(autograder.testing.server.ServerTest):
                                         "standard-deviation": -1
                                     },
                                     {
-                                        "max": 0,
-                                        "mean": 0,
-                                        "median": 0,
-                                        "min": 0,
-                                        "question-name": "Style",
-                                        "standard-deviation": -1
-                                    },
-                                    {
                                         "max": 1,
                                         "mean": 1,
                                         "median": 1,

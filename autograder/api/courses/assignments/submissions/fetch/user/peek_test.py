@@ -115,16 +115,6 @@ SUBMISSION: autograder.assignment.GradedAssignment = autograder.assignment.Grade
             "message": "",
             "grading_start_time": 1697406273000,
             "grading_end_time": 1697406273000
-        },
-        {
-            "name": "Style",
-            "max_points": 0,
-            "score": 0,
-            "hard_fail": False,
-            "skipped": False,
-            "message": "Style is clean!",
-            "grading_start_time": 1697406273000,
-            "grading_end_time": 1697406273000
         }
     ],
     "grading_start_time": 1697406273000,

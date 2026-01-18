@@ -1,5 +1,6 @@
 import sys
 import typing
+import unittest
 
 import edq.util.dirent
 
@@ -91,6 +92,7 @@ class TestCourseAssignmentsFetchUserAttempt(autograder.testing.server.ServerTest
 
         self.base_api_test(autograder.api.courses.assignments.submissions.fetch.user.attempt.send, test_cases)
 
+    @unittest.skipIf(sys.platform.startswith("win"), "Windows file hashes create different HTTP exchange queries")
     def test_write_output(self):
         """ Ensure that the attempt is properly written to a directory. """
 
@@ -100,36 +102,18 @@ class TestCourseAssignmentsFetchUserAttempt(autograder.testing.server.ServerTest
         expected = {
             "autograder-testing": {
                 "course101::hw0::course-student@test.edulinq.org::1697406272": {
-                    "info.json": "0acd6cd5eea896d61999e02c3d3e793a6469d147b72599c9d93b15e9d200b4b6",
+                    "info.json": "8e82f4f1d0ab94630f33ec228e309e8095358900c358736b86bd2aef4bbba454",
                     "input": {
                         "submission.py": "0556802ad831fa40d1ab3d5bfd21e59887b9f4caf29dfd46d5357755cf51ab25"
                     },
                     "output": {
-                        "result.json": "3e763894ef9ec385e80887d4fd3398c11d1d31d02b28258d0b674e384298b731"
+                        "result.json": "64a907f42bfe209830b6204a9cf8ea97a2e1e24661dd7dd1f89bd2a808b7e154"
                     },
                     "stderr.txt": "01ba4719c80b6fe911b091a7c05124b64eeece964e09c058ef8f9805daca546b",
-                    "stdout.txt": "cb2815272d73a630f099b902301f5a098485b42c1a639c9b3be138ae2e589e54"
+                    "stdout.txt": "87864e5833cd38179a7d146f2dce1395a4b83234e7be96d379cb7f37c4ef8645"
                 }
             }
         }
-
-        # Windows will have different hashes.
-        if (sys.platform == 'win32'):
-            expected = {
-                "autograder-testing": {
-                    "course101__hw0__course-student@test.edulinq.org__1697406272": {
-                        "info.json": "93f23186058de5439da828b3510552cfbdfe3626397d024dc249300734a08c60",
-                        "input": {
-                            "submission.py": "0556802ad831fa40d1ab3d5bfd21e59887b9f4caf29dfd46d5357755cf51ab25"
-                        },
-                        "output": {
-                            "result.json": "3e763894ef9ec385e80887d4fd3398c11d1d31d02b28258d0b674e384298b731"
-                        },
-                        "stderr.txt": "7eb70257593da06f682a3ddda54a9d260d4fc514f645237f5ca74b08f8da61a6",
-                        "stdout.txt": "836491292efe503863b01b0ead71a3418a8364ef62bc1fdc7408671005b294f2"
-                    }
-                }
-            }
 
         actual = edq.util.dirent.tree(temp_dir, hash_files = True)
 
@@ -171,16 +155,6 @@ SUBMISSION: typing.Dict[str, typing.Any] = {
                 "name": "Q2",
                 "score": 1,
                 "skipped": False
-            },
-            {
-                "grading_end_time": 1697406273000,
-                "grading_start_time": 1697406273000,
-                "hard_fail": False,
-                "max_points": 0,
-                "message": "Style is clean!",
-                "name": "Style",
-                "score": 0,
-                "skipped": False
             }
         ],
         "score": 2,
@@ -191,8 +165,8 @@ SUBMISSION: typing.Dict[str, typing.Any] = {
         "submission.py": "H4sICAAAAAAA/3N1Ym1pc3Npb24ucHkASklNU0grzUsuyczPM9TQtOJSUFBQKEotKS3KUwgpKk3l4kJWYaRRlpiDqqgsMUdBW8GQCxAAAP//PpwmbkkAAAA="
     },
     "output-files-gzip": {
-        "result.json": "H4sICAAAAAAA/3Jlc3VsdC5qc29uAMSSvQqDMBSFd5/iNrNDDPUnPkHX0qFDKRI0SEBja1JoEd+9mIptg1YyNdPl3HPO5YN0HgAAkqzmKAW0O2Lkv6TrjSstGqlQCicjDa+bpq/cPhhj06Zm9+zSCKmHfGAtVd60fEavuVKsNI12X9myQsgyU5q1OtPC3A0iSuMtTggJKVkIcFnM2id376/Skb/ThW50oQPdQT8q/hMQLwDa+gegKQWhIK84kxtn3sSFNyLxm9dM5/ETr97BlnGhn3q99wwAAP//PProBisDAAA="
+        "result.json": "H4sICAAAAAAA/3Jlc3VsdC5qc29uAKrmUlBQUFDKS8xNVbJSUPIIN1DSgQgVlqYWl2Tm5xUrWSlEg4VAoBrOQtEXaAjVBpfJTayIL8jPzCsB6TdEkyxOzi9KxSKem1pcnJgONhHdvPSixJTMvPT44pLEopL4kkywvYZmlpbmJgYWRkamlkY4NKTmpWBVDlddq0PQd0YD7jtT0nxnivAdmBULjVSC9higKcRqvpmRJVctFyAAAP//0cU0zjsCAAA="
     },
     "stderr": "",
-    "stdout": "Autograder transcript for assignment: HW0.\nGrading started at 2023-11-11 22:13 and ended at 2023-11-11 22:13.\nQ1: 1 / 1\nQ2: 1 / 1\nStyle: 0 / 0\n   Style is clean!\n\nTotal: 2 / 2\n"
+    "stdout": "Autograder transcript for assignment: HW0.\nGrading started at 2023-11-11 22:13 and ended at 2023-11-11 22:13.\nQ1: 1 / 1\nQ2: 1 / 1\n\nTotal: 2 / 2\n"
 }

@@ -98,16 +98,6 @@ SUBMISSIONS: typing.List[typing.Dict[str, typing.Any]] = [
                     "name": "Q2",
                     "score": 0,
                     "skipped": False
-                },
-                {
-                    "grading_end_time": 1697406256000,
-                    "grading_start_time": 1697406256000,
-                    "hard_fail": False,
-                    "max_points": 0,
-                    "message": "Style is clean!",
-                    "name": "Style",
-                    "score": 0,
-                    "skipped": False
                 }
             ],
             "score": 0,
@@ -118,10 +108,10 @@ SUBMISSIONS: typing.List[typing.Dict[str, typing.Any]] = [
             "submission.py": "H4sICAAAAAAA/3N1Ym1pc3Npb24ucHkASklNU0grzUsuyczPM9TQtOJSUFBQKEotKS3KU/DLL/HMLchJzU3NK0lN4eJCVmukUZaYg1c5IAAA//8hrjgTWgAAAA=="
         },
         "output-files-gzip": {
-            "result.json": "H4sICAAAAAAA/3Jlc3VsdC5qc29uAMySwWrDMAyG73kKzecy4rRrkz7BdhmMHXYYI5haBEMsd7YKG6XvPuIlGTFsWW7NSUj/J+UDnzMAAEHKotiDuH/Jxeq79X7CwMZREHt4ja3uO4/VhHuSPTZOrPqoj84Qd7xMhuHgfMflKYQhqCZufHT8YI8tWiRGDR755An1bXqn8UobaurAynPNJv6P3FbVbpOXhVxX6Y0BQNJDXEzyYsxfVrPexdV6r+e9J/EF1s/82eKf4qngP8TjUjABDi0qulnsu13iuynufnxj9dY/+7k7ZZkEf9m/yy7ZVwAAAP//do3jyV0DAAA="
+            "result.json": "H4sICAAAAAAA/3Jlc3VsdC5qc29uAMySzaqDMBCF9z5FyFouRuX68wT3bgpddVGKhGaQQJPYZISC+O7FVC2GgttmNcycb04OzBARQgjVXAGtCf07JTR+te49OJRGO1qTs29Nb1irDXdkM7ZOFH80nZEaJ54FQ3c1duKSEALneOs3Hgz+q+4GCjSCIBawtxrET+jTWi6kbhuH3GKD0v+H/VZVkSdlyrIq9FgA0GKR042ervox3s2dfm3ubD/3Rv5O7avLfAZ7PmUZCD/uz9MiGqNnAAAA//+d6MFxbQIAAA=="
         },
         "stderr": "Dummy Stderr\n",
-        "stdout": "Autograder transcript for assignment: HW0.\nGrading started at 2023-11-11 22:13 and ended at 2023-11-11 22:13.\nQ1: 0 / 1\n   NotImplemented returned.\nQ2: 0 / 1\n   NotImplemented returned.\nStyle: 0 / 0\n   Style is clean!\n\nTotal: 0 / 2\n"
+        "stdout": "Autograder transcript for assignment: HW0.\nGrading started at 2023-11-11 22:13 and ended at 2023-11-11 22:13.\nQ1: 0 / 1\n   NotImplemented returned.\nQ2: 0 / 1\n   NotImplemented returned.\n\nTotal: 0 / 2\n"
     },
     {
         "info": {
@@ -154,16 +144,6 @@ SUBMISSIONS: typing.List[typing.Dict[str, typing.Any]] = [
                     "name": "Q2",
                     "score": 0,
                     "skipped": False
-                },
-                {
-                    "grading_end_time": 1697406266000,
-                    "grading_start_time": 1697406266000,
-                    "hard_fail": False,
-                    "max_points": 0,
-                    "message": "Style is clean!",
-                    "name": "Style",
-                    "score": 0,
-                    "skipped": False
                 }
             ],
             "score": 1,
@@ -174,10 +154,10 @@ SUBMISSIONS: typing.List[typing.Dict[str, typing.Any]] = [
             "submission.py": "H4sICAAAAAAA/3N1Ym1pc3Npb24ucHkASklNU0grzUsuyczPM9TQtOJSUFBQKEotKS3KUwgpKk3l4kJWYaRRlpiDqsgvv8QztyAnNTc1ryQ1hQsQAAD//6rUxttQAAAA"
         },
         "output-files-gzip": {
-            "result.json": "H4sICAAAAAAA/3Jlc3VsdC5qc29uAJySzWrDMBCE736Krc6hSE5/7DxBeymUHnooxYhoMQJrlUobaAl59xI1uFTEcRWfltmZMd+iXQUAIEg7FCsQD69SLH6kjy1Gtp6iWMFbkg7fbpz+5J7VMTZunP7sNt4SH/IqW8a1D3hCdxij7lNj3tcHbSz1XWQduGOb/qvu2vb+Rja1atvbiQCSOWkf3fvFLF19EZ2cpnvy/Og2AzokRgMBeRsIzXUxdVNG3RRQv/DXgGfBc8B/gKdSsBHWA2q6KuOtpcxvfY63lkv5y5um9+Pjnr3rMjNO9KtqX30HAAD//xSSgptDAwAA"
+            "result.json": "H4sICAAAAAAA/3Jlc3VsdC5qc29uAJyRT4uDMBDF736KkLMsie4f4yfYvSzsaQ+lSGgGCTSJTUYoiN+9mIqloojNaXjz3ht+pEsIIYRaaYCWhH7/M5repUsLAbWzgZbkEKXhddP0lPvjY2zaGHmtGqctDnk+W4aT87CgGwhB1rFx3ld7qbStq4DSY4U63uWfQny9syLjQnysBMCqRfvk7tNNuuwlOrZO9+vwxzRnMGARFPGArbeg3nZTF/uoiwd1nI7jZ2/eyWfGpf6M5Tzpk1sAAAD//2AK9WBTAgAA"
         },
         "stderr": "",
-        "stdout": "Autograder transcript for assignment: HW0.\nGrading started at 2023-11-11 22:13 and ended at 2023-11-11 22:13.\nQ1: 1 / 1\nQ2: 0 / 1\n   NotImplemented returned.\nStyle: 0 / 0\n   Style is clean!\n\nTotal: 1 / 2\n"
+        "stdout": "Autograder transcript for assignment: HW0.\nGrading started at 2023-11-11 22:13 and ended at 2023-11-11 22:13.\nQ1: 1 / 1\nQ2: 0 / 1\n   NotImplemented returned.\n\nTotal: 1 / 2\n"
     },
     {
         "info": {
@@ -210,16 +190,6 @@ SUBMISSIONS: typing.List[typing.Dict[str, typing.Any]] = [
                     "name": "Q2",
                     "score": 1,
                     "skipped": False
-                },
-                {
-                    "grading_end_time": 1697406273000,
-                    "grading_start_time": 1697406273000,
-                    "hard_fail": False,
-                    "max_points": 0,
-                    "message": "Style is clean!",
-                    "name": "Style",
-                    "score": 0,
-                    "skipped": False
                 }
             ],
             "score": 2,
@@ -230,9 +200,9 @@ SUBMISSIONS: typing.List[typing.Dict[str, typing.Any]] = [
             "submission.py": "H4sICAAAAAAA/3N1Ym1pc3Npb24ucHkASklNU0grzUsuyczPM9TQtOJSUFBQKEotKS3KUwgpKk3l4kJWYaRRlpiDqqgsMUdBW8GQCxAAAP//PpwmbkkAAAA="
         },
         "output-files-gzip": {
-            "result.json": "H4sICAAAAAAA/3Jlc3VsdC5qc29uAMSSvQqDMBSFd5/iNrNDDPUnPkHX0qFDKRI0SEBja1JoEd+9mIptg1YyNdPl3HPO5YN0HgAAkqzmKAW0O2Lkv6TrjSstGqlQCicjDa+bpq/cPhhj06Zm9+zSCKmHfGAtVd60fEavuVKsNI12X9myQsgyU5q1OtPC3A0iSuMtTggJKVkIcFnM2id376/Skb/ThW50oQPdQT8q/hMQLwDa+gegKQWhIK84kxtn3sSFNyLxm9dM5/ETr97BlnGhn3q99wwAAP//PProBisDAAA="
+            "result.json": "H4sICAAAAAAA/3Jlc3VsdC5qc29uAKrmUlBQUFDKS8xNVbJSUPIIN1DSgQgVlqYWl2Tm5xUrWSlEg4VAoBrOQtEXaAjVBpfJTayIL8jPzCsB6TdEkyxOzi9KxSKem1pcnJgONhHdvPSixJTMvPT44pLEopL4kkywvYZmlpbmJgYWRkamlkY4NKTmpWBVDlddq0PQd0YD7jtT0nxnivAdmBULjVSC9higKcRqvpmRJVctFyAAAP//0cU0zjsCAAA="
         },
         "stderr": "",
-        "stdout": "Autograder transcript for assignment: HW0.\nGrading started at 2023-11-11 22:13 and ended at 2023-11-11 22:13.\nQ1: 1 / 1\nQ2: 1 / 1\nStyle: 0 / 0\n   Style is clean!\n\nTotal: 2 / 2\n"
+        "stdout": "Autograder transcript for assignment: HW0.\nGrading started at 2023-11-11 22:13 and ended at 2023-11-11 22:13.\nQ1: 1 / 1\nQ2: 1 / 1\n\nTotal: 2 / 2\n"
     }
 ]
