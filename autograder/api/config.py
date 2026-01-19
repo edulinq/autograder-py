@@ -541,6 +541,74 @@ PARAM_PROXY_TIME = APIParam(
     api_required = False,
 )
 
+PARAM_QUERY_AFTER = APIParam(
+    'after',
+    'If supplied, only return records after this timestamp.',
+    value_type = int,
+    api_required = False,
+)
+
+PARAM_QUERY_BEFORE = APIParam(
+    'before',
+    'If supplied, only return records before this timestamp.',
+    value_type = int,
+    api_required = False,
+)
+
+PARAM_QUERY_LIMIT = APIParam(
+    'limit',
+    'The maximum number of records to return.',
+    value_type = int,
+    api_required = False,
+)
+
+PARAM_QUERY_METRIC_TYPE = APIParam(
+    'metric_type',
+    'The type of metric to query for. See: https://github.com/edulinq/autograder-server/blob/main/internal/stats/metrics.go#L29',
+    api_key = 'type',
+    cli_required = True,
+)
+
+PARAM_QUERY_SORT = APIParam(
+    'sort',
+    'Sort the results. -1 for ascending, 0 for no sorting, 1 for descending.',
+    value_type = int,
+    api_required = False,
+)
+
+PARAM_QUERY_TARGET_ASSIGNMENT = APIParam(
+    'target_assignment',
+    'If supplied, only return records for this assignment.',
+    api_required = False,
+    cli_show_default = False,
+)
+
+PARAM_QUERY_TARGET_COURSE = APIParam(
+    'target_course',
+    'If supplied, only return records for this course.',
+    api_required = False,
+    cli_show_default = False,
+)
+
+PARAM_QUERY_TARGET_EMAIL = APIParam(
+    'target_email',
+    'If supplied, only return records for this user.',
+    api_required = False,
+    cli_show_default = False,
+)
+
+PARAM_QUERY_WHERE = APIParam(
+    'where',
+    'Only includes records with a patching key/value pair.',
+    api_required = False,
+    value_type = dict,
+    cli_action = ArgumentMap,
+    cli_extra_options = {
+        'metavar': (f"KEY{MAP_KEY_VALUE_SEP}VALUE"),
+        'nargs': '+',
+    },
+)
+
 PARAM_RAW_COURSE_USERS = APIParam(
     'raw_course_users',
     'Raw course users to operate on.',
@@ -758,47 +826,6 @@ PARAM_FORCE = APIParam('force',
     'Force the operation, overwriting any existing resources.',
     required = False,
     cli_options = {'action': 'store_true', 'default': False})
-
-PARAM_QUERY_LIMIT = APIParam('limit',
-    'The maximum number of records to return.',
-    required = False, cli_options = {'action': 'store', 'type': int})
-
-PARAM_QUERY_AFTER = APIParam('after',
-    'If supplied, only return records after this timestamp.',
-    required = False, cli_options = {'action': 'store', 'type': int})
-
-PARAM_QUERY_BEFORE = APIParam('before',
-    'If supplied, only return records before this timestamp.',
-    required = False, cli_options = {'action': 'store', 'type': int})
-
-PARAM_QUERY_SORT = APIParam('sort',
-    'Sort the results. -1 for ascending, 0 for no sorting, 1 for descending.',
-    required = False, cli_options = {'action': 'store', 'type': int})
-
-PARAM_QUERY_TARGET_ASSIGNMENT = APIParam('target_assignment',
-    'If supplied, only return records for this assignment.',
-    required = False)
-
-PARAM_QUERY_TARGET_COURSE = APIParam('target_course',
-    'If supplied, only return records for this course.',
-    required = False)
-
-PARAM_QUERY_TARGET_EMAIL = APIParam('target_email',
-    'If supplied, only return records for this user.',
-    required = False)
-
-PARAM_QUERY_TYPE = APIParam('type',
-    'The type of metric to query for.',
-    required = True)
-
-PARAM_QUERY_WHERE = APIParam('where',
-    'Only includes records with a patching key/value pair.',
-    required = False,
-    cli_options = {
-        'metavar': (f"KEY{MAP_KEY_VALUE_SEP}VALUE"),
-        'action': ArgumentMap,
-        'nargs': '+',
-    })
 
 def add_skip_emails_argument(parser):
     parser.add_argument('--skip-emails', dest = 'skip-emails',
