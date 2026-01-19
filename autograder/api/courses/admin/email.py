@@ -1,5 +1,5 @@
 """
-Update an existing course using its own source.
+Send an email to course users.
 """
 
 import typing
@@ -7,21 +7,22 @@ import typing
 import autograder.api.common
 import autograder.api.config
 
-API_ENDPOINT: str = 'courses/admin/update'
+API_ENDPOINT: str = 'courses/admin/email'
 API_WRITE: bool = True
 API_PARAMS: typing.List[autograder.api.config.APIParam] = [
     autograder.api.config.PARAM_SERVER,
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
 
-    autograder.api.config.PARAM_DRY_RUN,
-    autograder.api.config.PARAM_SKIP_EMAILS,
-    autograder.api.config.PARAM_SKIP_SOURCE_SYNC,
-    autograder.api.config.PARAM_SKIP_LMS_SYNC,
-    autograder.api.config.PARAM_SKIP_BUILD_IMAGES,
-    autograder.api.config.PARAM_SKIP_TEMPLATE_FILES,
-
     autograder.api.config.PARAM_COURSE,
+    autograder.api.config.PARAM_DRY_RUN,
+
+    autograder.api.config.PARAM_EMAIL_COURSE_TO,
+    autograder.api.config.PARAM_EMAIL_COURSE_CC,
+    autograder.api.config.PARAM_EMAIL_COURSE_BCC,
+    autograder.api.config.PARAM_EMAIL_SUBJECT,
+    autograder.api.config.PARAM_EMAIL_BODY,
+    autograder.api.config.PARAM_EMAIL_HTML,
 ]
 
 def send(config: typing.Dict[str, typing.Any], **kwargs: typing.Any) -> typing.Dict[str, typing.Any]:

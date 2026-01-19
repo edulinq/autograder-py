@@ -328,6 +328,64 @@ PARAM_DRY_RUN = APIParam(
     cli_default_value = False,
 )
 
+PARAM_EMAIL_BODY = APIParam(
+    'body',
+    'The email body.',
+    api_required = False,
+)
+
+PARAM_EMAIL_COURSE_BCC = APIParam(
+    'bcc',
+    'A list of email addresses. Accepts course user references.',
+    api_required = False,
+    value_type = list,
+    cli_action = 'extend',
+    cli_type = _csv_to_list,
+    cli_show_default = False,
+)
+
+PARAM_EMAIL_COURSE_CC = APIParam(
+    'cc',
+    'A list of email addresses. Accepts course user references.',
+    api_required = False,
+    value_type = list,
+    cli_action = 'extend',
+    cli_type = _csv_to_list,
+    cli_show_default = False,
+)
+
+PARAM_EMAIL_COURSE_TO = APIParam('to',
+    ('A list of email addresses.'
+    + ' Accepts course user references.'
+    + ' Course user references may be specified in four ways:'
+    + ' 1) Email address of the requested user,'
+    + ' 2) "*" to request all users in the course,'
+    + ' 3) "<course role>" (e.g., student, grader)'
+    + ' to request all course users with that role,'
+    + ' and 4) any of the previous options preceded by a minus sign'
+    + ' (e.g., "-alice@test.edulinq.org", "-student")'
+    + ' to exclude that user or role from the request.'),
+    api_required = False,
+    value_type = list,
+    cli_action = 'extend',
+    cli_type = _csv_to_list,
+    cli_show_default = False,
+)
+
+PARAM_EMAIL_HTML = APIParam(
+    'html',
+    'Indicates the email body contains HTML.',
+    api_required = False,
+    value_type = bool,
+    cli_default_value = False,
+)
+
+PARAM_EMAIL_SUBJECT = APIParam(
+    'subject',
+    'The email subject.',
+    cli_required = True,
+)
+
 PARAM_FILESPEC_PART_PATH = APIParam(
     'filespec_path',
     'The path the filespec points to.',
@@ -684,47 +742,9 @@ PARAM_WAIT_FOR_COMPLETION = APIParam(
 )
 
 ''' TEST
-PARAM_COURSE_EMAIL_BCC = APIParam('bcc',
-    ('A list of email addresses.'
-    + ' Accepts course user references.'),
-    required = False,
-    cli_options = {'action': 'extend', 'type': _csv_to_list})
-
-PARAM_COURSE_EMAIL_CC = APIParam('cc',
-    ('A list of email addresses.'
-    + ' Accepts course user references.'),
-    required = False,
-    cli_options = {'action': 'extend', 'type': _csv_to_list})
-
-PARAM_COURSE_EMAIL_TO = APIParam('to',
-    ('A list of email addresses.'
-    + ' Accepts course user references.'
-    + ' Course user references may be specified in four ways:'
-    + ' 1) Email address of the requested user,'
-    + ' 2) "*" to request all users in the course,'
-    + ' 3) "<course role>" (e.g., student, grader)'
-    + ' to request all course users with that role,'
-    + ' and 4) any of the previous options preceded by a minus sign'
-    + ' (e.g., "-alice@test.edulinq.org", "-student")'
-    + ' to exclude that user or role from the request.'),
-    required = False,
-    cli_options = {'action': 'extend', 'type': _csv_to_list})
-
 PARAM_COURSE_SOURCE = APIParam('source',
     'The source to use for the course.',
     required = False)
-
-PARAM_EMAIL_BODY = APIParam('body',
-    'The email body.',
-    required = False)
-
-PARAM_EMAIL_HTML = APIParam('html',
-    'Indicates the email body contains HTML.',
-    required = False)
-
-PARAM_EMAIL_SUBJECT = APIParam('subject',
-    'The email subject.',
-    required = True)
 
 PARAM_FILTER_ROLE = APIParam('filter_role',
     'Only show results from users with this role (all roles if unknown (default)).',
