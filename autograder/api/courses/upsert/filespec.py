@@ -33,4 +33,5 @@ API_PARAMS: typing.List[autograder.api.config.APIParam] = [
 
 def send(config: typing.Dict[str, typing.Any], **kwargs: typing.Any) -> typing.Dict[str, typing.Any]:
     """ Send a request to the autograder. """
+
     return autograder.api.common.make_api_request(API_ENDPOINT, config, API_PARAMS, write = API_WRITE, **kwargs)

@@ -1,0 +1,13 @@
+{
+    "cli": "autograder.cli.courses.lms.scores.upload",
+    "arguments": [
+        '--user', 'server-admin@test.edulinq.org',
+        '--pass', 'server-admin',
+        '--course', 'course101',
+    ],
+}
+---
+{
+    "dry-run": false,
+    "results": []
+}
