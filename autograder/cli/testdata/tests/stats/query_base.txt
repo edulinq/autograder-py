@@ -1,0 +1,12 @@
+{
+    "cli": "autograder.cli.stats.query",
+    "arguments": [
+        '--user', 'server-admin@test.edulinq.org',
+        '--pass', 'server-admin',
+        '--metric-type', 'grading-time',
+    ],
+}
+---
+{
+    "results": []
+}

@@ -1,9 +1,9 @@
 import autograder.api.config
-import autograder.api.courses.stats.query
+import autograder.api.stats.query
 import autograder.testing.server
 
-class TestCoursesStatsQuery(autograder.testing.server.ServerTest):
-    """ Test query course stats. """
+class TestStatsQuery(autograder.testing.server.ServerTest):
+    """ Test query server stats. """
 
     def test_base(self):
         """ Test base functionality. """
@@ -15,8 +15,6 @@ class TestCoursesStatsQuery(autograder.testing.server.ServerTest):
                 {
                     autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
                     autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
-
-                    autograder.api.config.PARAM_COURSE.config_key: 'course101',
 
                     autograder.api.config.PARAM_QUERY_METRIC_TYPE.config_key: 'grading-time',
                     autograder.api.config.PARAM_QUERY_LIMIT.config_key: None,
@@ -34,4 +32,4 @@ class TestCoursesStatsQuery(autograder.testing.server.ServerTest):
 
         ]
 
-        self.base_api_test(autograder.api.courses.stats.query.send, test_cases)
+        self.base_api_test(autograder.api.stats.query.send, test_cases)
