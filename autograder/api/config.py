@@ -24,6 +24,17 @@ DEFAULT_CLI_ACTIONS: typing.Dict[typing.Type, str] = {
 }
 """ Map value types to default CLI actions. """
 
+API_LOG_LEVEL_MAP: typing.Dict[str, int] = {
+    'TRACE': -20,
+    'DEBUG': -10,
+    'INFO': 0,
+    'WARN': 10,
+    'ERROR': 20,
+    'FATAL': 30,
+    'OFF': 100,
+}
+""" String log levels to send to the API mapped to integer log levels returned from the API. """
+
 class APIParam:
     """
     A definition for a parameter to the autograder API.
@@ -567,11 +578,25 @@ PARAM_QUERY_LIMIT = APIParam(
     api_required = False,
 )
 
+PARAM_QUERY_LOG_LEVEL = APIParam(
+    'level',
+    'The minimum level of log records to return.',
+    api_required = False,
+    cli_default_value = 'INFO',
+    cli_extra_options = {'choices': API_LOG_LEVEL_MAP.keys()},
+)
+
 PARAM_QUERY_METRIC_TYPE = APIParam(
     'metric_type',
     'The type of metric to query for. See: https://github.com/edulinq/autograder-server/blob/main/internal/stats/metrics.go#L29',
     api_key = 'type',
     cli_required = True,
+)
+
+PARAM_QUERY_PAST = APIParam(
+    'past',
+    'If supplied, only return log records in this duration (using "h", "m", or "s" suffixes) (e.g., "24h", "10m", or "1h10m10s").',
+    api_required = False,
 )
 
 PARAM_QUERY_SORT = APIParam(

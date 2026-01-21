@@ -1,0 +1,14 @@
+{
+    "cli": "autograder.cli.logs.query",
+    "arguments": [
+        '--user', 'server-admin@test.edulinq.org',
+        '--pass', 'server-admin',
+        '--level', 'ERROR',
+    ],
+}
+---
+{
+    "error": null,
+    "results": [],
+    "success": true
+}
