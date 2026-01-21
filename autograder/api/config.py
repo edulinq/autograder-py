@@ -4,6 +4,7 @@ import typing
 
 import edq.util.hash
 import edq.util.parse
+import edq.util.time
 
 import autograder.api.constants
 import autograder.api.model
@@ -16,6 +17,7 @@ MAP_KEY_VALUE_SEP: str = '='
 
 DEFAULT_CLI_ACTIONS: typing.Dict[typing.Type, str] = {
     bool: 'store_true',
+    edq.util.time.Timestamp: 'store',
     float: 'store',
     int: 'store',
     str: 'store',
@@ -161,6 +163,9 @@ class APIParam:
 
         if (value is None):
             return None
+
+        if (issubclass(self.value_type, edq.util.time.Timestamp)):
+            return edq.util.time.Timestamp.guess(value)
 
         if (issubclass(self.value_type, bool)):
             return edq.util.parse.boolean(value)
@@ -537,21 +542,21 @@ PARAM_PROXY_TIME = APIParam(
     + ' Use this option to manually set the proxy time.'
     + ' Timestamps are milliseconds from the UNIX epoch'
     + ' (https://en.wikipedia.org/wiki/Unix_time).'),
-    value_type = int,
+    value_type = edq.util.time.Timestamp,
     api_required = False,
 )
 
 PARAM_QUERY_AFTER = APIParam(
     'after',
     'If supplied, only return records after this timestamp.',
-    value_type = int,
+    value_type = edq.util.time.Timestamp,
     api_required = False,
 )
 
 PARAM_QUERY_BEFORE = APIParam(
     'before',
     'If supplied, only return records before this timestamp.',
-    value_type = int,
+    value_type = edq.util.time.Timestamp,
     api_required = False,
 )
 
