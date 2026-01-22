@@ -9,6 +9,7 @@ import requests
 
 import autograder.api.constants
 import autograder.testing.asserts
+import autograder.testing.model
 
 CLEAN_REMOVE_HEADERS: typing.Set[str] = {
     'access-control-allow-origin',
@@ -89,6 +90,9 @@ def clean_api_response(response: requests.Response, body: str) -> str:
                 result['id'] = '::'.join(parts)
 
                 result['short-id'] = str(autograder.testing.asserts.TEST_TIMESTAMP)
+    elif (endpoint == 'system/stacks'):
+        # Replace payloads for stack traces completely to make it consistent.
+        data['content'] = autograder.testing.model.STACK_TRACE_PAYLOAD
 
     # Convert body back to a string.
     body = edq.util.json.dumps(data)

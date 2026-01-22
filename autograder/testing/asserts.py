@@ -76,6 +76,17 @@ def content_equals_noramlize_regrade(test: edq.testing.unittest.BaseTest, expect
 
     test.assertJSONDictEqual(expected_dict, actual_dict)
 
+def content_equals_stack_trace(test: edq.testing.unittest.BaseTest, expected: str, actual: str) -> None:
+    """
+    A CLI test assertion function for checking if the output looks like a stack trace.
+    """
+
+    # Actual output should be JSON.
+    actual_dict = edq.util.json.loads(actual, strict = True)
+
+    test.assertGreater(actual_dict['count'], 5)
+    test.assertEqual(actual_dict['count'], len(actual_dict['stacks']))
+
 def normalize_dict(data: typing.Dict[str, typing.Any]) -> typing.Dict[str, typing.Any]:
     """ Noramlize a dict that typically comes from testing output. """
 

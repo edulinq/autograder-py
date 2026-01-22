@@ -1,0 +1,9 @@
+{
+    "cli": "autograder.cli.system.stacks",
+    "stdout_assertion_func": "autograder.testing.asserts.content_equals_stack_trace",
+    "arguments": [
+        '--user', 'server-admin@test.edulinq.org',
+        '--pass', 'server-admin',
+    ],
+}
+---
