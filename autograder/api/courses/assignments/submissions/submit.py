@@ -9,9 +9,8 @@ import autograder.api.config
 import autograder.assignment
 import autograder.error
 
-API_ENDPOINT: str = 'courses/assignments/submissions/submit'
-API_WRITE: bool = True
-API_PARAMS: typing.List[autograder.api.config.APIParam] = [
+# Params have been split up so others can use these base params.
+BASE_API_PARAMS: typing.List[autograder.api.config.APIParam] = [
     autograder.api.config.PARAM_SERVER,
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
@@ -21,7 +20,11 @@ API_PARAMS: typing.List[autograder.api.config.APIParam] = [
 
     autograder.api.config.PARAM_SUBMISSION_MESSAGE,
     autograder.api.config.PARAM_ALLOW_LATE,
+]
 
+API_ENDPOINT: str = 'courses/assignments/submissions/submit'
+API_WRITE: bool = True
+API_PARAMS: typing.List[autograder.api.config.APIParam] = BASE_API_PARAMS + [
     autograder.api.config.PARAM_SUBMISSION_FILES,
 ]
 

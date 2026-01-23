@@ -180,13 +180,17 @@ def run_test_submission(assignment_config_path: str, submission_config_path: str
 
 def compare_test_submission(
         test_config_path: str,
-        actual_result: autograder.assignment.GradedAssignment,
+        actual_result: typing.Union[autograder.assignment.GradedAssignment, None],
         print_result: bool = True,
         ) -> bool:
     """
     Compare a grading result against the expected output of a test submission.
     Return true if the two match.
     """
+
+    if (actual_result is None):
+        print(f"Submission is null and cannot match expected output: '{test_config_path}'.")
+        return False
 
     test_config = edq.util.json.load_path(test_config_path)
 

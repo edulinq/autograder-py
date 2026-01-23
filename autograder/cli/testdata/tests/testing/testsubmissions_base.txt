@@ -1,12 +1,13 @@
 {
     "cli": "autograder.cli.testing.test-submissions",
+    "platform_skip": "win",
     "arguments": [
         '--assignment', '__ABS_DATA_DIR__(../../../../testdata/autograder-testdata/autograder-server/testdata/course-languages/bash/assignment.json)',
         '--submission', '__ABS_DATA_DIR__(../../../../testdata/autograder-testdata/autograder-server/testdata/course-languages/bash/test-submissions)',
     ],
 }
 ---
-Testing assignment '__ABS_DATA_DIR__(../../../../testdata/autograder-testdata/autograder-server/testdata/course-languages/bash/assignment.json)' and submission '__ABS_DATA_DIR__(../../../../testdata/autograder-testdata/autograder-server/testdata/course-languages/bash/test-submissions/solution/test-submission.json)'.
 Testing assignment '__ABS_DATA_DIR__(../../../../testdata/autograder-testdata/autograder-server/testdata/course-languages/bash/assignment.json)' and submission '__ABS_DATA_DIR__(../../../../testdata/autograder-testdata/autograder-server/testdata/course-languages/bash/test-submissions/not-implemented/test-submission.json)'.
+Testing assignment '__ABS_DATA_DIR__(../../../../testdata/autograder-testdata/autograder-server/testdata/course-languages/bash/assignment.json)' and submission '__ABS_DATA_DIR__(../../../../testdata/autograder-testdata/autograder-server/testdata/course-languages/bash/test-submissions/solution/test-submission.json)'.
 Encountered 0 error(s) while testing 2 submissions.
 Success

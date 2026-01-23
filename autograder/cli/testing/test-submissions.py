@@ -24,7 +24,7 @@ def run_cli(args: argparse.Namespace) -> int:
         return 101
 
     errors = 0
-    for test_submission in test_submissions:
+    for test_submission in sorted(test_submissions):
         success = False
 
         try:
