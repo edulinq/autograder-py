@@ -1,5 +1,5 @@
 """
-The `autograder.cli.testing` package contains tools for testing.
+The `autograder.cli.testing` package contains tools to test, debug, and develop courses and assignments.
 """
 
 import sys

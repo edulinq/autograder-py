@@ -22,7 +22,7 @@ class CLITest(autograder.testing.server.ServerTest):
 
         test_info.arguments += [
             '--config-global', CLI_GLOBAL_CONFG_PATH,
-            '--server', self.get_server_url(),
+            '--config', f"server={self.get_server_url()}",
         ]
 
     @classmethod

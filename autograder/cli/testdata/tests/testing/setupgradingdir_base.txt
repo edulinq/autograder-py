@@ -1,0 +1,10 @@
+{
+    "cli": "autograder.cli.testing.setup-grading-dir",
+    "arguments": [
+        '--assignment', '__DATA_DIR__(../../../../testdata/autograder-testdata/autograder-server/testdata/course-languages/bash/assignment.json)',
+        '--submission', '__DATA_DIR__(../../../../testdata/autograder-testdata/autograder-server/testdata/course-languages/bash/test-submissions/solution)',
+        '--out-dir', '__TEMP_DIR__()',
+    ],
+}
+---
+Prepared grading directory: '__TEMP_DIR__()'.
