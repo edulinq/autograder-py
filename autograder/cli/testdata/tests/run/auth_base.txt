@@ -1,0 +1,9 @@
+{
+    "cli": "autograder.run.auth",
+    "arguments": [
+        '--user', 'server-admin@test.edulinq.org',
+        '--pass', 'server-admin',
+    ],
+}
+---
+Authentication successful.
