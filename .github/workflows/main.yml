@@ -49,6 +49,10 @@ jobs:
         shell: bash
         run: ./scripts/check_lint.sh
 
+      - name: Check Style
+        shell: bash
+        run: ./scripts/check_style.sh
+
       - name: Run Tests
         shell: bash
         run: ./scripts/run_tests.sh

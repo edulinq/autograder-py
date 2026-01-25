@@ -29,6 +29,10 @@ function main() {
     "${THIS_DIR}/check_lint.sh"
     ((error_count += $?))
 
+    echo -e "\nChecking Style"
+    "${THIS_DIR}/check_style.sh"
+    ((error_count += $?))
+
     echo -e "\nRunning Tests"
     "${THIS_DIR}/run_tests.sh"
     ((error_count += $?))

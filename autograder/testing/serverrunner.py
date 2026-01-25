@@ -92,7 +92,7 @@ class ServerRunner(edq.testing.serverrunner.ServerRunner):
 
         return True
 
-    def identify_server(self) ->  bool:
+    def identify_server(self) -> bool:
         # Check the server for a heartbeat.
         try:
             autograder.api.metadata.heartbeat.send({'server': self.server}, exit_on_error = False)

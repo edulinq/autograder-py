@@ -5,14 +5,21 @@ Check the style of all '.py' and '.ipynb' files in the paths specified (recursiv
 import argparse
 import sys
 
+import edq.util.json
+
 import autograder.cli.parser
 import autograder.style
 
 def run_cli(args: argparse.Namespace) -> int:
     """ Run the CLI. """
 
+    style_overrides = edq.util.json.loads(args.style_overrides)
+
     count, total_lines = autograder.style.check_paths(args.paths,
-            ignore_paths = args.ignore_paths, ignore_patterns = args.ignore_patterns)
+            ignore_paths = args.ignore_paths,
+            ignore_patterns = args.ignore_patterns,
+            style_overrides = style_overrides)
+
     print(f"Found {count} style errors.")
 
     if (count > 0):
@@ -42,6 +49,10 @@ def _get_parser() -> argparse.ArgumentParser:
     parser.add_argument('--ignore-pattern', dest = 'ignore_patterns',
         type = str, action = 'append', default = [],
         help = 'Regular expressions to ignore (may be specified multiple times).')
+
+    parser.add_argument('--style-overrides', dest = 'style_overrides',
+        type = str, action = 'store', default = '{}',
+        help = 'A JSON object containing style overrides to send to flake8 (default: %(default)s).')
 
     return parser
 

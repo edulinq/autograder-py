@@ -44,7 +44,7 @@ class CLITest(autograder.testing.server.ServerTest):
             prefix = prefix.replace('_', '', 1)
 
         if (len(prefix) > 0):
-            name =  f"{prefix}_{name}"
+            name = f"{prefix}_{name}"
 
         return name
 

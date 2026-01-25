@@ -236,7 +236,7 @@ class APIParam:
             'help': self.description,
         }
 
-        if (not self.cli_action in {'store_true', 'store_false'}):
+        if (self.cli_action not in {'store_true', 'store_false'}):
             kwargs['type'] = self.cli_type
 
         if (self.cli_required):
