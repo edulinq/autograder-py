@@ -1,0 +1,8 @@
+{
+    "cli": "autograder.cli.util.style",
+    "arguments": [
+        '__DATA_DIR__(../../../testdata/code/simple.py)',
+    ],
+}
+---
+Found 0 style errors.
