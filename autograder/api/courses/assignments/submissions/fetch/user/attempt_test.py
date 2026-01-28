@@ -1,10 +1,10 @@
 import sys
-import typing
 import unittest
 
 import edq.util.dirent
 
 import autograder.api.config
+import autograder.api.courses.assignments.submissions.fetch.testing
 import autograder.api.courses.assignments.submissions.fetch.user.attempt
 import autograder.testing.server
 import autograder.util.submission
@@ -30,7 +30,7 @@ class TestCourseAssignmentsFetchUserAttempt(autograder.testing.server.ServerTest
                 (
                     True,
                     True,
-                    SUBMISSION,
+                    autograder.api.courses.assignments.submissions.fetch.testing.SUBMISSIONS['course-student@test.edulinq.org'][2],
                 ),
                 None,
             ),
@@ -96,8 +96,10 @@ class TestCourseAssignmentsFetchUserAttempt(autograder.testing.server.ServerTest
     def test_write_output(self):
         """ Ensure that the attempt is properly written to a directory. """
 
+        submission = autograder.api.courses.assignments.submissions.fetch.testing.SUBMISSIONS['course-student@test.edulinq.org'][2]
+
         temp_dir = edq.util.dirent.get_temp_dir('autograder-testing-')
-        autograder.util.submission.output_grading_result(SUBMISSION, base_dir = temp_dir)
+        autograder.util.submission.output_grading_result(submission, base_dir = temp_dir)
 
         expected = {
             "autograder-testing": {
@@ -122,51 +124,3 @@ class TestCourseAssignmentsFetchUserAttempt(autograder.testing.server.ServerTest
         actual['autograder-testing'] = actual.pop(key)
 
         self.assertJSONEqual(expected, actual)
-
-# pylint: disable=line-too-long
-SUBMISSION: typing.Dict[str, typing.Any] = {
-    "info": {
-        "additional-info": None,
-        "assignment-id": "hw0",
-        "course-id": "course101",
-        "grading_end_time": 1697406273000,
-        "grading_start_time": 1697406273000,
-        "id": "course101::hw0::course-student@test.edulinq.org::1697406272",
-        "max_points": 2,
-        "message": "",
-        "name": "HW0",
-        "questions": [
-            {
-                "grading_end_time": 1697406273000,
-                "grading_start_time": 1697406273000,
-                "hard_fail": False,
-                "max_points": 1,
-                "message": "",
-                "name": "Q1",
-                "score": 1,
-                "skipped": False
-            },
-            {
-                "grading_end_time": 1697406273000,
-                "grading_start_time": 1697406273000,
-                "hard_fail": False,
-                "max_points": 1,
-                "message": "",
-                "name": "Q2",
-                "score": 1,
-                "skipped": False
-            }
-        ],
-        "score": 2,
-        "short-id": "1697406272",
-        "user": "course-student@test.edulinq.org"
-    },
-    "input-files-gzip": {
-        "submission.py": "H4sICAAAAAAA/3N1Ym1pc3Npb24ucHkASklNU0grzUsuyczPM9TQtOJSUFBQKEotKS3KUwgpKk3l4kJWYaRRlpiDqqgsMUdBW8GQCxAAAP//PpwmbkkAAAA="
-    },
-    "output-files-gzip": {
-        "result.json": "H4sICAAAAAAA/3Jlc3VsdC5qc29uAKrmUlBQUFDKS8xNVbJSUPIIN1DSgQgVlqYWl2Tm5xUrWSlEg4VAoBrOQtEXaAjVBpfJTayIL8jPzCsB6TdEkyxOzi9KxSKem1pcnJgONhHdvPSixJTMvPT44pLEopL4kkywvYZmlpbmJgYWRkamlkY4NKTmpWBVDlddq0PQd0YD7jtT0nxnivAdmBULjVSC9higKcRqvpmRJVctFyAAAP//0cU0zjsCAAA="
-    },
-    "stderr": "",
-    "stdout": "Autograder transcript for assignment: HW0.\nGrading started at 2023-11-11 22:13 and ended at 2023-11-11 22:13.\nQ1: 1 / 1\nQ2: 1 / 1\n\nTotal: 2 / 2\n"
-}

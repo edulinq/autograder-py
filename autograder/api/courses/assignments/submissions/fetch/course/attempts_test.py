@@ -1,6 +1,6 @@
 import autograder.api.config
 import autograder.api.courses.assignments.submissions.fetch.course.attempts
-import autograder.api.courses.assignments.submissions.fetch.user.attempt_test
+import autograder.api.courses.assignments.submissions.fetch.testing
 import autograder.testing.server
 
 class TestCourseAssignmentsFetchCourseAttempts(autograder.testing.server.ServerTest):
@@ -8,6 +8,8 @@ class TestCourseAssignmentsFetchCourseAttempts(autograder.testing.server.ServerT
 
     def test_base(self):
         """ Test base functionality. """
+
+        submission = autograder.api.courses.assignments.submissions.fetch.testing.SUBMISSIONS['course-student@test.edulinq.org'][2]
 
         # [(config (and overrides), kwargs, expected, error substring), ...]
         test_cases = [
@@ -25,7 +27,7 @@ class TestCourseAssignmentsFetchCourseAttempts(autograder.testing.server.ServerT
                     "course-grader@test.edulinq.org": None,
                     "course-other@test.edulinq.org": None,
                     "course-owner@test.edulinq.org": None,
-                    "course-student@test.edulinq.org": autograder.api.courses.assignments.submissions.fetch.user.attempt_test.SUBMISSION,
+                    "course-student@test.edulinq.org": submission,
                 },
                 None,
             ),
@@ -45,7 +47,7 @@ class TestCourseAssignmentsFetchCourseAttempts(autograder.testing.server.ServerT
                 {},
                 {
                     "course-admin@test.edulinq.org": None,
-                    "course-student@test.edulinq.org": autograder.api.courses.assignments.submissions.fetch.user.attempt_test.SUBMISSION,
+                    "course-student@test.edulinq.org": submission,
                 },
                 None,
             ),
