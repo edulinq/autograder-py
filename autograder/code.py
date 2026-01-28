@@ -122,12 +122,10 @@ def parse_module_code(
     if (allowed_module_nodes is None):
         allowed_module_nodes = DEFAULT_MODULE_AST_ALLOWED_NODES
 
-    raw_ast = ast.parse(source_code)
+    module_ast = ast.parse(source_code)
 
-    if (not isinstance(raw_ast, ast.Module)):
-        raise ValueError(f"Provided code for parsing is not a Python module, found: '{type(raw_ast)}'.")
-
-    module_ast = typing.cast(ast.Module, raw_ast)
+    if (not isinstance(module_ast, ast.Module)):
+        raise ValueError(f"Provided code for parsing is not a Python module, found: '{type(module_ast)}'.")
 
     if (not sanitize):
         return module_ast

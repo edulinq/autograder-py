@@ -23,7 +23,7 @@ def _clean_server_users() -> typing.Dict[str, lms.model.users.ServerUser]:
     for user in users.values():
         _clean_server_user(user)
 
-    return users
+    return users  # type: ignore[no-any-return]
 
 def _clean_course_users() -> typing.Dict[str, typing.Dict[str, lms.model.users.CourseUser]]:
     """ Copy over the LMS Toolkit test course users, but clean users. """

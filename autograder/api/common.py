@@ -178,4 +178,5 @@ def send_api_request(
         code = response_body.get(autograder.api.constants.API_RESPONSE_KEY_STATUS, None)
         raise autograder.error.APIError(code, message)
 
-    return response_body[autograder.api.constants.API_RESPONSE_KEY_CONTENT]
+    content = response_body[autograder.api.constants.API_RESPONSE_KEY_CONTENT]
+    return typing.cast(typing.Dict[str, typing.Any], content)

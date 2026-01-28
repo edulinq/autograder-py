@@ -98,7 +98,8 @@ def normalize_dict(data: typing.Dict[str, typing.Any]) -> typing.Dict[str, typin
 def normalize_analysis(data: typing.Dict[str, typing.Any]) -> typing.Dict[str, typing.Any]:
     """ Noramlize a dict that comes from an analysis result. """
 
-    return _normalize_timestamps(data)
+    _normalize_timestamps(data)
+    return data
 
 def _noramlize_version(data: typing.Dict[str, typing.Any]) -> typing.Dict[str, typing.Any]:
     """ Normalize server version information. """

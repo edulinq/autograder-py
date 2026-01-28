@@ -68,7 +68,7 @@ class Style(autograder.question.Question):
     def __init__(self,
             paths: typing.Union[str, typing.List[str], None] = None,
             ignore_paths: typing.Union[typing.List[str], None] = None,
-            ignore_patterns: typing.Union[typing.List[typing.Union[str, re.Pattern]], None] = None,
+            ignore_patterns: typing.Union[typing.Sequence[typing.Union[str, re.Pattern]], None] = None,
             max_points: float = 5,
             fake_path: typing.Union[str, None] = None,
             shorten_path: bool = True,
@@ -126,7 +126,7 @@ class Style(autograder.question.Question):
         self._style_overrides = style_overrides
         """ Overrides for options passed directly to flake8. """
 
-    def score_question(self, *args, **kwargs):
+    def score_question(self, submission: typing.Any, **kwargs: typing.Any) -> None:
         error_count, style_output = check_paths(
                 self._paths,
                 ignore_paths = self._ignore_paths,
@@ -166,7 +166,7 @@ def check_path(
 def check_paths(
         paths: typing.List[str],
         ignore_paths: typing.Union[typing.List[str], None] = None,
-        ignore_patterns: typing.Union[typing.List[typing.Union[str, re.Pattern]], None] = None,
+        ignore_patterns: typing.Union[typing.Sequence[typing.Union[str, re.Pattern]], None] = None,
         include_clean_paths: bool = False,
         **kwargs: typing.Any) -> typing.Tuple[int, typing.List[typing.Tuple[str, typing.List[str]]]]:
     """

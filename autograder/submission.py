@@ -31,7 +31,7 @@ def copy_assignment_files(
         dest_dir: str,
         op_dir: str,
         files: typing.List[str],
-        only_contents = False,
+        only_contents: bool = False,
         pre_ops: typing.Union[typing.List[autograder.fileop.FileOp], None] = None,
         post_ops: typing.Union[typing.List[autograder.fileop.FileOp], None] = None,
         ) -> None:
@@ -85,7 +85,7 @@ def prep_grading_dir(
         assignment_config_path: str,
         submission_dir: str,
         grading_dir: typing.Union[str, None] = None,
-        skip_static = False,
+        skip_static: bool = False,
         ) -> str:
     """
     Create and return a directory for grading a submission.

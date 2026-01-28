@@ -30,4 +30,4 @@ def send(config: typing.Dict[str, typing.Any], **kwargs: typing.Any) -> typing.D
     """
 
     response = autograder.api.common.make_api_request(API_ENDPOINT, config, API_PARAMS, write = API_WRITE, **kwargs)
-    return response['grading-results']
+    return typing.cast(typing.Dict[str, typing.Dict[str, typing.Any]], response['grading-results'])

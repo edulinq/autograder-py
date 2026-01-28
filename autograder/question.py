@@ -110,7 +110,7 @@ class GradedQuestion(edq.util.json.DictConverter):
     def __eq__(self, other: typing.Any) -> bool:
         return self.equals(other)
 
-    def equals(self, other: typing.Any, ignore_messages: bool = False, **kwargs) -> bool:
+    def equals(self, other: typing.Any, ignore_messages: bool = False, **kwargs: typing.Any) -> bool:
         """ Check another graded question for equality. """
 
         if (not isinstance(other, GradedQuestion)):
@@ -300,7 +300,7 @@ class Question:
         self.set_result(0, message)
         raise AutograderFailError()
 
-    def hard_fail(self, message) -> None:
+    def hard_fail(self, message: str) -> None:
         """
         Immediately hard fail this question, no partial credit.
         Grading will be stopped for the rest of the assignment.

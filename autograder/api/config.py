@@ -255,7 +255,7 @@ class APIParam:
 class ArgumentMap(argparse.Action):
     """ An argparse Action for key/value pairs separated with MAP_KEY_VALUE_SEP. """
 
-    def __call__(self, parser, namespace, raw_values, option_string = None):
+    def __call__(self, parser, namespace, raw_values, option_string = None):  # type: ignore[no-untyped-def]
         if (not hasattr(namespace, self.dest)):
             setattr(namespace, self.dest, {})
 
@@ -271,17 +271,17 @@ class ArgumentMap(argparse.Action):
 
             all_values[parts[0].strip()] = parts[1].strip()
 
-def _cli_add_func_submission_files(parser, param):
+def _cli_add_func_submission_files(parser: argparse.ArgumentParser, param: APIParam) -> None:
     parser.add_argument('files', metavar = 'FILE',
         action = 'extend', type = str, nargs = '+',
         help = param.description)
 
-def _cli_add_func_submission_specs(parser, param):
+def _cli_add_func_submission_specs(parser: argparse.ArgumentParser, param: APIParam) -> None:
     parser.add_argument('submissions', metavar = 'SUBMISSION',
         action = 'extend', type = str, nargs = '+',
         help = param.description)
 
-def _cli_add_func_upsert_zip(parser, param):
+def _cli_add_func_upsert_zip(parser: argparse.ArgumentParser, param: APIParam) -> None:
     parser.add_argument('path', metavar = 'PATH',
         action = 'store', type = str,
         help = param.description)
@@ -290,11 +290,16 @@ def _cli_add_func_upsert_zip(parser, param):
 # See: https://docs.python.org/3/library/argparse.html#type
 # This converts a csv string and returns a list of strings,
 # e.g. --to email1@gmail.com,email2@gmail.com -> ["email1@gmail.com", "email2@gmail.com"].
-def _csv_to_list(arg):
-    if arg == "" or arg is None:
+# This will strip each compnent.
+def _csv_to_list(raw_argument: typing.Union[None, str]) -> typing.List[str]:
+    if (raw_argument is None):
+        raise ValueError('Parameter argument cannot be None.')
+
+    raw_argument = raw_argument.strip()
+    if (len(raw_argument) == 0):
         raise ValueError('Parameter argument cannot be empty.')
 
-    return [part.strip() for part in arg.split(CSV_TO_LIST_DELIMITER)]
+    return [part.strip() for part in raw_argument.split(CSV_TO_LIST_DELIMITER)]
 
 # Common API params.
 
