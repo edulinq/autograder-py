@@ -10,6 +10,7 @@ import autograder.testing.serverrunner
 
 THIS_DIR: str = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
 ROOT_PACKAGE_DIR: str = os.path.join(THIS_DIR, '..')
+ROOT_DIR: str = os.path.join(ROOT_PACKAGE_DIR, '..')
 
 def generate(args: typing.Union[argparse.Namespace, typing.Dict[str, typing.Any]]) -> int:
     """
@@ -35,6 +36,7 @@ def generate(args: typing.Union[argparse.Namespace, typing.Dict[str, typing.Any]
         'test_dirs': [ROOT_PACKAGE_DIR],
         'fail_fast': args.get('fail_fast', False),
         'pattern': args.get('pattern', None),
+        'discover_top_level_dir': ROOT_DIR,
     }
     failure_count = int(edq.testing.run.run(test_args))
 

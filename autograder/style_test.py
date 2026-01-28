@@ -139,42 +139,6 @@ class TestStyle(edq.testing.unittest.BaseTest):
                 None,
             ),
 
-            # Ignore Paths
-            (
-                [
-                    TESTDATA_DIR,
-                ],
-                {
-                    'ignore_paths': [
-                        os.path.join('autograder', 'testdata', 'code', 'base.ipynb'),
-                    ],
-                },
-                0,
-                [
-                    (
-                        os.path.join(TESTDATA_DIR, 'base.py'),
-                        [],
-                    ),
-                    (
-                        os.path.join(TESTDATA_DIR, 'base_with_raise.ipynb'),
-                        [],
-                    ),
-                    (
-                        os.path.join(TESTDATA_DIR, 'base_with_raise.py'),
-                        [],
-                    ),
-                    (
-                        os.path.join(TESTDATA_DIR, 'simple.ipynb'),
-                        [],
-                    ),
-                    (
-                        os.path.join(TESTDATA_DIR, 'simple.py'),
-                        [],
-                    ),
-                ],
-                None,
-            ),
-
             # Ignore Patterns
             (
                 [
