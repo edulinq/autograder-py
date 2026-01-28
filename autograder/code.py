@@ -18,7 +18,6 @@ DEFAULT_MODULE_AST_ALLOWED_NODES: typing.List[typing.Type] = [
     ast.ClassDef,
 ]
 
-# TODO(eriq): Code from a python file should be cleaned using an AST as well.
 def extract_code(path: str) -> str:
     """
     Gets the source code out of a path (to either a notebook or vanilla python).

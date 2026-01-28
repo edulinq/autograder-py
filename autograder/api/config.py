@@ -843,37 +843,3 @@ PARAM_WAIT_FOR_COMPLETION = APIParam(
     value_type = bool,
     cli_default_value = False,
 )
-
-''' TEST
-PARAM_COURSE_SOURCE = APIParam('source',
-    'The source to use for the course.',
-    required = False)
-
-PARAM_FILTER_ROLE = APIParam('filter_role',
-    'Only show results from users with this role (all roles if unknown (default)).',
-    required = False,
-    cli_options = {
-        'action': 'store',
-        'default': 'unknown',
-        'choices': [role.value for role in autograder.api.model.CourseRole]})
-
-PARAM_FORCE = APIParam('force',
-    'Force the operation, overwriting any existing resources.',
-    required = False,
-    cli_options = {'action': 'store_true', 'default': False})
-
-def add_skip_emails_argument(parser):
-    parser.add_argument('--skip-emails', dest = 'skip-emails',
-        action = 'store_true', default = False,
-        help = 'Skip sending any emails. Be aware that this may result in inaccessible'
-        + ' information (default: %(default)s).')
-
-PARAM_SKIP_TASKS = APIParam('skip_tasks',
-    'Skip starting course tasks.',
-    required = False,
-    cli_options = {'action': 'store_true', 'default': False})
-
-PARAM_TARGET_PASS = APIParam('target_pass',
-    'The password of the user that is the target of this request.',
-    required = True, hash_value = True)
-'''
