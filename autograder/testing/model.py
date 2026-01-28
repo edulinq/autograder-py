@@ -45,6 +45,92 @@ SERVER_USERS: typing.Dict[str, lms.model.users.ServerUser] = _clean_server_users
 # {course_name: {user_name: user, ...}, ...}
 COURSE_USERS: typing.Dict[str, typing.Dict[str, lms.model.users.CourseUser]] = _clean_course_users()
 
+LOGS: typing.List[typing.Dict[str, typing.Any]] = [
+    {
+        "assignment": "hw0",
+        "course": "course101",
+        "level": -20,
+        "message": "Trace Course Log",
+        "timestamp": 100,
+        "user": "course-other@test.edulinq.org"
+    },
+    {
+        "level": -20,
+        "message": "Trace Server Log",
+        "timestamp": 150,
+        "user": "server-user@test.edulinq.org"
+    },
+    {
+        "assignment": "hw0",
+        "course": "course101",
+        "level": -10,
+        "message": "Debug Course Log",
+        "timestamp": 200,
+        "user": "course-student@test.edulinq.org"
+    },
+    {
+        "level": -10,
+        "message": "Debug Server Log",
+        "timestamp": 250,
+        "user": "server-creator@test.edulinq.org"
+    },
+    {
+        "assignment": "hw0",
+        "course": "course101",
+        "level": 0,
+        "message": "Info Course Log",
+        "timestamp": 300,
+        "user": "course-grader@test.edulinq.org"
+    },
+    {
+        "level": 0,
+        "message": "Info Server Log",
+        "timestamp": 350,
+        "user": "server-admin@test.edulinq.org"
+    },
+    {
+        "assignment": "hw0",
+        "course": "course101",
+        "error": "Course Warning",
+        "level": 10,
+        "message": "Warn Course Log",
+        "timestamp": 400,
+        "user": "course-admin@test.edulinq.org"
+    },
+    {
+        "error": "Server Warning",
+        "level": 10,
+        "message": "Warn Server Log",
+        "timestamp": 450,
+        "user": "server-owner@test.edulinq.org"
+    },
+    {
+        "course": "course101",
+        "error": "Course Error",
+        "level": 20,
+        "message": "Error Course Log",
+        "timestamp": 500,
+        "user": "course-owner@test.edulinq.org"
+    },
+    {
+        "error": "Server Error",
+        "level": 20,
+        "message": "Error Server Log",
+        "timestamp": 550
+    },
+    {
+        "course": "course101",
+        "level": 30,
+        "message": "Fatal Course Log",
+        "timestamp": 600
+    },
+    {
+        "level": 30,
+        "message": "Fatal Server Log",
+        "timestamp": 650
+    }
+]
+
 # pylint: disable=line-too-long
 STACK_TRACE_PAYLOAD: typing.Dict[str, typing.Any] = {
     "count": 11,

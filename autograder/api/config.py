@@ -632,6 +632,15 @@ PARAM_QUERY_TARGET_EMAIL = APIParam(
     cli_show_default = False,
 )
 
+PARAM_QUERY_USE_TESTING_LOGS = APIParam(
+    'use_testing_logs',
+    'Use hard-coded testing logs.',
+    value_type = bool,
+    api_required = False,
+    api_key = 'use-testing-logs',
+    cli = False,
+)
+
 PARAM_QUERY_WHERE = APIParam(
     'where',
     'Only includes records with a patching key/value pair.',

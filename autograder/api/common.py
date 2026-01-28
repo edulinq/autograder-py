@@ -2,6 +2,7 @@ import os
 import sys
 import typing
 
+import edq.core.errors
 import edq.net.request
 import edq.util.json
 import edq.util.time
@@ -151,7 +152,11 @@ def send_api_request(
             headers = headers,
             files = post_files,
             raise_for_status = False)
-    except requests.exceptions.ConnectionError:
+    except edq.core.errors.RetryError as ex:
+        # If this is not a connection error, then re-raise.
+        if (not ex.contains_instance(requests.exceptions.ConnectionError)):
+            raise ex
+
         raise autograder.error.ConnectionError((f"Could not connect to autograder server '{server}'."  # pylint: disable=raise-missing-from
             + " This is a networking issue (e.g., network down, server down, wrong server address), not an authentication issue."))
 
