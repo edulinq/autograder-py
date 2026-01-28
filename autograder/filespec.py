@@ -9,8 +9,8 @@ import os
 import urllib.parse
 import typing
 
+import edq.net.request
 import edq.util.dirent
-import edq.util.net
 
 import autograder.util.git
 
@@ -205,7 +205,7 @@ def _copy_url(path: str, dest: str, dest_dir: str) -> None:
     """ Copy a URL filespec. """
 
     dest_path = os.path.join(dest_dir, dest)
-    response, body = edq.util.net.make_get(path)
+    response, body = edq.net.request.make_get(path)
     edq.util.dirent.write_file(dest_path, body, encoding = response.encoding, strip = False, newline = False)
 
 class FileSpecError(ValueError):

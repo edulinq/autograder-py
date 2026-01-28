@@ -2,8 +2,8 @@ import os
 import sys
 import typing
 
+import edq.net.request
 import edq.util.json
-import edq.util.net
 import edq.util.time
 import requests
 
@@ -145,7 +145,7 @@ def send_api_request(
         post_files[filename] = open(path, 'rb')  # pylint: disable=consider-using-with
 
     try:
-        raw_response, raw_body = edq.util.net.make_post(
+        raw_response, raw_body = edq.net.request.make_post(
             url,
             data = {autograder.api.constants.API_REQUEST_JSON_KEY: edq.util.json.dumps(payload)},
             headers = headers,

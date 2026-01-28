@@ -6,7 +6,7 @@ import argparse
 import typing
 
 import edq.core.argparser
-import edq.util.net
+import edq.net.exchange
 import edq.util.reflection
 import lms.model.constants
 
@@ -70,7 +70,7 @@ def get_parser(
     # Ensure that responses are cleaned as API responses.
     if (include_net):
         if (_set_exchanges_clean_func):
-            edq.util.net._exchanges_clean_func = edq.util.reflection.get_qualified_name(autograder.util.net.clean_api_response)
+            edq.net.exchange._exchanges_clean_func = edq.util.reflection.get_qualified_name(autograder.util.net.clean_api_response)
 
     if (include_output_format):
         parser.add_argument('--format', dest = 'output_format',

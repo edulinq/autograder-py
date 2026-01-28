@@ -1,6 +1,7 @@
 import os
 import typing
 
+import edq.net.exchangeserver
 import edq.testing.httpserver
 import lms.model.base
 
@@ -36,7 +37,7 @@ class ServerTest(edq.testing.httpserver.HTTPServerTest):
         autograder.error._exit_on_error_for_testing = False
 
     @classmethod
-    def setup_server(cls, server: edq.testing.httpserver.HTTPTestServer) -> None:
+    def setup_server(cls, server: edq.net.exchangeserver.HTTPExchangeServer) -> None:
         edq.testing.httpserver.HTTPServerTest.setup_server(server)
         server.load_exchanges_dir(EXCHANGES_DIR)
 
