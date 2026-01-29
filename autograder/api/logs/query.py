@@ -16,7 +16,7 @@ API_PARAMS: typing.List[autograder.api.config.APIParam] = [
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
 
-    autograder.api.config.PARAM_QUERY_USE_TESTING_LOGS,
+    autograder.api.config.PARAM_QUERY_USE_TESTING_DATA,
 
     autograder.api.config.PARAM_QUERY_LOG_LEVEL,
     autograder.api.config.PARAM_QUERY_AFTER,

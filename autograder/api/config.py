@@ -622,12 +622,12 @@ PARAM_QUERY_TARGET_EMAIL = APIParam(
     cli_show_default = False,
 )
 
-PARAM_QUERY_USE_TESTING_LOGS = APIParam(
-    'use_testing_logs',
-    'Use hard-coded testing logs.',
+PARAM_QUERY_USE_TESTING_DATA = APIParam(
+    'use_testing_data',
+    'Query from hard-coded testing data (instead of real data).',
     value_type = bool,
     api_required = False,
-    api_key = 'use-testing-logs',
+    api_key = 'use-testing-data',
     cli = False,
 )
 
