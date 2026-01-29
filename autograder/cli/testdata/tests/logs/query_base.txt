@@ -7,8 +7,4 @@
     ],
 }
 ---
-{
-    "error": null,
-    "results": [],
-    "success": true
-}
+

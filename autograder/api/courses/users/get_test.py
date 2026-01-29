@@ -1,6 +1,6 @@
 import autograder.api.config
 import autograder.api.courses.users.get
-import autograder.api.model
+import autograder.model.user
 import autograder.testing.model
 import autograder.testing.server
 
@@ -85,7 +85,7 @@ class TestUsersGet(autograder.testing.server.ServerTest):
                     autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
                 },
                 {},
-                autograder.api.model.promote_server_user(autograder.testing.model.SERVER_USERS['server-admin']),
+                autograder.model.user.promote_server_user(autograder.testing.model.SERVER_USERS['server-admin']),
                 None,
             ),
         ]

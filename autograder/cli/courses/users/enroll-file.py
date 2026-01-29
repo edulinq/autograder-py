@@ -62,7 +62,7 @@ def _load_users(path: str) -> typing.List[typing.Dict[str, str]]:
         if (course_role == ''):
             course_role = 'unknown'
 
-        if (not autograder.api.model.CourseRole.has_value(course_role)):
+        if (not autograder.model.user.CourseRole.has_value(course_role)):
             raise ValueError(f"File ('{path}') line ({lineno}) has an invalid course role '{course_role}'.")
 
         course_lms_id = ''

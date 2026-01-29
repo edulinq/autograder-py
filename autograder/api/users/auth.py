@@ -8,7 +8,7 @@ import lms.model.users
 
 import autograder.api.common
 import autograder.api.config
-import autograder.api.model
+import autograder.model.user
 
 API_ENDPOINT: str = 'users/auth'
 API_WRITE: bool = False

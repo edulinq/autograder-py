@@ -11,7 +11,7 @@ import typing
 import edq.util.hash
 
 import autograder.api.config
-import autograder.api.model
+import autograder.model.user
 import autograder.api.users.upsert
 import autograder.cli.parser
 import autograder.util.load
@@ -65,7 +65,7 @@ def _load_users(path: str) -> typing.List[typing.Dict[str, str]]:
             role = row.pop(0)
             role = role.lower()
 
-        if (not autograder.api.model.ServerRole.has_value(role)):
+        if (not autograder.model.user.ServerRole.has_value(role)):
             raise ValueError(f"File ('{path}') line ({lineno}) has an invalid role '{role}'.")
 
         course = ''
@@ -77,7 +77,7 @@ def _load_users(path: str) -> typing.List[typing.Dict[str, str]]:
             course_role = row.pop(0)
             course_role = course_role.lower()
 
-        if (not autograder.api.model.CourseRole.has_value(course_role)):
+        if (not autograder.model.user.CourseRole.has_value(course_role)):
             raise ValueError(f"File ('{path}') line ({lineno}) has an invalid course role '{course_role}'.")
 
         course_lms_id = ''

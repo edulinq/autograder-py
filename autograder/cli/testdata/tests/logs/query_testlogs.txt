@@ -8,92 +8,98 @@
     ],
 }
 ---
-{
-    "error": null,
-    "results": [
-        {
-            "assignment": "hw0",
-            "course": "course101",
-            "level": -20,
-            "message": "Trace Course Log",
-            "timestamp": 100,
-            "user": "course-other@test.edulinq.org"
-        },
-        {
-            "level": -20,
-            "message": "Trace Server Log",
-            "timestamp": 150,
-            "user": "server-user@test.edulinq.org"
-        },
-        {
-            "assignment": "hw0",
-            "course": "course101",
-            "level": -10,
-            "message": "Debug Course Log",
-            "timestamp": 200,
-            "user": "course-student@test.edulinq.org"
-        },
-        {
-            "level": -10,
-            "message": "Debug Server Log",
-            "timestamp": 250,
-            "user": "server-creator@test.edulinq.org"
-        },
-        {
-            "assignment": "hw0",
-            "course": "course101",
-            "level": 0,
-            "message": "Info Course Log",
-            "timestamp": 300,
-            "user": "course-grader@test.edulinq.org"
-        },
-        {
-            "level": 0,
-            "message": "Info Server Log",
-            "timestamp": 350,
-            "user": "server-admin@test.edulinq.org"
-        },
-        {
-            "assignment": "hw0",
-            "course": "course101",
-            "error": "Course Warning",
-            "level": 10,
-            "message": "Warn Course Log",
-            "timestamp": 400,
-            "user": "course-admin@test.edulinq.org"
-        },
-        {
-            "error": "Server Warning",
-            "level": 10,
-            "message": "Warn Server Log",
-            "timestamp": 450,
-            "user": "server-owner@test.edulinq.org"
-        },
-        {
-            "course": "course101",
-            "error": "Course Error",
-            "level": 20,
-            "message": "Error Course Log",
-            "timestamp": 500,
-            "user": "course-owner@test.edulinq.org"
-        },
-        {
-            "error": "Server Error",
-            "level": 20,
-            "message": "Error Server Log",
-            "timestamp": 550
-        },
-        {
-            "course": "course101",
-            "level": 30,
-            "message": "Fatal Course Log",
-            "timestamp": 600
-        },
-        {
-            "level": 30,
-            "message": "Fatal Server Log",
-            "timestamp": 650
-        }
-    ],
-    "success": true
-}
+timestamp: 100
+level: TRACE
+message: Trace Course Log
+error: 
+course: course101
+assignment: hw0
+user: course-other@test.edulinq.org
+
+timestamp: 150
+level: TRACE
+message: Trace Server Log
+error: 
+course: 
+assignment: 
+user: server-user@test.edulinq.org
+
+timestamp: 200
+level: DEBUG
+message: Debug Course Log
+error: 
+course: course101
+assignment: hw0
+user: course-student@test.edulinq.org
+
+timestamp: 250
+level: DEBUG
+message: Debug Server Log
+error: 
+course: 
+assignment: 
+user: server-creator@test.edulinq.org
+
+timestamp: 300
+level: INFO
+message: Info Course Log
+error: 
+course: course101
+assignment: hw0
+user: course-grader@test.edulinq.org
+
+timestamp: 350
+level: INFO
+message: Info Server Log
+error: 
+course: 
+assignment: 
+user: server-admin@test.edulinq.org
+
+timestamp: 400
+level: WARN
+message: Warn Course Log
+error: Course Warning
+course: course101
+assignment: hw0
+user: course-admin@test.edulinq.org
+
+timestamp: 450
+level: WARN
+message: Warn Server Log
+error: Server Warning
+course: 
+assignment: 
+user: server-owner@test.edulinq.org
+
+timestamp: 500
+level: ERROR
+message: Error Course Log
+error: Course Error
+course: course101
+assignment: 
+user: course-owner@test.edulinq.org
+
+timestamp: 550
+level: ERROR
+message: Error Server Log
+error: Server Error
+course: 
+assignment: 
+user: 
+
+timestamp: 600
+level: FATAL
+message: Fatal Course Log
+error: 
+course: course101
+assignment: 
+user: 
+
+timestamp: 650
+level: FATAL
+message: Fatal Server Log
+error: 
+course: 
+assignment: 
+user: 

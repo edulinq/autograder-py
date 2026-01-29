@@ -8,7 +8,7 @@ import lms.model.scores
 
 import autograder.api.common
 import autograder.api.config
-import autograder.api.model
+import autograder.model.assignment
 
 API_ENDPOINT: str = 'courses/assignments/submissions/fetch/user/history'
 API_WRITE: bool = False
@@ -33,6 +33,6 @@ def send(config: typing.Dict[str, typing.Any], **kwargs: typing.Any) -> typing.T
 
     scores = []
     for raw_score in response['history']:
-        scores.append(autograder.api.model.make_assignment_score(raw_score))
+        scores.append(autograder.model.assignment.make_assignment_score(raw_score))
 
     return True, sorted(scores)

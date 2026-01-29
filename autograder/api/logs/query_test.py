@@ -27,11 +27,10 @@ class TestLogsQuery(autograder.testing.server.ServerTest):
                     autograder.api.config.PARAM_QUERY_TARGET_EMAIL.config_key: None,
                 },
                 {},
-                {
-                    "error": None,
-                    "results": [],
-                    "success": True
-                },
+                (
+                    None,
+                    [],
+                ),
                 None,
             ),
 
@@ -51,11 +50,33 @@ class TestLogsQuery(autograder.testing.server.ServerTest):
                     autograder.api.config.PARAM_QUERY_TARGET_EMAIL.config_key: None,
                 },
                 {},
+                (
+                    None,
+                    autograder.testing.model.PARSED_LOGS,
+                ),
+                None,
+            ),
+
+            # Bad Permissions
+            (
                 {
-                    "error": None,
-                    "results": autograder.testing.model.LOGS,
-                    "success": True
+                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-user@test.edulinq.org',
+                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-user',
+
+                    autograder.api.config.PARAM_QUERY_USE_TESTING_LOGS.config_key: False,
+
+                    autograder.api.config.PARAM_QUERY_LOG_LEVEL.config_key: 'ERROR',
+                    autograder.api.config.PARAM_QUERY_AFTER.config_key: None,
+                    autograder.api.config.PARAM_QUERY_PAST.config_key: None,
+                    autograder.api.config.PARAM_QUERY_TARGET_COURSE.config_key: "course101",
+                    autograder.api.config.PARAM_QUERY_TARGET_ASSIGNMENT.config_key: None,
+                    autograder.api.config.PARAM_QUERY_TARGET_EMAIL.config_key: None,
                 },
+                {},
+                (
+                    "Error: 'You do not have the correct permissions to execute this log query.', Locator: ''.",
+                    [],
+                ),
                 None,
             ),
         ]

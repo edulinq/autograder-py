@@ -8,7 +8,7 @@ import lms.model.users
 
 import autograder.api.common
 import autograder.api.config
-import autograder.api.model
+import autograder.model.user
 
 API_ENDPOINT: str = 'users/list'
 API_WRITE: bool = False
@@ -27,6 +27,6 @@ def send(config: typing.Dict[str, typing.Any], **kwargs: typing.Any) -> typing.L
 
     users = []
     for raw_user in response['users']:
-        users.append(autograder.api.model.make_server_user(raw_user))
+        users.append(autograder.model.user.make_server_user(raw_user))
 
     return sorted(users)

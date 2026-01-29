@@ -8,6 +8,8 @@ import typing
 import lms.model.testdata.users
 import lms.model.users
 
+import autograder.model.log
+
 def _clean_server_user(user: lms.model.users.ServerUser) -> None:
     """
     Clean the server user for use with the autograder.
@@ -45,7 +47,7 @@ SERVER_USERS: typing.Dict[str, lms.model.users.ServerUser] = _clean_server_users
 # {course_name: {user_name: user, ...}, ...}
 COURSE_USERS: typing.Dict[str, typing.Dict[str, lms.model.users.CourseUser]] = _clean_course_users()
 
-LOGS: typing.List[typing.Dict[str, typing.Any]] = [
+API_LOGS: typing.List[typing.Dict[str, typing.Any]] = [
     {
         "assignment": "hw0",
         "course": "course101",
@@ -130,6 +132,8 @@ LOGS: typing.List[typing.Dict[str, typing.Any]] = [
         "timestamp": 650
     }
 ]
+
+PARSED_LOGS: typing.List[autograder.model.log.LogRecord] = [autograder.model.log.LogRecord.from_api(record) for record in API_LOGS]
 
 # pylint: disable=line-too-long
 STACK_TRACE_PAYLOAD: typing.Dict[str, typing.Any] = {

@@ -7,7 +7,8 @@ import edq.util.parse
 import edq.util.time
 
 import autograder.api.constants
-import autograder.api.model
+import autograder.model.log
+import autograder.model.user
 import autograder.error
 import autograder.filespec
 import autograder.util.parse
@@ -23,17 +24,6 @@ DEFAULT_CLI_ACTIONS: typing.Dict[typing.Type, str] = {
     str: 'store',
 }
 """ Map value types to default CLI actions. """
-
-API_LOG_LEVEL_MAP: typing.Dict[str, int] = {
-    'TRACE': -20,
-    'DEBUG': -10,
-    'INFO': 0,
-    'WARN': 10,
-    'ERROR': 20,
-    'FATAL': 30,
-    'OFF': 100,
-}
-""" String log levels to send to the API mapped to integer log levels returned from the API. """
 
 class APIParam:
     """
@@ -487,8 +477,8 @@ PARAM_NEW_USER_COURSE_ROLE = APIParam(
     'new_course_role',
     'The course role for the new user.',
     api = False,
-    cli_default_value = autograder.api.model.CourseRole.STUDENT.value,
-    cli_extra_options = {'choices': [role.value for role in autograder.api.model.CourseRole]},
+    cli_default_value = autograder.model.user.CourseRole.STUDENT.value,
+    cli_extra_options = {'choices': [role.value for role in autograder.model.user.CourseRole]},
 )
 
 PARAM_NEW_USER_EMAIL = APIParam(
@@ -526,8 +516,8 @@ PARAM_NEW_USER_SERVER_ROLE = APIParam(
     'new_role',
     'The server role for the new user.',
     api = False,
-    cli_default_value = autograder.api.model.ServerRole.USER.value,
-    cli_extra_options = {'choices': [role.value for role in autograder.api.model.ServerRole]},
+    cli_default_value = autograder.model.user.ServerRole.USER.value,
+    cli_extra_options = {'choices': [role.value for role in autograder.model.user.ServerRole]},
 )
 
 PARAM_OVERWRITE_RECORDS = APIParam(
@@ -588,7 +578,7 @@ PARAM_QUERY_LOG_LEVEL = APIParam(
     'The minimum level of log records to return.',
     api_required = False,
     cli_default_value = 'INFO',
-    cli_extra_options = {'choices': API_LOG_LEVEL_MAP.keys()},
+    cli_extra_options = {'choices': autograder.model.log.LOG_LEVEL_TEXT_TO_INT.keys()}
 )
 
 PARAM_QUERY_METRIC_TYPE = APIParam(

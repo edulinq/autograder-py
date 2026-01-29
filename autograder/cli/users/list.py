@@ -37,7 +37,8 @@ def _get_parser() -> argparse.ArgumentParser:
     parser = autograder.cli.parser.get_parser(
         __doc__.strip(),
         autograder.api.users.list.API_PARAMS,
-        include_output_format = True)
+        include_output_format = True,
+    )
 
     return parser
 

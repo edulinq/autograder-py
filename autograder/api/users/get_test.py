@@ -1,6 +1,6 @@
 import autograder.api.config
 import autograder.api.users.get
-import autograder.api.model
+import autograder.model.user
 import autograder.testing.model
 import autograder.testing.server
 

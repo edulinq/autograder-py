@@ -8,7 +8,7 @@ import lms.model.users
 
 import autograder.api.common
 import autograder.api.config
-import autograder.api.model
+import autograder.model.user
 
 API_ENDPOINT: str = 'courses/users/get'
 API_WRITE: bool = False
@@ -29,4 +29,4 @@ def send(config: typing.Dict[str, typing.Any], **kwargs: typing.Any) -> typing.U
     if (not response.get('found', False)):
         return None
 
-    return autograder.api.model.make_course_user(response['user'])
+    return autograder.model.user.make_course_user(response['user'])

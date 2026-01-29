@@ -5,7 +5,7 @@ Query log entries from the autograder server.
 import argparse
 import sys
 
-import edq.util.json
+import lms.model.base
 
 import autograder.api.logs.query
 import autograder.cli.parser
@@ -15,8 +15,18 @@ def run_cli(args: argparse.Namespace) -> int:
 
     config = args._config
 
-    result = autograder.api.logs.query.send(config)
-    print(edq.util.json.dumps(result, indent = 4))
+    error, logs = autograder.api.logs.query.send(config)
+
+    if (error is not None):
+        print(f"Log Query Error -- {error}", file = sys.stderr)
+        return 10
+
+    output = lms.model.base.base_list_to_output_format(logs, args.output_format,
+            skip_headers = args.skip_headers,
+            pretty_headers = args.pretty_headers,
+            include_extra_fields = args.include_extra_fields,
+    )
+    print(output)
 
     return 0
 
@@ -30,7 +40,9 @@ def _get_parser() -> argparse.ArgumentParser:
 
     parser = autograder.cli.parser.get_parser(
         __doc__.strip(),
-        autograder.api.logs.query.API_PARAMS)
+        autograder.api.logs.query.API_PARAMS,
+        include_output_format = True,
+    )
 
     return parser
 
