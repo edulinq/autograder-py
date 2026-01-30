@@ -2,7 +2,7 @@ import os
 
 import edq.testing.unittest
 
-import autograder.util.submission
+import autograder.util.prepare_submission
 
 THIS_DIR: str = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
 DATA_DIR: str = os.path.join(THIS_DIR, 'testdata')
@@ -17,7 +17,7 @@ class TestSubmission(edq.testing.unittest.BaseTest):
 
         for ext in ['py', 'ipynb']:
             path = os.path.join(DATA_DIR, 'code', 'simple.' + ext)
-            submission = autograder.util.submission.prepare(path)
+            submission = autograder.util.prepare_submission.prepare(path)
 
             self.assertIn('__all__', dir(submission))
             self.assertIn('SOME_CONSTANT', dir(submission.__all__))
@@ -31,7 +31,7 @@ class TestSubmission(edq.testing.unittest.BaseTest):
         """ Test preparing a nested submission. """
 
         path = os.path.join(DATA_DIR, 'submission', 'nested')
-        submission = autograder.util.submission.prepare(path)
+        submission = autograder.util.prepare_submission.prepare(path)
 
         self.assertIn('__all__', dir(submission))
         self.assertIn('SOME_CONSTANT', dir(submission.__all__))

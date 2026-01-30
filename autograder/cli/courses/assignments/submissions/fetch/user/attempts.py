@@ -8,7 +8,7 @@ import sys
 
 import autograder.api.courses.assignments.submissions.fetch.user.attempts
 import autograder.cli.parser
-import autograder.util.submission
+import autograder.util.grading
 
 def run_cli(args: argparse.Namespace) -> int:
     """ Run the CLI. """
@@ -33,7 +33,7 @@ def run_cli(args: argparse.Namespace) -> int:
     out_dir = os.path.join(config['out_dir'], assignment, user)
 
     for grading_result in grading_results:
-        autograder.util.submission.output_grading_result(grading_result, base_dir = out_dir, short_id = True)
+        autograder.util.grading.output_grading_result(grading_result, base_dir = out_dir, short_id = True)
 
     print(f"Wrote {len(grading_results)} attempts to '{out_dir}'.")
 

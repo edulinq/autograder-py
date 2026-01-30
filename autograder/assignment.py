@@ -6,7 +6,7 @@ import edq.util.json
 
 import autograder.code
 import autograder.question
-import autograder.util.submission
+import autograder.util.prepare_submission
 
 class GradedAssignment(edq.util.json.DictConverter):
     """
@@ -312,7 +312,7 @@ class Assignment:
         """
 
         if (self.prep_submission):
-            return autograder.util.submission.prepare(self.input_dir)
+            return autograder.util.prepare_submission.prepare(self.input_dir)
 
         return None
 

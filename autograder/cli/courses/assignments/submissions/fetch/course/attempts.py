@@ -7,7 +7,7 @@ import sys
 
 import autograder.api.courses.assignments.submissions.fetch.course.attempts
 import autograder.cli.parser
-import autograder.util.submission
+import autograder.util.grading
 
 def run_cli(args: argparse.Namespace) -> int:
     """ Run the CLI. """
@@ -21,7 +21,7 @@ def run_cli(args: argparse.Namespace) -> int:
         if (grading_result is None):
             continue
 
-        autograder.util.submission.output_grading_result(grading_result, base_dir = config['out_dir'])
+        autograder.util.grading.output_grading_result(grading_result, base_dir = config['out_dir'])
         count += 1
 
     print(f"Wrote {count} attempts to '{config['out_dir']}'.")

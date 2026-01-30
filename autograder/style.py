@@ -10,7 +10,7 @@ import flake8.api.legacy
 
 import autograder.code
 import autograder.question
-import autograder.util.submission
+import autograder.util.prepare_submission
 
 DEFAULT_MAX_LINE_LENGTH: int = 150
 
@@ -222,7 +222,7 @@ def check_paths(
             continue
 
         if (os.path.isfile(path)):
-            if (os.path.splitext(path)[1] not in autograder.util.submission.ALLOWED_EXTENSIONS):
+            if (os.path.splitext(path)[1] not in autograder.util.prepare_submission.ALLOWED_EXTENSIONS):
                 continue
 
             count, raw_lines = check_file(path, **kwargs)

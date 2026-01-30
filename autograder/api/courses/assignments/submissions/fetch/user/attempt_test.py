@@ -7,7 +7,7 @@ import autograder.api.config
 import autograder.api.courses.assignments.submissions.fetch.testing
 import autograder.api.courses.assignments.submissions.fetch.user.attempt
 import autograder.testing.server
-import autograder.util.submission
+import autograder.util.grading
 
 class TestCourseAssignmentsFetchUserAttempt(autograder.testing.server.ServerTest):
     """ Test fetching user submission attempt. """
@@ -99,7 +99,7 @@ class TestCourseAssignmentsFetchUserAttempt(autograder.testing.server.ServerTest
         submission = autograder.api.courses.assignments.submissions.fetch.testing.SUBMISSIONS['course-student@test.edulinq.org'][2]
 
         temp_dir = edq.util.dirent.get_temp_dir('autograder-testing-')
-        autograder.util.submission.output_grading_result(submission, base_dir = temp_dir)
+        autograder.util.grading.output_grading_result(submission, base_dir = temp_dir)
 
         expected = {
             "autograder-testing": {

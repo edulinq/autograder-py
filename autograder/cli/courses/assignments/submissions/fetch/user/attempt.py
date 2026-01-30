@@ -7,7 +7,7 @@ import sys
 
 import autograder.api.courses.assignments.submissions.fetch.user.attempt
 import autograder.cli.parser
-import autograder.util.submission
+import autograder.util.grading
 
 def run_cli(args: argparse.Namespace) -> int:
     """ Run the CLI. """
@@ -27,7 +27,7 @@ def run_cli(args: argparse.Namespace) -> int:
     if (result is None):
         raise ValueError("Existing submission was not provided by API.")
 
-    out_path = autograder.util.submission.output_grading_result(result, base_dir = config['out_dir'])
+    out_path = autograder.util.grading.output_grading_result(result, base_dir = config['out_dir'])
     print(f"Submission wrote to '{out_path}'.")
 
     return 0
