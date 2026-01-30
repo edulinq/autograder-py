@@ -101,7 +101,7 @@ def prep_grading_dir(
     if (grading_dir is None):
         grading_dir = edq.util.dirent.get_temp_path(prefix = 'ag-py-submission-')
 
-    os.makedirs(grading_dir, exist_ok = True)
+    edq.util.dirent.mkdir(grading_dir)
 
     input_dir, _, work_dir = make_core_dirs(grading_dir)
 
@@ -136,13 +136,13 @@ def make_core_dirs(base_dir: str) -> typing.Tuple[str, str, str]:
     """
 
     input_dir = os.path.join(base_dir, INPUT_DIRNAME)
-    os.makedirs(input_dir, exist_ok = True)
+    edq.util.dirent.mkdir(input_dir)
 
     output_dir = os.path.join(base_dir, OUTPUT_DIRNAME)
-    os.makedirs(output_dir, exist_ok = True)
+    edq.util.dirent.mkdir(output_dir)
 
     work_dir = os.path.join(base_dir, WORK_DIRNAME)
-    os.makedirs(work_dir, exist_ok = True)
+    edq.util.dirent.mkdir(work_dir)
 
     return input_dir, output_dir, work_dir
 

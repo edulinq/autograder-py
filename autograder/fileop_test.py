@@ -209,7 +209,7 @@ class TestFileOp(edq.testing.unittest.BaseTest):
                 ALREADY_EXISTS_FILENAME,
                 [],
                 [],
-                "File exists"
+                "Target of mkdir already exists, and is not a dir"
             ),
             (
                 ALREADY_EXISTS_DIRNAME,
@@ -365,7 +365,7 @@ class TestFileOp(edq.testing.unittest.BaseTest):
                 ALREADY_EXISTS_FILENAME,
                 [],
                 [],
-                "File exists",
+                "Target of mkdir already exists, and is not a dir",
             ),
             # Fails to move ALREADY_EXISTS_FILENAME to ALREADY_EXISTS_FILE_RELPATH.
             (

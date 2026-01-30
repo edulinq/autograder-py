@@ -206,6 +206,6 @@ def _prep_for_globs(source_path_glob: str, dest_path: str) -> typing.List[str]:
         raise FileNotFoundError(f"No such file or directory: '{source_path_glob}'.")
 
     if (len(source_paths) > 1):
-        os.makedirs(dest_path, exist_ok = True)
+        edq.util.dirent.mkdir(dest_path)
 
     return source_paths

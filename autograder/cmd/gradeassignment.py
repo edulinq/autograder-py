@@ -9,6 +9,7 @@ import argparse
 import os
 import sys
 
+import edq.util.dirent
 import edq.util.json
 
 import autograder.cli.parser
@@ -36,7 +37,7 @@ def run(args: argparse.Namespace) -> int:
 
     if (args.out_path is not None):
         out_path = os.path.abspath(args.out_path)
-        os.makedirs(os.path.dirname(os.path.abspath(out_path)), exist_ok = True)
+        edq.util.dirent.mkdir(os.path.dirname(os.path.abspath(out_path)))
 
         edq.util.json.dump_path(result, out_path, indent = 4)
 
@@ -45,7 +46,7 @@ def run(args: argparse.Namespace) -> int:
         if (os.path.isdir(test_submission_path)):
             test_submission_path = os.path.join(test_submission_path, TEST_SUBMISSION_FILENAME)
 
-        os.makedirs(os.path.dirname(test_submission_path), exist_ok = True)
+        edq.util.dirent.mkdir(os.path.dirname(test_submission_path))
 
         edq.util.json.dump_path(result.to_test_submission(), test_submission_path, indent = 4)
 
