@@ -2,9 +2,9 @@ import inspect
 import traceback
 import typing
 
+import edq.util.code
 import edq.util.json
 
-import autograder.code
 import autograder.question
 import autograder.util.prepare_submission
 
@@ -321,7 +321,7 @@ def load_assignment_classes(path: str) -> typing.List[typing.Type[Assignment]]:
     Recursively load all the assignment classes in a path (file or dir).
     """
 
-    module = autograder.code.sanitize_and_import_path(path)
+    module = edq.util.code.sanitize_and_import_path(path)
     assignments = []
 
     for name in dir(module):

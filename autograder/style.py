@@ -5,10 +5,10 @@ import re
 import sys
 import typing
 
+import edq.util.code
 import edq.util.dirent
 import flake8.api.legacy
 
-import autograder.code
 import autograder.question
 import autograder.util.prepare_submission
 
@@ -262,7 +262,7 @@ def check_file(
     if (path.endswith('.py')):
         pass
     elif (path.endswith('.ipynb')):
-        contents = autograder.code.extract_notebook_code(path)
+        contents = edq.util.code.extract_notebook_code(path)
 
         temp_path = edq.util.dirent.get_temp_path(prefix = 'style_', suffix = '_notebook')
         cleanup_paths.append(temp_path)

@@ -2,7 +2,7 @@ import os
 import types
 import typing
 
-import autograder.code
+import edq.util.code
 
 ALL_SUBMISSION_KEY: str = '__all__'
 ALLOWED_EXTENSIONS: typing.List[str] = ['.py', '.ipynb']
@@ -72,7 +72,7 @@ def _prepare_submission_file(
 
     basename = os.path.splitext(os.path.basename(path))[0]
 
-    defs = vars(autograder.code.sanitize_and_import_path(path))
+    defs = vars(edq.util.code.sanitize_and_import_path(path))
 
     for (name, value) in defs.items():
         if (name.startswith('__')):

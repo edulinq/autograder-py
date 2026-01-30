@@ -7,17 +7,17 @@ Pull the code from a file and output the sanitized version as if it was being gr
 import argparse
 import sys
 
+import edq.util.code
 import edq.util.dirent
 
 import autograder.cli.parser
-import autograder.code
 
 def run_cli(args: argparse.Namespace) -> int:
     """ Run the CLI. """
 
-    text = autograder.code.extract_code(args.path)
-    ast = autograder.code.parse_module_code(text)
-    source = autograder.code.ast_to_source(ast)
+    text = edq.util.code.extract_code(args.path)
+    ast = edq.util.code.parse_module_code(text)
+    source = edq.util.code.ast_to_source(ast)
 
     if (args.out_path is None):
         print(source)
