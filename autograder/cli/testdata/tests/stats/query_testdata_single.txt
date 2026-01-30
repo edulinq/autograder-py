@@ -8,17 +8,6 @@
     ],
 }
 ---
-{
-    "results": [
-        {
-            "attributes": {
-                "assignment": "hw0",
-                "course": "course101",
-                "user": "course-student@test.edulinq.org"
-            },
-            "timestamp": 1200,
-            "type": "grading-time",
-            "value": 150
-        }
-    ]
-}
+timestamp: 1200
+type: grading-time
+value: 150

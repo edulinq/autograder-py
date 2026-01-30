@@ -8,6 +8,7 @@ import edq.util.time
 
 import autograder.api.constants
 import autograder.model.log
+import autograder.model.stats
 import autograder.model.user
 import autograder.error
 import autograder.filespec
@@ -586,6 +587,7 @@ PARAM_QUERY_METRIC_TYPE = APIParam(
     'The type of metric to query for. See: https://github.com/edulinq/autograder-server/blob/main/internal/stats/metrics.go#L29',
     api_key = 'type',
     cli_required = True,
+    cli_extra_options = {'choices': autograder.model.stats.METRIC_TYPES}
 )
 
 PARAM_QUERY_PAST = APIParam(

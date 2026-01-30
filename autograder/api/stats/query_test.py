@@ -1,5 +1,6 @@
 import autograder.api.config
 import autograder.api.stats.query
+import autograder.model.stats
 import autograder.testing.server
 
 class TestStatsQuery(autograder.testing.server.ServerTest):
@@ -26,9 +27,7 @@ class TestStatsQuery(autograder.testing.server.ServerTest):
                     autograder.api.config.PARAM_QUERY_WHERE.config_key: None,
                 },
                 {},
-                {
-                    "results": [],
-                },
+                [],
                 None,
             ),
 
@@ -48,20 +47,18 @@ class TestStatsQuery(autograder.testing.server.ServerTest):
                     autograder.api.config.PARAM_QUERY_WHERE.config_key: None,
                 },
                 {},
-                {
-                    "results": [
-                        {
-                            "attributes": {
-                                "assignment": "hw0",
-                                "course": "course101",
-                                "user": "course-student@test.edulinq.org"
-                            },
-                            "timestamp": 1200,
-                            "type": "grading-time",
-                            "value": 150
+                [
+                    autograder.model.stats.Metric.from_api({
+                        "attributes": {
+                            "assignment": "hw0",
+                            "course": "course101",
+                            "user": "course-student@test.edulinq.org"
                         },
-                    ],
-                },
+                        "timestamp": 1200,
+                        "type": "grading-time",
+                        "value": 150
+                    }),
+                ],
                 None,
             ),
 
@@ -81,20 +78,18 @@ class TestStatsQuery(autograder.testing.server.ServerTest):
                     autograder.api.config.PARAM_QUERY_WHERE.config_key: None,
                 },
                 {},
-                {
-                    "results": [
-                        {
-                            "timestamp": 1800,
-                            "type": "cpu-usage",
-                            "value": 5
-                        },
-                        {
-                            "timestamp": 2200,
-                            "type": "cpu-usage",
-                            "value": 10
-                        },
-                    ],
-                },
+                [
+                    autograder.model.stats.Metric.from_api({
+                        "timestamp": 1800,
+                        "type": "cpu-usage",
+                        "value": 5
+                    }),
+                    autograder.model.stats.Metric.from_api({
+                        "timestamp": 2200,
+                        "type": "cpu-usage",
+                        "value": 10
+                    }),
+                ],
                 None,
             ),
 
@@ -114,9 +109,7 @@ class TestStatsQuery(autograder.testing.server.ServerTest):
                     autograder.api.config.PARAM_QUERY_WHERE.config_key: None,
                 },
                 {},
-                {
-                    "results": [],
-                },
+                [],
                 None,
             ),
 
@@ -136,9 +129,7 @@ class TestStatsQuery(autograder.testing.server.ServerTest):
                     autograder.api.config.PARAM_QUERY_WHERE.config_key: None,
                 },
                 {},
-                {
-                    "results": [],
-                },
+                [],
                 None,
             ),
 
@@ -158,9 +149,7 @@ class TestStatsQuery(autograder.testing.server.ServerTest):
                     autograder.api.config.PARAM_QUERY_WHERE.config_key: None,
                 },
                 {},
-                {
-                    "results": [],
-                },
+                [],
                 None,
             ),
         ]
