@@ -207,7 +207,7 @@ class APIParam:
         new_param.cli_required = True
         return new_param
 
-    def add_to_parser(self, parser: argparse.ArgumentParser) -> None:
+    def add_to_parser(self, parser: typing.Union[argparse.ArgumentParser, argparse._ArgumentGroup]) -> None:
         """
         Add this API parameter to the given parser.
         If this parameter is not supposed to be represented as a CLI argument, it will not be added.

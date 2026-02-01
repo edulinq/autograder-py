@@ -67,36 +67,39 @@ def get_parser(
         action = 'store_true', default = False,
         help = 'Run as if a test is being run (default: %(default)s).')
 
+    # Add arguments according to the given API params.
+    group = parser.add_argument_group('command-specific options')
+    for api_param in api_params:
+        api_param.add_to_parser(group)
+
     # Ensure that responses are cleaned as API responses.
     if (include_net):
         if (_set_exchanges_clean_func):
             edq.net.exchange._exchanges_clean_func = edq.util.reflection.get_qualified_name(autograder.util.net.clean_api_response)
 
     if (include_output_format):
-        parser.add_argument('--format', dest = 'output_format',
+        group = parser.add_argument_group('output formatting options')
+
+        group.add_argument('--format', dest = 'output_format',
             action = 'store', type = str,
             default = lms.model.constants.OUTPUT_FORMAT_TEXT, choices = lms.model.constants.OUTPUT_FORMATS,
             help = 'The format to display the output as (default: %(default)s).')
 
-        parser.add_argument('--skip-headers', dest = 'skip_headers',
+        group.add_argument('--include-extra-fields', dest = 'include_extra_fields',
             action = 'store_true', default = False,
-            help = 'Skip headers when outputting results, will not apply to all formats (default: %(default)s).')
+            help = 'Include uncommon fields in results (default: %(default)s).')
 
-        parser.add_argument('--pretty-headers', dest = 'pretty_headers',
+        group.add_argument('--pretty-headers', dest = 'pretty_headers',
             action = 'store_true', default = False,
             help = 'When displaying headers, try to make them look "pretty" (default: %(default)s).')
 
-        parser.add_argument('--include-extra-fields', dest = 'include_extra_fields',
+        group.add_argument('--skip-headers', dest = 'skip_headers',
             action = 'store_true', default = False,
-            help = 'Include uncommon fields in results (default: %(default)s).')
+            help = 'Skip headers when outputting results, will not apply to all formats (default: %(default)s).')
 
     if (include_skip_rows):
         parser.add_argument('--skip-rows', dest = 'skip_rows',
             action = 'store', type = int, default = DEFAULT_SKIP_ROWS,
             help = 'The number of header rows to skip (default: %(default)s).')
-
-    # Add arguments according to the given API params.
-    for api_param in api_params:
-        api_param.add_to_parser(parser)
 
     return parser
