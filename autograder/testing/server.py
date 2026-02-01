@@ -20,6 +20,24 @@ BASE_ARGUMENTS: typing.Dict[str, typing.Any] = {
 # Exchange tests are unnecessary.
 delattr(edq.testing.httpserver.HTTPServerTest, 'test_exchanges_base')
 
+@typing.runtime_checkable
+class CleanFunction(typing.Protocol):
+    """ A function for cleaning a test result (expected or actual) before assertion. """
+
+    def __call__(self, raw: typing.Any) -> typing.Any:
+        """
+        Clean and return data for assertion.
+        """
+
+@typing.runtime_checkable
+class AssertionFunction(typing.Protocol):
+    """ A function for asserting during a test. """
+
+    def __call__(self, expected: typing.Any, actual: typing.Any) -> typing.Any:
+        """
+        Assert the relationship between expected and actual.
+        """
+
 class ServerTest(edq.testing.httpserver.HTTPServerTest):
     """
     A special test suite that is common across all tests that require a test autograder server.
@@ -44,9 +62,9 @@ class ServerTest(edq.testing.httpserver.HTTPServerTest):
     def base_api_test(self,
             api_function: typing.Callable,
             test_cases: typing.List[typing.Tuple[typing.Dict[str, typing.Any], typing.Dict[str, typing.Any], typing.Any, typing.Union[str, None]]],
-            actual_clean_func: typing.Union[typing.Callable, None] = None,
-            expected_clean_func: typing.Union[typing.Callable, None] = None,
-            assertion_func: typing.Union[typing.Callable, None] = None,
+            actual_clean_func: typing.Union[CleanFunction, None] = None,
+            expected_clean_func: typing.Union[CleanFunction, None] = None,
+            assertion_func: typing.Union[AssertionFunction, None] = None,
             ) -> None:
         """
         A common test for the base API functionality.

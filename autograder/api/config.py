@@ -26,6 +26,15 @@ DEFAULT_CLI_ACTIONS: typing.Dict[typing.Type, str] = {
 }
 """ Map value types to default CLI actions. """
 
+@typing.runtime_checkable
+class CLIAddFunction(typing.Protocol):
+    """ A function for manually adding APIParams to a parser. """
+
+    def __call__(self, parser: typing.Union[argparse.ArgumentParser, argparse._ArgumentGroup], param: 'APIParam') -> None:
+        """
+        Add the given APIParam to the parser.
+        """
+
 class APIParam:
     """
     A definition for a parameter to the autograder API.
@@ -51,7 +60,7 @@ class APIParam:
             cli_default_value: typing.Any = None,
             cli_show_default: typing.Union[bool, None] = None,
             cli_extra_options: typing.Union[typing.Dict[str, typing.Any], None] = None,
-            cli_add_func: typing.Union[typing.Callable, None] = None,
+            cli_add_func: typing.Union[CLIAddFunction, None] = None,
             **kwargs: typing.Any) -> None:
         if (len(config_key.strip()) == 0):
             raise autograder.error.APIError(None, "APIParam cannot have an empty key.")
@@ -141,7 +150,7 @@ class APIParam:
         These should not conflict with the options set using the direct members.
         """
 
-        self.cli_add_func: typing.Union[typing.Callable, None] = cli_add_func
+        self.cli_add_func: typing.Union[CLIAddFunction, None] = cli_add_func
         """ A function that can be used to override the standard behavior in add_to_parser(). """
 
         if (self.cli and (self.cli_add_func is None) and (cli_action is None)):
@@ -262,17 +271,17 @@ class ArgumentMap(argparse.Action):
 
             all_values[parts[0].strip()] = parts[1].strip()
 
-def _cli_add_func_submission_files(parser: argparse.ArgumentParser, param: APIParam) -> None:
+def _cli_add_func_submission_files(parser: typing.Union[argparse.ArgumentParser, argparse._ArgumentGroup], param: APIParam) -> None:
     parser.add_argument('files', metavar = 'FILE',
         action = 'extend', type = str, nargs = '+',
         help = param.description)
 
-def _cli_add_func_submission_specs(parser: argparse.ArgumentParser, param: APIParam) -> None:
+def _cli_add_func_submission_specs(parser: typing.Union[argparse.ArgumentParser, argparse._ArgumentGroup], param: APIParam) -> None:
     parser.add_argument('submissions', metavar = 'SUBMISSION',
         action = 'extend', type = str, nargs = '+',
         help = param.description)
 
-def _cli_add_func_upsert_zip(parser: argparse.ArgumentParser, param: APIParam) -> None:
+def _cli_add_func_upsert_zip(parser: typing.Union[argparse.ArgumentParser, argparse._ArgumentGroup], param: APIParam) -> None:
     parser.add_argument('path', metavar = 'PATH',
         action = 'store', type = str,
         help = param.description)
