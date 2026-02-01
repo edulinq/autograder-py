@@ -113,7 +113,7 @@ def validate(operation: typing.Union[None, typing.List[str], FileOp]) -> FileOp:
 
         operation[i] = path
 
-    return typing.cast(FileOp, operation)
+    return operation
 
 def execute(operation: FileOp, base_dir: str) -> None:
     """ Execute operation operation in the given directory. """
