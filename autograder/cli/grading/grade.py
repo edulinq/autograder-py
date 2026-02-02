@@ -1,3 +1,10 @@
+"""
+Grade an assignment (specified by an assignment JSON file) with the given submission.
+Non-Python assignments can be graded, but they require an "invocation" field'
+in the assignment config, and the running machine must be configured to run them'
+(e.g. have all the required software installed).
+"""
+
 import argparse
 import sys
 

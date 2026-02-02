@@ -1,5 +1,9 @@
 # pylint: disable=invalid-name
 
+"""
+Alias for `autograder.cli.users.password.change`.
+"""
+
 import argparse
 import sys
 
@@ -14,7 +18,7 @@ def _get_parser() -> argparse.ArgumentParser:
     """ Get a parser for this operation. """
 
     parser = alias._get_parser()
-    parser.epilog = f"This is an alias for `{alias.__name__}`."
+    parser.epilog = __doc__.strip()
     return parser
 
 if (__name__ == '__main__'):
