@@ -5,6 +5,8 @@ The canonical Python interface for EduLinq's [Lynx Grader server](https://github
 ## Quick Links
 
  - [Resources](#resources)
+ - [API Reference](https://edulinq.github.io/autograder-py)
+ - [CLI Reference](https://edulinq.github.io/autograder-py/docs/latest/autograder/cli.html)
  - [Installation / Requirements](#installation--requirements)
  - [Quickstart](#quickstart)
  - [The CLI](#the-cli)
@@ -23,6 +25,8 @@ The canonical Python interface for EduLinq's [Lynx Grader server](https://github
 
 ## Resources
 
+ - [API Reference](https://edulinq.github.io/autograder-py)
+ - [CLI Reference](https://edulinq.github.io/autograder-py/docs/latest/autograder/cli.html)
  - [Autograder Server](https://github.com/edulinq/autograder-server)
  - [Autograder Python Interface (this repo)](https://github.com/edulinq/autograder-py)
  - [Autograder Sample Course](https://github.com/edulinq/cse-cracks-course)
