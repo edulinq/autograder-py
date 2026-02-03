@@ -198,7 +198,7 @@ class TestQuestion(edq.testing.unittest.BaseTest):
                 actual.grading_start_time = TEST_TIMESTAMP
                 actual.grading_end_time = TEST_TIMESTAMP
 
-                # If we are chechking the message as a substring, normalize the result message.
+                # If we are checking the message as a substring, normalize the result message.
                 actual_message = actual.message
                 if (message_substring is not None):
                     actual.message = ''
@@ -207,3 +207,58 @@ class TestQuestion(edq.testing.unittest.BaseTest):
 
                 if (message_substring is not None):
                     self.assertIn(message_substring, actual_message, 'Message is not as expected.')
+
+    def test_scoring_report_base(self):
+        """ Test that output looks correct. """
+
+        # [(graded question, expected), ...]
+        test_cases = [
+            # Zero
+            (
+                autograder.question.GradedQuestion(name = 'Test Question', max_points = 10),
+                'Test Question: 0 / 10',
+            ),
+
+            # Int
+            (
+                autograder.question.GradedQuestion(name = 'Test Question', score = 5, max_points = 10),
+                'Test Question: 5 / 10',
+            ),
+
+            # Float - Simple
+            (
+                autograder.question.GradedQuestion(name = 'Test Question', score = 5.5, max_points = 10),
+                'Test Question: 5.5 / 10',
+            ),
+
+            # Float - Zero
+            (
+                autograder.question.GradedQuestion(name = 'Test Question', score = 5.0, max_points = 10),
+                'Test Question: 5.0 / 10',
+            ),
+
+            # Float - Double Zero
+            (
+                autograder.question.GradedQuestion(name = 'Test Question', score = 5.00, max_points = 10),
+                'Test Question: 5.0 / 10',
+            ),
+
+            # Float - Irrational
+            (
+                autograder.question.GradedQuestion(name = 'Test Question', score = 10 / 3, max_points = 10),
+                'Test Question: 3.33 / 10',
+            ),
+
+            # Float - Irrational - Max Points
+            (
+                autograder.question.GradedQuestion(name = 'Test Question', score = 10 / 3, max_points = 20 / 3),
+                'Test Question: 3.33 / 6.67',
+            ),
+        ]
+
+        for (i, test_case) in enumerate(test_cases):
+            (graded_question, expected) = test_case
+
+            with self.subTest(msg = f"Case {i}"):
+                actual = graded_question.scoring_report()
+                self.assertEqual(expected, actual)

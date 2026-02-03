@@ -3,9 +3,11 @@ import time
 import typing
 
 import edq.testing.unittest
+import edq.util.time
 
-import autograder.question
 import autograder.assignment
+import autograder.question
+import autograder.testing.asserts
 import autograder.util.invoke
 
 BASE_ERROR_MESSAGE = "Bad result for question."
@@ -344,3 +346,147 @@ class TestAssignment(edq.testing.unittest.BaseTest):
                 self.assertEqual(result, expected_result, "Unexpected result:"
                     + f" Expected: '{json.dumps(expected_result.to_dict(), indent = 4)}',"
                     + f" actual: '{json.dumps(result.to_dict(), indent = 4)}'.")
+
+    def test_report_score_format(self):
+        """ Test the formatting for assignment scores. """
+
+        # [(graded assignment, expected lines), ...]
+        test_cases = [
+            # Zero
+            (
+                autograder.assignment.GradedAssignment(
+                    name = 'Test Assignment',
+                    questions = [],
+                    grading_start_time = edq.util.time.Timestamp(123), grading_end_time = edq.util.time.Timestamp(123),
+                    proxy_start_time = edq.util.time.Timestamp(123), proxy_end_time = edq.util.time.Timestamp(123),
+                ),
+                [
+                    'Autograder transcript for assignment: Test Assignment',
+                    'Grading started at <PRETTY TIME> and ended at <PRETTY TIME>.',
+                    '',
+                    'Total: 0 / 0',
+                ],
+            ),
+
+            # Int
+            (
+                autograder.assignment.GradedAssignment(
+                    name = 'Test Assignment',
+                    questions = [
+                        autograder.question.GradedQuestion(name = 'A', score = 1, max_points = 10),
+                    ],
+                    grading_start_time = edq.util.time.Timestamp(123), grading_end_time = edq.util.time.Timestamp(123),
+                    proxy_start_time = edq.util.time.Timestamp(123), proxy_end_time = edq.util.time.Timestamp(123),
+                ),
+                [
+                    'Autograder transcript for assignment: Test Assignment',
+                    'Grading started at <PRETTY TIME> and ended at <PRETTY TIME>.',
+                    'A: 1 / 10',
+                    '',
+                    'Total: 1 / 10',
+                ],
+            ),
+
+            # Float - Simple
+            (
+                autograder.assignment.GradedAssignment(
+                    name = 'Test Assignment',
+                    questions = [
+                        autograder.question.GradedQuestion(name = 'A', score = 5.5, max_points = 10),
+                    ],
+                    grading_start_time = edq.util.time.Timestamp(123), grading_end_time = edq.util.time.Timestamp(123),
+                    proxy_start_time = edq.util.time.Timestamp(123), proxy_end_time = edq.util.time.Timestamp(123),
+                ),
+                [
+                    'Autograder transcript for assignment: Test Assignment',
+                    'Grading started at <PRETTY TIME> and ended at <PRETTY TIME>.',
+                    'A: 5.5 / 10',
+                    '',
+                    'Total: 5.5 / 10',
+                ],
+            ),
+
+            # Float - Zero
+            (
+                autograder.assignment.GradedAssignment(
+                    name = 'Test Assignment',
+                    questions = [
+                        autograder.question.GradedQuestion(name = 'A', score = 5.0, max_points = 10),
+                    ],
+                    grading_start_time = edq.util.time.Timestamp(123), grading_end_time = edq.util.time.Timestamp(123),
+                    proxy_start_time = edq.util.time.Timestamp(123), proxy_end_time = edq.util.time.Timestamp(123),
+                ),
+                [
+                    'Autograder transcript for assignment: Test Assignment',
+                    'Grading started at <PRETTY TIME> and ended at <PRETTY TIME>.',
+                    'A: 5.0 / 10',
+                    '',
+                    'Total: 5.0 / 10',
+                ],
+            ),
+
+            # Float - Double Zero
+            (
+                autograder.assignment.GradedAssignment(
+                    name = 'Test Assignment',
+                    questions = [
+                        autograder.question.GradedQuestion(name = 'A', score = 5.00, max_points = 10),
+                    ],
+                    grading_start_time = edq.util.time.Timestamp(123), grading_end_time = edq.util.time.Timestamp(123),
+                    proxy_start_time = edq.util.time.Timestamp(123), proxy_end_time = edq.util.time.Timestamp(123),
+                ),
+                [
+                    'Autograder transcript for assignment: Test Assignment',
+                    'Grading started at <PRETTY TIME> and ended at <PRETTY TIME>.',
+                    'A: 5.0 / 10',
+                    '',
+                    'Total: 5.0 / 10',
+                ],
+            ),
+
+            # Float - Irrational
+            (
+                autograder.assignment.GradedAssignment(
+                    name = 'Test Assignment',
+                    questions = [
+                        autograder.question.GradedQuestion(name = 'A', score = 10 / 3, max_points = 10),
+                    ],
+                    grading_start_time = edq.util.time.Timestamp(123), grading_end_time = edq.util.time.Timestamp(123),
+                    proxy_start_time = edq.util.time.Timestamp(123), proxy_end_time = edq.util.time.Timestamp(123),
+                ),
+                [
+                    'Autograder transcript for assignment: Test Assignment',
+                    'Grading started at <PRETTY TIME> and ended at <PRETTY TIME>.',
+                    'A: 3.33 / 10',
+                    '',
+                    'Total: 3.33 / 10',
+                ],
+            ),
+
+            # Float - Irrational - Max Points
+            (
+                autograder.assignment.GradedAssignment(
+                    name = 'Test Assignment',
+                    questions = [
+                        autograder.question.GradedQuestion(name = 'A', score = 1, max_points = 10 / 3),
+                    ],
+                    grading_start_time = edq.util.time.Timestamp(123), grading_end_time = edq.util.time.Timestamp(123),
+                    proxy_start_time = edq.util.time.Timestamp(123), proxy_end_time = edq.util.time.Timestamp(123),
+                ),
+                [
+                    'Autograder transcript for assignment: Test Assignment',
+                    'Grading started at <PRETTY TIME> and ended at <PRETTY TIME>.',
+                    'A: 1 / 3.33',
+                    '',
+                    'Total: 1 / 3.33',
+                ],
+            ),
+        ]
+
+        for (i, test_case) in enumerate(test_cases):
+            (graded_assignment, expected_lines) = test_case
+
+            with self.subTest(msg = f"Case {i}"):
+                expected = '\n'.join(expected_lines)
+                actual = graded_assignment.report()
+                autograder.testing.asserts.equals_clean_pretty_time(self, expected, actual)

@@ -114,15 +114,15 @@ class GradedAssignment(edq.util.json.DictConverter):
         """
 
         total_score: float = 0
-        max_score: float = 0
+        max_points: float = 0
 
         for question in self.questions:
             total_score += question.score
-            max_score += question.max_points
+            max_points += question.max_points
 
-        return (total_score, max_score)
+        return (total_score, max_points)
 
-    def report(self, prefix: str = '') -> str:
+    def report(self, prefix: str = '', precision: int = 2) -> str:
         """
         Return a string representation of the grading for this assignment.
         """
@@ -140,16 +140,19 @@ class GradedAssignment(edq.util.json.DictConverter):
         ]
 
         total_score: float = 0
-        max_score: float = 0
+        total_max_points: float = 0
 
         for question in self.questions:
             total_score += question.score
-            max_score += question.max_points
+            total_max_points += question.max_points
 
-            output.append(question.scoring_report(prefix = prefix))
+            output.append(question.scoring_report(prefix = prefix, precision = precision))
+
+        total_score_str = autograder.util.math.number_to_str(total_score, precision = precision)
+        total_max_points_str = autograder.util.math.number_to_str(total_max_points, precision = precision)
 
         output.append('')
-        output.append(f"{prefix}Total: {total_score} / {max_score}")
+        output.append(f"{prefix}Total: {total_score_str} / {total_max_points_str}")
 
         output += self._format_logue(self.epilogue, prefix)
 

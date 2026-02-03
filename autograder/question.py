@@ -12,6 +12,7 @@ import edq.util.json
 import edq.util.time
 
 import autograder.util.invoke
+import autograder.util.math
 
 DEFAULT_TIMEOUT_SEC: float = 60
 """ Default timeout for grading a question. """
@@ -92,7 +93,7 @@ class GradedQuestion(edq.util.json.DictConverter):
     def from_dict(data: typing.Dict[str, typing.Any]) -> 'GradedQuestion':
         return GradedQuestion(**data)
 
-    def scoring_report(self, prefix: str = '') -> str:
+    def scoring_report(self, prefix: str = '', precision: int = 2) -> str:
         """
         Get a string that represents the scoring for this question.
         """
@@ -100,7 +101,10 @@ class GradedQuestion(edq.util.json.DictConverter):
         if ((prefix != '') and (not prefix.endswith(' '))):
             prefix += ' '
 
-        lines = [f"{prefix}{self.name}: {self.score} / {self.max_points}"]
+        score_str = autograder.util.math.number_to_str(self.score, precision = precision)
+        max_points_str = autograder.util.math.number_to_str(self.max_points, precision = precision)
+
+        lines = [f"{prefix}{self.name}: {score_str} / {max_points_str}"]
         if (self.message != ''):
             for line in self.message.split("\n"):
                 lines.append(prefix + '   ' + line)
