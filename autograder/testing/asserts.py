@@ -2,6 +2,7 @@ import os
 import re
 import typing
 
+import edq.testing.asserts
 import edq.testing.unittest
 import edq.util.json
 
@@ -148,7 +149,7 @@ def equals_clean_pretty_time(test: edq.testing.unittest.BaseTest, expected: str,
 
     actual = re.sub(PRETTY_TIME_PATTERN, PRETTY_TIME_REPLACEMENT, actual)
 
-    test.assertEqual(expected, actual)
+    edq.testing.asserts.content_equals_normalize(test, expected, actual)
 
 def _normalize_timestamps(data: typing.Any, keys: typing.Union[typing.Set[str], None] = None) -> typing.Any:
     """

@@ -13,7 +13,7 @@ class TestQuestion(edq.testing.unittest.BaseTest):
     def test_grade_base(self):
         """ Test that grading can run successfully. """
 
-        # [(action, expected result, expected message), ...]
+        # [(action, expected result, message substring), ...]
         test_cases = [
             # Nothing
             (
@@ -24,6 +24,7 @@ class TestQuestion(edq.testing.unittest.BaseTest):
                     score = 0,
                     message = '',
                 ),
+                None,
             ),
 
             # Full Credit
@@ -34,6 +35,7 @@ class TestQuestion(edq.testing.unittest.BaseTest):
                     grading_start_time = TEST_TIMESTAMP, grading_end_time = TEST_TIMESTAMP,
                     score = 10,
                 ),
+                None,
             ),
 
             # Full Credit with Message
@@ -45,6 +47,7 @@ class TestQuestion(edq.testing.unittest.BaseTest):
                     score = 10,
                     message = 'Test Message',
                 ),
+                None,
             ),
 
             # Set Result
@@ -56,6 +59,7 @@ class TestQuestion(edq.testing.unittest.BaseTest):
                     score = 5,
                     message = 'Test Message',
                 ),
+                None,
             ),
 
             # Set Score
@@ -66,6 +70,7 @@ class TestQuestion(edq.testing.unittest.BaseTest):
                     grading_start_time = TEST_TIMESTAMP, grading_end_time = TEST_TIMESTAMP,
                     score = 5,
                 ),
+                None,
             ),
 
             # Set Message
@@ -76,6 +81,7 @@ class TestQuestion(edq.testing.unittest.BaseTest):
                     grading_start_time = TEST_TIMESTAMP, grading_end_time = TEST_TIMESTAMP,
                     message = 'Test Message',
                 ),
+                None,
             ),
 
             # Fail
@@ -87,6 +93,7 @@ class TestQuestion(edq.testing.unittest.BaseTest):
                     score = 0,
                     message = 'Test Message',
                 ),
+                None,
             ),
 
             # Hard Fail
@@ -99,6 +106,7 @@ class TestQuestion(edq.testing.unittest.BaseTest):
                     score = 0,
                     message = 'Test Message',
                 ),
+                None,
             ),
 
             # Add Score
@@ -109,6 +117,7 @@ class TestQuestion(edq.testing.unittest.BaseTest):
                     grading_start_time = TEST_TIMESTAMP, grading_end_time = TEST_TIMESTAMP,
                     score = -1,
                 ),
+                None,
             ),
 
             # Add Message
@@ -119,6 +128,7 @@ class TestQuestion(edq.testing.unittest.BaseTest):
                     grading_start_time = TEST_TIMESTAMP, grading_end_time = TEST_TIMESTAMP,
                     message = 'Test Message',
                 ),
+                None,
             ),
 
             # Add Message with Score
@@ -130,6 +140,7 @@ class TestQuestion(edq.testing.unittest.BaseTest):
                     score = 2,
                     message = 'Test Message',
                 ),
+                None,
             ),
 
             # Cap Score - Max
@@ -140,6 +151,7 @@ class TestQuestion(edq.testing.unittest.BaseTest):
                     grading_start_time = TEST_TIMESTAMP, grading_end_time = TEST_TIMESTAMP,
                     score = 0,
                 ),
+                None,
             ),
 
             # Cap Score - Min
@@ -150,6 +162,19 @@ class TestQuestion(edq.testing.unittest.BaseTest):
                     grading_start_time = TEST_TIMESTAMP, grading_end_time = TEST_TIMESTAMP,
                     score = 10,
                 ),
+                None,
+            ),
+
+            # Code does not run.
+            (
+                lambda question: (question.full_credit(), exec('import ZZZ'))[0],  # pylint: disable=exec-used
+                autograder.question.GradedQuestion(
+                    name = '_TestQustion', max_points = 10,
+                    grading_start_time = TEST_TIMESTAMP, grading_end_time = TEST_TIMESTAMP,
+                    score = 0,
+                    message = '',
+                ),
+                "No module named 'ZZZ'",
             ),
         ]
 
@@ -163,7 +188,7 @@ class TestQuestion(edq.testing.unittest.BaseTest):
                 self.action(self)
 
         for (i, test_case) in enumerate(test_cases):
-            (action, expected) = test_case
+            (action, expected, message_substring) = test_case
 
             with self.subTest(msg = f"Case {i}"):
                 question = _TestQustion(action)
@@ -173,4 +198,12 @@ class TestQuestion(edq.testing.unittest.BaseTest):
                 actual.grading_start_time = TEST_TIMESTAMP
                 actual.grading_end_time = TEST_TIMESTAMP
 
+                # If we are chechking the message as a substring, normalize the result message.
+                actual_message = actual.message
+                if (message_substring is not None):
+                    actual.message = ''
+
                 self.assertJSONEqual(expected, actual)
+
+                if (message_substring is not None):
+                    self.assertIn(message_substring, actual_message, 'Message is not as expected.')
