@@ -10,5 +10,6 @@
     ],
 }
 ---
-Encountered 0 error(s) while testing 2 submissions.
-Success
+Autograder failed to grade the submission.
+Encountered 1 error(s) while testing 3 submissions.
+Faiure

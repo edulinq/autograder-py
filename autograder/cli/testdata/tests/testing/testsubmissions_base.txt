@@ -1,13 +1,17 @@
 {
     "cli": "autograder.cli.testing.test-submissions",
     "platform_skip": "win",
+    /* Skip stderr comparison (since it has a version-dependent stack trace. */
+    "split_stdout_stderr": true,
     "arguments": [
         '--assignment', '__ABS_DATA_DIR__(../../../../testdata/autograder-testdata/autograder-server/testdata/course-languages/bash/assignment.json)',
         '--submission', '__ABS_DATA_DIR__(../../../../testdata/autograder-testdata/autograder-server/testdata/course-languages/bash/test-submissions)',
     ],
 }
 ---
+Testing assignment '__ABS_DATA_DIR__(../../../../testdata/autograder-testdata/autograder-server/testdata/course-languages/bash/assignment.json)' and submission '__ABS_DATA_DIR__(../../../../testdata/autograder-testdata/autograder-server/testdata/course-languages/bash/test-submissions/crash/test-submission.json)'.
+Failed to run submission '__ABS_DATA_DIR__(../../../../testdata/autograder-testdata/autograder-server/testdata/course-languages/bash/test-submissions/crash/test-submission.json)': 'Command '['bash', './grader.sh']' returned non-zero exit status 1.'.
 Testing assignment '__ABS_DATA_DIR__(../../../../testdata/autograder-testdata/autograder-server/testdata/course-languages/bash/assignment.json)' and submission '__ABS_DATA_DIR__(../../../../testdata/autograder-testdata/autograder-server/testdata/course-languages/bash/test-submissions/not-implemented/test-submission.json)'.
 Testing assignment '__ABS_DATA_DIR__(../../../../testdata/autograder-testdata/autograder-server/testdata/course-languages/bash/assignment.json)' and submission '__ABS_DATA_DIR__(../../../../testdata/autograder-testdata/autograder-server/testdata/course-languages/bash/test-submissions/solution/test-submission.json)'.
-Encountered 0 error(s) while testing 2 submissions.
-Success
+Encountered 1 error(s) while testing 3 submissions.
+Faiure

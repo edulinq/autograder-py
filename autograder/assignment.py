@@ -16,6 +16,7 @@ class GradedAssignment(edq.util.json.DictConverter):
     def __init__(self,
             name: str,
             questions: typing.List[autograder.question.GradedQuestion],
+            message: typing.Union[str, None] = None,
             prologue: typing.Union[str, None] = None,
             epilogue: typing.Union[str, None] = None,
             grading_start_time: typing.Union[edq.util.time.Timestamp, int, None] = None,
@@ -28,6 +29,9 @@ class GradedAssignment(edq.util.json.DictConverter):
 
         self.questions: typing.List[autograder.question.GradedQuestion] = questions
         """ The result of grading for each question. """
+
+        self.message: typing.Union[str, None] = prologue
+        """ Text to include with the grading result. """
 
         self.prologue: typing.Union[str, None] = prologue
         """ Text to include before the grading result. """
@@ -62,6 +66,9 @@ class GradedAssignment(edq.util.json.DictConverter):
     def to_dict(self) -> typing.Dict[str, typing.Any]:
         return {
             'name': self.name,
+            'message': self.message,
+            'prologue': self.prologue,
+            'epilogue': self.epilogue,
             'questions': [question.to_dict() for question in self.questions],
             'grading_start_time': self.grading_start_time,
             'grading_end_time': self.grading_end_time,
@@ -138,6 +145,9 @@ class GradedAssignment(edq.util.json.DictConverter):
             prefix + f"Autograder transcript for assignment: {self.name}",
             prefix + f"Grading started at {self.grading_start_time.pretty()} and ended at {self.grading_end_time.pretty()}.",
         ]
+
+        if ((self.message is not None) and (len(self.message) > 0)):
+            output.append(f"\n{self.message}\n")
 
         total_score: float = 0
         total_max_points: float = 0
