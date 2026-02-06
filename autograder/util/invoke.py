@@ -2,6 +2,7 @@ import multiprocessing
 import sys
 import time
 import traceback
+import typing
 
 REAP_TIME_SEC = 5
 
@@ -25,8 +26,8 @@ def _init_multiprocessing() -> None:
 # On timeout, success will be false and the value will be None.
 # On error, success will be false and value will be the string stacktrace.
 # On successful completion, success will be true and value may be None (if nothing was returned).
-def with_timeout(timeout, function):
-    if (not sys.platform.startswith('linux')):
+def with_timeout(timeout: typing.Union[int, None], function):
+    if ((timeout is None) or (not sys.platform.startswith('linux'))):
         # Mac and Windows have some pickling issues with multiprocessing.
         # Just run them without a timeout.
         # Any autograder will be run on a Linux machine and will be safe.
@@ -34,7 +35,7 @@ def with_timeout(timeout, function):
         value = function()
         runtime = time.time() - start_time
 
-        if (runtime > timeout):
+        if ((timeout is not None) and (runtime > timeout)):
             return (False, None)
 
         return (True, value)
