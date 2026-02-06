@@ -143,7 +143,7 @@ class Question:
     def __init__(self,
             max_points: float = 0,
             name: typing.Union[str, None] = None,
-            timeout: float = DEFAULT_TIMEOUT_SEC,
+            timeout: typing.Union[float, None] = DEFAULT_TIMEOUT_SEC,
             ) -> None:
         if (name is None):
             name = type(self).__name__
@@ -160,7 +160,7 @@ class Question:
         self.max_points: float = max_points
         """ The maximum number of points possible for this question (does not include extra credit). """
 
-        self._timeout: float = timeout
+        self._timeout: typing.Union[float, None] = timeout
         """ The number of seconds allowed when grading this question. """
 
         # Create the base scoring artifact.

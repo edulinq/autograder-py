@@ -22,9 +22,10 @@ def _init_multiprocessing() -> None:
     multiprocessing.set_start_method('fork')
     _multiprocessing_initialized = True
 
-def with_timeout(timeout: float, function: typing.Callable) -> typing.Tuple[bool, typing.Any]:
+def with_timeout(timeout: typing.Union[float, None], function: typing.Callable) -> typing.Tuple[bool, typing.Any]:
     """
-    Run the given function in a differnet process with the given timeout.
+    Run the given function in a different process with the given timeout.
+    If the timeout is None, then no timeout will be checked (and the code will be run on the same process).
 
     Return: (success, function return value)
     On timeout, success will be false and the value will be None.
@@ -32,7 +33,7 @@ def with_timeout(timeout: float, function: typing.Callable) -> typing.Tuple[bool
     On successful completion, success will be true and value may be None (if nothing was returned).
     """
 
-    if (not sys.platform.startswith('linux')):
+    if ((timeout is None) or (not sys.platform.startswith('linux'))):
         # Mac and Windows have some pickling issues with multiprocessing.
         # Just run them without a timeout.
         # Any autograder will be run on a Linux machine and will be safe.
@@ -40,7 +41,7 @@ def with_timeout(timeout: float, function: typing.Callable) -> typing.Tuple[bool
         value = function()
         runtime = time.time() - start_time
 
-        if (runtime > timeout):
+        if ((timeout is not None) and (runtime > timeout)):
             return (False, None)
 
         return (True, value)
