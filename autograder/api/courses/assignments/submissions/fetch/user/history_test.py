@@ -69,30 +69,30 @@ class TestCourseAssignmentsFetchUserHistory(autograder.testing.server.ServerTest
 
 SCORES: typing.List[lms.model.scores.AssignmentScore] = [
     lms.model.scores.AssignmentScore(
-        assignment_query = 'hw0',
+        assignment = 'hw0',
         comment = '',
         graded_date = 1697406256000,
         id = 'course101::hw0::course-student@test.edulinq.org::1697406256',
         score = 0,
         submission_date = 1697406256000,
-        user_query = 'course-student@test.edulinq.org',
+        user = 'course-student@test.edulinq.org',
     ),
     lms.model.scores.AssignmentScore(
-        assignment_query = 'hw0',
+        assignment = 'hw0',
         comment = '',
         graded_date = 1697406266000,
         id = 'course101::hw0::course-student@test.edulinq.org::1697406265',
         score = 1,
         submission_date = 1697406266000,
-        user_query = 'course-student@test.edulinq.org',
+        user = 'course-student@test.edulinq.org',
     ),
     lms.model.scores.AssignmentScore(
-        assignment_query = 'hw0',
+        assignment = 'hw0',
         comment = '',
         graded_date = 1697406273000,
         id = 'course101::hw0::course-student@test.edulinq.org::1697406272',
         score = 2,
         submission_date = 1697406273000,
-        user_query = 'course-student@test.edulinq.org',
+        user = 'course-student@test.edulinq.org',
     ),
 ]

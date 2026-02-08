@@ -64,19 +64,19 @@ class TestCourseAssignmentsFetchCourseScores(autograder.testing.server.ServerTes
         self.base_api_test(autograder.api.courses.assignments.submissions.fetch.course.scores.send, test_cases)
 
 STUDENT_SCORE: lms.model.scores.AssignmentScore = lms.model.scores.AssignmentScore(
-    assignment_query = 'hw0',
+    assignment = 'hw0',
     comment = '',
     graded_date = 1697406273000,
     id = 'course101::hw0::course-student@test.edulinq.org::1697406272',
     score = 2,
     submission_date = 1697406273000,
-    user_query = 'course-student@test.edulinq.org',
+    user = 'course-student@test.edulinq.org',
 )
 
 FULL_SCORES: typing.List[lms.model.scores.AssignmentScore] = [
-    lms.model.scores.AssignmentScore(assignment_query = 'hw0', user_query = 'course-admin@test.edulinq.org'),
-    lms.model.scores.AssignmentScore(assignment_query = 'hw0', user_query = 'course-grader@test.edulinq.org'),
-    lms.model.scores.AssignmentScore(assignment_query = 'hw0', user_query = 'course-other@test.edulinq.org'),
-    lms.model.scores.AssignmentScore(assignment_query = 'hw0', user_query = 'course-owner@test.edulinq.org'),
+    lms.model.scores.AssignmentScore(assignment = 'hw0', user = 'course-admin@test.edulinq.org'),
+    lms.model.scores.AssignmentScore(assignment = 'hw0', user = 'course-grader@test.edulinq.org'),
+    lms.model.scores.AssignmentScore(assignment = 'hw0', user = 'course-other@test.edulinq.org'),
+    lms.model.scores.AssignmentScore(assignment = 'hw0', user = 'course-owner@test.edulinq.org'),
     STUDENT_SCORE,
 ]

@@ -17,7 +17,7 @@ LOG_LEVEL_TEXT_TO_INT: typing.Dict[str, int] = {
 LOG_LEVEL_INT_TO_TEXT: typing.Dict[int, str] = {value: key for (key, value) in LOG_LEVEL_TEXT_TO_INT.items()}
 """ Map int API log levels to text. """
 
-class LogRecord(lms.model.base.BaseType):  # type: ignore[misc]
+class LogRecord(lms.model.base.BaseType):
     """
     A logging record.
     """

@@ -8,6 +8,6 @@
     ],
 }
 ---
-timestamp: 1200
+timestamp: 1970-01-01 00:00
 type: grading-time
 value: 150

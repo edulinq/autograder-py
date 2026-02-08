@@ -9,41 +9,41 @@
 }
 ---
 id: 
-user_query: course-admin@test.edulinq.org
-assignment_query: hw0
+user: course-admin@test.edulinq.org
+assignment: hw0
 score: 
 submission_date: 
 graded_date: 
 comment: 
 
 id: 
-user_query: course-grader@test.edulinq.org
-assignment_query: hw0
+user: course-grader@test.edulinq.org
+assignment: hw0
 score: 
 submission_date: 
 graded_date: 
 comment: 
 
 id: 
-user_query: course-other@test.edulinq.org
-assignment_query: hw0
+user: course-other@test.edulinq.org
+assignment: hw0
 score: 
 submission_date: 
 graded_date: 
 comment: 
 
 id: 
-user_query: course-owner@test.edulinq.org
-assignment_query: hw0
+user: course-owner@test.edulinq.org
+assignment: hw0
 score: 
 submission_date: 
 graded_date: 
 comment: 
 
 id: course101::hw0::course-student@test.edulinq.org::1697406272
-user_query: course-student@test.edulinq.org
-assignment_query: hw0
+user: course-student@test.edulinq.org
+assignment: hw0
 score: 2
-submission_date: 1697406273000
-graded_date: 1697406273000
+submission_date: 2023-10-15 21:44
+graded_date: 2023-10-15 21:44
 comment: 

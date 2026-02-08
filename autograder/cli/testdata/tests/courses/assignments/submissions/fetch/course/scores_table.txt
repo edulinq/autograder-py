@@ -9,7 +9,7 @@
     ],
 }
 ---
-id	user_query	assignment_query	score	submission_date	graded_date	comment
+id	user	assignment	score	submission_date	graded_date	comment
 	course-admin@test.edulinq.org	hw0				
 	course-grader@test.edulinq.org	hw0				
 	course-other@test.edulinq.org	hw0				

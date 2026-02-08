@@ -14,7 +14,7 @@ METRIC_TYPES: typing.List[str] = [
     'task-time',
 ]
 
-class Metric(lms.model.base.BaseType):  # type: ignore[misc]
+class Metric(lms.model.base.BaseType):
     """
     A metric value.
     """

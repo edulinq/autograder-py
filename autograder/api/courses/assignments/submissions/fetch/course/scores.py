@@ -33,7 +33,7 @@ def send(config: typing.Dict[str, typing.Any], **kwargs: typing.Any) -> typing.L
     scores = []
     for (user_email, raw_score) in response['submission-infos'].items():
         if (raw_score is None):
-            scores.append(lms.model.scores.AssignmentScore(assignment_query = assignment_id, user_query = user_email))
+            scores.append(lms.model.scores.AssignmentScore(assignment = assignment_id, user = user_email))
         else:
             scores.append(autograder.model.assignment.make_assignment_score(raw_score))
 

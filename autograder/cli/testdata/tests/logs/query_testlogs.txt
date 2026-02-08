@@ -8,7 +8,7 @@
     ],
 }
 ---
-timestamp: 100
+timestamp: 1970-01-01 00:00
 level: TRACE
 message: Trace Course Log
 error: 
@@ -16,7 +16,7 @@ course: course101
 assignment: hw0
 user: course-other@test.edulinq.org
 
-timestamp: 150
+timestamp: 1970-01-01 00:00
 level: TRACE
 message: Trace Server Log
 error: 
@@ -24,7 +24,7 @@ course:
 assignment: 
 user: server-user@test.edulinq.org
 
-timestamp: 200
+timestamp: 1970-01-01 00:00
 level: DEBUG
 message: Debug Course Log
 error: 
@@ -32,7 +32,7 @@ course: course101
 assignment: hw0
 user: course-student@test.edulinq.org
 
-timestamp: 250
+timestamp: 1970-01-01 00:00
 level: DEBUG
 message: Debug Server Log
 error: 
@@ -40,7 +40,7 @@ course:
 assignment: 
 user: server-creator@test.edulinq.org
 
-timestamp: 300
+timestamp: 1970-01-01 00:00
 level: INFO
 message: Info Course Log
 error: 
@@ -48,7 +48,7 @@ course: course101
 assignment: hw0
 user: course-grader@test.edulinq.org
 
-timestamp: 350
+timestamp: 1970-01-01 00:00
 level: INFO
 message: Info Server Log
 error: 
@@ -56,7 +56,7 @@ course:
 assignment: 
 user: server-admin@test.edulinq.org
 
-timestamp: 400
+timestamp: 1970-01-01 00:00
 level: WARN
 message: Warn Course Log
 error: Course Warning
@@ -64,7 +64,7 @@ course: course101
 assignment: hw0
 user: course-admin@test.edulinq.org
 
-timestamp: 450
+timestamp: 1970-01-01 00:00
 level: WARN
 message: Warn Server Log
 error: Server Warning
@@ -72,7 +72,7 @@ course:
 assignment: 
 user: server-owner@test.edulinq.org
 
-timestamp: 500
+timestamp: 1970-01-01 00:00
 level: ERROR
 message: Error Course Log
 error: Course Error
@@ -80,7 +80,7 @@ course: course101
 assignment: 
 user: course-owner@test.edulinq.org
 
-timestamp: 550
+timestamp: 1970-01-01 00:00
 level: ERROR
 message: Error Server Log
 error: Server Error
@@ -88,7 +88,7 @@ course:
 assignment: 
 user: 
 
-timestamp: 600
+timestamp: 1970-01-01 00:00
 level: FATAL
 message: Fatal Course Log
 error: 
@@ -96,7 +96,7 @@ course: course101
 assignment: 
 user: 
 
-timestamp: 650
+timestamp: 1970-01-01 00:00
 level: FATAL
 message: Fatal Server Log
 error: 

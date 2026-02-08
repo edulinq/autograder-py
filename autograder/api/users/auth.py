@@ -4,8 +4,6 @@ Authenticate as a user.
 
 import typing
 
-import lms.model.users
-
 import autograder.api.common
 import autograder.api.config
 import autograder.model.user
@@ -18,8 +16,8 @@ API_PARAMS: typing.List[autograder.api.config.APIParam] = [
     autograder.api.config.PARAM_USER_PASS,
 ]
 
-def send(config: typing.Dict[str, typing.Any], **kwargs: typing.Any) -> typing.Union[lms.model.users.ServerUser, None]:
+def send(config: typing.Dict[str, typing.Any], **kwargs: typing.Any) -> bool:
     """ Send a request to the autograder. """
 
     results = autograder.api.common.make_api_request(API_ENDPOINT, config, API_PARAMS, write = API_WRITE, **kwargs)
-    return results.get('success', False)
+    return bool(results.get('success', False))
