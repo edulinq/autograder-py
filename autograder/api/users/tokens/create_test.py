@@ -19,8 +19,8 @@ class TestUsersTokensCreate(autograder.testing.server.ServerTest):
                 },
                 {},
                 {
-                    "token-cleartext": autograder.testing.asserts.TEST_TOKEN_CLEARTEXT,
-                    "token-id": autograder.testing.asserts.TEST_TOKEN_ID,
+                    "token-cleartext": autograder.testing.constants.TEST_TOKEN_CLEARTEXT,
+                    "token-id": autograder.testing.constants.TEST_TOKEN_ID,
                 },
                 None,
             ),
@@ -34,8 +34,8 @@ class TestUsersTokensCreate(autograder.testing.server.ServerTest):
                 },
                 {},
                 {
-                    "token-cleartext": autograder.testing.asserts.TEST_TOKEN_CLEARTEXT,
-                    "token-id": autograder.testing.asserts.TEST_TOKEN_ID,
+                    "token-cleartext": autograder.testing.constants.TEST_TOKEN_CLEARTEXT,
+                    "token-id": autograder.testing.constants.TEST_TOKEN_ID,
                 },
                 None,
             ),

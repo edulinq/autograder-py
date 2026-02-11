@@ -20,9 +20,9 @@ class TestHeartbeat(autograder.testing.server.ServerTest):
                 {},
                 {
                     'server-version': {
-                        'base-version': autograder.testing.asserts.TEST_BASE_VERSION,
-                        'git-hash': autograder.testing.asserts.TEST_GIT_HASH,
-                        'is-dirty': autograder.testing.asserts.TEST_IS_DIRTY,
+                        'base-version': autograder.testing.constants.TEST_BASE_VERSION,
+                        'git-hash': autograder.testing.constants.TEST_GIT_HASH,
+                        'is-dirty': autograder.testing.constants.TEST_IS_DIRTY,
                     },
                 },
                 None,

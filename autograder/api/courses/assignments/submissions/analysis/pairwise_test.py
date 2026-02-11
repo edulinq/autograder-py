@@ -106,8 +106,8 @@ BASE_TEST_ANALYSIS: typing.Dict[str, typing.Any] = {
         "complete-count": 0,
         "error-count": 0,
         "failure-count": 0,
-        "first-timestamp": autograder.testing.asserts.TEST_TIMESTAMP,
-        "last-timestamp": autograder.testing.asserts.TEST_TIMESTAMP,
+        "first-timestamp": autograder.testing.constants.TEST_TIMESTAMP,
+        "last-timestamp": autograder.testing.constants.TEST_TIMESTAMP,
         "pending-count": 1
     },
     "work-errors": {}
@@ -127,7 +127,7 @@ COMPLETE_TEST_ANALYSIS: typing.Dict[str, typing.Any] = {
     },
     "results": {
         "course101::hw0::course-student@test.edulinq.org::1697406256||course101::hw0::course-student@test.edulinq.org::1697406265": {
-            "analysis-timestamp": autograder.testing.asserts.TEST_TIMESTAMP,
+            "analysis-timestamp": autograder.testing.constants.TEST_TIMESTAMP,
             "mean-similarities": {
                 "submission.py": 0.13
             },
@@ -186,8 +186,8 @@ COMPLETE_TEST_ANALYSIS: typing.Dict[str, typing.Any] = {
         "complete-count": 1,
         "error-count": 0,
         "failure-count": 0,
-        "first-timestamp": autograder.testing.asserts.TEST_TIMESTAMP,
-        "last-timestamp": autograder.testing.asserts.TEST_TIMESTAMP,
+        "first-timestamp": autograder.testing.constants.TEST_TIMESTAMP,
+        "last-timestamp": autograder.testing.constants.TEST_TIMESTAMP,
         "pending-count": 0
     },
     "work-errors": {}

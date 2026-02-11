@@ -6,26 +6,19 @@ import edq.testing.asserts
 import edq.testing.unittest
 import edq.util.json
 
+import autograder.testing.constants
+
 THIS_DIR: str = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
 ROOT_DIR: str = os.path.join(THIS_DIR, '..', '..')
 AUTOGRADER_TESTDATA_REPO: str = os.path.join(ROOT_DIR, 'testdata', 'autograder-testdata')
 AUTOGRADER_SERVER_REPO: str = os.path.join(AUTOGRADER_TESTDATA_REPO, 'autograder-server')
 API_DESCRIPTION_PATH: str = os.path.join(AUTOGRADER_SERVER_REPO, 'resources', 'api.json')
 
-TEST_BASE_VERSION: str = '1.2.3'
-TEST_GIT_HASH: str = 'abcd1234'
-TEST_IS_DIRTY: bool = False
-
 TOKEN_CLEARTEXT_PATTERN: str = r'\w{32}'
 TOKEN_ID_PATTERN: str = r'\w{8}-\w{4}-\w{4}-\w{4}-\w{12}'
 
 PRETTY_TIME_PATTERN: str = r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d+[\+\-]\d+:\d+'
 PRETTY_TIME_REPLACEMENT: str = '<PRETTY TIME>'
-
-TEST_TOKEN_CLEARTEXT: str = 'test-token-cleartext'
-TEST_TOKEN_ID: str = 'test-token-id'
-
-TEST_TIMESTAMP: int = 123456789
 
 NORMALIZE_TIMESTAMP_KEYS: typing.Set[str] = {
     'analysis-timestamp',
@@ -108,9 +101,9 @@ def _noramlize_version(data: typing.Dict[str, typing.Any]) -> typing.Dict[str, t
     if ('server-version' not in data):
         return data
 
-    data['server-version']['base-version'] = TEST_BASE_VERSION
-    data['server-version']['git-hash'] = TEST_GIT_HASH
-    data['server-version']['is-dirty'] = TEST_IS_DIRTY
+    data['server-version']['base-version'] = autograder.testing.constants.TEST_BASE_VERSION
+    data['server-version']['git-hash'] = autograder.testing.constants.TEST_GIT_HASH
+    data['server-version']['is-dirty'] = autograder.testing.constants.TEST_IS_DIRTY
 
     return data
 
@@ -118,10 +111,10 @@ def _noramlize_tokens(data: typing.Dict[str, typing.Any]) -> typing.Dict[str, ty
     """ Normalize token identifiers. """
 
     if ('token-id' in data):
-        data['token-id'] = TEST_TOKEN_ID
+        data['token-id'] = autograder.testing.constants.TEST_TOKEN_ID
 
     if ('token-cleartext' in data):
-        data['token-cleartext'] = TEST_TOKEN_CLEARTEXT
+        data['token-cleartext'] = autograder.testing.constants.TEST_TOKEN_CLEARTEXT
 
     return data
 
@@ -136,11 +129,11 @@ def equals_api_description(test: edq.testing.unittest.BaseTest, expected: str, a
 def equals_clean_tokens(test: edq.testing.unittest.BaseTest, expected: str, actual: str) -> None:
     """ A CLI test assertion function for text that contains tokens. """
 
-    expected = re.sub(TOKEN_CLEARTEXT_PATTERN, TEST_TOKEN_CLEARTEXT, expected)
-    expected = re.sub(TOKEN_ID_PATTERN, TEST_TOKEN_ID, expected)
+    expected = re.sub(TOKEN_CLEARTEXT_PATTERN, autograder.testing.constants.TEST_TOKEN_CLEARTEXT, expected)
+    expected = re.sub(TOKEN_ID_PATTERN, autograder.testing.constants.TEST_TOKEN_ID, expected)
 
-    actual = re.sub(TOKEN_CLEARTEXT_PATTERN, TEST_TOKEN_CLEARTEXT, actual)
-    actual = re.sub(TOKEN_ID_PATTERN, TEST_TOKEN_ID, actual)
+    actual = re.sub(TOKEN_CLEARTEXT_PATTERN, autograder.testing.constants.TEST_TOKEN_CLEARTEXT, actual)
+    actual = re.sub(TOKEN_ID_PATTERN, autograder.testing.constants.TEST_TOKEN_ID, actual)
 
     test.assertEqual(expected, actual)
 
@@ -167,7 +160,7 @@ def _normalize_timestamps(data: typing.Any, keys: typing.Union[typing.Set[str], 
     if (isinstance(data, dict)):
         for (key, value) in data.items():
             if (key in keys):
-                data[key] = TEST_TIMESTAMP
+                data[key] = autograder.testing.constants.TEST_TIMESTAMP
             else:
                 data[key] = _normalize_timestamps(value, keys = keys)
 

@@ -148,8 +148,8 @@ BASE_TEST_ANALYSIS: typing.Dict[str, typing.Any] = {
         "complete-count": 0,
         "error-count": 0,
         "failure-count": 0,
-        "first-timestamp": autograder.testing.asserts.TEST_TIMESTAMP,
-        "last-timestamp": autograder.testing.asserts.TEST_TIMESTAMP,
+        "first-timestamp": autograder.testing.constants.TEST_TIMESTAMP,
+        "last-timestamp": autograder.testing.constants.TEST_TIMESTAMP,
         "pending-count": 2
     },
     "work-errors": {}
@@ -168,7 +168,7 @@ COMPLETE_TEST_ANALYSIS: typing.Dict[str, typing.Any] = {
     },
     "results": {
         "course101::hw0::course-student@test.edulinq.org::1697406256": {
-            "analysis-timestamp": autograder.testing.asserts.TEST_TIMESTAMP,
+            "analysis-timestamp": autograder.testing.constants.TEST_TIMESTAMP,
             "assignment-id": "hw0",
             "course-id": "course101",
             "files": [
@@ -204,7 +204,7 @@ COMPLETE_TEST_ANALYSIS: typing.Dict[str, typing.Any] = {
             "user-email": "course-student@test.edulinq.org"
         },
         "course101::hw0::course-student@test.edulinq.org::1697406265": {
-            "analysis-timestamp": autograder.testing.asserts.TEST_TIMESTAMP,
+            "analysis-timestamp": autograder.testing.constants.TEST_TIMESTAMP,
             "assignment-id": "hw0",
             "course-id": "course101",
             "files": [
@@ -307,8 +307,8 @@ COMPLETE_TEST_ANALYSIS: typing.Dict[str, typing.Any] = {
         "complete-count": 2,
         "error-count": 0,
         "failure-count": 0,
-        "first-timestamp": autograder.testing.asserts.TEST_TIMESTAMP,
-        "last-timestamp": autograder.testing.asserts.TEST_TIMESTAMP,
+        "first-timestamp": autograder.testing.constants.TEST_TIMESTAMP,
+        "last-timestamp": autograder.testing.constants.TEST_TIMESTAMP,
         "pending-count": 0
     },
     "work-errors": {}

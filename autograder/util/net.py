@@ -9,6 +9,7 @@ import requests
 
 import autograder.api.constants
 import autograder.testing.asserts
+import autograder.testing.constants
 import autograder.testing.model
 
 CLEAN_REMOVE_HEADERS: typing.Set[str] = {
@@ -63,10 +64,10 @@ def clean_api_response(response: requests.Response, body: str) -> str:
     content = data.get('content', None)
     if (content is not None):
         if ('token-id' in content):
-            content['token-id'] = autograder.testing.asserts.TEST_TOKEN_ID
+            content['token-id'] = autograder.testing.constants.TEST_TOKEN_ID
 
         if ('token-cleartext' in content):
-            content['token-cleartext'] = autograder.testing.asserts.TEST_TOKEN_CLEARTEXT
+            content['token-cleartext'] = autograder.testing.constants.TEST_TOKEN_CLEARTEXT
 
     # Clean specific timestamps.
 
@@ -86,13 +87,20 @@ def clean_api_response(response: requests.Response, body: str) -> str:
             result = content.get('result', None)
             if (result is not None):
                 parts = result['id'].split('::')
-                parts[3] = str(autograder.testing.asserts.TEST_TIMESTAMP)
+                parts[3] = str(autograder.testing.constants.TEST_TIMESTAMP)
                 result['id'] = '::'.join(parts)
 
-                result['short-id'] = str(autograder.testing.asserts.TEST_TIMESTAMP)
+                result['short-id'] = str(autograder.testing.constants.TEST_TIMESTAMP)
     elif (endpoint == 'system/stacks'):
         # Replace payloads for stack traces completely to make it consistent.
         data['content'] = autograder.testing.model.STACK_TRACE_PAYLOAD
+    elif (endpoint == 'courses/assignments/images/fetch'):
+        # Write a dummy docker image (which is just a text file).
+        if (content is not None):
+            content['bytes'] = autograder.testing.constants.TEST_PAYLOAD_B64_GZIP_BYTES
+            content['image-info']['created-timestamp'] = autograder.testing.constants.TEST_TIMESTAMP
+            content['image-info']['gzip-size-bytes'] = len(autograder.testing.constants.TEST_PAYLOAD_GZIP_BYTES)
+            content['image-info']['size-bytes'] = len(autograder.testing.constants.TEST_PAYLOAD_BYTES)
 
     # Convert body back to a string.
     body = edq.util.json.dumps(data)
