@@ -14,6 +14,8 @@ API_PARAMS: typing.List[autograder.api.config.APIParam] = [
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
 
+    autograder.api.config.PARAM_TARGET_USER_OR_SELF,
+
     autograder.api.config.PARAM_NAME,
 ]
 

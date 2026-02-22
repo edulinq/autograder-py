@@ -8,5 +8,6 @@
 }
 ---
 {
-    "found": true
+    "found-token": true,
+    "found-user": true
 }

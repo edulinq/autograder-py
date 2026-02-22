@@ -15,7 +15,7 @@ def run_cli(args: argparse.Namespace) -> int:
 
     result = autograder.api.users.tokens.create.send(config)
 
-    print("Token ID: " + result['token-id'])
+    print("Token ID: " + result['token-info']['id'])
     print("Token Text: " + result['token-cleartext'])
     print("")
     print("Copy down the token text and keep it safe, this will be the only time it is ever shown.")

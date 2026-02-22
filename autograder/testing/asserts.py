@@ -116,7 +116,22 @@ def _noramlize_tokens(data: typing.Dict[str, typing.Any]) -> typing.Dict[str, ty
     if ('token-cleartext' in data):
         data['token-cleartext'] = autograder.testing.constants.TEST_TOKEN_CLEARTEXT
 
+    if ('token-info' in data):
+        _normalize_token_info(data['token-info'])
+
+    if ('tokens' in data):
+        for token_info in data['tokens']:
+            _normalize_token_info(token_info)
+
     return data
+
+def _normalize_token_info(token_info: typing.Union[typing.Dict[str, typing.Any], None]) -> None:
+    if (token_info is None):
+        return
+
+    token_info['access-time'] = autograder.testing.constants.TEST_TIMESTAMP
+    token_info['creation-time'] = autograder.testing.constants.TEST_TIMESTAMP
+    token_info['id'] = autograder.testing.constants.TEST_TOKEN_ID
 
 def equals_api_description(test: edq.testing.unittest.BaseTest, expected: str, actual: str) -> None:
     """ A CLI test assertion function for the API description (read from a submodule). """

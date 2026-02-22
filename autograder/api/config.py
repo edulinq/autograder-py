@@ -779,6 +779,12 @@ PARAM_TARGET_EMAIL_OR_SELF = APIParam(
     api_required = False,
 )
 
+PARAM_TARGET_USER_OR_SELF = APIParam(
+    'target_user',
+    'The user that is the target of this request (defaults to you).',
+    api_required = False,
+)
+
 PARAM_TARGET_USERS = APIParam(
     'target_users',
     ('A list of server user references.'
