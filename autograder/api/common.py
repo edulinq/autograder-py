@@ -98,6 +98,8 @@ def send_api_request(endpoint, server = None, verbose = False, data = {}, files 
     if (verbose):
         print("\nAutograder Response:\n---\n%s\n---\n" % (json.dumps(response, indent = 4)))
 
+    _check_server_version(response)
+
     if (not response.get(autograder.api.constants.API_RESPONSE_KEY_SUCCESS, False)):
         message = 'Request to the autograder failed.'
         if (autograder.api.constants.API_RESPONSE_KEY_MESSAGE in response):
@@ -111,3 +113,18 @@ def send_api_request(endpoint, server = None, verbose = False, data = {}, files 
         raise autograder.error.APIError(code, message)
 
     return response[autograder.api.constants.API_RESPONSE_KEY_CONTENT]
+
+def _check_server_version(response):
+    server_version_data = response.get(autograder.api.constants.API_RESPONSE_KEY_SERVER_VERSION)
+    if (server_version_data is None):
+        return
+
+    if (isinstance(server_version_data, dict)):
+        server_version = server_version_data.get('base-version', '')
+    else:
+        server_version = str(server_version_data)
+
+    if (server_version and (server_version != autograder.__version__)):
+        print(("WARNING: Server version (%s) does not match client version (%s)."
+            + " Consider updating the autograder package.") % (
+                server_version, autograder.__version__), file = sys.stderr)
