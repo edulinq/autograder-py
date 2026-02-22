@@ -61,14 +61,6 @@ def clean_api_response(response: requests.Response, body: str) -> str:
 
     # Standardize content keys.
 
-    content = data.get('content', None)
-    if (content is not None):
-        if ('token-id' in content):
-            content['token-id'] = autograder.testing.constants.TEST_TOKEN_ID
-
-        if ('token-cleartext' in content):
-            content['token-cleartext'] = autograder.testing.constants.TEST_TOKEN_CLEARTEXT
-
     # Clean specific timestamps.
 
     endpoint = response.url.strip().split(f"api/{autograder.api.constants.API_VERSION}/")[-1]
@@ -83,6 +75,7 @@ def clean_api_response(response: requests.Response, body: str) -> str:
 
     if (endpoint in GRADING_ENDPOINTS):
         # Normalize submission IDs.
+        content = data.get('content', None)
         if (content is not None):
             result = content.get('result', None)
             if (result is not None):
@@ -91,16 +84,28 @@ def clean_api_response(response: requests.Response, body: str) -> str:
                 result['id'] = '::'.join(parts)
 
                 result['short-id'] = str(autograder.testing.constants.TEST_TIMESTAMP)
+
+                # A test case returns a stack trace, normalize it.
+                if ("ModuleNotFoundError: No module named 'ZZZ'" in result.get('epilogue', '')):
+                    result['epilogue'] = ("Submission could not be graded because of the following error:"
+                        + "\n<TESTING STACK TRACE>"
+                        + "\nModuleNotFoundError: No module named 'ZZZ'")
     elif (endpoint == 'system/stacks'):
         # Replace payloads for stack traces completely to make it consistent.
         data['content'] = autograder.testing.model.STACK_TRACE_PAYLOAD
     elif (endpoint == 'courses/assignments/images/fetch'):
         # Write a dummy docker image (which is just a text file).
+        content = data.get('content', None)
         if (content is not None):
             content['bytes'] = autograder.testing.constants.TEST_PAYLOAD_B64_GZIP_BYTES
             content['image-info']['created-timestamp'] = autograder.testing.constants.TEST_TIMESTAMP
             content['image-info']['gzip-size-bytes'] = len(autograder.testing.constants.TEST_PAYLOAD_GZIP_BYTES)
             content['image-info']['size-bytes'] = len(autograder.testing.constants.TEST_PAYLOAD_BYTES)
+    elif ('tokens' in endpoint):
+        # Normalize Tokens
+        content = data.get('content', None)
+        if (content is not None):
+            autograder.testing.asserts._noramlize_tokens(content)
 
     # Convert body back to a string.
     body = edq.util.json.dumps(data)

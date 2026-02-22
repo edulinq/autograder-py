@@ -19,10 +19,6 @@ Q2: 0 / 1
    Submission could not be graded.
 
 Total: 0 / 2
-
 Submission could not be graded because of the following error:
----
-Traceback (most recent call last):
-<TRACEBACK>
+<TESTING STACK TRACE>
 ModuleNotFoundError: No module named 'ZZZ'
----

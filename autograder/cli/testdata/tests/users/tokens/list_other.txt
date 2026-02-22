@@ -12,8 +12,8 @@
     "found-user": true,
     "tokens": [
         {
-            "access-time": 0,
-            "creation-time": 0,
+            "access-time": 123456789,
+            "creation-time": 123456789,
             "id": "test-token-id",
             "name": "test",
             "source": "user"

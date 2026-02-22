@@ -168,7 +168,7 @@ class TestCourseAssignmentsSubmit(autograder.testing.server.ServerTest):
                     'message': "",
                     'grading-success': True,
                     'result': 0,
-                    'epilogue': "\nSubmission could not be graded because of the following error:\n---\nTraceback (most recent call last):\n<TRACEBACK>\nModuleNotFoundError: No module named 'ZZZ'\n---",
+                    'epilogue': "Submission could not be graded because of the following error:\n<TESTING STACK TRACE>\nModuleNotFoundError: No module named 'ZZZ'",
                 },
                 None,
             ),
