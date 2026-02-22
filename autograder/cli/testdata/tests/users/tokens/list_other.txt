@@ -1,0 +1,22 @@
+{
+    "cli": "autograder.cli.users.tokens.list",
+    "stdout_assertion_func": "autograder.testing.asserts.equals_clean_tokens",
+    "arguments": [
+        '--user', 'server-admin@test.edulinq.org',
+        '--pass', 'server-admin',
+        '--target-user', 'course-student@test.edulinq.org',
+    ],
+}
+---
+{
+    "found-user": true,
+    "tokens": [
+        {
+            "access-time": 0,
+            "creation-time": 0,
+            "id": "test-token-id",
+            "name": "test",
+            "source": "user"
+        }
+    ]
+}

@@ -120,8 +120,9 @@ def _noramlize_tokens(data: typing.Dict[str, typing.Any]) -> typing.Dict[str, ty
         _normalize_token_info(data['token-info'])
 
     if ('tokens' in data):
-        for token_info in data['tokens']:
-            _normalize_token_info(token_info)
+        if (data['tokens'] is not None):
+            for token_info in data['tokens']:
+                _normalize_token_info(token_info)
 
     return data
 
