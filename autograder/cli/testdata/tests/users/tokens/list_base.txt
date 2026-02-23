@@ -1,6 +1,6 @@
 {
     "cli": "autograder.cli.users.tokens.list",
-    "stdout_assertion_func": "autograder.testing.asserts.equals_clean_tokens",
+    "stdout_assertion_func": "autograder.testing.asserts.content_equals_noramlize_json",
     "arguments": [
         '--user', 'server-user@test.edulinq.org',
         '--pass', 'server-user',
