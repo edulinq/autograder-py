@@ -1,3 +1,4 @@
+import logging
 import os
 import sys
 import typing
@@ -12,6 +13,8 @@ import autograder
 import autograder.api.config
 import autograder.api.constants
 import autograder.error
+
+_logger = logging.getLogger(__name__)
 
 DEFAULT_SOURCE_NAME: str = 'edq-autograder-py'
 DEFAULT_SOURCE_VERSION: str = autograder.__version__
@@ -172,6 +175,8 @@ def send_api_request(
 
         raise autograder.error.APIError(None, message) from ex
 
+    _check_server_version(response_body)
+
     if (not response_body.get(autograder.api.constants.API_RESPONSE_KEY_SUCCESS, False)):
         message = 'Request to the autograder failed.'
         if (autograder.api.constants.API_RESPONSE_KEY_MESSAGE in response_body):
@@ -185,3 +190,32 @@ def send_api_request(
 
     content = response_body[autograder.api.constants.API_RESPONSE_KEY_CONTENT]
     return typing.cast(typing.Dict[str, typing.Any], content)
+
+def _check_server_version(response_body: typing.Dict[str, typing.Any]) -> bool:
+    """ Check if the server version is compatible with the supported version.
+
+    Returns True if a mismatch is detected (and a warning was logged), False otherwise.
+    Major and minor version components are compared; patch differences are ignored.
+    """
+
+    server_version_data = response_body.get(autograder.api.constants.API_RESPONSE_KEY_SERVER_VERSION)
+    if (server_version_data is None):
+        return False
+
+    server_version = server_version_data.get('base-version', None)
+    if (server_version is None):
+        return False
+
+    supported_version = autograder.api.constants.SUPPORTED_SERVER_VERSION
+
+    server_parts = server_version.split('.')
+    supported_parts = supported_version.split('.')
+
+    if (server_parts[:2] == supported_parts[:2]):
+        return False
+
+    _logger.warning((f"Server version ({server_version}) does not match"
+        + f" supported version ({supported_version})."
+        + " Consider updating the autograder package."))
+
+    return True
