@@ -27,10 +27,21 @@ class TestCourseAssignmentsImagesFetch(autograder.testing.server.ServerTest):
                     "bytes": autograder.testing.constants.TEST_PAYLOAD_B64_GZIP_BYTES,
                     "gzip": True,
                     "image-info": {
+                        "built": True,
                         "created-timestamp": autograder.testing.constants.TEST_TIMESTAMP,
                         "gzip-size-bytes": len(autograder.testing.constants.TEST_PAYLOAD_GZIP_BYTES),
                         "name": "autograder.course101.hw0",
                         "size-bytes": len(autograder.testing.constants.TEST_PAYLOAD_BYTES),
+                        "source-info": {
+                            "image": "ghcr.io/edulinq/grader.python:0.1.1.0-alpine",
+                            "max-runtime-secs": 300,
+                            "static-files": [
+                                {
+                                    "path": "grader.py",
+                                    "type": "path"
+                                }
+                            ]
+                        },
                     }
                 },
                 None,

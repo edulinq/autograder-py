@@ -1,5 +1,6 @@
 {
     "cli": "autograder.cli.courses.assignments.images.fetch",
+    "stdout_assertion_func": "autograder.testing.asserts.contains",
     "arguments": [
         '--user', 'server-admin@test.edulinq.org',
         '--pass', 'server-admin',

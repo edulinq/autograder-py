@@ -8,6 +8,7 @@ import sys
 
 import edq.util.dirent
 import edq.util.encoding
+import edq.util.json
 
 import autograder.api.courses.assignments.images.fetch
 import autograder.cli.parser
@@ -18,6 +19,13 @@ def run_cli(args: argparse.Namespace) -> int:
     config = args._config
 
     result = autograder.api.courses.assignments.images.fetch.send(config)
+
+    print(edq.util.json.dumps(result['image-info'], indent = 4))
+    print('---')
+
+    if (not result['image-info']['built']):
+        print("Image has not been built, nothing to write to disk.")
+        return 1
 
     edq.util.dirent.mkdir(args.out_dir)
     out_path = os.path.abspath(os.path.join(args.out_dir, result['image-info']['name'] + '.tar.gz'))
