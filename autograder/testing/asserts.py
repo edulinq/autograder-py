@@ -57,6 +57,13 @@ def content_equals_noramlize_json(test: edq.testing.unittest.BaseTest, expected:
 
     test.assertJSONDictEqual(expected_dict, actual_dict)
 
+def contains(test: edq.testing.unittest.BaseTest, expected: str, actual: str) -> None:
+    """
+    A CLI test assertion function that checks if the expected output is a contained in the actual output.
+    """
+
+    test.assertIn(expected, actual)
+
 def content_equals_noramlize_regrade(test: edq.testing.unittest.BaseTest, expected: str, actual: str) -> None:
     """ A CLI test assertion function for regrade output. """
 

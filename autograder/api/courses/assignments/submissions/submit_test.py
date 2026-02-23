@@ -168,7 +168,7 @@ class TestCourseAssignmentsSubmit(autograder.testing.server.ServerTest):
                     'message': "",
                     'grading-success': True,
                     'result': 0,
-                    'epilogue': "Submission could not be graded because of the following error:\n<TESTING STACK TRACE>\nModuleNotFoundError: No module named 'ZZZ'",
+                    'epilogue': autograder.testing.constants.TEST_CRASH_EPILOGUE,
                 },
                 None,
             ),
@@ -196,6 +196,9 @@ def _clean_response(actual: typing.Tuple[typing.Dict[str, typing.Any], typing.Un
             epilogue = assignment.epilogue
             for (regex, replacement) in edq.testing.asserts.TEXT_NORMALIZATIONS:
                 epilogue = re.sub(regex, replacement, epilogue, flags = re.MULTILINE)
+
+            if ("ModuleNotFoundError: No module named 'ZZZ'" in epilogue):
+                epilogue = autograder.testing.constants.TEST_CRASH_EPILOGUE
 
             data['epilogue'] = epilogue
 

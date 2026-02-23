@@ -39,3 +39,7 @@ TEST_IS_DIRTY: bool = False
 
 TEST_TOKEN_CLEARTEXT: str = 'test-token-cleartext'
 TEST_TOKEN_ID: str = 'test-token-id'
+
+TEST_CRASH_EPILOGUE: str = ("Submission could not be graded because of the following error:"
+        + "\n<TESTING STACK TRACE>"
+        + "\nModuleNotFoundError: No module named 'ZZZ'")

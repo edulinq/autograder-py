@@ -87,9 +87,7 @@ def clean_api_response(response: requests.Response, body: str) -> str:
 
                 # A test case returns a stack trace, normalize it.
                 if ("ModuleNotFoundError: No module named 'ZZZ'" in result.get('epilogue', '')):
-                    result['epilogue'] = ("Submission could not be graded because of the following error:"
-                        + "\n<TESTING STACK TRACE>"
-                        + "\nModuleNotFoundError: No module named 'ZZZ'")
+                    result['epilogue'] = autograder.testing.constants.TEST_CRASH_EPILOGUE
     elif (endpoint == 'system/stacks'):
         # Replace payloads for stack traces completely to make it consistent.
         data['content'] = autograder.testing.model.STACK_TRACE_PAYLOAD
