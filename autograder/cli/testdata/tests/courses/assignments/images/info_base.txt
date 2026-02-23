@@ -1,0 +1,27 @@
+{
+    "cli": "autograder.cli.courses.assignments.images.info",
+    "stdout_assertion_func": "autograder.testing.asserts.equals_clean_imageinfo",
+    "arguments": [
+        '--user', 'server-admin@test.edulinq.org',
+        '--pass', 'server-admin',
+        '--course', 'course101',
+        '--assignment', 'hw0',
+    ],
+}
+---
+{
+    "built": true,
+    "created-timestamp": 123456789,
+    "name": "autograder.course101.hw0",
+    "size-bytes": 14,
+    "source-info": {
+        "image": "ghcr.io/edulinq/grader.python:0.1.1.0-alpine",
+        "max-runtime-secs": 300,
+        "static-files": [
+            {
+                "path": "grader.py",
+                "type": "path"
+            }
+        ]
+    }
+}

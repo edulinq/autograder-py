@@ -141,6 +141,21 @@ def _normalize_token_info(token_info: typing.Union[typing.Dict[str, typing.Any],
     token_info['creation-time'] = autograder.testing.constants.TEST_TIMESTAMP
     token_info['id'] = autograder.testing.constants.TEST_TOKEN_ID
 
+def equals_clean_imageinfo(test: edq.testing.unittest.BaseTest, expected: str, actual: str) -> None:
+    """
+    A CLI test assertion function for JSON image info.
+    """
+
+    # Convert both to dicts.
+    expected_dict = edq.util.json.loads(expected, strict = True)
+    actual_dict = edq.util.json.loads(actual, strict = True)
+
+    for content in [expected_dict, actual_dict]:
+        content['created-timestamp'] = autograder.testing.constants.TEST_TIMESTAMP
+        content['size-bytes'] = len(autograder.testing.constants.TEST_PAYLOAD_BYTES)
+
+    test.assertJSONDictEqual(expected_dict, actual_dict)
+
 def equals_api_description(test: edq.testing.unittest.BaseTest, expected: str, actual: str) -> None:
     """ A CLI test assertion function for the API description (read from a submodule). """
 

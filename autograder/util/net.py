@@ -99,6 +99,11 @@ def clean_api_response(response: requests.Response, body: str) -> str:
             content['image-info']['created-timestamp'] = autograder.testing.constants.TEST_TIMESTAMP
             content['image-info']['gzip-size-bytes'] = len(autograder.testing.constants.TEST_PAYLOAD_GZIP_BYTES)
             content['image-info']['size-bytes'] = len(autograder.testing.constants.TEST_PAYLOAD_BYTES)
+    elif (endpoint == 'courses/assignments/images/info'):
+        content = data.get('content', None)
+        if (content is not None):
+            content['image-info']['created-timestamp'] = autograder.testing.constants.TEST_TIMESTAMP
+            content['image-info']['size-bytes'] = len(autograder.testing.constants.TEST_PAYLOAD_BYTES)
     elif ('tokens' in endpoint):
         # Normalize Tokens
         content = data.get('content', None)
