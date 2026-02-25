@@ -34,3 +34,6 @@ class CourseSetupWizard(autograder.wizard.model.BaseWizard):
 
     def _intro(self) -> None:
         self.write("Welcome to the course setup wizard.")
+        self.write("Use :? or :help to see all available commands.")
+        self.write("The exit, use `:quit` or Ctrl-C twice.")
+        self.write('')

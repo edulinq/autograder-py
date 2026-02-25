@@ -143,13 +143,46 @@ class BaseWizard(abc.ABC):
         self._indent: str = DEFAULT_INDENT
         """ The suggested indentation to use. """
 
+        self._has_read_line: bool = True
+        """
+        Indicates that a line has been read since the last time a Ctrl-C was seen.
+        Intentionally starts at true to make the initial case consistent.
+        """
+
     def run(self) -> None:
         """ Run the wizard. """
 
         self._intro()
 
-        current_step_index: typing.Union[int, None] = self._transition(None)
         exit_early = False
+        current_step_index: typing.Union[int, None] = self._transition(None)
+
+        while ((current_step_index is not None) and (not exit_early)):
+            try:
+                (current_step_index, exit_early) = self._run_loop(current_step_index)
+            except KeyboardInterrupt:
+                # If this is the first Ctrl-C since the last input, just clear the line and wait.
+                # Otherwise, exit.
+                self.write('')
+
+                if (not self._has_read_line):
+                    self.write("Caught keyboard interrupt, exiting.")
+                    return
+
+                self.write("Caught keyboard interrupt, press once more to exit.")
+                self._has_read_line = False
+
+        if (exit_early):
+            self._early_exit()
+        else:
+            self._outro()
+
+    def _run_loop(self, current_step_index: typing.Union[int, None]) -> typing.Tuple[typing.Union[int, None], bool]:
+        """
+        The main control loop for the wizard.
+
+        Returns the current step index and whether or not the wizard should exit early.
+        """
 
         while (current_step_index is not None):
             current_step = self._steps[current_step_index]
@@ -157,8 +190,7 @@ class BaseWizard(abc.ABC):
             # Get the next line of input.
             line = self._read_line()
             if (line is None):
-                exit_early = True
-                break
+                return current_step_index, True
 
             # Ignore empty lines.
             if (len(line) == 0):
@@ -177,10 +209,7 @@ class BaseWizard(abc.ABC):
             # The step ran and is complete, transition to the next step.
             current_step_index = self._transition(current_step_index)
 
-        if (exit_early):
-            self._early_exit()
-        else:
-            self._outro()
+        return current_step_index, False
 
     def write(self, text: str, newline: bool = True) -> None:
         """
@@ -249,7 +278,7 @@ class BaseWizard(abc.ABC):
 
         return True
 
-    def _read_line(self) -> typing.Union[str, None]:
+    def _read_line(self, prompt: bool = False) -> typing.Union[str, None]:
         """
         Read the next line of input.
         Return None if there is no next line.
@@ -257,7 +286,10 @@ class BaseWizard(abc.ABC):
 
         # TEST - Check EOF?
 
-        return self._reader.readline()
+        line = self._reader.readline().strip()
+        self._has_read_line = True
+
+        return line
 
     def _transition(self, current_step_index: typing.Union[int, None]) -> typing.Union[int, None]:
         """
