@@ -7,6 +7,7 @@ import typing
 
 DEFAULT_COMMAND_PREFIX: str = ':'
 DEFAULT_INDENT: str = '    '
+DEFAULT_PROMPT_TEXT: str = '$ '
 
 class BaseStep(abc.ABC):
     """
@@ -81,11 +82,7 @@ class BaseWizard(abc.ABC):
     Specifically, the wizard's FSM must be linear and go through states sequentially.
     """
 
-    # TEST - Ctrl-C -- If things on line, clear. Else, exit.
-
     # TEST - Show status of each step? -- status_line()
-
-    # TEST - Prompt (like shell prompt).
 
     def __init__(self,
             steps: typing.List[BaseStep],
@@ -95,6 +92,7 @@ class BaseWizard(abc.ABC):
             reader: typing.Union[io.TextIOBase, None] = None,
             writer: typing.Union[io.TextIOBase, None] = None,
             indent: str = DEFAULT_INDENT,
+            prompt_text: str = DEFAULT_PROMPT_TEXT,
             **kwargs: typing.Any) -> None:
         if (reader is None):
             reader = typing.cast(io.TextIOBase, sys.stdin)
@@ -142,6 +140,9 @@ class BaseWizard(abc.ABC):
 
         self._indent: str = DEFAULT_INDENT
         """ The suggested indentation to use. """
+
+        self._prompt_text: str = prompt_text
+        """ The text to use to indicate a prompt. """
 
         self._has_read_line: bool = True
         """
@@ -211,7 +212,7 @@ class BaseWizard(abc.ABC):
 
         return current_step_index, False
 
-    def write(self, text: str, newline: bool = True) -> None:
+    def write(self, text: str, newline: bool = True, flush: bool = False) -> None:
         """
         Write text to the wizard's writer.
         """
@@ -221,7 +222,10 @@ class BaseWizard(abc.ABC):
         if (newline):
             self._writer.write(os.linesep)
 
-    def prompt(self, text: str, check_command: bool = True) -> str:
+        if (flush):
+            self._writer.flush()
+
+    def get_input(self, text: str, check_command: bool = True) -> str:
         """
         Prompt for a response and return the result.
         """
@@ -229,7 +233,7 @@ class BaseWizard(abc.ABC):
         # TEST
         return ''
 
-    def prompt_with_choices(self, text: str, choices: typing.List[str],
+    def get_input_with_choices(self, text: str, choices: typing.List[str],
             reprompt: bool = True,
             normalize_case: bool = True, check_command: bool = True) -> str:
         """
@@ -278,13 +282,16 @@ class BaseWizard(abc.ABC):
 
         return True
 
-    def _read_line(self, prompt: bool = False) -> typing.Union[str, None]:
+    def _read_line(self, prompt: bool = True) -> typing.Union[str, None]:
         """
         Read the next line of input.
         Return None if there is no next line.
         """
 
         # TEST - Check EOF?
+
+        if (prompt and self._reader.isatty()):
+            self.write(self._prompt_text, newline = False, flush = True)
 
         line = self._reader.readline().strip()
         self._has_read_line = True
