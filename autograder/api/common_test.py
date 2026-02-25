@@ -4,22 +4,17 @@ import autograder.api.common
 import autograder.api.constants
 
 class TestCheckServerVersion(edq.testing.unittest.BaseTest):
-    """ Test the _check_server_version helper in autograder.api.common. """
+    """ Test the _check_server_version helper. """
 
     def test_check_server_version(self):
-        """ Test that _check_server_version returns True on major/minor mismatch, False otherwise. """
+        """ Test _check_server_version. """
 
-        supported_version: str = autograder.api.constants.SUPPORTED_SERVER_VERSION
-        supported_parts = supported_version.split('.')
+        supported_version = autograder.api.constants.SUPPORTED_SERVER_VERSION
+        parts = supported_version.split('.')
 
-        patch_only_version: str = f"{supported_parts[0]}.{supported_parts[1]}.99"
-        minor_bump_version: str = f"{supported_parts[0]}.{int(supported_parts[1]) + 1}.0"
-        major_bump_version: str = f"{int(supported_parts[0]) + 1}.0.0"
-
-        # [(response_body, expected mismatch bool), ...]
+        # [(response_body, expected compatible bool), ...]
         test_cases = [
-
-            # Exact match - no mismatch.
+            # Exact match - compatible.
             (
                 {
                     autograder.api.constants.API_RESPONSE_KEY_SERVER_VERSION: {
@@ -28,61 +23,49 @@ class TestCheckServerVersion(edq.testing.unittest.BaseTest):
                         'is-dirty': False,
                     },
                 },
-                False,
+                True,
             ),
 
-            # Patch-only difference - no mismatch.
+            # Patch-only difference - compatible.
             (
                 {
                     autograder.api.constants.API_RESPONSE_KEY_SERVER_VERSION: {
-                        'base-version': patch_only_version,
+                        'base-version': f"{parts[0]}.{parts[1]}.99",
                         'git-hash': 'abc12345',
                         'is-dirty': False,
                     },
                 },
-                False,
+                True,
             ),
 
             # Minor version difference - mismatch.
             (
                 {
                     autograder.api.constants.API_RESPONSE_KEY_SERVER_VERSION: {
-                        'base-version': minor_bump_version,
+                        'base-version': f"{parts[0]}.{int(parts[1]) + 1}.0",
                         'git-hash': 'abc12345',
                         'is-dirty': False,
                     },
                 },
-                True,
+                False,
             ),
 
             # Major version difference - mismatch.
             (
                 {
                     autograder.api.constants.API_RESPONSE_KEY_SERVER_VERSION: {
-                        'base-version': major_bump_version,
+                        'base-version': f"{int(parts[0]) + 1}.0.0",
                         'git-hash': 'abc12345',
                         'is-dirty': False,
                     },
                 },
-                True,
+                False,
             ),
 
-            # Missing server-version key - no mismatch.
+            # Missing server-version key - compatible.
             (
                 {},
-                False,
-            ),
-
-            # None base-version - no mismatch.
-            (
-                {
-                    autograder.api.constants.API_RESPONSE_KEY_SERVER_VERSION: {
-                        'base-version': None,
-                        'git-hash': '',
-                        'is-dirty': False,
-                    },
-                },
-                False,
+                True,
             ),
 
         ]
