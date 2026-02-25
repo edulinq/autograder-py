@@ -63,14 +63,15 @@ def get_parser(
 
     parser.register_callbacks('autograder-py', None, _post_parse)
 
-    parser.add_argument('--testing-mode', dest = 'testing_mode',
-        action = 'store_true', default = False,
-        help = 'Run as if a test is being run (default: %(default)s).')
-
     # Add arguments according to the given API params.
     group = parser.add_argument_group('command-specific options')
     for api_param in api_params:
         api_param.add_to_parser(group)
+
+    group = parser.add_argument_group('testing options')
+    group.add_argument('--testing-mode', dest = 'testing_mode',
+        action = 'store_true', default = False,
+        help = 'Run as if a test is being run (default: %(default)s).')
 
     # Ensure that responses are cleaned as API responses.
     if (include_net):
