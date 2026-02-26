@@ -161,6 +161,11 @@ class BaseWizard(abc.ABC):
         while ((current_step_index is not None) and (not exit_early)):
             try:
                 (current_step_index, exit_early) = self._run_loop(current_step_index)
+            except EOFError:
+                # If we got an EOF (or Ctrl-D), just exit.
+                self.write('')
+                self.write("Reached end of input, exiting.")
+                return
             except KeyboardInterrupt:
                 # If this is the first Ctrl-C since the last input, just clear the line and wait.
                 # Otherwise, exit.
@@ -288,15 +293,18 @@ class BaseWizard(abc.ABC):
         Return None if there is no next line.
         """
 
-        # TEST - Check EOF?
-
         if (prompt and self._reader.isatty()):
             self.write(self._prompt_text, newline = False, flush = True)
 
-        line = self._reader.readline().strip()
-        self._has_read_line = True
+        raw_line = self._reader.readline()
 
-        return line
+        # On an EOF/Ctrl-D the returned string will be empty.
+        # On just an enter, it will be at least 1 (because of the newline).
+        if (len(raw_line) == 0):
+            raise EOFError('EOF on reading input line.')
+
+        self._has_read_line = True
+        return raw_line.strip()
 
     def _transition(self, current_step_index: typing.Union[int, None]) -> typing.Union[int, None]:
         """
