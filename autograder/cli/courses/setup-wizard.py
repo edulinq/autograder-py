@@ -13,7 +13,9 @@ import autograder.cli.parser
 def run_cli(args: argparse.Namespace) -> int:
     """ Run the CLI. """
 
-    wizard = autograder.wizard.coursesetup.wizard.CourseSetupWizard()
+    config = args._config
+
+    wizard = autograder.wizard.coursesetup.wizard.CourseSetupWizard(config)
     wizard.run()
 
     return 0

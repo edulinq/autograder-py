@@ -20,11 +20,20 @@ class BaseStep(abc.ABC):
     """
 
     def __init__(self, name: str) -> None:
+        name = name.strip()
+        if (len(name) == 0):
+            raise ValueError('Step name must be non-empty.')
+
         self.name: str = name
         """ A name to refer to this step. """
 
-    def help(self, wizard: 'BaseWizard') -> None:
-        """ Called when the user explicitly requests help on this step. """
+    def get_prompt(self) -> typing.Union[str, None]:
+        """
+        Get the text prompt to use.
+        Falls back to the default wizard prompt.
+        """
+
+        return None
 
     def intro(self, wizard: 'BaseWizard') -> None:
         """ Called when transitioning into this step. """
@@ -81,8 +90,6 @@ class BaseWizard(abc.ABC):
     See: https://en.wikipedia.org/wiki/Finite-state_machine .
     Specifically, the wizard's FSM must be linear and go through states sequentially.
     """
-
-    # TEST - Show status of each step? -- status_line()
 
     def __init__(self,
             steps: typing.List[BaseStep],
@@ -194,13 +201,9 @@ class BaseWizard(abc.ABC):
             current_step = self._steps[current_step_index]
 
             # Get the next line of input.
-            line = self._read_line()
+            line = self._read_line(step_prompt = current_step.get_prompt())
             if (line is None):
                 return current_step_index, True
-
-            # Ignore empty lines.
-            if (len(line) == 0):
-                continue
 
             # Check if the line is a command.
             line_consumed = self._check_and_run_command(line)
@@ -287,14 +290,21 @@ class BaseWizard(abc.ABC):
 
         return True
 
-    def _read_line(self, prompt: bool = True) -> typing.Union[str, None]:
+    def _read_line(self,
+            display_prompt: bool = True,
+            step_prompt: typing.Union[str, None] = None,
+            ) -> typing.Union[str, None]:
         """
         Read the next line of input.
         Return None if there is no next line.
         """
 
-        if (prompt and self._reader.isatty()):
-            self.write(self._prompt_text, newline = False, flush = True)
+        if (display_prompt and self._reader.isatty()):
+            prompt = step_prompt
+            if (prompt is None):
+                prompt = self._prompt_text
+
+            self.write(prompt, newline = False, flush = True)
 
         raw_line = self._reader.readline()
 
@@ -343,6 +353,22 @@ class BaseWizard(abc.ABC):
         for (keys, command) in sorted(self._commands.items()):
             keys_text = ', '.join([f"{self._command_prefix}{key}" for key in keys])
             lines.append(f"{self._indent}{keys_text} -- {command.help_line}")
+
+        self.write(os.linesep.join(lines))
+
+    def _status(self) -> None:
+        """ Called when the user explicitly requests the status of this wizard. """
+
+        lines = [
+            'Steps:',
+        ]
+
+        for (i, step) in enumerate(self._steps):
+            status = step.status_line()
+            if (status != ''):
+                status = f" -- {status}"
+
+            lines.append(f"{self._indent}{i + 1}: {step.name}{status}")
 
         self.write(os.linesep.join(lines))
 
