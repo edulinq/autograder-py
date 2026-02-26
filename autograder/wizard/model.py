@@ -342,7 +342,7 @@ class BaseWizard(abc.ABC):
 
         for (keys, command) in sorted(self._commands.items()):
             keys_text = ', '.join([f"{self._command_prefix}{key}" for key in keys])
-            lines.append(f"{self._indent}{self._command_prefix}{keys_text} -- {command.help_line}")
+            lines.append(f"{self._indent}{keys_text} -- {command.help_line}")
 
         self.write(os.linesep.join(lines))
 
