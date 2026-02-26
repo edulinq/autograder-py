@@ -10,7 +10,7 @@ class TestCheckServerVersion(edq.testing.unittest.BaseTest):
         """ Test _check_server_version. """
 
         supported_version = autograder.api.constants.SUPPORTED_SERVER_VERSION
-        parts = supported_version.split('.')
+        (major, minor, patch) = supported_version.split('.')
 
         # [(response_body, expected compatible bool), ...]
         test_cases = [
@@ -30,7 +30,7 @@ class TestCheckServerVersion(edq.testing.unittest.BaseTest):
             (
                 {
                     autograder.api.constants.API_RESPONSE_KEY_SERVER_VERSION: {
-                        'base-version': f"{parts[0]}.{parts[1]}.99",
+                        'base-version': f"{major}.{minor}.99",
                         'git-hash': 'abc12345',
                         'is-dirty': False,
                     },
@@ -42,7 +42,7 @@ class TestCheckServerVersion(edq.testing.unittest.BaseTest):
             (
                 {
                     autograder.api.constants.API_RESPONSE_KEY_SERVER_VERSION: {
-                        'base-version': f"{parts[0]}.{int(parts[1]) + 1}.0",
+                        'base-version': f"{major}.{int(minor) + 1}.0",
                         'git-hash': 'abc12345',
                         'is-dirty': False,
                     },
@@ -54,18 +54,12 @@ class TestCheckServerVersion(edq.testing.unittest.BaseTest):
             (
                 {
                     autograder.api.constants.API_RESPONSE_KEY_SERVER_VERSION: {
-                        'base-version': f"{int(parts[0]) + 1}.0.0",
+                        'base-version': f"{int(major) + 1}.0.0",
                         'git-hash': 'abc12345',
                         'is-dirty': False,
                     },
                 },
                 False,
-            ),
-
-            # Missing server-version key - compatible.
-            (
-                {},
-                True,
             ),
 
         ]

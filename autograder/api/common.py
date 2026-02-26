@@ -202,12 +202,13 @@ def _check_server_version(response_body: typing.Dict[str, typing.Any]) -> bool:
 
     global _version_mismatch_logged  # pylint: disable=global-statement
 
-    server_version_data = response_body.get(autograder.api.constants.API_RESPONSE_KEY_SERVER_VERSION)
-    if (server_version_data is None):
-        return True
+    if (_version_mismatch_logged):
+        return False
 
-    server_version = server_version_data['base-version']
+    server_version = response_body[autograder.api.constants.API_RESPONSE_KEY_SERVER_VERSION]['base-version']
     supported_version = autograder.api.constants.SUPPORTED_SERVER_VERSION
+
+    _logger.debug(f"Server version: {server_version}, supported version: {supported_version}.")
 
     server_parts = server_version.split('.')
     supported_parts = supported_version.split('.')
@@ -215,14 +216,15 @@ def _check_server_version(response_body: typing.Dict[str, typing.Any]) -> bool:
     if (server_parts[:2] == supported_parts[:2]):
         return True
 
-    if (not _version_mismatch_logged):
-        message = f"Server version ({server_version}) does not match supported version ({supported_version}). Consider updating the autograder package."
+    if (server_parts[0] != supported_parts[0]):
+        is_newer = int(server_parts[0]) > int(supported_parts[0])
+        log_fn = _logger.error
+    else:
+        is_newer = int(server_parts[1]) > int(supported_parts[1])
+        log_fn = _logger.warning
 
-        if (server_parts[0] != supported_parts[0]):
-            _logger.error(message)
-        else:
-            _logger.warning(message)
+    direction = 'newer' if is_newer else 'older'
+    log_fn(f"Server version ({server_version}) is {direction} than supported version ({supported_version}). Consider updating the autograder package.")
 
-        _version_mismatch_logged = True
-
+    _version_mismatch_logged = True
     return False
