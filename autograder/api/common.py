@@ -208,23 +208,18 @@ def _check_server_version(response_body: typing.Dict[str, typing.Any]) -> bool:
     server_version = response_body[autograder.api.constants.API_RESPONSE_KEY_SERVER_VERSION]['base-version']
     supported_version = autograder.api.constants.SUPPORTED_SERVER_VERSION
 
-    _logger.debug(f"Server version: {server_version}, supported version: {supported_version}.")
-
     server_parts = server_version.split('.')
     supported_parts = supported_version.split('.')
 
     if (server_parts[:2] == supported_parts[:2]):
         return True
 
-    if (server_parts[0] != supported_parts[0]):
-        is_newer = int(server_parts[0]) > int(supported_parts[0])
-        log_fn = _logger.error
-    else:
-        is_newer = int(server_parts[1]) > int(supported_parts[1])
-        log_fn = _logger.warning
+    _logger.debug(f"Autograder server version: {server_version}, supported version: {supported_version}.")
 
-    direction = 'newer' if is_newer else 'older'
-    log_fn(f"Server version ({server_version}) is {direction} than supported version ({supported_version}). Consider updating the autograder package.")
+    if (server_parts[0] != supported_parts[0]):
+        _logger.error(f"Autograder server major version mismatch: server version ({server_version}) does not match supported version ({supported_version}).")
+    else:
+        _logger.warning(f"Autograder server minor version mismatch: server version ({server_version}) does not match supported version ({supported_version}).")
 
     _version_mismatch_logged = True
     return False

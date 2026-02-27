@@ -12,20 +12,29 @@ function main() {
         exit 1
     fi
 
-    set -e
     trap exit SIGINT
 
     cd "${ROOT_DIR}"
 
-    local api_version
-    local testdata_version
+    readonly API_VERSION_FILE="${ROOT_DIR}/autograder/api/version.json"
+    readonly TESTDATA_VERSION_FILE="${ROOT_DIR}/testdata/autograder-testdata/autograder-server/resources/VERSION.json"
 
-    api_version=$(python3 -c "import json; print(json.load(open('autograder/api/version.json'))['base-version'])")
-    testdata_version=$(python3 -c "import json; print(json.load(open('testdata/autograder-testdata/autograder-server/resources/VERSION.json'))['base-version'])")
+    if [[ ! -f "${API_VERSION_FILE}" ]]; then
+        echo "ERROR: API version file not found: ${API_VERSION_FILE}"
+        exit 2
+    fi
+
+    if [[ ! -f "${TESTDATA_VERSION_FILE}" ]]; then
+        echo "ERROR: Testdata version file not found: ${TESTDATA_VERSION_FILE}"
+        exit 3
+    fi
+
+    local api_version=$(python3 -c "import edq.util.json; print(edq.util.json.load_path('${API_VERSION_FILE}')['base-version'])")
+    local testdata_version=$(python3 -c "import edq.util.json; print(edq.util.json.load_path('${TESTDATA_VERSION_FILE}')['base-version'])")
 
     if [[ "${api_version}" != "${testdata_version}" ]]; then
         echo "ERROR: autograder/api/version.json (${api_version}) does not match testdata server VERSION.json (${testdata_version})."
-        return 1
+        exit 4
     fi
 
     return 0
