@@ -15,7 +15,7 @@ def run_cli(args: argparse.Namespace) -> int:
 
     config = args._config
 
-    result = autograder.api.metadata.heartbeat.send(config)
+    result = autograder.api.metadata.heartbeat.send(config, exit_on_error = True)
     print(edq.util.json.dumps(result, indent = 4))
 
     return 0

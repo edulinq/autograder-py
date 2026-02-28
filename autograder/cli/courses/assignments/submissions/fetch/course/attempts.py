@@ -14,7 +14,7 @@ def run_cli(args: argparse.Namespace) -> int:
 
     config = args._config
 
-    grading_results = autograder.api.courses.assignments.submissions.fetch.course.attempts.send(config)
+    grading_results = autograder.api.courses.assignments.submissions.fetch.course.attempts.send(config, exit_on_error = True)
 
     count = 0
     for grading_result in grading_results.values():

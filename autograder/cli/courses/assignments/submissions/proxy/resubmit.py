@@ -14,7 +14,7 @@ def run_cli(args: argparse.Namespace) -> int:
 
     config = args._config
 
-    api_response, grading_result = autograder.api.courses.assignments.submissions.proxy.resubmit.send(config)
+    api_response, grading_result = autograder.api.courses.assignments.submissions.proxy.resubmit.send(config, exit_on_error = True)
     return autograder.cli.courses.assignments.submissions.common.display_grading_result(api_response, grading_result,
             include_found_user = True,
             include_found_submission = True)
