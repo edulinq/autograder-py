@@ -46,11 +46,6 @@ class CourseSetupWizard(autograder.wizard.model.BaseWizard):
     A wizard for setting up an autograder course.
     """
 
-    COMMANDS: typing.Dict[typing.Tuple[str, ...], autograder.wizard.model.BaseCommand] = {
-        ('?', 'h', 'help'): autograder.wizard.commands.Help(),
-        ('s', 'status'): autograder.wizard.commands.Status(),
-    }
-
     def __init__(self, config: typing.Dict[str, typing.Any]):
         self.data: SetupData = SetupData(**config)
         """ The common data for this wizard. """
@@ -68,7 +63,7 @@ class CourseSetupWizard(autograder.wizard.model.BaseWizard):
 
         super().__init__(
             steps = steps,
-            commands = CourseSetupWizard.COMMANDS,
+            commands = autograder.wizard.commands.COMMON_COMMANDS,
         )
 
     def _intro(self) -> None:

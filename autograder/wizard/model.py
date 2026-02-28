@@ -5,6 +5,8 @@ import re
 import sys
 import typing
 
+import autograder.util.terminal
+
 DEFAULT_COMMAND_PREFIX: str = ':'
 DEFAULT_INDENT: str = '    '
 DEFAULT_PROMPT_TEXT: str = '$ '
@@ -371,6 +373,11 @@ class BaseWizard(abc.ABC):
             lines.append(f"{self._indent}{i + 1}: {step.name}{status}")
 
         self.write(os.linesep.join(lines))
+
+    def _clear(self) -> None:
+        """ Called when the user explicitly requests to clear the wizard screen. """
+
+        autograder.util.terminal.clear_screen(self._writer)
 
     def _outro(self) -> None:
         """
