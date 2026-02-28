@@ -17,7 +17,7 @@ class Clear(autograder.wizard.model.BaseCommand):
         super().__init__("Clear the screen.")
 
     def run(self, wizard: autograder.wizard.model.BaseWizard, argument: typing.Union[str, None]) -> None:
-        wizard._clear()
+        wizard.clear()
 
 class Help(autograder.wizard.model.BaseCommand):
     """ Output help for this wizard. """
@@ -26,7 +26,7 @@ class Help(autograder.wizard.model.BaseCommand):
         super().__init__("Output help information.")
 
     def run(self, wizard: autograder.wizard.model.BaseWizard, argument: typing.Union[str, None]) -> None:
-        wizard._help()
+        wizard.help()
 
 class Status(autograder.wizard.model.BaseCommand):
     """ Output status for this wizard. """
@@ -35,7 +35,7 @@ class Status(autograder.wizard.model.BaseCommand):
         super().__init__("Output the status of each step.")
 
     def run(self, wizard: autograder.wizard.model.BaseWizard, argument: typing.Union[str, None]) -> None:
-        wizard._status()
+        wizard.status()
 
 COMMON_COMMANDS: typing.Dict[typing.Tuple[str, ...], autograder.wizard.model.BaseCommand] = {
     ('?', 'h', 'help'): Help(),

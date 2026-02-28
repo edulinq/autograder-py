@@ -106,7 +106,7 @@ class BaseWizard(abc.ABC):
         if (reader is None):
             reader = typing.cast(io.TextIOBase, sys.stdin)
 
-        self._reader: io.TextIOBase = reader
+        self.reader: io.TextIOBase = reader
         """
         The input stream to read from.
         Defaults to stdin.
@@ -115,7 +115,7 @@ class BaseWizard(abc.ABC):
         if (writer is None):
             writer = typing.cast(io.TextIOBase, sys.stdout)
 
-        self._writer: io.TextIOBase = writer
+        self.writer: io.TextIOBase = writer
         """
         The input stream to write to.
         Defaults to stdout.
@@ -124,12 +124,12 @@ class BaseWizard(abc.ABC):
         if ((steps is None) or (len(steps) == 0)):
             raise ValueError("Wizards need at least one step.")
 
-        self._steps: typing.List[BaseStep] = steps
+        self.steps: typing.List[BaseStep] = steps
 
         if (commands is None):
             commands = {}
 
-        self._commands: typing.Dict[typing.Tuple[str, ...], BaseCommand] = commands
+        self.commands: typing.Dict[typing.Tuple[str, ...], BaseCommand] = commands
         """
         The commands to use in this wizard.
         Commands can be supplied at any step in the wizard.
@@ -138,22 +138,22 @@ class BaseWizard(abc.ABC):
         The tuple of keys allow for command aliases (e.g. ('?', 'h', 'help')).
         """
 
-        self._help_command_key: typing.Union[str, None] = help_command_key
+        self.help_command_key: typing.Union[str, None] = help_command_key
         """
         The key for the help command (if one exists).
         This can be used to help prompt the user when they make a mistake.
         """
 
-        self._command_prefix: str = command_prefix
+        self.command_prefix: str = command_prefix
         """ The prefix to identify a command line. """
 
-        self._indent: str = DEFAULT_INDENT
+        self.indent: str = DEFAULT_INDENT
         """ The suggested indentation to use. """
 
-        self._prompt_text: str = prompt_text
+        self.prompt_text: str = prompt_text
         """ The text to use to indicate a prompt. """
 
-        self._has_read_line: bool = True
+        self.has_read_line: bool = True
         """
         Indicates that a line has been read since the last time a Ctrl-C was seen.
         Intentionally starts at true to make the initial case consistent.
@@ -162,7 +162,7 @@ class BaseWizard(abc.ABC):
     def run(self) -> None:
         """ Run the wizard. """
 
-        self._intro()
+        self.intro()
 
         exit_early = False
         current_step_index: typing.Union[int, None] = self._transition(None)
@@ -180,17 +180,17 @@ class BaseWizard(abc.ABC):
                 # Otherwise, exit.
                 self.write('')
 
-                if (not self._has_read_line):
+                if (not self.has_read_line):
                     self.write("Caught keyboard interrupt, exiting.")
                     return
 
                 self.write("Caught keyboard interrupt, press once more to exit.")
-                self._has_read_line = False
+                self.has_read_line = False
 
         if (exit_early):
-            self._early_exit()
+            self.early_exit()
         else:
-            self._outro()
+            self.outro()
 
     def _run_loop(self, current_step_index: typing.Union[int, None]) -> typing.Tuple[typing.Union[int, None], bool]:
         """
@@ -200,15 +200,15 @@ class BaseWizard(abc.ABC):
         """
 
         while (current_step_index is not None):
-            current_step = self._steps[current_step_index]
+            current_step = self.steps[current_step_index]
 
             # Get the next line of input.
-            line = self._read_line(step_prompt = current_step.get_prompt())
+            line = self.read_line(step_prompt = current_step.get_prompt())
             if (line is None):
                 return current_step_index, True
 
             # Check if the line is a command.
-            line_consumed = self._check_and_run_command(line)
+            line_consumed = self.check_and_run_command(line)
             if (line_consumed):
                 continue
 
@@ -227,13 +227,13 @@ class BaseWizard(abc.ABC):
         Write text to the wizard's writer.
         """
 
-        self._writer.write(text)
+        self.writer.write(text)
 
         if (newline):
-            self._writer.write(os.linesep)
+            self.writer.write(os.linesep)
 
         if (flush):
-            self._writer.flush()
+            self.writer.flush()
 
     def get_input(self, text: str, check_command: bool = True) -> str:
         """
@@ -253,21 +253,21 @@ class BaseWizard(abc.ABC):
         # TEST
         return ''
 
-    def _check_and_run_command(self, line: str) -> bool:
+    def check_and_run_command(self, line: str) -> bool:
         """
         Check if the line looks like a command, and run the associated command.
         Return true if the given line should be consumed (whether or not the command ran successfully).
         """
 
         line = line.strip()
-        if (not line.startswith(self._command_prefix)):
+        if (not line.startswith(self.command_prefix)):
             return False
 
         parts = re.split(r'\s+', line, maxsplit = 1)
 
-        command_key = parts[0].removeprefix(self._command_prefix)
+        command_key = parts[0].removeprefix(self.command_prefix)
         if (len(command_key) == 0):
-            self.write(f"ERROR: No command was provided after command prefix ('{self._command_prefix}').")
+            self.write(f"ERROR: No command was provided after command prefix ('{self.command_prefix}').")
             return True
 
         argument = None
@@ -275,7 +275,7 @@ class BaseWizard(abc.ABC):
             argument = parts[1]
 
         target_command = None
-        for (keys, command) in self._commands.items():
+        for (keys, command) in self.commands.items():
             if (command_key in keys):
                 target_command = command
                 break
@@ -283,8 +283,8 @@ class BaseWizard(abc.ABC):
         if (target_command is None):
             self.write(f"ERROR: Command not found: '{command_key}'.")
 
-            if (self._help_command_key is not None):
-                self.write(f"{self._indent}Use `{self._command_prefix}{self._help_command_key}` to see the available commands.")
+            if (self.help_command_key is not None):
+                self.write(f"{self.indent}Use `{self.command_prefix}{self.help_command_key}` to see the available commands.")
 
             return True
 
@@ -292,7 +292,7 @@ class BaseWizard(abc.ABC):
 
         return True
 
-    def _read_line(self,
+    def read_line(self,
             display_prompt: bool = True,
             step_prompt: typing.Union[str, None] = None,
             ) -> typing.Union[str, None]:
@@ -301,21 +301,21 @@ class BaseWizard(abc.ABC):
         Return None if there is no next line.
         """
 
-        if (display_prompt and self._reader.isatty()):
+        if (display_prompt and self.reader.isatty()):
             prompt = step_prompt
             if (prompt is None):
-                prompt = self._prompt_text
+                prompt = self.prompt_text
 
             self.write(prompt, newline = False, flush = True)
 
-        raw_line = self._reader.readline()
+        raw_line = self.reader.readline()
 
         # On an EOF/Ctrl-D the returned string will be empty.
         # On just an enter, it will be at least 1 (because of the newline).
         if (len(raw_line) == 0):
             raise EOFError('EOF on reading input line.')
 
-        self._has_read_line = True
+        self.has_read_line = True
         return raw_line.strip()
 
     def _transition(self, current_step_index: typing.Union[int, None]) -> typing.Union[int, None]:
@@ -330,65 +330,65 @@ class BaseWizard(abc.ABC):
             return 0
 
         # Transition out of the current step.
-        self._steps[current_step_index].outro(self)
+        self.steps[current_step_index].outro(self)
 
         current_step_index += 1
 
-        if (current_step_index >= len(self._steps)):
+        if (current_step_index >= len(self.steps)):
             return None
 
         # Transition into the new step.
-        self._steps[current_step_index].intro(self)
+        self.steps[current_step_index].intro(self)
 
         return current_step_index
 
-    def _intro(self) -> None:
+    def intro(self) -> None:
         """ Called before transitioning to the first step. """
 
-    def _help(self) -> None:
+    def help(self) -> None:
         """ Called when the user explicitly requests help. """
 
         lines = [
             'Available Commands:',
         ]
 
-        for (keys, command) in sorted(self._commands.items()):
-            keys_text = ', '.join([f"{self._command_prefix}{key}" for key in keys])
-            lines.append(f"{self._indent}{keys_text} -- {command.help_line}")
+        for (keys, command) in sorted(self.commands.items()):
+            keys_text = ', '.join([f"{self.command_prefix}{key}" for key in keys])
+            lines.append(f"{self.indent}{keys_text} -- {command.help_line}")
 
         self.write(os.linesep.join(lines))
 
-    def _status(self) -> None:
+    def status(self) -> None:
         """ Called when the user explicitly requests the status of this wizard. """
 
         lines = [
             'Steps:',
         ]
 
-        for (i, step) in enumerate(self._steps):
+        for (i, step) in enumerate(self.steps):
             status = step.status_line()
             if (status != ''):
                 status = f" -- {status}"
 
-            lines.append(f"{self._indent}{i + 1}: {step.name}{status}")
+            lines.append(f"{self.indent}{i + 1}: {step.name}{status}")
 
         self.write(os.linesep.join(lines))
 
-    def _clear(self) -> None:
+    def clear(self) -> None:
         """ Called when the user explicitly requests to clear the wizard screen. """
 
-        autograder.util.terminal.clear_screen(self._writer)
+        autograder.util.terminal.clear_screen(self.writer)
 
-    def _outro(self) -> None:
+    def outro(self) -> None:
         """
         Called after transitioning out of the last step.
         Is NOT called on an early exit.
         """
 
-    def _early_exit(self) -> None:
+    def early_exit(self) -> None:
         """
         Called when run() has exited early.
-        Called instead of _outro().
+        Called instead of outro().
         """
 
         self.write("Wizard exited early.")
