@@ -1,5 +1,8 @@
 import typing
 
+import autograder.api.config
+import autograder.api.metadata.heartbeat
+import autograder.error
 import autograder.wizard.commands
 import autograder.wizard.model
 import autograder.wizard.steps
@@ -36,10 +39,25 @@ class ConnectToServerStep(autograder.wizard.model.BaseStep):
         return self.data.server
 
     def consume_line(self, line: str, wizard: autograder.wizard.model.BaseWizard) -> bool:
-        if (len(line) != 0):
-            self.data.server = line
+        server: typing.Union[str, None] = line
+        if ((server is not None) and (len(line) == 0)):
+            server = self.data.server
 
-        return (self.data.server is not None)
+        if (server is None):
+            return False
+
+        try:
+            autograder.api.metadata.heartbeat.send({
+                autograder.api.config.PARAM_SERVER.config_key: server,
+            })
+        except autograder.error.ConnectionError:
+            wizard.write(f"Could not connect to autograder server at '{server}', check address and that the server is up.")
+            return False
+
+        self.data.server = server
+        wizard.write(f"Successfully connected to autograder server at '{server}'.")
+
+        return True
 
 class CourseSetupWizard(autograder.wizard.model.BaseWizard):
     """
