@@ -18,7 +18,7 @@ def run_cli(args: argparse.Namespace) -> int:
 
     config = args._config
 
-    result = autograder.api.courses.assignments.images.fetch.send(config)
+    result = autograder.api.courses.assignments.images.fetch.send(config, exit_on_error = True)
 
     print(edq.util.json.dumps(result['image-info'], indent = 4))
     print('---')

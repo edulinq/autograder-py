@@ -14,7 +14,7 @@ def run_cli(args: argparse.Namespace) -> int:
 
     config = args._config
 
-    api_response, grading_result = autograder.api.courses.assignments.submissions.submit.send(config, post_paths = args.files)
+    api_response, grading_result = autograder.api.courses.assignments.submissions.submit.send(config, post_paths = args.files, exit_on_error = True)
     return autograder.cli.courses.assignments.submissions.common.display_grading_result(api_response, grading_result)
 
 def main() -> int:

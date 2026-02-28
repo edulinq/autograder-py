@@ -15,7 +15,7 @@ def run_cli(args: argparse.Namespace) -> int:
 
     config = args._config
 
-    scores = autograder.api.courses.assignments.submissions.fetch.course.scores.send(config)
+    scores = autograder.api.courses.assignments.submissions.fetch.course.scores.send(config, exit_on_error = True)
 
     output = lms.model.base.base_list_to_output_format(scores, args.output_format,
             skip_headers = args.skip_headers,

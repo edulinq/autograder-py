@@ -24,7 +24,7 @@ def run_cli(args: argparse.Namespace) -> int:
         },
     ]
 
-    result = autograder.api.courses.users.enroll.send(config)
+    result = autograder.api.courses.users.enroll.send(config, exit_on_error = True)
     print(edq.util.json.dumps(result, indent = 4))
 
     return 0

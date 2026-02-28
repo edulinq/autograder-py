@@ -24,7 +24,7 @@ def run_cli(args: argparse.Namespace) -> int:
         print(str(ex))
         return 10
 
-    result = autograder.api.courses.upsert.zip.send(config, post_paths = [zip_path])
+    result = autograder.api.courses.upsert.zip.send(config, post_paths = [zip_path], exit_on_error = True)
     print(edq.util.json.dumps(result, indent = 4))
 
     return 0

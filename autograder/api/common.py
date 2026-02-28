@@ -36,7 +36,7 @@ def make_api_request(
         config: typing.Dict[str, typing.Any],
         api_params: typing.List[autograder.api.config.APIParam],
         write: typing.Union[bool, None] = None,
-        exit_on_error: bool = True,
+        exit_on_error: bool = False,
         post_paths: typing.Union[typing.List[str], None] = None,
         ) -> typing.Dict[str, typing.Any]:
     """

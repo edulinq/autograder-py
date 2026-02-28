@@ -32,7 +32,8 @@ def run_cli(args: argparse.Namespace) -> int:
         paths = _get_files(test_submission_path)
 
         try:
-            api_response, grading_result = autograder.api.courses.assignments.submissions.submit.send(config, post_paths = paths)
+            api_response, grading_result = autograder.api.courses.assignments.submissions.submit.send(config,
+                    post_paths = paths, exit_on_error = True)
         except Exception as ex:
             print(f"Failed to run submission '{test_submission_path}': '{ex}'.")
             traceback.print_exc()

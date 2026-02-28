@@ -19,7 +19,7 @@ def run_cli(args: argparse.Namespace) -> int:
 
     config['filespec'] = _build_filespec(config)
 
-    result = autograder.api.courses.upsert.filespec.send(config)
+    result = autograder.api.courses.upsert.filespec.send(config, exit_on_error = True)
     print(edq.util.json.dumps(result, indent = 4))
 
     return 0

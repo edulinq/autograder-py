@@ -14,7 +14,7 @@ def run_cli(args: argparse.Namespace) -> int:
 
     config = args._config
 
-    found_user, found_submission, result = autograder.api.courses.assignments.submissions.fetch.user.peek.send(config)
+    found_user, found_submission, result = autograder.api.courses.assignments.submissions.fetch.user.peek.send(config, exit_on_error = True)
 
     if (not found_user):
         print(f"No matching user found: '{config.get('target_email', '')}'.", file = sys.stderr)

@@ -13,7 +13,7 @@ def run_cli(args: argparse.Namespace) -> int:
 
     config = args._config
 
-    result = autograder.api.users.tokens.create.send(config)
+    result = autograder.api.users.tokens.create.send(config, exit_on_error = True)
 
     print("Token ID: " + result['token-info']['id'])
     print("Token Text: " + result['token-cleartext'])

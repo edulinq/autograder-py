@@ -15,7 +15,7 @@ def run_cli(args: argparse.Namespace) -> int:
 
     config = args._config
 
-    result = autograder.api.courses.assignments.submissions.proxy.regrade.send(config)
+    result = autograder.api.courses.assignments.submissions.proxy.regrade.send(config, exit_on_error = True)
     print(edq.util.json.dumps(result, indent = 4))
 
     return 0

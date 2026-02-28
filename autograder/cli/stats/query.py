@@ -15,7 +15,7 @@ def run_cli(args: argparse.Namespace) -> int:
 
     config = args._config
 
-    records = autograder.api.stats.query.send(config)
+    records = autograder.api.stats.query.send(config, exit_on_error = True)
 
     output = lms.model.base.base_list_to_output_format(records, args.output_format,
             skip_headers = args.skip_headers,

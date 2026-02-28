@@ -15,7 +15,7 @@ def run_cli(args: argparse.Namespace) -> int:
 
     config = args._config
 
-    error, logs = autograder.api.logs.query.send(config)
+    error, logs = autograder.api.logs.query.send(config, exit_on_error = True)
 
     if (error is not None):
         print(f"Log Query Error -- {error}", file = sys.stderr)

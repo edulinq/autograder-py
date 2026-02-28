@@ -15,7 +15,7 @@ def run_cli(args: argparse.Namespace) -> int:
 
     config = args._config
 
-    user = autograder.api.courses.users.get.send(config)
+    user = autograder.api.courses.users.get.send(config, exit_on_error = True)
 
     users = []
     if (user is not None):

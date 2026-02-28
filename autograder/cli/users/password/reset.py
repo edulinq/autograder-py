@@ -13,7 +13,7 @@ def run_cli(args: argparse.Namespace) -> int:
 
     config = args._config
 
-    autograder.api.users.password.reset.send(config)
+    autograder.api.users.password.reset.send(config, exit_on_error = True)
     print("The server has successfully processed your request.")
     print("Check your email for the new password.")
 
