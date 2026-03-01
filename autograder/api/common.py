@@ -1,3 +1,4 @@
+import http
 import os
 import sys
 import typing
@@ -181,6 +182,11 @@ def send_api_request(
             message = edq.util.time.Timestamp.convert_embedded(message, pretty = True)
 
         code = response_body.get(autograder.api.constants.API_RESPONSE_KEY_STATUS, None)
+
+        # Raise a special error for 401.
+        if (code == http.HTTPStatus.UNAUTHORIZED):
+            raise autograder.error.AuthenticationError(code, message)
+
         raise autograder.error.APIError(code, message)
 
     content = response_body[autograder.api.constants.API_RESPONSE_KEY_CONTENT]

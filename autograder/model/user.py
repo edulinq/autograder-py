@@ -18,6 +18,12 @@ class CourseRole(enum.Enum):
     def __str__(self) -> str:
         return str(self.value)
 
+    def __lt__(self, other: object) -> bool:
+        if (not isinstance(other, CourseRole)):
+            return False
+
+        return COURSE_ROLE_NUMERIC_VALUES[self] < COURSE_ROLE_NUMERIC_VALUES[other]
+
     @classmethod
     def has_value(cls, value: typing.Any) -> bool:
         """
@@ -37,9 +43,16 @@ class ServerRole(enum.Enum):
     CREATOR = 'creator'
     ADMIN = 'admin'
     OWNER = 'owner'
+    ROOT = 'root'
 
     def __str__(self) -> str:
         return str(self.value)
+
+    def __lt__(self, other: object) -> bool:
+        if (not isinstance(other, ServerRole)):
+            return False
+
+        return SERVER_ROLE_NUMERIC_VALUES[self] < SERVER_ROLE_NUMERIC_VALUES[other]
 
     @classmethod
     def has_value(cls, value: typing.Any) -> bool:
@@ -49,6 +62,24 @@ class ServerRole(enum.Enum):
         """
 
         return (value is not None) and (str(value).upper() in cls.__members__)
+
+COURSE_ROLE_NUMERIC_VALUES: typing.Dict[CourseRole, int] = {
+    CourseRole.UNKNOWN: 0,
+    CourseRole.OTHER: 10,
+    CourseRole.STUDENT: 20,
+    CourseRole.GRADER: 30,
+    CourseRole.ADMIN: 40,
+    CourseRole.OWNER: 50,
+}
+
+SERVER_ROLE_NUMERIC_VALUES: typing.Dict[ServerRole, int] = {
+    ServerRole.UNKNOWN: 0,
+    ServerRole.USER: 10,
+    ServerRole.CREATOR: 20,
+    ServerRole.ADMIN: 30,
+    ServerRole.OWNER: 40,
+    ServerRole.ROOT: 50,
+}
 
 def make_course_user(raw_user: typing.Dict[str, typing.Any]) -> lms.model.users.CourseUser:
     """
@@ -67,6 +98,8 @@ def make_server_user(raw_user: typing.Dict[str, typing.Any]) -> lms.model.users.
     """
     Create an LMS Toolkit server user from raw data coming from the autograder.
     """
+
+    raw_user['role'] = ServerRole(raw_user['role'])
 
     return lms.model.users.ServerUser(
         id = raw_user['email'],

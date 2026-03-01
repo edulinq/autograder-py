@@ -10,6 +10,7 @@ import autograder.util.terminal
 DEFAULT_COMMAND_PREFIX: str = ':'
 DEFAULT_INDENT: str = '    '
 DEFAULT_PROMPT_TEXT: str = '$ '
+DEFAULT_ERROR_PREFIX: str = 'ERROR: '
 
 class BaseStep(abc.ABC):
     """
@@ -235,23 +236,13 @@ class BaseWizard(abc.ABC):
         if (flush):
             self.writer.flush()
 
-    def get_input(self, text: str, check_command: bool = True) -> str:
+    def error(self, text: str, error_prefix: str = DEFAULT_ERROR_PREFIX, **kwargs: typing.Any) -> None:
         """
-        Prompt for a response and return the result.
-        """
-
-        # TEST
-        return ''
-
-    def get_input_with_choices(self, text: str, choices: typing.List[str],
-            reprompt: bool = True,
-            normalize_case: bool = True, check_command: bool = True) -> str:
-        """
-        Prompt for a response from a set of pre-defined choices and return the result.
+        Write an error message.
+        Has all the same kwargs as write().
         """
 
-        # TEST
-        return ''
+        self.write(f"{error_prefix}{text}", **kwargs)
 
     def check_and_run_command(self, line: str) -> bool:
         """
@@ -267,7 +258,7 @@ class BaseWizard(abc.ABC):
 
         command_key = parts[0].removeprefix(self.command_prefix)
         if (len(command_key) == 0):
-            self.write(f"ERROR: No command was provided after command prefix ('{self.command_prefix}').")
+            self.error(f"No command was provided after command prefix ('{self.command_prefix}').")
             return True
 
         argument = None
@@ -281,7 +272,7 @@ class BaseWizard(abc.ABC):
                 break
 
         if (target_command is None):
-            self.write(f"ERROR: Command not found: '{command_key}'.")
+            self.error(f"Command not found: '{command_key}'.")
 
             if (self.help_command_key is not None):
                 self.write(f"{self.indent}Use `{self.command_prefix}{self.help_command_key}` to see the available commands.")
@@ -349,6 +340,7 @@ class BaseWizard(abc.ABC):
         """ Called when the user explicitly requests help. """
 
         lines = [
+            'Use Ctrl-C (x2) or Ctrl-D to exit.',
             'Available Commands:',
         ]
 

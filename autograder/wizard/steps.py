@@ -31,6 +31,14 @@ class SimpleInputValidator(typing.Protocol):
         Check if the given value is valid for this input.
         """
 
+def email_simple_input_validator(value: str) -> typing.Union[str, None]:
+    """ Check if the given input looks like an email. """
+
+    if ('@' in value):
+        return None
+
+    return f"value '{value}' does not look like an email address"
+
 class SimpleInput:
     """ A representation of simple input prompt/value. """
 

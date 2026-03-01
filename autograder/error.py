@@ -30,5 +30,11 @@ class APIError(AutograderError):
         self.code: typing.Union[int, None] = code
         """ The HTTP status code. """
 
+class AuthenticationError(APIError):
+    """ An error stemming from bad credentials. """
+
+    def __init__(self, code: typing.Union[int, None], message: str) -> None:
+        super().__init__(code, message)
+
 class ConnectionError(AutograderError):
     """ An error stemming from a bad network connection. """

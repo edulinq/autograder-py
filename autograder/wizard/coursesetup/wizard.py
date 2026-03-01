@@ -2,6 +2,7 @@ import typing
 
 import autograder.api.config
 import autograder.api.metadata.heartbeat
+import autograder.api.users.get
 import autograder.error
 import autograder.wizard.commands
 import autograder.wizard.model
@@ -24,32 +25,93 @@ class ConnectStep(autograder.wizard.steps.SimpleInputStep):
     """ A step for connecting to an autograder server. """
 
     def __init__(self, data: SetupData) -> None:
-        self._server_input: autograder.wizard.steps.SimpleInput = autograder.wizard.steps.SimpleInput(
+        self._step_input_server: autograder.wizard.steps.SimpleInput = autograder.wizard.steps.SimpleInput(
             'address',
             'Enter the server to connect to',
             data.server,
         )
+        """ Input for the server address. """
 
         self.data: SetupData = data
         """ The common data for this wizard. """
 
         super().__init__('Connect to Server', [
-            self._server_input,
+            self._step_input_server,
         ])
 
     def post_input_action(self, wizard: autograder.wizard.model.BaseWizard) -> bool:
-        server = self._server_input.value
+        server = self._step_input_server.value
 
         try:
             autograder.api.metadata.heartbeat.send({
                 autograder.api.config.PARAM_SERVER.config_key: server,
             })
         except autograder.error.ConnectionError:
-            wizard.write(f"Could not connect to autograder server at '{server}', check address and that the server is up.")
+            wizard.error(f"Could not connect to autograder server at '{server}', check address and that the server is up.")
             return False
 
         self.data.server = server
         wizard.write(f"Successfully connected to autograder server at '{server}'.")
+
+        return True
+
+class AuthStep(autograder.wizard.steps.SimpleInputStep):
+    """ A step for authenticating against an autograder server. """
+
+    def __init__(self, data: SetupData) -> None:
+        self._step_input_user: autograder.wizard.steps.SimpleInput = autograder.wizard.steps.SimpleInput(
+            'user email',
+            'Login Email',
+            data.user,
+            validation_func = autograder.wizard.steps.email_simple_input_validator,
+        )
+        """ Input for the user email. """
+
+        self._step_input_password: autograder.wizard.steps.SimpleInput = autograder.wizard.steps.SimpleInput(
+            'user password',
+            'Login Password/Token',
+            data.password,
+        )
+        """ Input for the user password. """
+
+        self.data: SetupData = data
+        """ The common data for this wizard. """
+
+        super().__init__('Connect to Server', [
+            self._step_input_user,
+            self._step_input_password,
+        ])
+
+    def post_input_action(self, wizard: autograder.wizard.model.BaseWizard) -> bool:
+        server = self.data.server
+        user_email = self._step_input_user.value
+        password = self._step_input_password.value
+
+        user = None
+        try:
+            user = autograder.api.users.get.send({
+                autograder.api.config.PARAM_SERVER.config_key: server,
+                autograder.api.config.PARAM_USER_EMAIL.config_key: user_email,
+                autograder.api.config.PARAM_USER_PASS.config_key: password,
+            })
+        except autograder.error.AuthenticationError:
+            wizard.error(f"Failed to authenticate as '{user_email}', please check your user and password.")
+            return False
+
+        if (user is None):
+            wizard.error(f"Could not find user '{user_email}' on the server.")
+            return False
+
+        role = user.extra_fields.get('role', autograder.model.user.ServerRole.UNKNOWN)
+
+        if (role < autograder.model.user.ServerRole.CREATOR):
+            wizard.error(("You do not have the required premissions to create a course."
+                    + f" You are a '{role}', and you need to be at least a '{autograder.model.user.ServerRole.CREATOR}'."))
+            return False
+
+        self.data.user = user_email
+        self.data.password = password
+        wizard.write(f"Successfully authenticated as '{user_email}'.")
 
         return True
 
@@ -64,7 +126,7 @@ class CourseSetupWizard(autograder.wizard.model.BaseWizard):
 
         steps: typing.List[autograder.wizard.model.BaseStep] = [
             ConnectStep(self.data),
-            # AuthStep(self.data),
+            AuthStep(self.data),
             # Source
             # Build
             # Save / Commit
