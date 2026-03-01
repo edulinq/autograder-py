@@ -54,7 +54,7 @@ class BaseStep(abc.ABC):
 
         return ''
 
-    def clear(self) -> None:
+    def reset(self) -> None:
         """
         Clear all the state associated with this step.
         Used in cases such as when a user goes backwards in the wizard.

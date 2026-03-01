@@ -10,6 +10,8 @@ import autograder.wizard.model
 
 # TODO - replay?
 
+# TODO - restart step?
+
 class Clear(autograder.wizard.model.BaseCommand):
     """ clear the screen for this wizard. """
 

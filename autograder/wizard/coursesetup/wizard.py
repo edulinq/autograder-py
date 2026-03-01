@@ -10,41 +10,35 @@ import autograder.wizard.steps
 class SetupData:
     """ A container for all the data used in this wizard. """
 
-    def __init__(self,
-            server: typing.Union[str, None] = None,
-            **kwargs: typing.Any) -> None:
-        self.server: typing.Union[str, None] = server
+    def __init__(self, config: typing.Dict[str, typing.Any]) -> None:
+        self.server: typing.Union[str, None] = config.get(autograder.api.config.PARAM_SERVER.config_key, None)
         """ The server to connect to. """
 
-class ConnectToServerStep(autograder.wizard.model.BaseStep):
+        self.user: typing.Union[str, None] = config.get(autograder.api.config.PARAM_USER_EMAIL.config_key, None)
+        """ The user to connect as. """
+
+        self.password: typing.Union[str, None] = config.get(autograder.api.config.PARAM_USER_PASS.config_key, None)
+        """ The password to connect with. """
+
+class ConnectStep(autograder.wizard.steps.SimpleInputStep):
     """ A step for connecting to an autograder server. """
 
     def __init__(self, data: SetupData) -> None:
-        super().__init__('Connect to Server')
+        self._server_input: autograder.wizard.steps.SimpleInput = autograder.wizard.steps.SimpleInput(
+            'address',
+            'Enter the server to connect to',
+            data.server,
+        )
 
         self.data: SetupData = data
         """ The common data for this wizard. """
 
-    def get_prompt(self) -> typing.Union[str, None]:
-        suffix = ''
-        if (self.data.server is not None):
-            suffix = f" (or nothing to use '{self.data.server}')"
+        super().__init__('Connect to Server', [
+            self._server_input,
+        ])
 
-        return f"Enter the server to connect to{suffix}: "
-
-    def status_line(self) -> str:
-        if (self.data.server is None):
-            return ''
-
-        return self.data.server
-
-    def consume_line(self, line: str, wizard: autograder.wizard.model.BaseWizard) -> bool:
-        server: typing.Union[str, None] = line
-        if ((server is not None) and (len(line) == 0)):
-            server = self.data.server
-
-        if (server is None):
-            return False
+    def post_input_action(self, wizard: autograder.wizard.model.BaseWizard) -> bool:
+        server = self._server_input.value
 
         try:
             autograder.api.metadata.heartbeat.send({
@@ -65,12 +59,12 @@ class CourseSetupWizard(autograder.wizard.model.BaseWizard):
     """
 
     def __init__(self, config: typing.Dict[str, typing.Any]):
-        self.data: SetupData = SetupData(**config)
+        self.data: SetupData = SetupData(config)
         """ The common data for this wizard. """
 
         steps: typing.List[autograder.wizard.model.BaseStep] = [
-            ConnectToServerStep(self.data),
-            # Auth
+            ConnectStep(self.data),
+            # AuthStep(self.data),
             # Source
             # Build
             # Save / Commit
