@@ -6,7 +6,7 @@ import typing
 
 import autograder.wizard.model
 
-# TODO - jump
+# TODO - jump - Clear undone steps, or just leave them (as defaults)?
 
 # TODO - replay?
 

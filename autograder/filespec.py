@@ -11,6 +11,7 @@ import typing
 
 import edq.net.request
 import edq.util.dirent
+import edq.util.json
 
 import autograder.util.git
 
@@ -22,6 +23,9 @@ FILESPEC_TYPE_URL: str = "url"
 
 class FileSpec(typing.Dict[str, str]):
     """ Alias file specs until they are formalized in a more robust class. """
+
+    def __repr__(self) -> str:
+        return edq.util.json.dumps(self)
 
 def parse(data: typing.Union[None, str, typing.Dict[str, str], FileSpec]) -> FileSpec:
     """

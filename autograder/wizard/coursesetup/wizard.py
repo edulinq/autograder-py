@@ -4,6 +4,7 @@ import autograder.api.config
 import autograder.api.metadata.heartbeat
 import autograder.api.users.get
 import autograder.error
+import autograder.filespec
 import autograder.wizard.commands
 import autograder.wizard.model
 import autograder.wizard.steps
@@ -20,6 +21,12 @@ class SetupData:
 
         self.password: typing.Union[str, None] = config.get(autograder.api.config.PARAM_USER_PASS.config_key, None)
         """ The password to connect with. """
+
+        self.source: typing.Union[autograder.filespec.FileSpec, None] = None
+        """ The source for this course. """
+
+        self.temp_dir: typing.Union[str, None] = None
+        """ The path to a temp dir that will house the course. """
 
 class ConnectStep(autograder.wizard.steps.SimpleInputStep):
     """ A step for connecting to an autograder server. """
@@ -51,6 +58,7 @@ class ConnectStep(autograder.wizard.steps.SimpleInputStep):
             return False
 
         self.data.server = server
+
         wizard.write(f"Successfully connected to autograder server at '{server}'.")
 
         return True
@@ -77,7 +85,7 @@ class AuthStep(autograder.wizard.steps.SimpleInputStep):
         self.data: SetupData = data
         """ The common data for this wizard. """
 
-        super().__init__('Connect to Server', [
+        super().__init__('Authenticate with Server', [
             self._step_input_user,
             self._step_input_password,
         ])
@@ -111,6 +119,7 @@ class AuthStep(autograder.wizard.steps.SimpleInputStep):
 
         self.data.user = user_email
         self.data.password = password
+
         wizard.write(f"Successfully authenticated as '{user_email}'.")
 
         return True
@@ -127,7 +136,7 @@ class CourseSetupWizard(autograder.wizard.model.BaseWizard):
         steps: typing.List[autograder.wizard.model.BaseStep] = [
             ConnectStep(self.data),
             AuthStep(self.data),
-            # Source
+            # FetchSourceStep(self.data),
             # Build
             # Save / Commit
 
@@ -140,8 +149,8 @@ class CourseSetupWizard(autograder.wizard.model.BaseWizard):
             commands = autograder.wizard.commands.COMMON_COMMANDS,
         )
 
-    def _intro(self) -> None:
+    def intro(self) -> None:
         self.write("Welcome to the course setup wizard.")
+        self.write("No data will be saved/committed until the final step.")
         self.write("Use :? or :help to see all available commands.")
         self.write("The exit, use `:quit` or Ctrl-C twice.")
-        self.write('')

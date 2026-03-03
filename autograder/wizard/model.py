@@ -316,19 +316,22 @@ class BaseWizard(abc.ABC):
         If the current step index is None, then start at the first step.
         """
 
-        # Start at the first step.
+        # Transition out of the current step (if there is one).
+        if (current_step_index is not None):
+            self.steps[current_step_index].outro(self)
+
+        # Move to the next (or first step).
         if (current_step_index is None):
-            return 0
+            current_step_index = 0
+        else:
+            current_step_index += 1
 
-        # Transition out of the current step.
-        self.steps[current_step_index].outro(self)
-
-        current_step_index += 1
-
+        # Check if we are done.
         if (current_step_index >= len(self.steps)):
             return None
 
         # Transition into the new step.
+        self.write(f"\nStep {current_step_index + 1}: {self.steps[current_step_index].name}")
         self.steps[current_step_index].intro(self)
 
         return current_step_index
