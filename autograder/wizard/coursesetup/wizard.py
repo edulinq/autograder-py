@@ -1,4 +1,7 @@
+import os
 import typing
+
+import edq.util.dirent
 
 import autograder.api.config
 import autograder.api.metadata.heartbeat
@@ -46,6 +49,11 @@ class ConnectStep(autograder.wizard.steps.SimpleInputStep):
             self._step_input_server,
         ])
 
+    def intro(self, wizard: autograder.wizard.model.BaseWizard) -> None:
+        wizard.write("This step will connect to an existing Lynx Autograder server.")
+        wizard.write("The server should be on and accessible from this machine.")
+        wizard.write('')
+
     def post_input_action(self, wizard: autograder.wizard.model.BaseWizard) -> bool:
         server = self._step_input_server.value
 
@@ -90,6 +98,10 @@ class AuthStep(autograder.wizard.steps.SimpleInputStep):
             self._step_input_password,
         ])
 
+    def intro(self, wizard: autograder.wizard.model.BaseWizard) -> None:
+        wizard.write("This step will authenticate your credentials against the autograder server.")
+        wizard.write('')
+
     def post_input_action(self, wizard: autograder.wizard.model.BaseWizard) -> bool:
         server = self.data.server
         user_email = self._step_input_user.value
@@ -113,7 +125,7 @@ class AuthStep(autograder.wizard.steps.SimpleInputStep):
         role = user.extra_fields.get('role', autograder.model.user.ServerRole.UNKNOWN)
 
         if (role < autograder.model.user.ServerRole.CREATOR):
-            wizard.error(("You do not have the required premissions to create a course."
+            wizard.error(("You do not have the required permissions to create a course."
                     + f" You are a '{role}', and you need to be at least a '{autograder.model.user.ServerRole.CREATOR}'."))
             return False
 
@@ -121,6 +133,63 @@ class AuthStep(autograder.wizard.steps.SimpleInputStep):
         self.data.password = password
 
         wizard.write(f"Successfully authenticated as '{user_email}'.")
+
+        return True
+
+class FetchSourceStep(autograder.wizard.steps.SimpleInputStep):
+    """ A step for fetching this course from source. """
+
+    # TODO - FileSpec link will change.
+    def intro(self, wizard: autograder.wizard.model.BaseWizard) -> None:
+        wizard.write("This step will attempt to fetch the course from its canonical home (we call a 'source').")
+        wizard.write('Once a course is active on the autograder, it can be automatically updated using this source.')
+        wizard.write('This wizard will fetch a copy of the course and put it in a temp directory.')
+        wizard.write('Course sources are specified using File Specifications (FileSpecs):')
+        wizard.write('    https://github.com/edulinq/autograder-server/blob/main/docs/types.md#file-specification-filespec')
+        wizard.write('')
+
+    def __init__(self, data: SetupData) -> None:
+        default_source = None
+        if (data.source is not None):
+            default_source = str(data.source)
+
+        self._step_input_source: autograder.wizard.steps.SimpleInput = autograder.wizard.steps.SimpleInput(
+            'source',
+            'Enter the source for this course',
+            default_source,
+        )
+        """ Input for the source. """
+
+        self.data: SetupData = data
+        """ The common data for this wizard. """
+
+        super().__init__('Fetch Course Source', [
+            self._step_input_source,
+        ])
+
+    def post_input_action(self, wizard: autograder.wizard.model.BaseWizard) -> bool:
+        source = self._step_input_source.value
+
+        try:
+            spec = autograder.filespec.parse(source)
+        except autograder.filespec.FileSpecError as ex:
+            wizard.error(f"Could not parse course source ('{source}'): '{ex}'.")
+            return False
+
+        temp_dir = edq.util.dirent.get_temp_dir('edq-ag-coursesetup-')
+        out_dir = os.path.join(temp_dir, 'course')
+        edq.util.dirent.mkdir(out_dir)
+
+        try:
+            autograder.filespec.copy(spec, temp_dir, out_dir, False)
+        except Exception as ex:
+            wizard.error(f"Failed to fetch course source ('{source}'): '{ex}'.")
+            return False
+
+        self.data.source = spec
+        self.data.temp_dir = temp_dir
+
+        wizard.write(f"Successfully copied course to temp dir: '{temp_dir}'.")
 
         return True
 
@@ -136,7 +205,7 @@ class CourseSetupWizard(autograder.wizard.model.BaseWizard):
         steps: typing.List[autograder.wizard.model.BaseStep] = [
             ConnectStep(self.data),
             AuthStep(self.data),
-            # FetchSourceStep(self.data),
+            FetchSourceStep(self.data),
             # Build
             # Save / Commit
 
