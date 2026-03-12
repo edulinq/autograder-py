@@ -20,7 +20,8 @@ class Question(object):
     Note that all scoring is in ints.
     """
 
-    def __init__(self, max_points = 0, name = None, timeout = DEFAULT_TIMEOUT_SEC):
+    def __init__(self, max_points = 0, name = None, timeout = DEFAULT_TIMEOUT_SEC,
+            allow_extra_credit = False):
         self.name = name
         if (self.name is None):
             self.name = type(self).__name__
@@ -31,6 +32,7 @@ class Question(object):
 
         self.max_points = max_points
         self._timeout = timeout
+        self.allow_extra_credit = allow_extra_credit
 
         # Create the base scoring artifact.
         self.result = GradedQuestion(name = self.name, max_points = self.max_points)
@@ -101,6 +103,9 @@ class Question(object):
         except AutograderHardFailError:
             # The question has been failed hard, signal to stop grading.
             self.result.hard_fail = True
+
+        if (not self.allow_extra_credit):
+            self.cap_score()
 
         self.result.grading_end_time = autograder.util.timestamp.get()
 
