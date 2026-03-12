@@ -287,4 +287,5 @@ class GradedQuestion(object):
         if (ignore_messages):
             return True
 
+
         return self.message == other.message
