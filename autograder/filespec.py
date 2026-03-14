@@ -11,8 +11,7 @@ import typing
 
 import edq.net.request
 import edq.util.dirent
-
-import autograder.util.git
+import edq.util.git
 
 FILESPEC_TYPE_EMPTY: str = "empty"
 FILESPEC_TYPE_NIL: str = "nil"
@@ -198,7 +197,7 @@ def _copy_git(path: str, dest: str, dest_dir: str,
 
     dest_path = os.path.join(dest_dir, dest)
 
-    autograder.util.git.ensure_repo(path, dest_path, update = True,
+    edq.util.git.ensure_repo(path, dest_path, update = True,
         ref = reference, username = username, token = token)
 
 def _copy_url(path: str, dest: str, dest_dir: str) -> None:
