@@ -57,13 +57,19 @@ def send_api_request(endpoint, server = None, verbose = False, data = {}, files 
     data['source-version'] = autograder.__version__
 
     post_files = {}
-    for path in files:
+    for i, path in enumerate(files):
+        # We use a unique key for each file to avoid collisions in the multipart form,
+        # but the server will look at the filename in the part's header.
+        # However, to maintain compatibility with existing servers that might
+        # use the form field name as the filename, we will use the basename
+        # unless there is a collision.
         filename = os.path.basename(path)
-        if (filename in post_files):
-            raise autograder.error.APIError(None, "Cannot submit duplicate filenames ('%s')."
-                % (filename))
+        key = filename
+        if (key in post_files):
+            # If there's a collision, use a unique key but keep the filename information.
+            key = f"file{i}_{filename}"
 
-        post_files[filename] = open(path, 'rb')
+        post_files[key] = (filename, open(path, 'rb'))
 
     if (verbose):
         print("\nURL: %s" % (url))
@@ -85,7 +91,7 @@ def send_api_request(endpoint, server = None, verbose = False, data = {}, files 
             + " (e.g., network down, server down, wrong server address),"
             + " not an authentication issue."))
 
-    for file in post_files.values():
+    for (_, file) in post_files.values():
         file.close()
 
     try:

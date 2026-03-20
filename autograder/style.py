@@ -203,8 +203,10 @@ def check_file(path, fake_path = None, shorten_path = False, style_overrides = N
     # Ignore most flak8 logging.
     logging.getLogger("flake8").setLevel(logging.WARNING)
 
-    # argparse (used by flake8) will look for a program name on sys.argv[0].
-    if (len(sys.argv) == 0):
+    # Ensure sys.argv is not empty for flake8.
+    # Note: Modern flake8 might not need this, but we keep a safer check.
+    current_argv = sys.argv
+    if (len(current_argv) == 0):
         sys.argv = ['']
 
     style_options = BASE_STYLE_OPTIONS.copy()
@@ -213,19 +215,22 @@ def check_file(path, fake_path = None, shorten_path = False, style_overrides = N
 
     style_guide = flake8.get_style_guide(**style_options)
 
-    with open(output_path, 'w') as file:
-        with contextlib.redirect_stdout(file):
-            report = style_guide.check_files([path])
+    try:
+        with open(output_path, 'w') as file:
+            with contextlib.redirect_stdout(file):
+                report = style_guide.check_files([path])
 
-    with open(output_path, 'r') as file:
-        lines = file.readlines()
+        with open(output_path, 'r') as file:
+            lines = file.readlines()
 
-    lines = [line.rstrip() for line in lines]
+        lines = [line.rstrip() for line in lines]
 
-    if (path != replacement_path):
-        lines = [line.replace(path, replacement_path) for line in lines]
+        if (path != replacement_path):
+            lines = [line.replace(path, replacement_path) for line in lines]
 
-    for path in cleanup_paths:
-        autograder.util.dirent.remove(path)
+    finally:
+        sys.argv = current_argv
+        for p in cleanup_paths:
+            autograder.util.dirent.remove(p)
 
     return (report._application.result_count, lines)

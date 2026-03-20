@@ -7,13 +7,14 @@ import uuid
 def get_temp_path(prefix = '', suffix = '', rm = True):
     """
     Get a path to a valid (but not currently existing) temp dirent.
-    If rm is True, then the dirent will be attempted to be deleted on exit
-    (no error will occur if the path is not there).
+    If rm is True, then the dirent will be attempted to be deleted on exit.
     """
 
-    path = None
-    while ((path is None) or os.path.exists(path)):
-        path = os.path.join(tempfile.gettempdir(), prefix + str(uuid.uuid4()) + suffix)
+    # Create a temporary file just to get a unique path, then close it.
+    # This is more secure than manually trying to find a non-existing path.
+    fd, path = tempfile.mkstemp(prefix = prefix, suffix = suffix)
+    os.close(fd)
+    os.remove(path)
 
     if (rm):
         atexit.register(remove, path)
@@ -82,11 +83,13 @@ def copy_contents(source, dest):
         shutil.copy2(source, dest)
         return
 
+    os.makedirs(dest, exist_ok = True)
+
     for dirent in os.listdir(source):
         source_path = os.path.join(source, dirent)
         dest_path = os.path.join(dest, dirent)
 
-        if (os.path.isfile(source_path)):
-            shutil.copy2(source_path, dest_path)
+        if (os.path.isfile(source_path) or os.path.islink(source_path)):
+            shutil.copy2(source_path, dest_path, follow_symlinks = False)
         else:
-            shutil.copytree(source_path, dest_path)
+            shutil.copytree(source_path, dest_path, dirs_exist_ok = True)
