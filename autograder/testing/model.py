@@ -7,8 +7,10 @@ import typing
 
 import lms.model.testdata.users
 import lms.model.users
+import edq.util.json
 
 import autograder.model.log
+import autograder.testing.constants
 
 def _clean_server_user(user: lms.model.users.ServerUser) -> None:
     """
@@ -46,6 +48,8 @@ SERVER_USERS: typing.Dict[str, lms.model.users.ServerUser] = _clean_server_users
 
 # {course_name: {user_name: user, ...}, ...}
 COURSE_USERS: typing.Dict[str, typing.Dict[str, lms.model.users.CourseUser]] = _clean_course_users()
+
+RAW_USER_DATA = edq.util.json.load_path(autograder.testing.constants.SUBMODULE_SERVER_USERS_PATH)
 
 API_LOGS: typing.List[typing.Dict[str, typing.Any]] = [
     {

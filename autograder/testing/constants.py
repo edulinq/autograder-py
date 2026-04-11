@@ -11,9 +11,11 @@ NOCOMPILE_PYTHON_PATH: str = os.path.join(THIS_DIR, '..', 'testdata', 'submissio
 
 SUBMODULE_TESTDATA_DIR: str = os.path.join(TESTDATA_DIR, 'autograder-testdata')
 SUBMODULE_SERVER_DIR: str = os.path.join(SUBMODULE_TESTDATA_DIR, 'autograder-server')
+SUBMODULE_SERVER_TESTDATA_DIR: str = os.path.join(SUBMODULE_SERVER_DIR, 'testdata')
 
-COURSE_101_DIR: str = os.path.join(SUBMODULE_SERVER_DIR, 'testdata', 'course101')
-COURSE_LANGUAGES_DIR: str = os.path.join(SUBMODULE_SERVER_DIR, 'testdata', 'course-languages')
+SUBMODULE_SERVER_USERS_PATH: str = os.path.join(SUBMODULE_SERVER_TESTDATA_DIR, 'users.json')
+COURSE_101_DIR: str = os.path.join(SUBMODULE_SERVER_DIR, SUBMODULE_SERVER_TESTDATA_DIR, 'course101')
+COURSE_LANGUAGES_DIR: str = os.path.join(SUBMODULE_SERVER_DIR, SUBMODULE_SERVER_TESTDATA_DIR, 'course-languages')
 
 COURSE_101_CONFIG_FILE: str = os.path.join(COURSE_101_DIR, 'course.json')
 COURSE_LANGUAGES_CONFIG_FILE: str = os.path.join(COURSE_LANGUAGES_DIR, 'course.json')
