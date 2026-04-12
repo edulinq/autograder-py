@@ -62,4 +62,16 @@ class TestUsersGet(autograder.testing.server.ServerTest):
             ),
         ]
 
+        # Add a test case for each user, this helps others using the generated test data.
+        for user in autograder.testing.model.SERVER_USERS.values():
+            test_cases.append((
+                {
+                    autograder.api.config.PARAM_USER_EMAIL.config_key: user.email,
+                    autograder.api.config.PARAM_USER_PASS.config_key: user.name,
+                },
+                {},
+                user,
+                None,
+            ))
+
         self.base_api_test(autograder.api.users.get.send, test_cases)
