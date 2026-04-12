@@ -1,0 +1,11 @@
+{
+    "cli": "autograder.cli.courses.get",
+    "arguments": [
+        '--course', 'ZZZ',
+        '--user', 'server-admin@test.edulinq.org',
+        '--pass', 'server-admin',
+    ],
+    "error": true,
+}
+---
+autograder.error.APIError: Failed to complete operation: Could not find course: 'zzz'.
