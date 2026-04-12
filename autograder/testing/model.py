@@ -55,13 +55,13 @@ COURSE_USERS: typing.Dict[str, typing.Dict[str, lms.model.users.CourseUser]] = _
 RAW_USER_DATA: typing.Dict[str, typing.Any] = edq.util.json.load_path(autograder.testing.constants.SUBMODULE_SERVER_USERS_PATH)
 
 ASSIGNMENTS: typing.Dict[str, typing.Dict[str, lms.model.assignments.Assignment]] = {
-    "course101": {
+    "Course 101": {
         'hw0': lms.model.assignments.Assignment(
             id = "hw0",
             name = "Homework 0",
         ),
     },
-    "course-languages": {
+    "Course Using Different Languages": {
         'bash': lms.model.assignments.Assignment(
             id = "bash",
             name = "A Simple Bash Assignment",
@@ -79,19 +79,19 @@ ASSIGNMENTS: typing.Dict[str, typing.Dict[str, lms.model.assignments.Assignment]
 }
 
 COURSES: typing.Dict[str, autograder.model.course.Course] = {
-    'course101': autograder.model.course.Course(
+    'Course 101': autograder.model.course.Course(
         id = 'course101',
         name = 'Course 101',
-        assignments = ASSIGNMENTS['course101'],
+        assignments = ASSIGNMENTS['Course 101'],
     ),
-    'course-languages': autograder.model.course.Course(
+    'Course Using Different Languages': autograder.model.course.Course(
         id = 'course-languages',
         name = 'Course Using Different Languages',
-        assignments = ASSIGNMENTS['course-languages'],
+        assignments = ASSIGNMENTS['Course Using Different Languages'],
     ),
 }
 
-COURSES_LIST: typing.List[autograder.model.course.Course] = [COURSES[key] for key in sorted(COURSES.keys())]
+COURSES_LIST: typing.List[autograder.model.course.Course] = sorted(COURSES.values())
 
 API_LOGS: typing.List[typing.Dict[str, typing.Any]] = [
     {

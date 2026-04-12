@@ -19,7 +19,7 @@ class TestCoursesGet(autograder.testing.server.ServerTest):
                     autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
                 },
                 {},
-                autograder.testing.model.COURSES['course101'],
+                autograder.testing.model.COURSES['Course 101'],
                 None,
             ),
             (
@@ -29,7 +29,7 @@ class TestCoursesGet(autograder.testing.server.ServerTest):
                     autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
                 },
                 {},
-                autograder.testing.model.COURSES['course-languages'],
+                autograder.testing.model.COURSES['Course Using Different Languages'],
                 None,
             ),
 
@@ -45,5 +45,22 @@ class TestCoursesGet(autograder.testing.server.ServerTest):
                 'Could not find course',
             ),
         ]
+
+        # Add a get for each user of each course (this helps users of the test data).
+        for (course_name, users) in autograder.testing.model.COURSE_USERS.items():
+            if (course_name == 'Extra Course'):
+                continue
+
+            for user in users.values():
+                test_cases.append((
+                    {
+                        autograder.api.config.PARAM_COURSE.config_key: autograder.testing.model.COURSES[course_name].id,
+                        autograder.api.config.PARAM_USER_EMAIL.config_key: user.email,
+                        autograder.api.config.PARAM_USER_PASS.config_key: user.name,
+                    },
+                    {},
+                    autograder.testing.model.COURSES[course_name],
+                    None,
+                ))
 
         self.base_api_test(autograder.api.courses.get.send, test_cases)
