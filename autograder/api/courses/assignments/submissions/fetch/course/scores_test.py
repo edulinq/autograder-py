@@ -59,6 +59,22 @@ class TestCourseAssignmentsFetchCourseScores(autograder.testing.server.ServerTes
                 [],
                 None,
             ),
+
+            # Course Admin
+            (
+                {
+                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'course-admin@test.edulinq.org',
+                    autograder.api.config.PARAM_USER_PASS.config_key: 'course-admin',
+                    autograder.api.config.PARAM_COURSE.config_key: 'course101',
+                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'hw0',
+                    autograder.api.config.PARAM_COURSE_USER_REFERENCES.config_key: [
+                        'student',
+                    ],
+                },
+                {},
+                [STUDENT_SCORE],
+                None,
+            ),
         ]
 
         self.base_api_test(autograder.api.courses.assignments.submissions.fetch.course.scores.send, test_cases)

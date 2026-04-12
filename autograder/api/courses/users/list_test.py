@@ -24,6 +24,16 @@ class TestUsersList(autograder.testing.server.ServerTest):
             (
                 {
                     autograder.api.config.PARAM_COURSE.config_key: 'course101',
+                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'course-admin@test.edulinq.org',
+                    autograder.api.config.PARAM_USER_PASS.config_key: 'course-admin',
+                },
+                {},
+                sorted(autograder.testing.model.COURSE_USERS['Course 101'].values()),
+                None,
+            ),
+            (
+                {
+                    autograder.api.config.PARAM_COURSE.config_key: 'course101',
                     autograder.api.config.PARAM_USER_EMAIL.config_key: 'course-grader@test.edulinq.org',
                     autograder.api.config.PARAM_USER_PASS.config_key: 'course-grader',
                 },

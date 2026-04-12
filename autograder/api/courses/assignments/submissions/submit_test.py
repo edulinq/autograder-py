@@ -43,6 +43,28 @@ class TestCourseAssignmentsSubmit(autograder.testing.server.ServerTest):
                 },
                 None,
             ),
+            (
+                {
+                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'course-admin@test.edulinq.org',
+                    autograder.api.config.PARAM_USER_PASS.config_key: 'course-admin',
+                    autograder.api.config.PARAM_COURSE.config_key: 'course-languages',
+                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'bash',
+                    autograder.api.config.PARAM_ALLOW_LATE.config_key: True,
+                },
+                {
+                    'post_paths': [
+                        autograder.testing.constants.TEST_SUBMISSIONS_BASH_SOLUTION_PATH,
+                    ]
+                },
+                {
+                    'rejected': False,
+                    'message': '',
+                    'grading-success': True,
+                    'result': 10,
+                    'epilogue': None,
+                },
+                None,
+            ),
 
             # Message
             (

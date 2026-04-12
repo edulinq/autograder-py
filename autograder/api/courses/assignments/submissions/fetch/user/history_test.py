@@ -30,6 +30,21 @@ class TestCourseAssignmentsFetchUserHistory(autograder.testing.server.ServerTest
                 ),
                 None,
             ),
+            (
+                {
+                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'course-admin@test.edulinq.org',
+                    autograder.api.config.PARAM_USER_PASS.config_key: 'course-admin',
+                    autograder.api.config.PARAM_COURSE.config_key: 'course101',
+                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'hw0',
+                    autograder.api.config.PARAM_TARGET_EMAIL_OR_SELF.config_key: 'course-student@test.edulinq.org',
+                },
+                {},
+                (
+                    True,
+                    SCORES,
+                ),
+                None,
+            ),
 
             # No History, Self
             (

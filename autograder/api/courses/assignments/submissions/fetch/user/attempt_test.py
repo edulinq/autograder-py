@@ -88,6 +88,40 @@ class TestCourseAssignmentsFetchUserAttempt(autograder.testing.server.ServerTest
                 ),
                 None,
             ),
+            (
+                {
+                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'course-admin@test.edulinq.org',
+                    autograder.api.config.PARAM_USER_PASS.config_key: 'course-admin',
+                    autograder.api.config.PARAM_COURSE.config_key: 'course101',
+                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'hw0',
+                },
+                {},
+                (
+                    True,
+                    False,
+                    None,
+                ),
+                None,
+            ),
+
+            # Target Submissions
+            (
+                {
+                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'course-admin@test.edulinq.org',
+                    autograder.api.config.PARAM_USER_PASS.config_key: 'course-admin',
+                    autograder.api.config.PARAM_COURSE.config_key: 'course101',
+                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'hw0',
+                    autograder.api.config.PARAM_TARGET_EMAIL_OR_SELF.config_key: 'course-student@test.edulinq.org',
+                    autograder.api.config.PARAM_TARGET_SUBMISSION_OR_RECENT.config_key: '1697406265',
+                },
+                {},
+                (
+                    True,
+                    True,
+                    autograder.api.courses.assignments.submissions.fetch.testing.SUBMISSIONS['course-student@test.edulinq.org'][1],
+                ),
+                None,
+            ),
         ]
 
         self.base_api_test(autograder.api.courses.assignments.submissions.fetch.user.attempt.send, test_cases)
