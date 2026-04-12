@@ -5,10 +5,13 @@ Most model data will be copied over from the LMS toolkit and updated for the aut
 
 import typing
 
+import lms.model.assignments
 import lms.model.testdata.users
 import lms.model.users
 import edq.util.json
+import edq.util.time
 
+import autograder.model.course
 import autograder.model.log
 import autograder.testing.constants
 
@@ -49,7 +52,46 @@ SERVER_USERS: typing.Dict[str, lms.model.users.ServerUser] = _clean_server_users
 # {course_name: {user_name: user, ...}, ...}
 COURSE_USERS: typing.Dict[str, typing.Dict[str, lms.model.users.CourseUser]] = _clean_course_users()
 
-RAW_USER_DATA = edq.util.json.load_path(autograder.testing.constants.SUBMODULE_SERVER_USERS_PATH)
+RAW_USER_DATA: typing.Dict[str, typing.Any] = edq.util.json.load_path(autograder.testing.constants.SUBMODULE_SERVER_USERS_PATH)
+
+ASSIGNMENTS: typing.Dict[str, typing.Dict[str, lms.model.assignments.Assignment]] = {
+    "course101": {
+        'hw0': lms.model.assignments.Assignment(
+            id = "hw0",
+            name = "Homework 0",
+        ),
+    },
+    "course-languages": {
+        'bash': lms.model.assignments.Assignment(
+            id = "bash",
+            name = "A Simple Bash Assignment",
+            due_date = edq.util.time.Timestamp(0),
+        ),
+        'cpp': lms.model.assignments.Assignment(
+            id = "cpp",
+            name = "A Simple C++ Assignment",
+        ),
+        'java': lms.model.assignments.Assignment(
+            id = "java",
+            name = "A Simple Java Assignment",
+        ),
+    },
+}
+
+COURSES: typing.Dict[str, autograder.model.course.Course] = {
+    'course101': autograder.model.course.Course(
+        id = 'course101',
+        name = 'Course 101',
+        assignments = ASSIGNMENTS['course101'],
+    ),
+    'course-languages': autograder.model.course.Course(
+        id = 'course-languages',
+        name = 'Course Using Different Languages',
+        assignments = ASSIGNMENTS['course-languages'],
+    ),
+}
+
+COURSES_LIST: typing.List[autograder.model.course.Course] = [COURSES[key] for key in sorted(COURSES.keys())]
 
 API_LOGS: typing.List[typing.Dict[str, typing.Any]] = [
     {
