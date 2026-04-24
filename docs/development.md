@@ -21,7 +21,7 @@ All tests can be run using the [scripts/run_tests.sh](../scripts/run_tests.sh) s
 ./scripts/run_tests.sh
 ```
 
-This script also accept an argument that is a Python regular expression.
+This script also accepts an argument that is a Python regular expression.
 Only tests that match the regular expression will be run.
 For example, to only run CLI tests, you can use:
 ```sh
