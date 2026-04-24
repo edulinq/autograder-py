@@ -1,5 +1,6 @@
 import autograder.api.config
 import autograder.api.users.tokens.delete
+import autograder.testing.model
 import autograder.testing.server
 
 class TestUsersTokensDelete(autograder.testing.server.ServerTest):
@@ -101,5 +102,21 @@ class TestUsersTokensDelete(autograder.testing.server.ServerTest):
                 None,
             ),
         ]
+
+        # Add a test case for each user, this helps others using the generated test data.
+        for user in autograder.testing.model.RAW_USER_DATA.values():
+            test_cases.append((
+                {
+                    autograder.api.config.PARAM_USER_EMAIL.config_key: user['email'],
+                    autograder.api.config.PARAM_USER_PASS.config_key: user['name'],
+                    autograder.api.config.PARAM_TOKEN_ID.config_key: user['tokens'][0]['id'],
+                },
+                {},
+                {
+                    "found-user": True,
+                    "found-token": True,
+                },
+                None,
+            ))
 
         self.base_api_test(autograder.api.users.tokens.delete.send, test_cases)

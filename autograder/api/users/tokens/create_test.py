@@ -1,6 +1,7 @@
 import autograder.api.config
 import autograder.api.users.tokens.create
 import autograder.testing.asserts
+import autograder.testing.model
 import autograder.testing.server
 
 class TestUsersTokensCreate(autograder.testing.server.ServerTest):
@@ -104,5 +105,27 @@ class TestUsersTokensCreate(autograder.testing.server.ServerTest):
                 None,
             ),
         ]
+
+        # Add a test case for each user, this helps others using the generated test data.
+        for user in autograder.testing.model.SERVER_USERS.values():
+            test_cases.append((
+                {
+                    autograder.api.config.PARAM_USER_EMAIL.config_key: user.email,
+                    autograder.api.config.PARAM_USER_PASS.config_key: user.name,
+                },
+                {},
+                {
+                    "found-user": True,
+                    "token-cleartext": autograder.testing.constants.TEST_TOKEN_CLEARTEXT,
+                    "token-info": {
+                        "access-time": autograder.testing.constants.TEST_TIMESTAMP,
+                        "creation-time": autograder.testing.constants.TEST_TIMESTAMP,
+                        "id": autograder.testing.constants.TEST_TOKEN_ID,
+                        "name": "",
+                        "source": "user"
+                    },
+                },
+                None,
+            ))
 
         self.base_api_test(autograder.api.users.tokens.create.send, test_cases, actual_clean_func = autograder.testing.asserts.normalize_dict)

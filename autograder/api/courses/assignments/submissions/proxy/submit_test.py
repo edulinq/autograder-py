@@ -39,6 +39,28 @@ class TestCourseAssignmentsProxySubmit(autograder.testing.server.ServerTest):
                 },
                 None,
             ),
+            (
+                {
+                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'course-admin@test.edulinq.org',
+                    autograder.api.config.PARAM_USER_PASS.config_key: 'course-admin',
+                    autograder.api.config.PARAM_COURSE.config_key: 'course-languages',
+                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'bash',
+                    autograder.api.config.PARAM_PROXY_EMAIL.config_key: 'course-student@test.edulinq.org',
+                },
+                {
+                    'post_paths': [
+                        autograder.testing.constants.TEST_SUBMISSIONS_BASH_SOLUTION_PATH,
+                    ]
+                },
+                {
+                    'found-user': True,
+                    'rejected': False,
+                    'message': '',
+                    'grading-success': True,
+                    'result': 10,
+                },
+                None,
+            ),
 
             # Proxy Time
             (
@@ -70,6 +92,28 @@ class TestCourseAssignmentsProxySubmit(autograder.testing.server.ServerTest):
                 {
                     autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
                     autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
+                    autograder.api.config.PARAM_COURSE.config_key: 'course-languages',
+                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'bash',
+                    autograder.api.config.PARAM_PROXY_EMAIL.config_key: 'ZZZ@test.edulinq.org',
+                },
+                {
+                    'post_paths': [
+                        autograder.testing.constants.TEST_SUBMISSIONS_BASH_SOLUTION_PATH,
+                    ]
+                },
+                {
+                    'found-user': False,
+                    'rejected': False,
+                    'message': '',
+                    'grading-success': False,
+                    'result': None,
+                },
+                None,
+            ),
+            (
+                {
+                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'course-admin@test.edulinq.org',
+                    autograder.api.config.PARAM_USER_PASS.config_key: 'course-admin',
                     autograder.api.config.PARAM_COURSE.config_key: 'course-languages',
                     autograder.api.config.PARAM_ASSIGNMENT.config_key: 'bash',
                     autograder.api.config.PARAM_PROXY_EMAIL.config_key: 'ZZZ@test.edulinq.org',

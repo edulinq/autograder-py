@@ -15,6 +15,10 @@ class TestCoursesAssignmentsSubmissionsAnalysisIndividual(autograder.testing.ser
         dry_run_analysis = copy.deepcopy(BASE_TEST_ANALYSIS)
         dry_run_analysis['options']['dry-run'] = True
 
+        all_options_analysis = copy.deepcopy(COMPLETE_TEST_ANALYSIS)
+        all_options_analysis['options']['dry-run'] = True
+        all_options_analysis['options']['overwrite-records'] = True
+
         # [(config (and overrides), kwargs, expected, error substring), ...]
         test_cases = [
             # Base
@@ -74,6 +78,26 @@ class TestCoursesAssignmentsSubmissionsAnalysisIndividual(autograder.testing.ser
                 },
                 {},
                 COMPLETE_TEST_ANALYSIS,
+                None,
+            ),
+
+            # All Options
+            (
+                {
+                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'course-admin@test.edulinq.org',
+                    autograder.api.config.PARAM_USER_PASS.config_key: 'course-admin',
+
+                    autograder.api.config.PARAM_SUBMISSION_SPECS.config_key: [
+                        'course101::hw0::course-student@test.edulinq.org::1697406256',
+                        'course101::hw0::course-student@test.edulinq.org::1697406265',
+                    ],
+
+                    autograder.api.config.PARAM_DRY_RUN.config_key: True,
+                    autograder.api.config.PARAM_OVERWRITE_RECORDS.config_key: True,
+                    autograder.api.config.PARAM_WAIT_FOR_COMPLETION.config_key: True,
+                },
+                {},
+                all_options_analysis,
                 None,
             ),
         ]

@@ -86,6 +86,41 @@ class TestCoursesAssignmentsSubmissionsProxyRegrade(autograder.testing.server.Se
                 },
                 None,
             ),
+            (
+                {
+                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'course-admin@test.edulinq.org',
+                    autograder.api.config.PARAM_USER_PASS.config_key: 'course-admin',
+                    autograder.api.config.PARAM_COURSE.config_key: 'course-languages',
+                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'bash',
+
+                    autograder.api.config.PARAM_COURSE_USER_REFERENCES.config_key: [
+                        'student',
+                    ],
+
+                    autograder.api.config.PARAM_DRY_RUN.config_key: False,
+                    autograder.api.config.PARAM_OVERWRITE_RECORDS.config_key: False,
+                    autograder.api.config.PARAM_WAIT_FOR_COMPLETION.config_key: False,
+                },
+                {},
+                {
+                    "complete": False,
+                    "options": {
+                        "dry-run": False,
+                        "overwrite-records": False,
+                        "regrade-cutoff": autograder.testing.constants.TEST_TIMESTAMP,
+                        "target-users": [
+                            "student",
+                        ],
+                        "wait-for-completion": False
+                    },
+                    "resolved-users": [
+                        "course-student@test.edulinq.org"
+                    ],
+                    "results": {},
+                    "work-errors": {},
+                },
+                None,
+            ),
 
             # Wait and Cutoff
             (
