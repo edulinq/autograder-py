@@ -1,0 +1,41 @@
+{
+    "module": "autograder.api.courses.assignments.list",
+    
+    "arguments": {
+        "course-id": "course101",
+        "user-email": "myemail",
+        "user-pass": "userpass"
+    },
+    
+    "output": {
+        "assignments": [
+            {
+                "name": "Homework 0",
+                "id": "hw0",
+                "description": "Getting started with autograder",
+                "due-date": 1697836800000,
+                "release-date": 1697059200000,
+                "late-days-allowed": 3,
+                "max-submission-size": 1048576
+            },
+            {
+                "name": "Homework 1",
+                "id": "hw1",
+                "description": "Variables and functions",
+                "due-date": 1698441600000,
+                "release-date": 1697923200000,
+                "late-days-allowed": 3,
+                "max-submission-size": 1048576
+            },
+            {
+                "name": "Homework 2",
+                "id": "hw2",
+                "description": "Control flow",
+                "due-date": 1699046400000,
+                "release-date": 1698528000000,
+                "late-days-allowed": 3,
+                "max-submission-size": 1048576
+            }
+        ]
+    }
+}
