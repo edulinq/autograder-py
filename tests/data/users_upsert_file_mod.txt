@@ -1,2 +1,0 @@
-server-user@test.edulinq.org		sammy	
-server-creator@test.edulinq.org			user

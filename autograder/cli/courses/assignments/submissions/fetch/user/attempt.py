@@ -1,38 +1,48 @@
+"""
+Get a submission along with all grading information.
+"""
+
+import argparse
 import sys
 
 import autograder.api.courses.assignments.submissions.fetch.user.attempt
-import autograder.cli.courses.assignments.submissions.common
+import autograder.cli.parser
+import autograder.util.grading
 
-def run(arguments):
-    result = autograder.api.courses.assignments.submissions.fetch.user.attempt.send(arguments,
-            exit_on_error = True)
+def run_cli(args: argparse.Namespace) -> int:
+    """ Run the CLI. """
 
-    if (not result['found-user']):
-        print("No matching user found.")
+    config = args._config
+
+    found_user, found_submission, result = autograder.api.courses.assignments.submissions.fetch.user.attempt.send(config, exit_on_error = True)
+
+    if (not found_user):
+        print(f"No matching user found: '{config.get('target_email', '')}'.", file = sys.stderr)
         return 1
 
-    if (not result['found-submission']):
-        print("No matching submission found.")
+    if (not found_submission):
+        print(f"No matching submission found: '{config.get('target_submission', '')}'.", file = sys.stderr)
         return 2
 
-    autograder.cli.courses.assignments.submissions.common.output_grading_result(
-        result['grading-result'], arguments.out_dir)
+    if (result is None):
+        raise ValueError("Existing submission was not provided by API.")
 
-    print("Wrote submission to '%s'." % (arguments.out_dir))
+    out_path = autograder.util.grading.output_grading_result(result, base_dir = config['out_dir'])
+    print(f"Submission wrote to '{out_path}'.")
 
     return 0
 
-def main():
-    return run(_get_parser().parse_args())
+def main() -> int:
+    """ Get a parser, parse the args, and call run. """
 
-def _get_parser():
-    parser = autograder.api.courses.assignments.submissions.fetch.user.attempt._get_parser()
+    return run_cli(_get_parser().parse_args())
 
-    parser.add_argument('-o', '--out-dir', dest = 'out_dir',
-        action = 'store', type = str, default = '.',
-        help = ('Where to create a new directory that contains the submission information.'
-            + ' An existing subdirectory will be removed.'
-            + ' Defaults to the current directory.'))
+def _get_parser() -> argparse.ArgumentParser:
+    """ Get a parser for this operation. """
+
+    parser = autograder.cli.parser.get_parser(
+        __doc__.strip(),
+        autograder.api.courses.assignments.submissions.fetch.user.attempt.API_PARAMS)
 
     return parser
 

@@ -1,29 +1,48 @@
+"""
+Get a copy of the grading report for the specified submission.
+Does not submit a new submission.
+"""
+
+import argparse
 import sys
 
 import autograder.api.courses.assignments.submissions.fetch.user.peek
-import autograder.assignment
+import autograder.cli.parser
 
-def run(arguments):
-    result = autograder.api.courses.assignments.submissions.fetch.user.peek.send(arguments,
-            exit_on_error = True)
+def run_cli(args: argparse.Namespace) -> int:
+    """ Run the CLI. """
 
-    if (not result['found-user']):
-        print("No matching user found.")
+    config = args._config
+
+    found_user, found_submission, result = autograder.api.courses.assignments.submissions.fetch.user.peek.send(config, exit_on_error = True)
+
+    if (not found_user):
+        print(f"No matching user found: '{config.get('target_email', '')}'.", file = sys.stderr)
         return 1
 
-    if (not result['found-submission']):
-        print("No matching submission found.")
+    if (not found_submission):
+        print(f"No matching submission found: '{config.get('target_submission', '')}'.", file = sys.stderr)
         return 2
 
-    submission = autograder.assignment.GradedAssignment.from_dict(result['submission-result'])
-    print(submission.report())
+    if (result is None):
+        raise ValueError("Existing submission was not provided by API.")
+
+    print(result.report())
+
     return 0
 
-def main():
-    return run(_get_parser().parse_args())
+def main() -> int:
+    """ Get a parser, parse the args, and call run. """
 
-def _get_parser():
-    parser = autograder.api.courses.assignments.submissions.fetch.user.peek._get_parser()
+    return run_cli(_get_parser().parse_args())
+
+def _get_parser() -> argparse.ArgumentParser:
+    """ Get a parser for this operation. """
+
+    parser = autograder.cli.parser.get_parser(
+        __doc__.strip(),
+        autograder.api.courses.assignments.submissions.fetch.user.peek.API_PARAMS)
+
     return parser
 
 if (__name__ == '__main__'):

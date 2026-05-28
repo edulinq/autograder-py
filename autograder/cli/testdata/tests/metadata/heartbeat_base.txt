@@ -1,0 +1,14 @@
+{
+    "cli": "autograder.cli.metadata.heartbeat",
+    "stdout_assertion_func": "autograder.testing.asserts.content_equals_noramlize_json",
+    "arguments": [
+    ],
+}
+---
+{
+    "server-version": {
+        "base-version": "1.2.3",
+        "git-hash": "abcd1234",
+        "is-dirty": false
+    }
+}

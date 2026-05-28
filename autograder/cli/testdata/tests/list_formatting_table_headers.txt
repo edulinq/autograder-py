@@ -1,0 +1,23 @@
+{
+    "cli": "autograder.cli.users.list",
+    "arguments": [
+        '--user', 'server-admin@test.edulinq.org',
+        '--pass', 'server-admin',
+        '--format', 'table',
+    ],
+}
+---
+id	name	email
+course-admin@test.edulinq.org	course-admin	course-admin@test.edulinq.org
+course-grader@test.edulinq.org	course-grader	course-grader@test.edulinq.org
+course-other@test.edulinq.org	course-other	course-other@test.edulinq.org
+course-owner@test.edulinq.org	course-owner	course-owner@test.edulinq.org
+course-student@test.edulinq.org	course-student	course-student@test.edulinq.org
+extra-course-student-1@test.edulinq.org	extra-course-student-1	extra-course-student-1@test.edulinq.org
+extra-course-student-2@test.edulinq.org	extra-course-student-2	extra-course-student-2@test.edulinq.org
+extra-course-student-3@test.edulinq.org	extra-course-student-3	extra-course-student-3@test.edulinq.org
+extra-course-student-4@test.edulinq.org	extra-course-student-4	extra-course-student-4@test.edulinq.org
+server-admin@test.edulinq.org	server-admin	server-admin@test.edulinq.org
+server-creator@test.edulinq.org	server-creator	server-creator@test.edulinq.org
+server-owner@test.edulinq.org	server-owner	server-owner@test.edulinq.org
+server-user@test.edulinq.org	server-user	server-user@test.edulinq.org

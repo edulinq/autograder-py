@@ -1,37 +1,60 @@
+"""
+Check the style of all '.py' and '.ipynb' files in the paths specified (recursively).
+"""
+
 import argparse
 import sys
 
+import edq.util.json
+
+import autograder.cli.parser
 import autograder.style
 
-def run(args):
-    count, total_lines = autograder.style.check_paths(args.paths, ignore_paths = args.ignore_paths)
-    print("Found %d style errors." % (count))
+def run_cli(args: argparse.Namespace) -> int:
+    """ Run the CLI. """
+
+    style_overrides = edq.util.json.loads(args.style_overrides)
+
+    count, total_lines = autograder.style.check_paths(args.paths,
+            ignore_paths = args.ignore_paths,
+            ignore_patterns = args.ignore_patterns,
+            style_overrides = style_overrides)
+
+    print(f"Found {count} style errors.")
 
     if (count > 0):
         for (path, lines) in total_lines:
-            print("\nStyle Errors for '%s':" % (path))
+            print(f"\nStyle Errors for '{path}':")
             print('---')
             print("\n".join(lines))
             print("---\n")
 
     return count
 
-def _get_parser():
-    parser = argparse.ArgumentParser(description =
-        "Check the style of all '.py' and '.ipynb' files in the paths specified (recursively).")
+def main() -> int:
+    """ Get a parser, parse the args, and call run. """
+    return run_cli(_get_parser().parse_args())
 
-    parser.add_argument('--ignore', dest = 'ignore_paths',
-        type = str, action = 'append', default = [],
-        help = 'Paths to ignore (may be specified mulitiple times).')
+def _get_parser() -> argparse.ArgumentParser:
+    parser = autograder.cli.parser.get_parser(__doc__.strip())
 
     parser.add_argument('paths', metavar = 'path',
         type = str, nargs = '+',
         help = 'A path to check for style.')
 
-    return parser
+    parser.add_argument('--ignore-path', dest = 'ignore_paths',
+        type = str, action = 'append', default = [],
+        help = 'Paths to ignore (may be specified multiple times).')
 
-def main():
-    return run(_get_parser().parse_args())
+    parser.add_argument('--ignore-pattern', dest = 'ignore_patterns',
+        type = str, action = 'append', default = [],
+        help = 'Regular expressions to ignore (may be specified multiple times).')
+
+    parser.add_argument('--style-overrides', dest = 'style_overrides',
+        type = str, action = 'store', default = '{}',
+        help = 'A JSON object containing style overrides to send to flake8 (default: %(default)s).')
+
+    return parser
 
 if (__name__ == '__main__'):
     sys.exit(main())

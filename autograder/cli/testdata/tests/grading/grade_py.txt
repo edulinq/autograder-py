@@ -1,0 +1,15 @@
+{
+    "cli": "autograder.cli.grading.grade",
+    "stdout_assertion_func": "autograder.testing.asserts.equals_clean_pretty_time",
+    "arguments": [
+        '--assignment', '__DATA_DIR__(../../../../testdata/autograder-testdata/autograder-server/testdata/course101/HW0/assignment.json)',
+        '--submission', '__DATA_DIR__(../../../../testdata/autograder-testdata/autograder-server/testdata/course101/HW0/test-submissions/solution/submission.py)',
+    ],
+}
+---
+Autograder transcript for assignment: HW0
+Grading started at <PRETTY TIME> and ended at <PRETTY TIME>.
+Q1: 1 / 1
+Q2: 1 / 1
+
+Total: 2 / 2

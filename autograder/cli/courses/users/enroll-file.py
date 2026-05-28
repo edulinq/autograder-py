@@ -1,30 +1,53 @@
-import sys
+# pylint: disable=invalid-name
 
-import autograder.api.constants
+"""
+Enroll users from a TSV file into a course.
+"""
+
+import argparse
+import sys
+import typing
+
+import edq.util.json
+
+import autograder.api.config
 import autograder.api.courses.users.enroll
-import autograder.cli.common
-import autograder.cli.config
-import autograder.util.hash
+import autograder.cli.parser
 import autograder.util.load
 
-def run(arguments):
-    arguments = vars(arguments)
+API_PARAMS: typing.List[autograder.api.config.APIParam] = [
+    autograder.api.config.PARAM_SERVER,
+    autograder.api.config.PARAM_COURSE,
+    autograder.api.config.PARAM_USER_EMAIL,
+    autograder.api.config.PARAM_USER_PASS,
 
-    arguments['raw-course-users'] = _load_users(arguments['path'])
-    arguments['send-emails'] = not arguments['skip-emails']
+    autograder.api.config.PARAM_DRY_RUN,
+    autograder.api.config.PARAM_SKIP_INSERTS,
+    autograder.api.config.PARAM_SKIP_UPDATES,
 
-    result = autograder.api.courses.users.enroll.send(arguments, exit_on_error = True)
+    autograder.api.config.PARAM_SEND_EMAILS,
 
-    autograder.cli.common.list_user_op_responses(result['results'], table = arguments['table'])
+    autograder.api.config.PARAM_RAW_COURSE_USERS,
+]
+
+def run_cli(args: argparse.Namespace) -> int:
+    """ Run the CLI. """
+
+    config = args._config
+    config['raw_course_users'] = _load_users(args.path)
+
+    result = autograder.api.courses.users.enroll.send(config, exit_on_error = True)
+    print(edq.util.json.dumps(result, indent = 4))
+
     return 0
 
-def _load_users(path):
+def _load_users(path: str) -> typing.List[typing.Dict[str, str]]:
+    """ Load raw user entries from a TSV file. """
+
     users = []
 
     rows = autograder.util.load.load_tsv(path, 4)
-    for lineno in range(len(rows)):
-        row = rows[lineno]
-
+    for (lineno, row) in enumerate(rows):
         email = row.pop(0)
 
         name = ''
@@ -39,10 +62,8 @@ def _load_users(path):
         if (course_role == ''):
             course_role = 'unknown'
 
-        if (course_role not in autograder.api.constants.COURSE_ROLES):
-            raise ValueError(
-                "File ('%s') line (%d) has an invalid course role '%s'." % (
-                    path, lineno, course_role))
+        if (not autograder.model.user.CourseRole.has_value(course_role)):
+            raise ValueError(f"File ('{path}') line ({lineno}) has an invalid course role '{course_role}'.")
 
         course_lms_id = ''
         if (len(row) > 0):
@@ -57,16 +78,17 @@ def _load_users(path):
 
     return users
 
-def main():
-    return run(_get_parser().parse_args())
+def main() -> int:
+    """ Get a parser, parse the args, and call run. """
 
-def _get_parser():
-    parser = autograder.api.courses.users.enroll._get_parser()
+    return run_cli(_get_parser().parse_args())
 
-    parser.description = ('Enroll users to the course from a TSV file.')
+def _get_parser() -> argparse.ArgumentParser:
+    """ Get a parser for this operation. """
 
-    autograder.cli.config.add_table_argument(parser)
-    autograder.cli.config.add_skip_emails_argument(parser)
+    parser = autograder.cli.parser.get_parser(
+        __doc__.strip(),
+        API_PARAMS)
 
     parser.add_argument('path', metavar = 'PATH',
         action = 'store', type = str,

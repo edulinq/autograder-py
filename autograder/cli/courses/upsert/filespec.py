@@ -1,64 +1,55 @@
+"""
+Upsert a course using a file specification (FileSpec).
+"""
+
+import argparse
 import sys
+import typing
+
+import edq.util.json
 
 import autograder.api.courses.upsert.filespec
-import autograder.cli.courses.upsert.common
+import autograder.cli.parser
+import autograder.filespec
 
-def run(arguments):
-    arguments = vars(arguments)
+def run_cli(args: argparse.Namespace) -> int:
+    """ Run the CLI. """
 
-    filespec = _build_filespec(arguments)
-    arguments['filespec'] = filespec
+    config = args._config
 
-    results = autograder.api.courses.upsert.filespec.send(arguments, exit_on_error = True)
+    config['filespec'] = _build_filespec(config)
 
-    return autograder.cli.courses.upsert.common.handle_results(results,
-        arguments['full_output'])
+    result = autograder.api.courses.upsert.filespec.send(config, exit_on_error = True)
+    print(edq.util.json.dumps(result, indent = 4))
 
-def _build_filespec(arguments):
-    filespec = {
-        'type': arguments['type'],
-        'path': arguments['path'],
+    return 0
+
+def _build_filespec(config: typing.Dict[str, typing.Any]) -> autograder.filespec.FileSpec:
+    data = {
+        'type': config['filespec_type'],
+        'path': config['filespec_path'],
     }
 
-    for key in ['reference', 'username', 'token']:
-        value = arguments.get(key, None)
+    for base_key in ['reference', 'username', 'token']:
+        value = config.get(f"filespec_{base_key}", None)
         if (value is None):
             continue
 
-        filespec[key] = value
+        data[base_key] = value
 
-    return filespec
+    return autograder.filespec.parse(data)
 
-def main():
-    return run(_get_parser().parse_args())
+def main() -> int:
+    """ Get a parser, parse the args, and call run. """
 
-def _get_parser():
-    parser = autograder.api.courses.upsert.filespec._get_parser()
+    return run_cli(_get_parser().parse_args())
 
-    autograder.cli.courses.upsert.common.add_full_output_argument(parser)
+def _get_parser() -> argparse.ArgumentParser:
+    """ Get a parser for this operation. """
 
-    parser.add_argument('--type', dest = 'type',
-        action = 'store', type = str, required = True,
-        choices = ['git', 'url'],
-        help = 'The type of filespec.')
-
-    parser.add_argument('--path', dest = 'path',
-        action = 'store', type = str, required = True,
-        help = 'The path the filespec points to.')
-
-    parser.add_argument('--reference', dest = 'reference',
-        action = 'store', type = str, default = None,
-        help = 'The reference (often git commit/branch) of the filespec.')
-
-    parser.add_argument('--username', dest = 'username',
-        action = 'store', type = str, default = None,
-        help = 'The username for filespec authentication.')
-
-    parser.add_argument('--token', dest = 'token',
-        action = 'store', type = str, default = None,
-        help = 'The token for filespec authentication.')
-
-    # Note that dest is not used for course upserting (the name of the dirs do not matter).
+    parser = autograder.cli.parser.get_parser(
+        __doc__.strip(),
+        autograder.api.courses.upsert.filespec.API_PARAMS)
 
     return parser
 

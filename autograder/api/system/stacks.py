@@ -1,20 +1,22 @@
+"""
+Get stack traces for all the currently running routines (threads) on the server.
+"""
+
+import typing
+
 import autograder.api.common
 import autograder.api.config
+import autograder.error
 
-API_ENDPOINT = 'system/stacks'
-API_PARAMS = [
+API_ENDPOINT: str = 'system/stacks'
+API_WRITE: bool = False
+API_PARAMS: typing.List[autograder.api.config.APIParam] = [
+    autograder.api.config.PARAM_SERVER,
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
 ]
 
-DESCRIPTION = 'Get stack traces for all the currently running routines (threads) on the server.'
+def send(config: typing.Dict[str, typing.Any], **kwargs: typing.Any) -> typing.Dict[str, typing.Any]:
+    """ Send a request to the autograder. """
 
-def send(arguments, **kwargs):
-    return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT, **kwargs)
-
-def _get_parser():
-    parser = autograder.api.config.get_argument_parser(
-        description = DESCRIPTION,
-        params = API_PARAMS)
-
-    return parser
+    return autograder.api.common.make_api_request(API_ENDPOINT, config, API_PARAMS, write = API_WRITE, **kwargs)

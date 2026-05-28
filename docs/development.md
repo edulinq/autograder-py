@@ -1,104 +1,151 @@
 # Development
 
+This document contains some notes for any developers.
+
 ## Testing
 
 This project has two main types of tests:
 standard unit tests and server tests.
+Server tests are then further divided into API and CLI tests.
 
 There is not much to say about the standard unit tests.
 They are made using Python's `unittest` library.
 
 The server test are much more involved.
-These tests will mock an [Autograder API server](https://github.com/edulinq/autograder-server)
-to send requests to.
-Server tests come in two flavors:
-API tests (which compare the direct output of API calls)
-and CLI tests (which compare the output (typically stdout) of CLI executables).
+These tests will mock an [Autograder API server](https://github.com/edulinq/autograder-server) to send requests to.
 
 ### Running Tests
 
-All tests can be run using the [run_tests.py](../run_tests.py) script:
+All tests can be run using the [scripts/run_tests.sh](../scripts/run_tests.sh) script:
 ```sh
-./run_tests.py
+./scripts/run_tests.sh
 ```
 
-This script also accept an argument that is a Python regular expression.
+This script also accepts an argument that is a Python regular expression.
 Only tests that match the regular expression will be run.
-For example, to only run API tests, you can use:
+For example, to only run CLI tests, you can use:
 ```sh
-./run_tests.py APITest
+./scripts/run_tests.sh CLITest
 ```
 
 ### Server Tests
 
-The core functionality for server tests lives in the [tests/server](../tests/server) directory.
-This includes a mock API server and a base test class that server tests can use to automatically start the mock server before tests.
+Server tests will mock an autograder server instance to submit requests against.
+The core functionality is provided by the [edq.testing.httpserver](https://edulinq.github.io/python-utils/docs/latest/edq/testing/httpserver.html) module.
+The general idea is that pre-generated test data is loaded at test time and any HTTP request that comes into the testing server is matched against this test data.
+If the HTTP request matches one in the test data, then the pre-defined response is sent to the client (the test).
+If there is no match, the server sends a 404.
+
+The test data is provided by the [edqlinq/autograder-testdata](https://github.com/edulinq/autograder-testdata) repo.
+This repo is included as a submodule of this project at [testdata/autograder-testdata](../testdata/autograder-testdata).
+To generate this test data, we run the tests from this repository.
+(I know this may sound confusing and circular at this point.)
+When we generate the test data, we run the tests from this repository, BUT we do not use a test server.
+Instead we start a real autograder server (using with a Docker image or building a sever from source),
+and point all the tests at that server when running.
+If an endpoint is called that may change the state on the server (the endpoint's module has `API_WRITE` set to true),
+then the testing framework will restart the server after the call so that the server always stays in a pristine state.
+As these tests are running, the testing framework saves all HTTP exchanges between the tests and the autograder server.
+These saved HTTP exchanges are the test data used in this repository.
 
 #### API Tests
 
-API tests directly make calls to the (mock) API server, and validates the output.
-API tests live in [tests/api/testdata](../tests/api/testdata).
-An API test is specified as a JSON file with the following fields:
-
-| Key               | Requited | Default Value       | Type    | Description                             |
-|-------------------|----------|---------------------|---------|-----------------------------------------|
-| `module`          | true     | -                   | string  | The Python module (import path) for the API function. This file MUST define `API_ENDPOINT`, `API_PARAMS`, `send()` and `_get_parser()`. |
-| `arguments`       | false    | {}                  | dict    | The arguments to send along with this API request. |
-| `output-modifier` | false    | "clean_output_noop" | string  | A function to clean the output data before comparison. This is useful for things like normalizing times and randomly generated tokens. See [tests/api/test_api.py](../tests/api/test_api.py) for pre-defined functions. |
-| `read-write`      | false    | false               | boolean | Set to true if this call should cause a write/update in the API server's data. This is used to speed up test data verification. |
-| `error`           | false    | false               | boolean | Indicates that this call should return an error. |
-| `output`          | true     | -                   | dict    | The response (content) if this API request. If `error` is true, then this should have the following keys: `code` (HTTP response code), `message` (the message sent by the API server), and `python-message` (the message inside the Python exception that was raised as a result of this call). |
-
-To get the output of an API request,
-the easiest way is to run your request on the command line (via one of the `autograder.cli.*` executables)
-with the `--verbose` flag.
-This will output the fill JSON request and response
-(which you can then copy into the `output` field).
-
-Since out test API data is the cornerstone of our server tests,
-it is important to ensure that it is always correct.
-To do this, we use the [.ci/verify_test_api_requests.py](../.ci/verify_test_api_requests.py) script.
-Look at the script's `--help` output to see all of it's functionality.
-The short version is that it creates a real Autograder API server to verify our test data.
-
-During CI, this script will use a Docker image for the test server:
-```
-./.ci/verify_test_api_requests.py --docker
-```
-
-This method is not very fast, but should be consistent and portable to everywhere you can run docker.
-The Docker image we used is built by the server on every tagged release.
-The current version of the Docker image we used is specify in [.ci/backend.py](../.ci/backend.py) in the `DEFAULT_DOCKER_IMAGE` constant.
-When you are targeting a new server version (like if you added an API endpoint), make sure to update the image version.
-
-However, the Docker-based method is not as helpful for developers who also have changes pending on the server side
-(since the Docker image will not be updated until changes are accepted).
-This happens a lot when developers are adding a new API endpoint.
-In this situation, you can run the verification script using an existing source directory for the server.
-The script will build the server from this directory and use that to verify test data.
-
-For example, if your Python interface repo (`autograder-py`) and server repo (`autograder-server`) are in the same directory,
-then you can use a command like:
-```
-./.ci/verify_test_api_requests.py --source-dir ../autograder-server
-```
+We call any test that directly tests an API endpoint an "API test".
+Aside from being server tests, they are not special.
+They live in the `autograder.api` package, adjacent to the endpoint they are testing.
 
 #### CLI Tests
 
-CLI tests are server tests that test the output (stdout) of the `autograder.cli.*` executables.
-CLI tests live in [tests/cli/testdata](../tests/cli/testdata).
-Like API tests, CLI tests use JSON-based options.
-However, CLI tests are held in a hybrid JSON/txt file which also contains the expected output
-(this allows users to easily include the output of the executable without worrying about special characters or newlines).
-These files are split with a `---`,
-where the upper part is the JSON options and the lower part is the expected output (stdout).
+CLI tests are a special kind of test specifically for testing CLI tools.
+They are built upon the [edq.testing.cli](https://edulinq.github.io/python-utils/docs/latest/edq/testing/cli.html) module.
+Tests are written as `.txt` files with configuration options in JSON in the top section (above `---`),
+and the expected stdout/stderr in the bottom section.
+They live in the [autograder/cli/testdata/tests](../autograder/cli/testdata/tests) directory.
+This directory is searched and a test is automatically created from each file.
 
-The JSON portion of the file has the following fields:
+### Generating Server Test Data
 
-| Key            | Requited | Default Value    | Type    | Description                             |
-|----------------|----------|------------------|---------|-----------------------------------------|
-| `cli`          | true     | -                | string  | The Python module (import path) for the CLI main. This file MUST define `_get_parser()` and `run()`. |
-| `arguments`    | false    | []               | dict    | String arguments to pass on the command line. |
-| `output-check` | false    | "content_equals" | string  | The function that will be used to compare the actual output to the expected output. See [tests/cli/test_cli.py](../tests/cli/test_cli.py) for pre-defined functions. |
-| `exit-status`  | false    | 0                | int     | The expected exit status. |
-| `error`        | false    | false            | boolean | Indicates that this call should raise a Python exception. When set, then the expected output should match the message in the Python exception (instead of stdout). |
+As discussed above, test data for server tests need to live in the
+[edqlinq/autograder-testdata](https://github.com/edulinq/autograder-testdata) repo.
+There are many valid ways of getting data into that repo.
+This section outlines one recommended way of doing so.
+
+Step 0) Ensure your development directory is installed as "editable".
+
+Your code that generates the test data will need access to the changes you are currently making.
+An easy way to accomplish this is by using a shared virtual environment,
+and installing your directory as an editable package.
+You can do this with:
+```sh
+pip install -e .
+```
+
+This makes it so that other Python packages can see the changes you make.
+
+Step 1) Write your code which calls the autograder.
+
+Typically, you are doing more than just adding a test (e.g. adding an endpoint or fixing a bug).
+Make sure that the code which will call the autograder is written.
+(Note that it does not need to be complete, it just needs to call the server properly.)
+
+Step 2) Create your tests.
+
+Since test data is generated by running tests,
+the first step in generating test data is creating the tests that will call the server to create your desired test data.
+So just write your tests normally.
+It's okay if your tests are failing/incomplete at this point.
+As long as they call the server, the test data can be generated.
+
+Step 3) Generate test data in the submodule.
+
+Now, we will generate test data in the [testdata/autograder-testdata](../testdata/autograder-testdata) submodule.
+I recommend navigating there in a different terminal (so you can switch back-and-forth).
+
+The fastest way to generate the test data will require building the [autograder server](https://github.com/edulinq/autograder-server) locally.
+This will require building a Go project.
+If this works for you, you can run:
+```sh
+./scripts/local-generate-test-data.py --pattern my-test-pattern
+```
+
+Where `--pattern my-test-pattern` lets you specify a regular expression to just run the tests you need (your new tests you wrote in Step 2).
+You can run without this option to execute all tests (but it will take longer).
+
+If you can't build the server locally, then you can use Docker to run the server instead:
+```sh
+./scripts/docker-generate-test-data.py --pattern my-test-pattern
+```
+
+Whether the tests passed or not, you should have not generated some new test data in the `testdata/http` directory (the full repo path is `testdata/autograder-testdata/testdata/http`).
+An easy way to check the new test data is to use a git status (assuming you kept your directory clean).
+
+Step 4) Complete your code and iterate.
+
+With your test data generated, you can now run your tests normally (using the [scripts/run_tests.sh](../scripts/run_tests.sh) script).
+The tests will automatically load data from [testdata/autograder-testdata](../testdata/autograder-testdata).
+So now you can complete your code/tests and repeat Step 3 as necessary until your development is complete.
+
+If you are submitting a PR, now would be the time to do it.
+You should double check that all your tests pass (since the PR's CI will show them failing during your reviews).
+
+Step 5) Commit data to autograder-testdata.
+
+Once everything is set with the code, we can update the data in the autograder-testdata repo.
+Again, ensure that the changes to autograder-py are accessible, and then generate the full test data.
+We typically don't do this in the submodule (since it will use an https vs an ssh git URL).
+
+```sh
+rm -r testdata/http
+./scripts/local-generate-test-data.py
+```
+
+This data should be committed with `[skip ci]` included in the commit message to skip CI.
+This helps break the circular dependency between autograder-py and autograder-testdata.
+
+Step 6) Update the autograder-testdata submodule.
+
+With the new test data in the autograder-testdata repo,
+all that is left is to update autograder-testdata submodule and commit any final changes.
+A `git pull` in the submodule should be sufficient (you may need to checkout the `main` branch first).
+
+Now you can push submodule update and any other code.

@@ -1,33 +1,37 @@
+"""
+Upsert a course using a file specification (FileSpec).
+"""
+
+import typing
+
 import autograder.api.common
 import autograder.api.config
+import autograder.error
 
-API_ENDPOINT = 'courses/upsert/filespec'
-API_PARAMS = [
-    autograder.api.config.PARAM_COURSE_ID,
+API_ENDPOINT: str = 'courses/upsert/filespec'
+API_WRITE: bool = True
+API_PARAMS: typing.List[autograder.api.config.APIParam] = [
+    autograder.api.config.PARAM_SERVER,
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
 
+    autograder.api.config.PARAM_DRY_RUN,
+    autograder.api.config.PARAM_SKIP_EMAILS,
     autograder.api.config.PARAM_SKIP_SOURCE_SYNC,
     autograder.api.config.PARAM_SKIP_LMS_SYNC,
     autograder.api.config.PARAM_SKIP_BUILD_IMAGES,
-    autograder.api.config.PARAM_SKIP_TASKS,
+    autograder.api.config.PARAM_SKIP_TEMPLATE_FILES,
 
-    autograder.api.config.PARAM_DRY_RUN,
-    autograder.api.config.PARAM_SKIP_EMAILS,
+    autograder.api.config.PARAM_UPSERT_FILESPEC,
 
-    autograder.api.config.APIParam('filespec',
-        'The specification of the file to upload.',
-        required = True, cli_param = False),
+    autograder.api.config.PARAM_FILESPEC_PART_TYPE,
+    autograder.api.config.PARAM_FILESPEC_PART_PATH,
+    autograder.api.config.PARAM_FILESPEC_PART_REFERENCE,
+    autograder.api.config.PARAM_FILESPEC_PART_USERNAME,
+    autograder.api.config.PARAM_FILESPEC_PART_TOKEN,
 ]
 
-DESCRIPTION = 'Upsert a course using a filespec.'
+def send(config: typing.Dict[str, typing.Any], **kwargs: typing.Any) -> typing.Dict[str, typing.Any]:
+    """ Send a request to the autograder. """
 
-def send(arguments, **kwargs):
-    return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT, **kwargs)
-
-def _get_parser():
-    parser = autograder.api.config.get_argument_parser(
-        description = DESCRIPTION,
-        params = API_PARAMS)
-
-    return parser
+    return autograder.api.common.make_api_request(API_ENDPOINT, config, API_PARAMS, write = API_WRITE, **kwargs)

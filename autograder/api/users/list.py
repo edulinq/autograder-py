@@ -1,22 +1,32 @@
+"""
+List the users on the server.
+"""
+
+import typing
+
+import lms.model.users
+
 import autograder.api.common
 import autograder.api.config
+import autograder.model.user
 
-API_ENDPOINT = 'users/list'
-API_PARAMS = [
+API_ENDPOINT: str = 'users/list'
+API_WRITE: bool = False
+API_PARAMS: typing.List[autograder.api.config.APIParam] = [
+    autograder.api.config.PARAM_SERVER,
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
 
-    autograder.api.config.PARAM_SERVER_USER_REFERENCES,
+    autograder.api.config.PARAM_TARGET_USERS,
 ]
 
-DESCRIPTION = 'List the users on the server.'
+def send(config: typing.Dict[str, typing.Any], **kwargs: typing.Any) -> typing.List[lms.model.users.ServerUser]:
+    """ Send a request to the autograder. """
 
-def send(arguments, **kwargs):
-    return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT, **kwargs)
+    response = autograder.api.common.make_api_request(API_ENDPOINT, config, API_PARAMS, write = API_WRITE, **kwargs)
 
-def _get_parser():
-    parser = autograder.api.config.get_argument_parser(
-        description = DESCRIPTION,
-        params = API_PARAMS)
+    users = []
+    for raw_user in response['users']:
+        users.append(autograder.model.user.make_server_user(raw_user))
 
-    return parser
+    return sorted(users)

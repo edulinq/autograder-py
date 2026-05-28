@@ -1,21 +1,23 @@
+"""
+Change your password to the one provided.
+"""
+
+import typing
+
 import autograder.api.common
 import autograder.api.config
 
-API_ENDPOINT = 'users/password/change'
-API_PARAMS = [
+API_ENDPOINT: str = 'users/password/change'
+API_WRITE: bool = True
+API_PARAMS: typing.List[autograder.api.config.APIParam] = [
+    autograder.api.config.PARAM_SERVER,
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
+
     autograder.api.config.PARAM_NEW_PASS,
 ]
 
-DESCRIPTION = 'Change your password to the one provided.'
+def send(config: typing.Dict[str, typing.Any], **kwargs: typing.Any) -> typing.Dict[str, typing.Any]:
+    """ Send a request to the autograder. """
 
-def send(arguments, **kwargs):
-    return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT, **kwargs)
-
-def _get_parser():
-    parser = autograder.api.config.get_argument_parser(
-        description = DESCRIPTION,
-        params = API_PARAMS)
-
-    return parser
+    return autograder.api.common.make_api_request(API_ENDPOINT, config, API_PARAMS, write = API_WRITE, **kwargs)

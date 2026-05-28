@@ -1,0 +1,12 @@
+{
+    "cli": "autograder.cli.courses.assignments.submissions.fetch.user.attempt",
+    "arguments": [
+        '--user', 'server-admin@test.edulinq.org',
+        '--pass', 'server-admin',
+        '--course', 'course101',
+        '--assignment', 'hw0',
+        '--out-dir', '__TEMP_DIR__()',
+    ],
+}
+---
+No matching submission found: ''.

@@ -1,0 +1,205 @@
+import os
+import re
+import typing
+
+import edq.testing.asserts
+import edq.testing.unittest
+import edq.util.json
+
+import autograder.testing.constants
+
+THIS_DIR: str = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
+ROOT_DIR: str = os.path.join(THIS_DIR, '..', '..')
+AUTOGRADER_TESTDATA_REPO: str = os.path.join(ROOT_DIR, 'testdata', 'autograder-testdata')
+AUTOGRADER_SERVER_REPO: str = os.path.join(AUTOGRADER_TESTDATA_REPO, 'autograder-server')
+API_DESCRIPTION_PATH: str = os.path.join(AUTOGRADER_SERVER_REPO, 'resources', 'api.json')
+
+TOKEN_CLEARTEXT_PATTERN: str = r'\w{32}'
+TOKEN_ID_PATTERN: str = r'\w{8}-\w{4}-\w{4}-\w{4}-\w{12}'
+
+PRETTY_TIME_PATTERN: str = r'\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d+[\+\-]\d+:\d+'
+PRETTY_TIME_REPLACEMENT: str = '<PRETTY TIME>'
+
+NORMALIZE_TIMESTAMP_KEYS: typing.Set[str] = {
+    'analysis-timestamp',
+    'first-timestamp',
+    'last-timestamp',
+}
+""" Keys for timestamp values to normalize. """
+
+_cached_api_description: typing.Union[typing.Dict[str, typing.Any], None] = None  # pylint: disable=invalid-name
+
+def get_expected_api_description() -> typing.Dict[str, typing.Any]:
+    """ Get the expected API description from the submodule (or the cache). """
+
+    global _cached_api_description  # pylint: disable=global-statement
+
+    if (_cached_api_description is not None):
+        return _cached_api_description
+
+    _cached_api_description = edq.util.json.load_path(API_DESCRIPTION_PATH, strict = True)
+
+    return _cached_api_description
+
+def content_equals_noramlize_json(test: edq.testing.unittest.BaseTest, expected: str, actual: str) -> None:
+    """
+    A CLI test assertion function for JSON output.
+    The output will be converted to a dict and then compared with edq.testing.unittest.BaseTest.assertJSONDictEqual().
+    """
+
+    # Convert both to dicts.
+    expected_dict = edq.util.json.loads(expected, strict = True)
+    actual_dict = edq.util.json.loads(actual, strict = True)
+
+    # Normalize the actual data (the expected should already be normalized (by the tester)).
+    actual_dict = normalize_dict(actual_dict)
+    actual_dict = _normalize_timestamps(actual_dict)
+
+    test.assertJSONDictEqual(expected_dict, actual_dict)
+
+def contains(test: edq.testing.unittest.BaseTest, expected: str, actual: str) -> None:
+    """
+    A CLI test assertion function that checks if the expected output is a contained in the actual output.
+    """
+
+    test.assertIn(expected, actual)
+
+def content_equals_noramlize_regrade(test: edq.testing.unittest.BaseTest, expected: str, actual: str) -> None:
+    """ A CLI test assertion function for regrade output. """
+
+    # Convert both to dicts.
+    expected_dict = edq.util.json.loads(expected, strict = True)
+    actual_dict = edq.util.json.loads(actual, strict = True)
+
+    # Normalize the actual data (the expected should already be normalized (by the tester)).
+    actual_dict = normalize_dict(actual_dict)
+    actual_dict = _normalize_timestamps(actual_dict, keys = {'grading_start_time', 'regrade-cutoff'})
+
+    test.assertJSONDictEqual(expected_dict, actual_dict)
+
+def content_equals_stack_trace(test: edq.testing.unittest.BaseTest, expected: str, actual: str) -> None:
+    """
+    A CLI test assertion function for checking if the output looks like a stack trace.
+    """
+
+    # Actual output should be JSON.
+    actual_dict = edq.util.json.loads(actual, strict = True)
+
+    test.assertGreater(actual_dict['count'], 5)
+    test.assertEqual(actual_dict['count'], len(actual_dict['stacks']))
+
+def normalize_dict(data: typing.Dict[str, typing.Any]) -> typing.Dict[str, typing.Any]:
+    """ Noramlize a dict that typically comes from testing output. """
+
+    data = _noramlize_version(data)
+    data = _noramlize_tokens(data)
+
+    return data
+
+def normalize_analysis(data: typing.Dict[str, typing.Any]) -> typing.Dict[str, typing.Any]:
+    """ Noramlize a dict that comes from an analysis result. """
+
+    _normalize_timestamps(data)
+    return data
+
+def _noramlize_version(data: typing.Dict[str, typing.Any]) -> typing.Dict[str, typing.Any]:
+    """ Normalize server version information. """
+
+    if ('server-version' not in data):
+        return data
+
+    data['server-version']['base-version'] = autograder.testing.constants.TEST_BASE_VERSION
+    data['server-version']['git-hash'] = autograder.testing.constants.TEST_GIT_HASH
+    data['server-version']['is-dirty'] = autograder.testing.constants.TEST_IS_DIRTY
+
+    return data
+
+def _noramlize_tokens(data: typing.Dict[str, typing.Any]) -> typing.Dict[str, typing.Any]:
+    """ Normalize token identifiers. """
+
+    if ('token-id' in data):
+        data['token-id'] = autograder.testing.constants.TEST_TOKEN_ID
+
+    if ('token-cleartext' in data):
+        data['token-cleartext'] = autograder.testing.constants.TEST_TOKEN_CLEARTEXT
+
+    if ('token-info' in data):
+        _normalize_token_info(data['token-info'])
+
+    if ('tokens' in data):
+        if (data['tokens'] is not None):
+            for token_info in data['tokens']:
+                _normalize_token_info(token_info)
+
+    return data
+
+def _normalize_token_info(token_info: typing.Union[typing.Dict[str, typing.Any], None]) -> None:
+    if (token_info is None):
+        return
+
+    token_info['access-time'] = autograder.testing.constants.TEST_TIMESTAMP
+    token_info['creation-time'] = autograder.testing.constants.TEST_TIMESTAMP
+    token_info['id'] = autograder.testing.constants.TEST_TOKEN_ID
+
+def equals_clean_imageinfo(test: edq.testing.unittest.BaseTest, expected: str, actual: str) -> None:
+    """
+    A CLI test assertion function for JSON image info.
+    """
+
+    # Convert both to dicts.
+    expected_dict = edq.util.json.loads(expected, strict = True)
+    actual_dict = edq.util.json.loads(actual, strict = True)
+
+    for content in [expected_dict, actual_dict]:
+        content['created-timestamp'] = autograder.testing.constants.TEST_TIMESTAMP
+        content['size-bytes'] = len(autograder.testing.constants.TEST_PAYLOAD_BYTES)
+
+    test.assertJSONDictEqual(expected_dict, actual_dict)
+
+def equals_api_description(test: edq.testing.unittest.BaseTest, expected: str, actual: str) -> None:
+    """ A CLI test assertion function for the API description (read from a submodule). """
+
+    expected_dict = get_expected_api_description()
+    actual_dict = edq.util.json.loads(actual, strict = True)
+
+    test.assertJSONDictEqual(expected_dict, actual_dict)
+
+def equals_clean_tokens(test: edq.testing.unittest.BaseTest, expected: str, actual: str) -> None:
+    """ A CLI test assertion function for text that contains tokens. """
+
+    expected = re.sub(TOKEN_CLEARTEXT_PATTERN, autograder.testing.constants.TEST_TOKEN_CLEARTEXT, expected)
+    expected = re.sub(TOKEN_ID_PATTERN, autograder.testing.constants.TEST_TOKEN_ID, expected)
+
+    actual = re.sub(TOKEN_CLEARTEXT_PATTERN, autograder.testing.constants.TEST_TOKEN_CLEARTEXT, actual)
+    actual = re.sub(TOKEN_ID_PATTERN, autograder.testing.constants.TEST_TOKEN_ID, actual)
+
+    test.assertEqual(expected, actual)
+
+def equals_clean_pretty_time(test: edq.testing.unittest.BaseTest, expected: str, actual: str) -> None:
+    """ A CLI test assertion function for text that contains pretty timestamps. """
+
+    actual = re.sub(PRETTY_TIME_PATTERN, PRETTY_TIME_REPLACEMENT, actual)
+
+    edq.testing.asserts.content_equals_normalize(test, expected, actual)
+
+def _normalize_timestamps(data: typing.Any, keys: typing.Union[typing.Set[str], None] = None) -> typing.Any:
+    """
+    Recursively normalize specified timestamps.
+    It is assumed that the specified data comes from JSON deserialization
+    (and therefore has a limited number of types).
+    """
+
+    if (keys is None):
+        keys = NORMALIZE_TIMESTAMP_KEYS
+
+    if (isinstance(data, list)):
+        return [_normalize_timestamps(item, keys = keys) for item in data]
+
+    if (isinstance(data, dict)):
+        for (key, value) in data.items():
+            if (key in keys):
+                data[key] = autograder.testing.constants.TEST_TIMESTAMP
+            else:
+                data[key] = _normalize_timestamps(value, keys = keys)
+
+    return data

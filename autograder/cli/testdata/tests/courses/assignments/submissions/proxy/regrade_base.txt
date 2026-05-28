@@ -1,0 +1,45 @@
+{
+    "cli": "autograder.cli.courses.assignments.submissions.proxy.regrade",
+    "stdout_assertion_func": "autograder.testing.asserts.content_equals_noramlize_regrade",
+    "arguments": [
+        '--user', 'server-admin@test.edulinq.org',
+        '--pass', 'server-admin',
+        '--course', 'course-languages',
+        '--assignment', 'bash',
+        '--regrade-cutoff', '123456789',
+    ],
+}
+---
+{
+    "complete": false,
+    "options": {
+        "dry-run": false,
+        "overwrite-records": false,
+        "regrade-cutoff": 123456789,
+        "target-users": [
+            "*"
+        ],
+        "wait-for-completion": false
+    },
+    "resolved-users": [
+        "course-admin@test.edulinq.org",
+        "course-grader@test.edulinq.org",
+        "course-other@test.edulinq.org",
+        "course-owner@test.edulinq.org",
+        "course-student@test.edulinq.org"
+    ],
+    "results": {
+        "course-student@test.edulinq.org": {
+            "assignment-id": "bash",
+            "course-id": "course-languages",
+            "grading_start_time": 123456789,
+            "id": "course-languages::bash::course-student@test.edulinq.org::1768603685",
+            "max_points": 10,
+            "message": "",
+            "score": 10,
+            "short-id": "1768603685",
+            "user": "course-student@test.edulinq.org"
+        }
+    },
+    "work-errors": {}
+}

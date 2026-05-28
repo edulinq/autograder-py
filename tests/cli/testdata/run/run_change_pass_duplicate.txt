@@ -1,9 +1,0 @@
-{
-    "cli": "autograder.run.change-pass",
-    "arguments": [
-        "--new-pass", "course-admin"
-    ],
-    "exit-status": 1
-}
----
-Your new password must be different from your previous password.

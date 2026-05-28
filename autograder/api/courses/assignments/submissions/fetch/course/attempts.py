@@ -1,24 +1,33 @@
+"""
+Get all recent submissions and grading information for this assignment.
+"""
+
+import typing
+
 import autograder.api.common
 import autograder.api.config
+import autograder.assignment
 
-API_ENDPOINT = 'courses/assignments/submissions/fetch/course/attempts'
-API_PARAMS = [
-    autograder.api.config.PARAM_COURSE_ID,
+API_ENDPOINT: str = 'courses/assignments/submissions/fetch/course/attempts'
+API_WRITE: bool = False
+API_PARAMS: typing.List[autograder.api.config.APIParam] = [
+    autograder.api.config.PARAM_SERVER,
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
-    autograder.api.config.PARAM_ASSIGNMENT_ID,
+
+    autograder.api.config.PARAM_COURSE,
+    autograder.api.config.PARAM_ASSIGNMENT,
 
     autograder.api.config.PARAM_COURSE_USER_REFERENCES,
+
+    autograder.api.config.PARAM_OUT_DIR,
 ]
 
-DESCRIPTION = 'Get all recent submissions and grading information for this assignment.'
+def send(config: typing.Dict[str, typing.Any], **kwargs: typing.Any) -> typing.Dict[str, typing.Dict[str, typing.Any]]:
+    """
+    Send a request to the autograder.
+    Return a map of grading results keyed by user email.
+    """
 
-def send(arguments, **kwargs):
-    return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT, **kwargs)
-
-def _get_parser():
-    parser = autograder.api.config.get_argument_parser(
-        description = DESCRIPTION,
-        params = API_PARAMS)
-
-    return parser
+    response = autograder.api.common.make_api_request(API_ENDPOINT, config, API_PARAMS, write = API_WRITE, **kwargs)
+    return typing.cast(typing.Dict[str, typing.Dict[str, typing.Any]], response['grading-results'])

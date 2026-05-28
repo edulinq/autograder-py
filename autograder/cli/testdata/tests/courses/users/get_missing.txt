@@ -1,0 +1,11 @@
+{
+    "cli": "autograder.cli.courses.users.get",
+    "arguments": [
+        '--course', 'course101',
+        '--user', 'course-grader@test.edulinq.org',
+        '--pass', 'course-grader',
+        '--target-email', 'server-user',
+    ],
+}
+---
+

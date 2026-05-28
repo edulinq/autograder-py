@@ -1,0 +1,2 @@
+new-user@test.edulinq.org	password123		user
+server-admin@test.edulinq.org		New Name

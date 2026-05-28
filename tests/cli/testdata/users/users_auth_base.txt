@@ -1,7 +1,0 @@
-{
-    "cli": "autograder.cli.users.auth",
-    "arguments": [
-    ]
-}
----
-Authentication successful.

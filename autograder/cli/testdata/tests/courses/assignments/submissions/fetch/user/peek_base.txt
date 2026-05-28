@@ -1,0 +1,18 @@
+{
+    "cli": "autograder.cli.courses.assignments.submissions.fetch.user.peek",
+    "stdout_assertion_func": "autograder.testing.asserts.equals_clean_pretty_time",
+    "arguments": [
+        '--user', 'server-admin@test.edulinq.org',
+        '--pass', 'server-admin',
+        '--course', 'course101',
+        '--assignment', 'hw0',
+        '--target-email', 'course-student@test.edulinq.org',
+    ],
+}
+---
+Autograder transcript for assignment: HW0
+Grading started at <PRETTY TIME> and ended at <PRETTY TIME>.
+Q1: 1 / 1
+Q2: 1 / 1
+
+Total: 2 / 2

@@ -1,20 +1,28 @@
+"""
+List the courses on a server.
+"""
+
+import typing
+
 import autograder.api.common
 import autograder.api.config
+import autograder.model.course
 
-API_ENDPOINT = 'courses/list'
-API_PARAMS = [
+API_ENDPOINT: str = 'courses/list'
+API_WRITE: bool = False
+API_PARAMS: typing.List[autograder.api.config.APIParam] = [
+    autograder.api.config.PARAM_SERVER,
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
 ]
 
-DESCRIPTION = 'List the courses on the server.'
+def send(config: typing.Dict[str, typing.Any], **kwargs: typing.Any) -> typing.List[autograder.model.course.Course]:
+    """ Send a request to the autograder. """
 
-def send(arguments, **kwargs):
-    return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT, **kwargs)
+    response = autograder.api.common.make_api_request(API_ENDPOINT, config, API_PARAMS, write = API_WRITE, **kwargs)
 
-def _get_parser():
-    parser = autograder.api.config.get_argument_parser(
-        description = DESCRIPTION,
-        params = API_PARAMS)
+    courses = []
+    for raw_course in response['courses']:
+        courses.append(autograder.model.course.Course.from_api(raw_course))
 
-    return parser
+    return sorted(courses)

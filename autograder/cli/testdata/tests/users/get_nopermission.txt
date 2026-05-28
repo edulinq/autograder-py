@@ -1,0 +1,11 @@
+{
+    "cli": "autograder.cli.users.get",
+    "arguments": [
+        '--user', 'course-admin@test.edulinq.org',
+        '--pass', 'course-admin',
+        '--target-email', 'course-student@test.edulinq.org',
+    ],
+    "error": true,
+}
+---
+autograder.error.APIError: Failed to complete operation: You have insufficient permissions for the requested operation.

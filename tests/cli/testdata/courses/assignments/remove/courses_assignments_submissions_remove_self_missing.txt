@@ -1,8 +1,0 @@
-{
-    "cli": "autograder.cli.courses.assignments.submissions.remove",
-    "arguments": [
-    ],
-    "exit-status": 2
-}
----
-No matching submission found.

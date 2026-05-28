@@ -1,31 +1,41 @@
+# pylint: disable=invalid-name
+
+"""
+Take any necessary steps before performing a standard docker-based grading.
+This script is used as part of the standard docker grading procedure for Python.
+"""
+
 import argparse
-import json
 import os
 import sys
+
+import edq.util.dirent
+import edq.util.json
 
 import autograder.fileop
 import autograder.submission
 
-DEFAULT_BASE_DIR = os.path.join('/', 'autograder')
+DEFAULT_BASE_DIR: str = os.path.join('/', 'autograder')
 
-DEFAULT_CONFIG_PATH = os.path.join(DEFAULT_BASE_DIR, 'config.json')
+DEFAULT_CONFIG_PATH: str = os.path.join(DEFAULT_BASE_DIR, 'config.json')
 
-DEFAULT_INPUT_DIR = os.path.join(DEFAULT_BASE_DIR, 'input')
-DEFAULT_OUTPUT_DIR = os.path.join(DEFAULT_BASE_DIR, 'output')
-DEFAULT_WORK_DIR = os.path.join(DEFAULT_BASE_DIR, 'work')
+DEFAULT_INPUT_DIR: str = os.path.join(DEFAULT_BASE_DIR, 'input')
+DEFAULT_OUTPUT_DIR: str = os.path.join(DEFAULT_BASE_DIR, 'output')
+DEFAULT_WORK_DIR: str = os.path.join(DEFAULT_BASE_DIR, 'work')
 
-def run(args):
+def run_cli(args: argparse.Namespace) -> int:
+    """ Run the CLI. """
+
     if (not os.path.exists(args.config)):
         # No config, there's nothing to do.
         return 0
 
-    with open(args.config, 'r') as file:
-        config = json.load(file)
+    config = edq.util.json.load_path(args.config)
 
-    os.makedirs(args.basedir, exist_ok = True)
-    os.makedirs(args.inputdir, exist_ok = True)
-    os.makedirs(args.outputdir, exist_ok = True)
-    os.makedirs(args.workdir, exist_ok = True)
+    edq.util.dirent.mkdir(args.basedir)
+    edq.util.dirent.mkdir(args.inputdir)
+    edq.util.dirent.mkdir(args.outputdir)
+    edq.util.dirent.mkdir(args.workdir)
 
     # Do post-submission file operations.
     # There are no pre-sub file ops and Docker has already copied over the submission files
@@ -35,10 +45,16 @@ def run(args):
 
     return 0
 
-def _get_parser():
-    parser = argparse.ArgumentParser(description =
-        'Take any necessary steps before performing a standard docker-based grading.'
-        + ' This script is used as part of the standard docker grading procedure for Python.')
+def main() -> int:
+    """ Get a parser, parse the args, and call run. """
+
+    args, _ = _get_parser().parse_known_args()
+    return run_cli(args)
+
+def _get_parser() -> argparse.ArgumentParser:
+    """ Get a parser for this operation. """
+
+    parser = argparse.ArgumentParser(description = __doc__.strip())
 
     parser.add_argument('-c', '--config',
         action = 'store', type = str, default = DEFAULT_CONFIG_PATH,
@@ -61,9 +77,6 @@ def _get_parser():
         help = 'The path to the grading work directory (default: %(default)s).')
 
     return parser
-
-def main():
-    return run(_get_parser().parse_args())
 
 if (__name__ == '__main__'):
     sys.exit(main())

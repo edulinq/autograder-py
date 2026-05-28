@@ -1,20 +1,23 @@
 import contextlib
 import logging
 import os
+import re
 import sys
+import typing
 
-from flake8.api import legacy as flake8
+import edq.util.code
+import edq.util.dirent
+import flake8.api.legacy
 
-import autograder.code
 import autograder.question
-import autograder.util.dirent
+import autograder.util.prepare_submission
 
-DEFAULT_MAX_LINE_LENGTH = 100
+DEFAULT_MAX_LINE_LENGTH: int = 150
 
 # For codes, see:
 # flake8: https://flake8.pycqa.org/en/latest/user/error-codes.html
 # pycodestyle: https://pycodestyle.pycqa.org/en/latest/intro.html#error-codes
-BASE_STYLE_OPTIONS = {
+BASE_STYLE_OPTIONS: typing.Dict[str, typing.Any] = {
     'max_line_length': DEFAULT_MAX_LINE_LENGTH,
     'max_doc_length': DEFAULT_MAX_LINE_LENGTH,
     'select': 'E,W,F',
@@ -62,66 +65,122 @@ class Style(autograder.question.Question):
     A question that can be added to assignments that checks style.
     """
 
-    def __init__(self, paths, ignore_paths = None,
-            max_points = 5,
-            fake_path = None, shorten_path = True,
-            style_overrides = None,
-            **kwargs):
+    def __init__(self,
+            paths: typing.Union[str, typing.List[str], None] = None,
+            ignore_paths: typing.Union[typing.List[str], None] = None,
+            ignore_patterns: typing.Union[typing.Sequence[typing.Union[str, re.Pattern]], None] = None,
+            max_points: float = 5,
+            fake_path: typing.Union[str, None] = None,
+            shorten_path: bool = True,
+            style_overrides: typing.Union[typing.Dict[str, typing.Any], None] = None,
+            **kwargs: typing.Any) -> None:
         super().__init__(max_points)
+
+        if (paths is None):
+            paths = []
 
         if (isinstance(paths, str)):
             paths = [paths]
 
-        if (not isinstance(paths, list)):
-            # Allow this to throw.
-            paths = list(paths)
+        self._paths: typing.List[str] = paths
+        """ The paths to check. """
 
         if (ignore_paths is None):
             ignore_paths = []
 
+        self._ignore_paths = ignore_paths
+        """
+        Paths to ignore when checking style.
+        These should be relative to where the style checker will be run or absolute.
+        Use `ignore_patterns` for more flexiblity.
+        """
+
+        if (ignore_patterns is None):
+            ignore_patterns = []
+
+        clean_ignore_patterns = []
+        for pattern in ignore_patterns:
+            if (isinstance(pattern, re.Pattern)):
+                clean_ignore_patterns.append(pattern)
+            else:
+                clean_ignore_patterns.append(re.compile(pattern))
+
+        self._ignore_patterns = clean_ignore_patterns
+        """ Patterns to check against every file path before making checks. """
+
+        self._fake_path: typing.Union[str, None] = fake_path
+        """
+        A fake path to use when reporting style errors.
+        This can help make output cleaner.
+        """
+
+        self._shorten_paths: bool = shorten_path
+        """
+        Shorten the reported path when reporting style errors.
+        This can help make output cleaner.
+        """
+
         if (style_overrides is None):
             style_overrides = {}
 
-        self._paths = paths
-        self._ignore_paths = ignore_paths
-        self._fake_path = fake_path
-        self._shorten_paths = shorten_path
         self._style_overrides = style_overrides
+        """ Overrides for options passed directly to flake8. """
 
-    def score_question(self, *args, **kwargs):
-        error_count, style_output = check_paths(self._paths,
+    def score_question(self, submission: typing.Any, **kwargs: typing.Any) -> None:
+        error_count, style_output = check_paths(
+                self._paths,
                 ignore_paths = self._ignore_paths,
+                ignore_patterns = self._ignore_patterns,
                 fake_path = self._fake_path,
                 shorten_path = self._shorten_paths,
-                style_overrides = self._style_overrides)
+                style_overrides = self._style_overrides,
+                include_clean_paths = False,
+        )
 
         if (error_count == 0):
             self.full_credit(message = 'Style is clean!')
             return
 
-        self.add_message(("Code has %d style issues (shown below)."
-                + " Note that line numbers may be offset in iPython notebooks.")
-                % (error_count))
+        self.add_message(f"Code has {error_count} style issues (shown below). Note that line numbers may be offset in iPython notebooks.")
         self.set_score(max(0, self.max_points - error_count))
 
         self.add_message("--- Style Output BEGIN ---")
         for (path, lines) in style_output:
-            self.add_message("\nStyle Issues for: '%s':" % path)
+            self.add_message(f"\nStyle Issues for: '{path}':")
             self.add_message('---')
             self.add_message("\n".join(lines))
             self.add_message("---\n")
         self.add_message("--- Style Output END ---")
 
-def check_path(path, **kwargs):
+def check_path(
+        path: str,
+        **kwargs: typing.Any) -> typing.Tuple[int, typing.List[typing.Tuple[str, typing.List[str]]]]:
+    """
+    Check a single path for style.
+    See check_paths() and check_file() for kwargs.
+    See check_paths() for return value.
+    """
+
     return check_paths([path], **kwargs)
 
-def check_paths(paths, ignore_paths = None, **kwargs):
+def check_paths(
+        paths: typing.List[str],
+        ignore_paths: typing.Union[typing.List[str], None] = None,
+        ignore_patterns: typing.Union[typing.Sequence[typing.Union[str, re.Pattern]], None] = None,
+        include_clean_paths: bool = False,
+        **kwargs: typing.Any) -> typing.Tuple[int, typing.List[typing.Tuple[str, typing.List[str]]]]:
     """
-    Check the style of all the listed paths (recursivley) and return a two-item tuple of:
+    Check the style of all the listed paths (recursively).
+
+    If `include_clean_paths` is false, then no information is returned on empty files,
+    otherwise, these files will be included in the results (with empty description lines).
+    Ignored paths are never included in the results.
+
+    Returns a two-item tuple of:
         - The total number of style violations.
-        - A list of two-item tules of:
-            - The path to a file with style violations.
-            - A list of strings that describe the style issues.
+        - A list of two-item tuples of:
+            - The path to the context file.
+            - A list of strings that describe the style issues in the context file.
     """
 
     if (ignore_paths is None):
@@ -129,16 +188,33 @@ def check_paths(paths, ignore_paths = None, **kwargs):
 
     ignore_paths = [os.path.abspath(path) for path in ignore_paths]
 
+    if (ignore_patterns is None):
+        ignore_patterns = []
+
+    clean_ignore_patterns = []
+    for pattern in ignore_patterns:
+        if (isinstance(pattern, re.Pattern)):
+            clean_ignore_patterns.append(pattern)
+        else:
+            clean_ignore_patterns.append(re.compile(pattern))
+
     total_count = 0
+
     # [(path, lines), ...]
     total_lines = []
 
-    for path in paths:
+    for path in sorted(paths):
         path = os.path.abspath(path)
 
         skip = False
+
         for ignore_path in ignore_paths:
-            if (path.startswith(ignore_path)):
+            if (path == ignore_path):
+                skip = True
+                break
+
+        for ignore_pattern in clean_ignore_patterns:
+            if (re.search(ignore_pattern, path) is not None):
                 skip = True
                 break
 
@@ -146,46 +222,55 @@ def check_paths(paths, ignore_paths = None, **kwargs):
             continue
 
         if (os.path.isfile(path)):
-            if (os.path.splitext(path)[1] not in autograder.code.ALLOWED_EXTENSIONS):
+            if (os.path.splitext(path)[1] not in autograder.util.prepare_submission.ALLOWED_EXTENSIONS):
                 continue
 
-            count, lines = check_file(path, **kwargs)
-            lines = [(path, lines)]
+            count, raw_lines = check_file(path, **kwargs)
+            lines = [(path, raw_lines)]
         else:
             dirents = [os.path.join(path, dirent) for dirent in os.listdir(path)]
-            count, lines = check_paths(dirents, ignore_paths = ignore_paths, **kwargs)
+            count, lines = check_paths(dirents,
+                    ignore_paths = ignore_paths, ignore_patterns = ignore_patterns, include_clean_paths = include_clean_paths, **kwargs)
 
-        if (count > 0):
+        if (include_clean_paths or (count > 0)):
             total_count += count
             total_lines += lines
 
     return total_count, total_lines
 
-def check_file(path, fake_path = None, shorten_path = False, style_overrides = None):
+def check_file(
+        path: str,
+        fake_path: typing.Union[str, None] = None,
+        shorten_path: bool = False,
+        style_overrides: typing.Union[typing.Dict[str, typing.Any], None] = None,
+        **kwargs: typing.Any) -> typing.Tuple[int, typing.List[str]]:
     """
-    Check the style of a file and return a two-item tuple of:
+    Check the style of a file.
+    Return a two-item tuple of:
         - The number of style violations.
         - A list of strings that describe the style issues.
     """
 
+    if (style_overrides is None):
+        style_overrides = {}
+
     if (not os.path.isfile(path)):
-        raise ValueError("Can only check style on a file, got a directory: '%s'." % (path))
+        raise ValueError(f"Can only check style on a file, got a directory: '{path}'.")
 
     cleanup_paths = []
 
     if (path.endswith('.py')):
         pass
     elif (path.endswith('.ipynb')):
-        contents = autograder.code.extract_notebook_code(path)
+        contents = edq.util.code.extract_notebook_code(path)
 
-        temp_path = autograder.util.dirent.get_temp_path(prefix = 'style_', suffix = '_notebook')
+        temp_path = edq.util.dirent.get_temp_path(prefix = 'style_', suffix = '_notebook')
         cleanup_paths.append(temp_path)
-        with open(temp_path, 'w') as file:
-            file.write(contents)
+        edq.util.dirent.write_file(temp_path, contents, strip = False, newline = False)
 
         path = temp_path
     else:
-        raise ValueError("Can only check style on .py or .ipynb files, got '%s'." % (path))
+        raise ValueError(f"Can only check style on .py or .ipynb files, got '{path}'.")
 
     path = os.path.realpath(path)
 
@@ -197,10 +282,10 @@ def check_file(path, fake_path = None, shorten_path = False, style_overrides = N
     if (shorten_path):
         replacement_path = os.path.basename(replacement_path)
 
-    output_path = autograder.util.dirent.get_temp_path(prefix = 'style_', suffix = '_output')
+    output_path = edq.util.dirent.get_temp_path(prefix = 'style_', suffix = '_output')
     cleanup_paths.append(output_path)
 
-    # Ignore most flak8 logging.
+    # Ignore most flake8 logging.
     logging.getLogger("flake8").setLevel(logging.WARNING)
 
     # argparse (used by flake8) will look for a program name on sys.argv[0].
@@ -208,16 +293,15 @@ def check_file(path, fake_path = None, shorten_path = False, style_overrides = N
         sys.argv = ['']
 
     style_options = BASE_STYLE_OPTIONS.copy()
-    if (style_overrides is not None):
-        style_options.update(style_overrides)
+    style_options.update(style_overrides)
 
-    style_guide = flake8.get_style_guide(**style_options)
+    style_guide = flake8.api.legacy.get_style_guide(**style_options)
 
-    with open(output_path, 'w') as file:
+    with open(output_path, 'w', encoding = edq.util.dirent.DEFAULT_ENCODING) as file:
         with contextlib.redirect_stdout(file):
             report = style_guide.check_files([path])
 
-    with open(output_path, 'r') as file:
+    with open(output_path, 'r', encoding = edq.util.dirent.DEFAULT_ENCODING) as file:
         lines = file.readlines()
 
     lines = [line.rstrip() for line in lines]
@@ -225,7 +309,7 @@ def check_file(path, fake_path = None, shorten_path = False, style_overrides = N
     if (path != replacement_path):
         lines = [line.replace(path, replacement_path) for line in lines]
 
-    for path in cleanup_paths:
-        autograder.util.dirent.remove(path)
+    for cleanup_path in cleanup_paths:
+        edq.util.dirent.remove(cleanup_path)
 
     return (report._application.result_count, lines)

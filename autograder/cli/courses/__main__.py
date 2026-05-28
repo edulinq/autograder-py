@@ -1,13 +1,11 @@
-"""
-The `autograder.cli.courses` package contains tools to access and manage course information.
-"""
-
 import sys
 
-import autograder.util.cli
+import edq.clilib.list
 
-def main():
-    return autograder.util.cli.main()
+def main() -> int:
+    """ List this CLI dir. """
+
+    return edq.clilib.list.main()
 
 if (__name__ == '__main__'):
     sys.exit(main())

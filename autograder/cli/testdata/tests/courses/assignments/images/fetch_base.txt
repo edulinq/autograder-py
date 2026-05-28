@@ -1,0 +1,13 @@
+{
+    "cli": "autograder.cli.courses.assignments.images.fetch",
+    "stdout_assertion_func": "autograder.testing.asserts.contains",
+    "arguments": [
+        '--user', 'server-admin@test.edulinq.org',
+        '--pass', 'server-admin',
+        '--course', 'course101',
+        '--assignment', 'hw0',
+        '--out-dir', '__TEMP_DIR__()',
+    ],
+}
+---
+Wrote image 'autograder.course101.hw0' to '__TEMP_DIR__(autograder.course101.hw0.tar.gz)'.

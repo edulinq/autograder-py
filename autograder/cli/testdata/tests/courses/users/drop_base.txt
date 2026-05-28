@@ -1,0 +1,13 @@
+{
+    "cli": "autograder.cli.courses.users.drop",
+    "arguments": [
+        '--course', 'course101',
+        '--user', 'course-admin@test.edulinq.org',
+        '--pass', 'course-admin',
+        '--target-email', 'course-student@test.edulinq.org',
+    ],
+}
+---
+{
+    "found-user": true
+}

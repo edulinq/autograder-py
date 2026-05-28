@@ -1,0 +1,15 @@
+{
+    "cli": "autograder.cli.courses.assignments.submissions.fetch.user.attempts",
+    /* The name of the output dir will be different on Windows. */
+    "platform_skip": "win",
+    "arguments": [
+        '--user', 'server-admin@test.edulinq.org',
+        '--pass', 'server-admin',
+        '--course', 'course101',
+        '--assignment', 'hw0',
+        '--target-email', 'course-student@test.edulinq.org',
+        '--out-dir', '__TEMP_DIR__()',
+    ],
+}
+---
+Wrote 3 attempts to '__TEMP_DIR__(hw0/course-student@test.edulinq.org)'.

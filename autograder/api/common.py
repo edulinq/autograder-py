@@ -1,27 +1,56 @@
-import json
 import os
 import sys
-import traceback
+import typing
 
+import edq.core.errors
+import edq.net.request
+import edq.util.json
+import edq.util.time
 import requests
 
 import autograder
 import autograder.api.config
 import autograder.api.constants
 import autograder.error
-import autograder.util.timestamp
 
-SOURCE_NAME = 'edq-autograder-py'
+DEFAULT_SOURCE_NAME: str = 'edq-autograder-py'
+DEFAULT_SOURCE_VERSION: str = autograder.__version__
 
-def handle_api_request(arguments, params, endpoint, exit_on_error = False, files = []):
+TESTING_SOURCE_NAME: str = 'testing'
+TESTING_SOURCE_VERSION: str = '0.0.0'
+
+_source_name: str = DEFAULT_SOURCE_NAME  # pylint: disable=invalid-name
+_source_version: str = DEFAULT_SOURCE_VERSION  # pylint: disable=invalid-name
+
+def set_testing_source_info() -> None:
+    """ Set source info for API requests to consistent values for testing. """
+
+    global _source_name  # pylint: disable=global-statement
+    global _source_version  # pylint: disable=global-statement
+
+    _source_name = TESTING_SOURCE_NAME
+    _source_version = TESTING_SOURCE_VERSION
+
+def make_api_request(
+        endpoint: str,
+        config: typing.Dict[str, typing.Any],
+        api_params: typing.List[autograder.api.config.APIParam],
+        write: typing.Union[bool, None] = None,
+        exit_on_error: bool = False,
+        post_paths: typing.Union[typing.List[str], None] = None,
+        ) -> typing.Dict[str, typing.Any]:
     """
     Given arguments (usually from argparse), API params, and an endpoint,
     make an API request.
     Will raise an error on any error or error response.
+
+    Requests that MAY write data to the server should pass `write` as true.
+    When set, a header (autograder.api.constants.HEADER_KEY_WRITE) will be sent along with the API request.
+    This should only affect testing, and will allow server runners to restart when write operations are sent.
     """
 
     try:
-        return _handle_api_request(arguments, params, endpoint, exit_on_error, files)
+        return _make_api_request(endpoint, config, api_params, post_paths = post_paths, write = write)
     except autograder.error.AutograderError as ex:
         if (exit_on_error):
             print("ERROR: " + ex.args[0], file = sys.stderr)
@@ -29,85 +58,130 @@ def handle_api_request(arguments, params, endpoint, exit_on_error = False, files
 
         raise ex
 
-def _handle_api_request(arguments, params, endpoint, exit_on_error, files):
-    config = autograder.api.config.get_tiered_config(arguments)
-    data, extra = autograder.api.config.parse_api_config(config, params,
-            exit_on_error = exit_on_error)
+def _make_api_request(
+        endpoint: str,
+        config: typing.Dict[str, typing.Any],
+        api_params: typing.List[autograder.api.config.APIParam],
+        write: typing.Union[bool, None] = None,
+        post_paths: typing.Union[typing.List[str], None] = None,
+        ) -> typing.Dict[str, typing.Any]:
+    """ Wrapped function for make_api_request(). """
 
-    return send_api_request(endpoint, data = data, files = files, **extra)
+    payload = _verify_payload(config, api_params)
 
-def send_api_request(endpoint, server = None, verbose = False, data = {}, files = [], **kwargs):
+    return send_api_request(endpoint, payload, config, post_paths = post_paths, write = write)
+
+def _verify_payload(
+        raw_payload: typing.Dict[str, typing.Any],
+        api_params: typing.List[autograder.api.config.APIParam],
+        ) -> typing.Dict[str, typing.Any]:
+    """
+    Verify that the given payload matches the listed API parameters,
+    and return a new copy of the payload with only the specified keys.
+    """
+
+    payload = {}
+
+    for api_param in api_params:
+        if (not api_param.api):
+            continue
+
+        value = api_param.clean_value(raw_payload.get(api_param.config_key, None))
+
+        if (value is None):
+            if (api_param.api_required):
+                raise autograder.error.APIError(None,
+                    f"Required parameter '{api_param.config_key}' not found.")
+
+            if (api_param.omit_empty):
+                continue
+
+        payload[api_param.api_key] = value
+
+    return payload
+
+def send_api_request(
+        endpoint: str,
+        payload: typing.Dict[str, typing.Any],
+        config: typing.Dict[str, typing.Any],
+        write: typing.Union[bool, None] = None,
+        post_paths: typing.Union[typing.List[str], None] = None,
+        ) -> typing.Dict[str, typing.Any]:
     """
     Make an autograder API request.
-    On a failure statue, an error will be raised with error information.
+    On a failure (including non 200), an error will be raised with error information.
     Otherwise (including a successful response with a failed operation (soft error)),
-    the content of the response will be returned.
+    the content of the response will be returned (converted from JSON to a dict).
     """
 
-    if ((server is None) or (server == '')):
+    if (post_paths is None):
+        post_paths = []
+
+    server = payload.pop('server', None)
+    if (server is None):
         raise autograder.error.APIError(None, "No server provided.")
 
     server = server.rstrip('/')
     endpoint = endpoint.lstrip('/')
 
-    url = "%s/api/%s/%s" % (server, autograder.api.constants.API_VERSION, endpoint)
+    url = f"{server}/api/{autograder.api.constants.API_VERSION}/{endpoint}"
 
     # Add source information.
-    data['source'] = SOURCE_NAME
-    data['source-version'] = autograder.__version__
+    payload['source'] = _source_name
+    payload['source-version'] = _source_version
+
+    headers = {}
+    if (write is not None):
+        headers[autograder.api.constants.HEADER_KEY_WRITE] = str(write).lower()
 
     post_files = {}
-    for path in files:
+    for path in post_paths:
         filename = os.path.basename(path)
         if (filename in post_files):
-            raise autograder.error.APIError(None, "Cannot submit duplicate filenames ('%s')."
-                % (filename))
+            raise autograder.error.APIError(None, f"Cannot submit duplicate filenames ('{filename}').")
 
-        post_files[filename] = open(path, 'rb')
+        if (not os.path.isfile(path)):
+            raise autograder.error.APIError(None, f"Path does not exist, or is not a file: '{path}'.")
 
-    if (verbose):
-        print("\nURL: %s" % (url))
-        print("Autograder Request Data:\n---\n%s\n---\n" % (json.dumps(data, indent = 4)))
+        post_files[filename] = open(path, 'rb')  # pylint: disable=consider-using-with
 
     try:
-        raw_response = requests.request(
-            method = 'POST',
-            url = url,
-            data = {autograder.api.constants.API_REQUEST_JSON_KEY: json.dumps(data)},
-            files = post_files)
-    except requests.exceptions.ConnectionError:
-        if (verbose):
-            traceback.print_exc()
+        raw_response, raw_body = edq.net.request.make_post(
+            url,
+            data = {autograder.api.constants.API_REQUEST_JSON_KEY: edq.util.json.dumps(payload)},
+            headers = headers,
+            files = post_files,
+            raise_for_status = False)
+    except edq.core.errors.RetryError as ex:
+        # If this is not a connection error, then re-raise.
+        if (not ex.contains_instance(requests.exceptions.ConnectionError)):
+            raise ex
 
-        raise autograder.error.ConnectionError(("Could not connect to autograder server"
-            + " '%s'." % (server)
-            + " This is a networking issue"
-            + " (e.g., network down, server down, wrong server address),"
-            + " not an authentication issue."))
+        raise autograder.error.ConnectionError((f"Could not connect to autograder server '{server}'."  # pylint: disable=raise-missing-from
+            + " This is a networking issue (e.g., network down, server down, wrong server address), not an authentication issue."))
 
     for file in post_files.values():
         file.close()
 
     try:
-        response = raw_response.json()
+        response_body = edq.util.json.loads(raw_body, strict = True)
     except Exception as ex:
-        raise autograder.error.APIError(None, "Autograder response does not contain valid JSON."
-            + " Contact a server admin with the following. Response:\n---\n%s\n---" % (
-                raw_response.text)) from ex
+        message = ("Autograder response does not contain valid JSON."
+            + " Contact a server admin with the following."
+            + f" Response:\n---\n{raw_response.text}\n---")
 
-    if (verbose):
-        print("\nAutograder Response:\n---\n%s\n---\n" % (json.dumps(response, indent = 4)))
+        raise autograder.error.APIError(None, message) from ex
 
-    if (not response.get(autograder.api.constants.API_RESPONSE_KEY_SUCCESS, False)):
+    if (not response_body.get(autograder.api.constants.API_RESPONSE_KEY_SUCCESS, False)):
         message = 'Request to the autograder failed.'
-        if (autograder.api.constants.API_RESPONSE_KEY_MESSAGE in response):
-            message = ("Failed to complete operation: %s" %
-                response[autograder.api.constants.API_RESPONSE_KEY_MESSAGE])
+        if (autograder.api.constants.API_RESPONSE_KEY_MESSAGE in response_body):
+            message = f"Failed to complete operation: {response_body[autograder.api.constants.API_RESPONSE_KEY_MESSAGE]}"
 
             # Replace any timestamps in the message.
-            message = autograder.util.timestamp.convert_message(message, pretty = True)
+            message = edq.util.time.Timestamp.convert_embedded(message, pretty = True)
 
-        code = response.get("status", None)
+        code = response_body.get(autograder.api.constants.API_RESPONSE_KEY_STATUS, None)
         raise autograder.error.APIError(code, message)
 
-    return response[autograder.api.constants.API_RESPONSE_KEY_CONTENT]
+    content = response_body[autograder.api.constants.API_RESPONSE_KEY_CONTENT]
+    return typing.cast(typing.Dict[str, typing.Any], content)

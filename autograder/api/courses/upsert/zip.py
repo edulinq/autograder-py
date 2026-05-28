@@ -1,29 +1,41 @@
+"""
+Upsert a course using a zip file.
+"""
+
+import typing
+
 import autograder.api.common
 import autograder.api.config
+import autograder.error
 
-API_ENDPOINT = 'courses/upsert/zip'
-API_PARAMS = [
-    autograder.api.config.PARAM_COURSE_ID,
+API_ENDPOINT: str = 'courses/upsert/zip'
+API_WRITE: bool = True
+API_PARAMS: typing.List[autograder.api.config.APIParam] = [
+    autograder.api.config.PARAM_SERVER,
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
 
+    autograder.api.config.PARAM_DRY_RUN,
+    autograder.api.config.PARAM_SKIP_EMAILS,
     autograder.api.config.PARAM_SKIP_SOURCE_SYNC,
     autograder.api.config.PARAM_SKIP_LMS_SYNC,
     autograder.api.config.PARAM_SKIP_BUILD_IMAGES,
-    autograder.api.config.PARAM_SKIP_TASKS,
+    autograder.api.config.PARAM_SKIP_TEMPLATE_FILES,
 
-    autograder.api.config.PARAM_DRY_RUN,
-    autograder.api.config.PARAM_SKIP_EMAILS,
+    autograder.api.config.PARAM_UPSERT_ZIP,
 ]
 
-DESCRIPTION = 'Upsert a course using a zip file.'
+def send(
+        config: typing.Dict[str, typing.Any],
+        post_paths: typing.Union[typing.List[str], None] = None,
+        **kwargs: typing.Any,
+        ) -> typing.Dict[str, typing.Any]:
+    """ Send a request to the autograder. """
 
-def send(arguments, **kwargs):
-    return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT, **kwargs)
+    if ((post_paths is None) or len(post_paths) == 0):
+        raise autograder.error.AutograderError("No files provided for upsert.")
 
-def _get_parser():
-    parser = autograder.api.config.get_argument_parser(
-        description = DESCRIPTION,
-        params = API_PARAMS)
+    if (len(post_paths) > 1):
+        raise autograder.error.AutograderError(f"Too many files ({len(post_paths)}) provided for upsert, expecting exactly one.")
 
-    return parser
+    return autograder.api.common.make_api_request(API_ENDPOINT, config, API_PARAMS, write = API_WRITE, post_paths = post_paths, **kwargs)

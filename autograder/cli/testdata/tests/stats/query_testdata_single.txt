@@ -1,0 +1,13 @@
+{
+    "cli": "autograder.cli.stats.query",
+    "arguments": [
+        '--user', 'server-admin@test.edulinq.org',
+        '--pass', 'server-admin',
+        '--metric-type', 'grading-time',
+        '--config', 'use_testing_data=true',
+    ],
+}
+---
+timestamp: 1970-01-01 00:00
+type: grading-time
+value: 150

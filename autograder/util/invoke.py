@@ -4,7 +4,7 @@ import time
 import traceback
 import typing
 
-REAP_TIME_SEC = 5
+REAP_TIME_SEC: float = 5
 
 _multiprocessing_initialized: bool = False  # pylint: disable=invalid-name
 
@@ -22,11 +22,17 @@ def _init_multiprocessing() -> None:
     multiprocessing.set_start_method('fork')
     _multiprocessing_initialized = True
 
-# Return: (success, function return value)
-# On timeout, success will be false and the value will be None.
-# On error, success will be false and value will be the string stacktrace.
-# On successful completion, success will be true and value may be None (if nothing was returned).
-def with_timeout(timeout: typing.Union[int, None], function):
+def with_timeout(timeout: typing.Union[float, None], function: typing.Callable) -> typing.Tuple[bool, typing.Any]:
+    """
+    Run the given function in a different process with the given timeout.
+    If the timeout is None, then no timeout will be checked (and the code will be run on the same process).
+
+    Return: (success, function return value)
+    On timeout, success will be false and the value will be None.
+    On error, success will be false and value will be the string stacktrace.
+    On successful completion, success will be true and value may be None (if nothing was returned).
+    """
+
     if ((timeout is None) or (not sys.platform.startswith('linux'))):
         # Mac and Windows have some pickling issues with multiprocessing.
         # Just run them without a timeout.
@@ -42,7 +48,7 @@ def with_timeout(timeout: typing.Union[int, None], function):
 
     _init_multiprocessing()
 
-    result = multiprocessing.Queue(1)
+    result: multiprocessing.Queue = multiprocessing.Queue(1)
 
     # Note that we use processes instead of threads so they can be more completely killed.
     process = multiprocessing.Process(target = _invoke_helper, args = (result, function))
@@ -68,12 +74,14 @@ def with_timeout(timeout: typing.Union[int, None], function):
     value, error = result.get()
 
     if (error is not None):
-        exception, stacktrace = error
+        _, stacktrace = error
         return (False, stacktrace)
 
     return (True, value)
 
-def _invoke_helper(result, function):
+def _invoke_helper(result: multiprocessing.Queue, function: typing.Callable) -> None:
+    """ A helper function for running the given function. """
+
     value = None
     error = None
 

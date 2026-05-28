@@ -1,24 +1,40 @@
+"""
+Get the most recent scores for this assignment.
+"""
+
+import typing
+
+import lms.model.scores
+
 import autograder.api.common
 import autograder.api.config
+import autograder.model.assignment
 
-API_ENDPOINT = 'courses/assignments/submissions/fetch/course/scores'
-API_PARAMS = [
-    autograder.api.config.PARAM_COURSE_ID,
+API_ENDPOINT: str = 'courses/assignments/submissions/fetch/course/scores'
+API_WRITE: bool = False
+API_PARAMS: typing.List[autograder.api.config.APIParam] = [
+    autograder.api.config.PARAM_SERVER,
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
-    autograder.api.config.PARAM_ASSIGNMENT_ID,
+
+    autograder.api.config.PARAM_COURSE,
+    autograder.api.config.PARAM_ASSIGNMENT,
 
     autograder.api.config.PARAM_COURSE_USER_REFERENCES,
 ]
 
-DESCRIPTION = 'Get a summary of the most recent scores for this assignment.'
+def send(config: typing.Dict[str, typing.Any], **kwargs: typing.Any) -> typing.List[lms.model.scores.AssignmentScore]:
+    """ Send a request to the autograder. """
 
-def send(arguments, **kwargs):
-    return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT, **kwargs)
+    response = autograder.api.common.make_api_request(API_ENDPOINT, config, API_PARAMS, write = API_WRITE, **kwargs)
 
-def _get_parser():
-    parser = autograder.api.config.get_argument_parser(
-        description = DESCRIPTION,
-        params = API_PARAMS)
+    assignment_id = config.get(autograder.api.config.PARAM_ASSIGNMENT.config_key, None)
 
-    return parser
+    scores = []
+    for (user_email, raw_score) in response['submission-infos'].items():
+        if (raw_score is None):
+            scores.append(lms.model.scores.AssignmentScore(assignment = assignment_id, user = user_email))
+        else:
+            scores.append(autograder.model.assignment.make_assignment_score(raw_score))
+
+    return sorted(scores)

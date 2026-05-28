@@ -1,0 +1,2 @@
+server-user@test.edulinq.org	server-user	student
+ZZZ@test.edulinq.org	ZZZ	student

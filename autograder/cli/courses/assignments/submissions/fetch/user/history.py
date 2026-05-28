@@ -1,49 +1,47 @@
+"""
+Get the most recent scores for this user and assignment.
+"""
+
+import argparse
 import sys
 
+import lms.model.base
+
 import autograder.api.courses.assignments.submissions.fetch.user.history
-import autograder.cli.config
-import autograder.submission
+import autograder.cli.parser
 
-def run(arguments):
-    result = autograder.api.courses.assignments.submissions.fetch.user.history.send(arguments,
-            exit_on_error = True)
+def run_cli(args: argparse.Namespace) -> int:
+    """ Run the CLI. """
 
-    if (not result['found-user']):
-        print("No matching user found.")
+    config = args._config
+
+    found_user, scores = autograder.api.courses.assignments.submissions.fetch.user.history.send(config, exit_on_error = True)
+
+    if (not found_user):
+        print(f"No matching user found: '{config.get('target_email', '')}'.", file = sys.stderr)
         return 1
 
-    history = result['history']
-
-    if (not arguments.table):
-        print("Found %d submissions." % (len(history)))
-        for entry in history:
-            print("    " + str(autograder.submission.SubmissionSummary.from_dict(entry)))
-
-        return 0
-
-    header = [
-        'id',
-        'score',
-        'max_points',
-        'grading_start_time',
-        'message',
-    ]
-
-    print("\t".join(header))
-    for entry in history:
-        entry = autograder.submission.SubmissionSummary.from_dict(entry)
-        entry = entry.to_dict()
-        print("\t".join([str(entry[key]) for key in header]))
+    output = lms.model.base.base_list_to_output_format(scores, args.output_format,
+            skip_headers = args.skip_headers,
+            pretty_headers = args.pretty_headers,
+            include_extra_fields = args.include_extra_fields,
+    )
+    print(output)
 
     return 0
 
-def main():
-    return run(_get_parser().parse_args())
+def main() -> int:
+    """ Get a parser, parse the args, and call run. """
 
-def _get_parser():
-    parser = autograder.api.courses.assignments.submissions.fetch.user.history._get_parser()
+    return run_cli(_get_parser().parse_args())
 
-    autograder.cli.config.add_table_argument(parser)
+def _get_parser() -> argparse.ArgumentParser:
+    """ Get a parser for this operation. """
+
+    parser = autograder.cli.parser.get_parser(
+        __doc__.strip(),
+        autograder.api.courses.assignments.submissions.fetch.user.history.API_PARAMS,
+        include_output_format = True)
 
     return parser
 

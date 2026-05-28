@@ -1,10 +1,12 @@
-# Python Interface for Autograder
+# Python Interface for Lynx Grader
 
-The canonical Python interface for the autograding server.
+The canonical Python interface for EduLinq's [Lynx Grader server](https://github.com/edulinq/autograder-server).
 
 ## Quick Links
 
  - [Resources](#resources)
+ - [API Reference](https://edulinq.github.io/autograder-py)
+ - [CLI Reference](https://edulinq.github.io/autograder-py/docs/latest/autograder/cli.html)
  - [Installation / Requirements](#installation--requirements)
  - [Quickstart](#quickstart)
  - [The CLI](#the-cli)
@@ -23,13 +25,15 @@ The canonical Python interface for the autograding server.
 
 ## Resources
 
+ - [API Reference](https://edulinq.github.io/autograder-py)
+ - [CLI Reference](https://edulinq.github.io/autograder-py/docs/latest/autograder/cli.html)
  - [Autograder Server](https://github.com/edulinq/autograder-server)
  - [Autograder Python Interface (this repo)](https://github.com/edulinq/autograder-py)
  - [Autograder Sample Course](https://github.com/edulinq/cse-cracks-course)
 
 ## Installation / Requirements
 
-This project requires [Python](https://www.python.org/) >= 3.8.
+This project requires [Python](https://www.python.org/) >= 3.9.
 
 The project can be installed from PyPi with:
 ```
@@ -40,6 +44,20 @@ Standard Python requirements are listed in `pyproject.toml`.
 The project and Python dependencies can be installed from source with:
 ```
 pip3 install .
+```
+
+### Cloning
+
+This repository includes submodules.
+To fetch these submodules on clone, add the `--recurse-submodules` flag.
+For example:
+```sh
+git clone --recurse-submodules git@github.com:edulinq/autograder-py.git
+```
+
+To fetch the submodules after cloning, you can use:
+```sh
+git submodule update --init --recursive
 ```
 
 ## Quickstart
@@ -366,11 +384,17 @@ Below is a list of commands you may want to look into.
 The help prompt of each command (accessible using the `--help` option)
 will give a more in-depth description of the command and available options.
 
- - `autograder.lms.upload-scores` -- Upload scores for any LMS assignment straight to your LMS. Very useful for avoiding a clunky LMS interface.
  - `autograder.cli.courses.assignments.submissions.fetch.course.scores` -- Get all the most recent scores for an assignment.
  - `autograder.cli.courses.assignments.submissions.fetch.user.attempt` -- Get a student's submission (code) and grading output.
  - `autograder.cli.courses.assignments.submissions.fetch.course.attempts` -- Get all the most recent submissions (code and grading output) for an assignment.
  - `autograder.cli.courses.users.list` -- List all the users in a course.
+
+#### LMS Commands
+
+To interact directly with your LMS (e.g. Blackboard, Canvas, Moodle),
+we recommend the [LMS Toolkit](https://github.com/edulinq/lms-toolkit).
+This library provides a unified CLI and Python interface for interacting with different LMSs.
+This is what the autograder uses when connecting with LMSs.
 
 #### Proxy Submissions
 

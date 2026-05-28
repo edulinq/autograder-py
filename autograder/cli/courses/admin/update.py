@@ -1,37 +1,36 @@
-import json
+"""
+Update an existing course using its own source.
+"""
+
+import argparse
 import sys
 
+import edq.util.json
+
 import autograder.api.courses.admin.update
+import autograder.cli.parser
 
-def run(arguments):
-    result = autograder.api.courses.admin.update.send(arguments, exit_on_error = True)
-    result = result['result']
+def run_cli(args: argparse.Namespace) -> int:
+    """ Run the CLI. """
 
-    exit_status = 0
-    if (not result['success']):
-        exit_status = 1
+    config = args._config
 
-    if (arguments.full_output):
-        print(json.dumps(result, indent = 4))
-        return exit_status
+    result = autograder.api.courses.admin.update.send(config, exit_on_error = True)
+    print(edq.util.json.dumps(result, indent = 4))
 
-    if (result['success']):
-        print("Course updated.")
-    else:
-        print("Course not updated.")
-        print("Message from server: '%s'." % (result.get('message', '')))
+    return 0
 
-    return exit_status
+def main() -> int:
+    """ Get a parser, parse the args, and call run. """
 
-def main():
-    return run(_get_parser().parse_args())
+    return run_cli(_get_parser().parse_args())
 
-def _get_parser():
-    parser = autograder.api.courses.admin.update._get_parser()
+def _get_parser() -> argparse.ArgumentParser:
+    """ Get a parser for this operation. """
 
-    parser.add_argument('--full-output', dest = 'full_output',
-        action = 'store_true', default = False,
-        help = 'See the full course update output (as JSON) (default: %(default)s).')
+    parser = autograder.cli.parser.get_parser(
+        __doc__.strip(),
+        autograder.api.courses.admin.update.API_PARAMS)
 
     return parser
 

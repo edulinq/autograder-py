@@ -1,25 +1,32 @@
+"""
+Get information about a course user.
+"""
+
+import typing
+
+import lms.model.users
+
 import autograder.api.common
 import autograder.api.config
+import autograder.model.user
 
-API_ENDPOINT = 'courses/users/get'
-
-API_PARAMS = [
+API_ENDPOINT: str = 'courses/users/get'
+API_WRITE: bool = False
+API_PARAMS: typing.List[autograder.api.config.APIParam] = [
+    autograder.api.config.PARAM_SERVER,
+    autograder.api.config.PARAM_COURSE,
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
-
-    autograder.api.config.PARAM_COURSE_ID,
 
     autograder.api.config.PARAM_TARGET_EMAIL_OR_SELF,
 ]
 
-DESCRIPTION = 'Get the information for a course user.'
+def send(config: typing.Dict[str, typing.Any], **kwargs: typing.Any) -> typing.Union[lms.model.users.ServerUser, None]:
+    """ Send a request to the autograder. """
 
-def send(arguments, **kwargs):
-    return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT, **kwargs)
+    response = autograder.api.common.make_api_request(API_ENDPOINT, config, API_PARAMS, write = API_WRITE, **kwargs)
 
-def _get_parser():
-    parser = autograder.api.config.get_argument_parser(
-        description = DESCRIPTION,
-        params = API_PARAMS)
+    if (not response.get('found', False)):
+        return None
 
-    return parser
+    return autograder.model.user.make_course_user(response['user'])

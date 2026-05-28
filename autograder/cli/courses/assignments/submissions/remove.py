@@ -1,27 +1,44 @@
+"""
+Remove a specified submission.
+Defaults to the most recent submission.
+"""
+
+import argparse
 import sys
 
 import autograder.api.courses.assignments.submissions.remove
+import autograder.cli.parser
 
-def run(arguments):
-    result = autograder.api.courses.assignments.submissions.remove.send(arguments,
-            exit_on_error = True)
+def run_cli(args: argparse.Namespace) -> int:
+    """ Run the CLI. """
 
-    if (not result['found-user']):
-        print("No matching user found.")
+    config = args._config
+
+    found_user, found_submission = autograder.api.courses.assignments.submissions.remove.send(config, exit_on_error = True)
+
+    if (not found_user):
+        print(f"No matching user found: '{config.get('target_email', '')}'.", file = sys.stderr)
         return 1
 
-    if (not result['found-submission']):
-        print("No matching submission found.")
+    if (not found_submission):
+        print(f"No matching submission found: '{config.get('target_submission', '')}'.", file = sys.stderr)
         return 2
 
     print("Submission removed.")
     return 0
 
-def main():
-    return run(_get_parser().parse_args())
+def main() -> int:
+    """ Get a parser, parse the args, and call run. """
 
-def _get_parser():
-    parser = autograder.api.courses.assignments.submissions.remove._get_parser()
+    return run_cli(_get_parser().parse_args())
+
+def _get_parser() -> argparse.ArgumentParser:
+    """ Get a parser for this operation. """
+
+    parser = autograder.cli.parser.get_parser(
+        __doc__.strip(),
+        autograder.api.courses.assignments.submissions.remove.API_PARAMS)
+
     return parser
 
 if (__name__ == '__main__'):

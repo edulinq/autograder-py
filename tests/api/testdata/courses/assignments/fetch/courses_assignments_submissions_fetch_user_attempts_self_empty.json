@@ -1,8 +1,0 @@
-{
-    "module": "autograder.api.courses.assignments.submissions.fetch.user.attempts",
-    "arguments": {},
-    "output": {
-        "found-user": true,
-        "grading-results": []
-    }
-}

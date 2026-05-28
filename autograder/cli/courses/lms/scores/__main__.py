@@ -1,14 +1,11 @@
-"""
-The `autograder.cli.courses.lms.scores` package contains tools for
-working with assignment scores for a course's LMS.
-"""
-
 import sys
 
-import autograder.util.cli
+import edq.clilib.list
 
-def main():
-    return autograder.util.cli.main()
+def main() -> int:
+    """ List this CLI dir. """
+
+    return edq.clilib.list.main()
 
 if (__name__ == '__main__'):
     sys.exit(main())

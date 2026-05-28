@@ -1,9 +1,0 @@
-{
-    "cli": "autograder.cli.courses.assignments.submissions.fetch.course.attempts",
-    "arguments": [
-        "--out-dir", "__TEMP_DIR__()",
-        "--target-users", "student"
-    ]
-}
----
-Wrote 1 submissions to '__TEMP_DIR__()'.

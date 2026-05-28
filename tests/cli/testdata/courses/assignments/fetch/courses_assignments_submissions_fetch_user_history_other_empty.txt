@@ -1,8 +1,0 @@
-{
-    "cli": "autograder.cli.courses.assignments.submissions.fetch.user.history",
-    "arguments": [
-        "--target-email", "course-other@test.edulinq.org"
-    ]
-}
----
-Found 0 submissions.

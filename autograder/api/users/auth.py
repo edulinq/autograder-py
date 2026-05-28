@@ -1,20 +1,23 @@
+"""
+Authenticate as a user.
+"""
+
+import typing
+
 import autograder.api.common
 import autograder.api.config
+import autograder.model.user
 
-API_ENDPOINT = 'users/auth'
-API_PARAMS = [
+API_ENDPOINT: str = 'users/auth'
+API_WRITE: bool = False
+API_PARAMS: typing.List[autograder.api.config.APIParam] = [
+    autograder.api.config.PARAM_SERVER,
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
 ]
 
-DESCRIPTION = 'Authenticate as a user.'
+def send(config: typing.Dict[str, typing.Any], **kwargs: typing.Any) -> bool:
+    """ Send a request to the autograder. """
 
-def send(arguments, **kwargs):
-    return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT, **kwargs)
-
-def _get_parser():
-    parser = autograder.api.config.get_argument_parser(
-        description = DESCRIPTION,
-        params = API_PARAMS)
-
-    return parser
+    results = autograder.api.common.make_api_request(API_ENDPOINT, config, API_PARAMS, write = API_WRITE, **kwargs)
+    return bool(results.get('success', False))

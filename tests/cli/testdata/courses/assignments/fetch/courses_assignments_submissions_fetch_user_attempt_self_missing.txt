@@ -1,8 +1,0 @@
-{
-    "cli": "autograder.cli.courses.assignments.submissions.fetch.user.attempt",
-    "arguments": [
-    ],
-    "exit-status": 2
-}
----
-No matching submission found.

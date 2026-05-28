@@ -1,40 +1,45 @@
+"""
+Enroll a user in a course.
+"""
+
+import argparse
 import sys
 
-import autograder.api.config
+import edq.util.json
+
 import autograder.api.courses.users.enroll
-import autograder.cli.common
-import autograder.cli.config
+import autograder.cli.parser
 
-def run(arguments):
-    arguments = vars(arguments)
+def run_cli(args: argparse.Namespace) -> int:
+    """ Run the CLI. """
 
-    arguments['raw-course-users'] = [{
-        'email': arguments['new-email'],
-        'name': arguments['new-name'],
-        'course-role': arguments['new-course-role'],
-        'course-lms-id': arguments['new-lms-id'],
-    }]
+    config = args._config
 
-    arguments['send-emails'] = not arguments['skip-emails']
+    config['raw_course_users'] = [
+        {
+            'email': config['new_email'],
+            'name': config.get('new_name', ''),
+            'course-role': config['new_course_role'],
+            'course-lms-id': config.get('new_lms_id', ''),
+        },
+    ]
 
-    result = autograder.api.courses.users.enroll.send(arguments, exit_on_error = True)
+    result = autograder.api.courses.users.enroll.send(config, exit_on_error = True)
+    print(edq.util.json.dumps(result, indent = 4))
 
-    autograder.cli.common.list_user_op_responses(result['results'], table = arguments['table'])
     return 0
 
-def main():
-    return run(_get_parser().parse_args())
+def main() -> int:
+    """ Get a parser, parse the args, and call run. """
 
-def _get_parser():
-    parser = autograder.api.courses.users.enroll._get_parser()
+    return run_cli(_get_parser().parse_args())
 
-    autograder.cli.config.add_table_argument(parser)
-    autograder.cli.config.add_skip_emails_argument(parser)
+def _get_parser() -> argparse.ArgumentParser:
+    """ Get a parser for this operation. """
 
-    autograder.cli.config.add_new_email_argument(parser, "enroll")
-    autograder.cli.config.add_new_name_argument(parser, "enroll")
-    autograder.cli.config.add_new_course_role_argument(parser, "enroll")
-    autograder.cli.config.add_new_lms_id_argument(parser, "enroll")
+    parser = autograder.cli.parser.get_parser(
+        __doc__.strip(),
+        autograder.api.courses.users.enroll.API_PARAMS)
 
     return parser
 

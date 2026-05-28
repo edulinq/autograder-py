@@ -1,13 +1,16 @@
 import sys
+import typing
 
-# Control if exit_from_error() should actually exit.
-# Testing infrastructure can set this to control exit behavior.
-_exit_on_error_for_testing = True
+_exit_on_error_for_testing: bool = True  # pylint: disable=invalid-name
+"""
+Control if exit_from_error() should actually exit.
+Testing infrastructure can set this to control exit behavior.
+"""
 
-def exit_from_error(exit_status = 1):
+def exit_from_error(exit_status: int = 1) -> None:
     """
     Exit because an error occurred.
-    Tetsing infrastructure can set _exit_on_error_for_testing to false to avoid exiting.
+    Testing infrastructure can set _exit_on_error_for_testing to false to avoid exiting.
     """
 
     if (not _exit_on_error_for_testing):
@@ -16,12 +19,16 @@ def exit_from_error(exit_status = 1):
     sys.exit(exit_status)
 
 class AutograderError(Exception):
-    pass
+    """ General errors from the autograder (including this interface). """
 
 class APIError(AutograderError):
-    def __init__(self, code, message):
+    """ Errors that specifically come from the autograder server. """
+
+    def __init__(self, code: typing.Union[int, None], message: str) -> None:
         super().__init__(message)
-        self.code = code
+
+        self.code: typing.Union[int, None] = code
+        """ The HTTP status code. """
 
 class ConnectionError(AutograderError):
-    pass
+    """ An error stemming from a bad network connection. """
