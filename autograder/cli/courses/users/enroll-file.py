@@ -33,7 +33,7 @@ API_PARAMS: typing.List[autograder.api.config.APIParam] = [
 def run_cli(args: argparse.Namespace) -> int:
     """ Run the CLI. """
 
-    config = args._config
+    config = args._config_info.config
     config['raw_course_users'] = _load_users(args.path)
 
     result = autograder.api.courses.users.enroll.send(config, exit_on_error = True)

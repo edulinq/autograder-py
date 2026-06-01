@@ -12,7 +12,7 @@ import autograder.cli.parser
 def run_cli(args: argparse.Namespace) -> int:
     """ Run the CLI. """
 
-    config = args._config
+    config = args._config_info.config
 
     found_user, found_submission = autograder.api.courses.assignments.submissions.remove.send(config, exit_on_error = True)
 

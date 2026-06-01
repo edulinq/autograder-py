@@ -7,6 +7,7 @@ import typing
 
 import edq.util.dirent
 import edq.util.json
+import edq.util.serial
 import edq.util.time
 
 import autograder.assignment
@@ -279,14 +280,9 @@ def run_external_grader(assignment_config_path: str, grading_dir: str) -> autogr
     if (not os.path.isfile(out_path)):
         raise ValueError(f"Could not find result after external grader ran: '{out_path}'.")
 
-    try:
-        result = edq.util.json.load_path(out_path)
-    except Exception as ex:
-        raise ValueError("Failed to grading result: " + out_path) from ex
+    return autograder.assignment.GradedAssignment.from_path(out_path)
 
-    return autograder.assignment.GradedAssignment.from_dict(result)
-
-class SubmissionSummary(edq.util.json.DictConverter):
+class SubmissionSummary(edq.util.serial.DictConverter):
     """
     A summary of a grading submission.
     """
@@ -315,19 +311,6 @@ class SubmissionSummary(edq.util.json.DictConverter):
 
         self.grading_start_time: typing.Any = edq.util.time.Timestamp(grading_start_time)
         """ When grading started. """
-
-    def to_dict(self) -> typing.Dict[str, typing.Any]:
-        return {
-            'id': self.id,
-            'max_points': self.max_points,
-            'score': self.score,
-            'message': self.message,
-            'grading_start_time': self.grading_start_time,
-        }
-
-    @staticmethod
-    def from_dict(data: typing.Dict[str, typing.Any]) -> 'SubmissionSummary':
-        return SubmissionSummary(**data)
 
     def short_id(self) -> str:
         """ Get the short ID for this submission. """

@@ -13,7 +13,7 @@ import autograder.cli.parser
 def run_cli(args: argparse.Namespace) -> int:
     """ Run the CLI. """
 
-    config = args._config
+    config = args._config_info.config
 
     result = autograder.api.courses.assignments.report.send(config, exit_on_error = True)
     print(edq.util.json.dumps(result, indent = 4))

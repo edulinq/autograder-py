@@ -419,9 +419,9 @@ class TestAssignment(edq.testing.unittest.BaseTest):
                 [
                     'Autograder transcript for assignment: Test Assignment',
                     'Grading started at <PRETTY TIME> and ended at <PRETTY TIME>.',
-                    'A: 5.0 / 10',
+                    'A: 5 / 10',
                     '',
-                    'Total: 5.0 / 10',
+                    'Total: 5 / 10',
                 ],
             ),
 
@@ -438,9 +438,9 @@ class TestAssignment(edq.testing.unittest.BaseTest):
                 [
                     'Autograder transcript for assignment: Test Assignment',
                     'Grading started at <PRETTY TIME> and ended at <PRETTY TIME>.',
-                    'A: 5.0 / 10',
+                    'A: 5 / 10',
                     '',
-                    'Total: 5.0 / 10',
+                    'Total: 5 / 10',
                 ],
             ),
 

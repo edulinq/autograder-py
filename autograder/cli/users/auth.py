@@ -13,7 +13,7 @@ import autograder.error
 def run_cli(args: argparse.Namespace) -> int:
     """ Run the CLI. """
 
-    config = args._config
+    config = args._config_info.config
 
     try:
         autograder.api.users.auth.send(config, exit_on_error = False)

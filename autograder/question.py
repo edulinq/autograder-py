@@ -8,7 +8,7 @@ import numbers
 import traceback
 import typing
 
-import edq.util.json
+import edq.util.serial
 import edq.util.time
 
 import autograder.util.invoke
@@ -29,7 +29,7 @@ class AutograderHardFailError(RuntimeError):
     and execution should be stopped for all questions in the assignment.
     """
 
-class GradedQuestion(edq.util.json.DictConverter):
+class GradedQuestion(edq.util.serial.DictConverter):
     """
     The result of a question being graded with a submission.
     """
@@ -76,22 +76,6 @@ class GradedQuestion(edq.util.json.DictConverter):
 
         self.grading_end_time: typing.Any = edq.util.time.Timestamp(grading_end_time)
         """ When grading ended. """
-
-    def to_dict(self) -> typing.Dict[str, typing.Any]:
-        return {
-            'name': self.name,
-            'max_points': self.max_points,
-            'score': self.score,
-            'hard_fail': self.hard_fail,
-            'skipped': self.skipped,
-            'message': self.message,
-            'grading_start_time': self.grading_start_time,
-            'grading_end_time': self.grading_end_time,
-        }
-
-    @staticmethod
-    def from_dict(data: typing.Dict[str, typing.Any]) -> 'GradedQuestion':
-        return GradedQuestion(**data)
 
     def scoring_report(self, prefix: str = '', precision: int = 2) -> str:
         """

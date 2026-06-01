@@ -3,12 +3,12 @@ import traceback
 import typing
 
 import edq.util.code
-import edq.util.json
+import edq.util.serial
 
 import autograder.question
 import autograder.util.prepare_submission
 
-class GradedAssignment(edq.util.json.DictConverter):
+class GradedAssignment(edq.util.serial.DictConverter):
     """
     The result of an assignment being graded with a submission.
     """
@@ -63,31 +63,6 @@ class GradedAssignment(edq.util.json.DictConverter):
         self.proxy_end_time: typing.Any = edq.util.time.Timestamp(proxy_end_time)
         """ When proxy grading ended. """
 
-    def to_dict(self) -> typing.Dict[str, typing.Any]:
-        return {
-            'name': self.name,
-            'message': self.message,
-            'prologue': self.prologue,
-            'epilogue': self.epilogue,
-            'questions': [question.to_dict() for question in self.questions],
-            'grading_start_time': self.grading_start_time,
-            'grading_end_time': self.grading_end_time,
-            'proxy_start_time': self.proxy_start_time,
-            'proxy_end_time': self.proxy_end_time,
-        }
-
-    @staticmethod
-    def from_dict(data: typing.Dict[str, typing.Any]) -> 'GradedAssignment':
-        data = dict(data)
-
-        if ('questions' in data):
-            data['questions'] = [
-                autograder.question.GradedQuestion(**question)
-                for question in data['questions']
-            ]
-
-        return GradedAssignment(**data)
-
     def to_test_submission(self, options: typing.Union[typing.Dict[str, typing.Any], None] = None) -> typing.Dict[str, typing.Any]:
         """
         Output a dict that can be used as a test submission.
@@ -103,7 +78,9 @@ class GradedAssignment(edq.util.json.DictConverter):
         del results['proxy_start_time']
         del results['proxy_end_time']
 
-        for question in results['questions']:
+        questions = typing.cast(typing.List[typing.Dict[str, edq.util.serial.PODType]], results.get('questions', []))
+
+        for question in questions:
             del question['grading_start_time']
             del question['grading_end_time']
 

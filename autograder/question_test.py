@@ -234,13 +234,13 @@ class TestQuestion(edq.testing.unittest.BaseTest):
             # Float - Zero
             (
                 autograder.question.GradedQuestion(name = 'Test Question', score = 5.0, max_points = 10),
-                'Test Question: 5.0 / 10',
+                'Test Question: 5 / 10',
             ),
 
             # Float - Double Zero
             (
                 autograder.question.GradedQuestion(name = 'Test Question', score = 5.00, max_points = 10),
-                'Test Question: 5.0 / 10',
+                'Test Question: 5 / 10',
             ),
 
             # Float - Irrational
