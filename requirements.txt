@@ -1,5 +1,5 @@
 argon2-cffi>=23.1.0
-edq-lms-toolkit>=1.1.9
-edq-utils>=0.4.4
+edq-lms-toolkit>=1.1.9,==1.*
+edq-utils>=0.4.4,==0.*
 flake8>=6.0.0
 requests>=2.31.0
