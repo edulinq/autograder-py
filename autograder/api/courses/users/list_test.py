@@ -1,42 +1,50 @@
+import typing
+
 import autograder.api.config
 import autograder.api.courses.users.list
+import autograder.model.config
 import autograder.testing.model
 import autograder.testing.server
 
 class TestUsersList(autograder.testing.server.ServerTest):
     """ Test listing course users. """
 
-    def test_base(self):
+    def test_base(self) -> None:
         """ Test base functionality. """
 
         # [(config (and overrides), kwargs, expected, error substring), ...]
-        test_cases = [
+        test_cases: typing.List[typing.Tuple[
+            autograder.model.config.Config,
+            typing.Dict[str, typing.Any],
+            typing.Any,
+            typing.Union[str, None],
+        ]] = [
             (
-                {
-                    autograder.api.config.PARAM_COURSE.config_key: 'course101',
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
-                },
+                autograder.model.config.Config(
+                    course = 'course101',
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
+                ),
                 {},
                 sorted(autograder.testing.model.COURSE_USERS['Course 101'].values()),
                 None,
             ),
             (
-                {
-                    autograder.api.config.PARAM_COURSE.config_key: 'course101',
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'course-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'course-admin',
-                },
+                autograder.model.config.Config(
+                    course = 'course101',
+                    auth_user = 'course-admin@test.edulinq.org',
+                    auth_pass = 'course-admin',
+                ),
                 {},
                 sorted(autograder.testing.model.COURSE_USERS['Course 101'].values()),
                 None,
             ),
             (
-                {
-                    autograder.api.config.PARAM_COURSE.config_key: 'course101',
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'course-grader@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'course-grader',
-                },
+                autograder.model.config.Config(
+                    course = 'course101',
+                    auth_user = 'course-grader@test.edulinq.org',
+                    auth_pass = 'course-grader',
+                ),
                 {},
                 sorted(autograder.testing.model.COURSE_USERS['Course 101'].values()),
                 None,

@@ -8,11 +8,13 @@ import lms.model.base
 
 import autograder.api.common
 import autograder.error
+import autograder.model.config
 
 THIS_DIR: str = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
 ROOT_DIR: str = os.path.join(THIS_DIR, '..', '..')
 EXCHANGES_DIR: str = os.path.join(ROOT_DIR, 'testdata', 'autograder-testdata')
 
+# TEST - Remove?
 BASE_ARGUMENTS: typing.Dict[str, typing.Any] = {
     # Will be set with the correct port when the test is run.
     'server': None,
@@ -66,7 +68,7 @@ class ServerTest(edq.testing.httpserver.HTTPServerTest):
 
     def base_api_test(self,
             api_function: typing.Callable,
-            test_cases: typing.List[typing.Tuple[typing.Dict[str, typing.Any], typing.Dict[str, typing.Any], typing.Any, typing.Union[str, None]]],
+            test_cases: typing.List[typing.Tuple[autograder.model.config.Config, typing.Dict[str, typing.Any], typing.Any, typing.Union[str, None]]],
             actual_clean_func: typing.Union[CleanFunction, None] = None,
             expected_clean_func: typing.Union[CleanFunction, None] = None,
             assertion_func: typing.Union[AssertionFunction, None] = None,
@@ -80,12 +82,10 @@ class ServerTest(edq.testing.httpserver.HTTPServerTest):
             (config, kwargs, expected, error_substring) = test_case
 
             with self.subTest(msg = f"Case {i}:"):
-                args = BASE_ARGUMENTS.copy()
-                args['server'] = self.get_server_url()
-                args.update(config)
+                config.server = self.get_server_url()
 
                 try:
-                    actual = api_function(args, **kwargs)
+                    actual = api_function(config, **kwargs)
                 except Exception as ex:
                     error_string = self.format_error_string(ex)
                     if (error_substring is None):

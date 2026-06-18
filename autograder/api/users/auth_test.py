@@ -1,21 +1,28 @@
-import autograder.api.config
+import typing
+
 import autograder.api.users.auth
+import autograder.model.config
 import autograder.testing.server
 
 class TestUsersAuth(autograder.testing.server.ServerTest):
     """ Test authenticating users. """
 
-    def test_base(self):
+    def test_base(self) -> None:
         """ Test base functionality. """
 
-        # [(config (and overrides), kwargs, expected, error substring), ...]
-        test_cases = [
+        # [(config, kwargs, expected, error substring), ...]
+        test_cases: typing.List[typing.Tuple[
+            autograder.model.config.Config,
+            typing.Dict[str, typing.Any],
+            typing.Any,
+            typing.Union[str, None],
+        ]] = [
             # Base - Auth
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
-                },
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
+                ),
                 {},
                 True,
                 None,
@@ -23,10 +30,10 @@ class TestUsersAuth(autograder.testing.server.ServerTest):
 
             # Base - No Auth
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'ZZZ',
-                },
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'ZZZ',
+                ),
                 {
                     'exit_on_error': False,
                 },
@@ -36,10 +43,10 @@ class TestUsersAuth(autograder.testing.server.ServerTest):
 
             # Missing
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'ZZZ',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'ZZZ',
-                },
+                autograder.model.config.Config(
+                    auth_user = 'ZZZ',
+                    auth_pass = 'ZZZ',
+                ),
                 {
                     'exit_on_error': False,
                 },

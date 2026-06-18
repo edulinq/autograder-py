@@ -1,28 +1,35 @@
 import typing
 
+import lms.model.assignments
 import lms.model.scores
 
 import autograder.api.config
 import autograder.api.courses.assignments.submissions.fetch.user.history
+import autograder.model.config
 import autograder.testing.server
 
 class TestCourseAssignmentsFetchUserHistory(autograder.testing.server.ServerTest):
     """ Test fetching user submission history. """
 
-    def test_base(self):
+    def test_base(self) -> None:
         """ Test base functionality. """
 
         # [(config (and overrides), kwargs, expected, error substring), ...]
-        test_cases = [
+        test_cases: typing.List[typing.Tuple[
+            autograder.model.config.Config,
+            typing.Dict[str, typing.Any],
+            typing.Any,
+            typing.Union[str, None],
+        ]] = [
             # Base
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
-                    autograder.api.config.PARAM_COURSE.config_key: 'course101',
-                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'hw0',
-                    autograder.api.config.PARAM_TARGET_EMAIL_OR_SELF.config_key: 'course-student@test.edulinq.org',
-                },
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
+                    course = 'course101',
+                    assignment = 'hw0',
+                    target_email = 'course-student@test.edulinq.org',
+                ),
                 {},
                 (
                     True,
@@ -31,13 +38,13 @@ class TestCourseAssignmentsFetchUserHistory(autograder.testing.server.ServerTest
                 None,
             ),
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'course-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'course-admin',
-                    autograder.api.config.PARAM_COURSE.config_key: 'course101',
-                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'hw0',
-                    autograder.api.config.PARAM_TARGET_EMAIL_OR_SELF.config_key: 'course-student@test.edulinq.org',
-                },
+                autograder.model.config.Config(
+                    auth_user = 'course-admin@test.edulinq.org',
+                    auth_pass = 'course-admin',
+                    course = 'course101',
+                    assignment = 'hw0',
+                    target_email = 'course-student@test.edulinq.org',
+                ),
                 {},
                 (
                     True,
@@ -48,12 +55,12 @@ class TestCourseAssignmentsFetchUserHistory(autograder.testing.server.ServerTest
 
             # No History, Self
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
-                    autograder.api.config.PARAM_COURSE.config_key: 'course101',
-                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'hw0',
-                },
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
+                    course = 'course101',
+                    assignment = 'hw0',
+                ),
                 {},
                 (
                     True,
@@ -64,13 +71,13 @@ class TestCourseAssignmentsFetchUserHistory(autograder.testing.server.ServerTest
 
             # No User
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
-                    autograder.api.config.PARAM_COURSE.config_key: 'course101',
-                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'hw0',
-                    autograder.api.config.PARAM_TARGET_EMAIL_OR_SELF.config_key: 'ZZZ@test.edulinq.org',
-                },
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
+                    course = 'course101',
+                    assignment = 'hw0',
+                    target_email = 'ZZZ@test.edulinq.org',
+                ),
                 {},
                 (
                     False,
@@ -84,7 +91,7 @@ class TestCourseAssignmentsFetchUserHistory(autograder.testing.server.ServerTest
 
 SCORES: typing.List[lms.model.scores.AssignmentScore] = [
     lms.model.scores.AssignmentScore(
-        assignment = 'hw0',
+        assignment = lms.model.assignments.AssignmentQuery('hw0'),
         comment = '',
         graded_date = 1697406256000,
         id = 'course101::hw0::course-student@test.edulinq.org::1697406256',
@@ -93,7 +100,7 @@ SCORES: typing.List[lms.model.scores.AssignmentScore] = [
         user = 'course-student@test.edulinq.org',
     ),
     lms.model.scores.AssignmentScore(
-        assignment = 'hw0',
+        assignment = lms.model.assignments.AssignmentQuery('hw0'),
         comment = '',
         graded_date = 1697406266000,
         id = 'course101::hw0::course-student@test.edulinq.org::1697406265',
@@ -102,7 +109,7 @@ SCORES: typing.List[lms.model.scores.AssignmentScore] = [
         user = 'course-student@test.edulinq.org',
     ),
     lms.model.scores.AssignmentScore(
-        assignment = 'hw0',
+        assignment = lms.model.assignments.AssignmentQuery('hw0'),
         comment = '',
         graded_date = 1697406273000,
         id = 'course101::hw0::course-student@test.edulinq.org::1697406272',

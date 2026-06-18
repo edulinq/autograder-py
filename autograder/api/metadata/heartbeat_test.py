@@ -7,16 +7,21 @@ import autograder.testing.server
 class TestHeartbeat(autograder.testing.server.ServerTest):
     """ Test getting a heartbeat. """
 
-    def test_base(self):
+    def test_base(self) -> None:
         """ Test base functionality. """
 
         # [(config (and overrides), kwargs, expected, error substring), ...]
-        test_cases = [
+        test_cases: typing.List[typing.Tuple[
+            autograder.model.config.Config,
+            typing.Dict[str, typing.Any],
+            typing.Any,
+            typing.Union[str, None],
+        ]] = [
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'course-owner@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'course-owner',
-                },
+                autograder.model.config.Config(
+                    auth_user = 'course-owner@test.edulinq.org',
+                    auth_pass = 'course-owner',
+                ),
                 {},
                 {
                     'server-version': {

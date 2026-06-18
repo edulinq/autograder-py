@@ -18,7 +18,7 @@ import autograder.submission
 def run_cli(args: argparse.Namespace) -> int:
     """ Run the CLI. """
 
-    config = args._config_info.config
+    config = args._config_info.application_config
 
     try:
         test_submission_paths = autograder.submission.fetch_test_submissions(args.submissions)

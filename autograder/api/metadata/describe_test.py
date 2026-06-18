@@ -7,23 +7,28 @@ import autograder.testing.server
 class TestDescribe(autograder.testing.server.ServerTest):
     """ Test describing the API. """
 
-    def test_base(self):
+    def test_base(self) -> None:
         """ Test base functionality. """
 
         api_description = autograder.testing.asserts.get_expected_api_description()
 
         # [(config (and overrides), kwargs, expected, error substring), ...]
-        test_cases = [
+        test_cases: typing.List[typing.Tuple[
+            autograder.model.config.Config,
+            typing.Dict[str, typing.Any],
+            typing.Any,
+            typing.Union[str, None],
+        ]] = [
             (
-                {},
+                autograder.model.config.Config(),
                 {},
                 api_description,
                 None,
             ),
             (
-                {
-                    'force_compute': True,
-                },
+                autograder.model.config.Config(
+                    force_compute = True,
+                ),
                 {},
                 api_description,
                 None,

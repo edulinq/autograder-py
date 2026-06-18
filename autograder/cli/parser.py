@@ -83,7 +83,8 @@ def get_parser(
 
         group.add_argument('--format', dest = 'output_format',
             action = 'store', type = str,
-            default = lms.model.constants.OUTPUT_FORMAT_TEXT, choices = lms.model.constants.OUTPUT_FORMATS,
+            default = lms.model.constants.OutputFormat.TEXT.value,
+            choices = [choice.value for choice in lms.model.constants.OutputFormat],
             help = 'The format to display the output as (default: %(default)s).')
 
         group.add_argument('--include-extra-fields', dest = 'include_extra_fields',

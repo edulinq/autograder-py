@@ -68,7 +68,7 @@ class APIParam:
         self.config_key: str = config_key
         """
         The main key/label used to reference this parameter.
-        Will be used in config dicts.
+        Will be used in the application config and config dicts.
         """
 
         if (len(description) == 0):
@@ -375,7 +375,8 @@ PARAM_EMAIL_COURSE_CC = APIParam(
     cli_show_default = False,
 )
 
-PARAM_EMAIL_COURSE_TO = APIParam('to',
+PARAM_EMAIL_COURSE_TO = APIParam(
+    'to',
     ('A list of email addresses.'
     + ' Accepts course user references.'
     + ' Course user references may be specified in four ways:'
@@ -394,8 +395,10 @@ PARAM_EMAIL_COURSE_TO = APIParam('to',
 )
 
 PARAM_EMAIL_HTML = APIParam(
-    'html',
+    'email_html',
     'Indicates the email body contains HTML.',
+    api_key = 'html',
+    cli_flag = 'html',
     api_required = False,
     value_type = bool,
     cli_default_value = False,
@@ -563,15 +566,19 @@ PARAM_PROXY_TIME = APIParam(
 )
 
 PARAM_QUERY_AFTER = APIParam(
-    'after',
+    'query_after',
     'If supplied, only return records after this timestamp.',
+    api_key = 'after',
+    cli_flag = 'after',
     value_type = edq.util.time.Timestamp,
     api_required = False,
 )
 
 PARAM_QUERY_BEFORE = APIParam(
-    'before',
+    'query_before',
     'If supplied, only return records before this timestamp.',
+    api_key = 'before',
+    cli_flag = 'before',
     value_type = edq.util.time.Timestamp,
     api_required = False,
 )
@@ -579,72 +586,90 @@ PARAM_QUERY_BEFORE = APIParam(
 PARAM_QUERY_LIMIT = APIParam(
     'limit',
     'The maximum number of records to return.',
+    api_key = 'limit',
+    cli_flag = 'limit',
     value_type = int,
     api_required = False,
 )
 
 PARAM_QUERY_LOG_LEVEL = APIParam(
-    'level',
+    'query_level',
     'The minimum level of log records to return.',
+    api_key = 'level',
+    cli_flag = 'level',
     api_required = False,
     cli_default_value = 'INFO',
     cli_extra_options = {'choices': autograder.model.log.LOG_LEVEL_TEXT_TO_INT.keys()}
 )
 
 PARAM_QUERY_METRIC_TYPE = APIParam(
-    'metric_type',
+    'query_metric_type',
     'The type of metric to query for. See: https://github.com/edulinq/autograder-server/blob/main/internal/stats/metrics.go#L29',
     api_key = 'type',
+    cli_flag = 'metric-type',
     cli_required = True,
     cli_extra_options = {'choices': autograder.model.stats.METRIC_TYPES}
 )
 
 PARAM_QUERY_PAST = APIParam(
-    'past',
+    'query_past',
     'If supplied, only return log records in this duration (using "h", "m", or "s" suffixes) (e.g., "24h", "10m", or "1h10m10s").',
+    api_key = 'past',
+    cli_flag = 'past',
     api_required = False,
 )
 
 PARAM_QUERY_SORT = APIParam(
-    'sort',
+    'query_sort',
     'Sort the results. -1 for ascending, 0 for no sorting, 1 for descending.',
+    api_key = 'sort',
+    cli_flag = 'sort',
     value_type = int,
     api_required = False,
 )
 
 PARAM_QUERY_TARGET_ASSIGNMENT = APIParam(
-    'target_assignment',
+    'query_target_assignment',
     'If supplied, only return records for this assignment.',
+    api_key = 'target-assignment',
+    cli_flag = 'target-assignment',
     api_required = False,
     cli_show_default = False,
 )
 
 PARAM_QUERY_TARGET_COURSE = APIParam(
-    'target_course',
+    'query_target_course',
     'If supplied, only return records for this course.',
+    api_key = 'target-course',
+    cli_flag = 'target-course',
     api_required = False,
     cli_show_default = False,
 )
 
 PARAM_QUERY_TARGET_EMAIL = APIParam(
-    'target_email',
+    'query_target_email',
     'If supplied, only return records for this user.',
+    api_key = 'target-email',
+    cli_flag = 'target-email',
     api_required = False,
     cli_show_default = False,
 )
 
 PARAM_QUERY_USE_TESTING_DATA = APIParam(
-    'use_testing_data',
+    'query_use_testing_data',
     'Query from hard-coded testing data (instead of real data).',
+    api_key = 'use-testing-data',
+    cli_flag = 'use-testing-data',
     value_type = bool,
     api_required = False,
-    api_key = 'use-testing-data',
     cli = False,
 )
 
 PARAM_QUERY_WHERE = APIParam(
-    'where',
+    'query_where',
     'Only includes records with a patching key/value pair.',
+    api_key = 'where',
+    cli_flag = 'where',
     api_required = False,
     value_type = dict,
     cli_action = ArgumentMap,
@@ -663,9 +688,10 @@ PARAM_RAW_COURSE_USERS = APIParam(
 )
 
 PARAM_RAW_SERVER_USERS = APIParam(
-    'raw_users',
+    'raw_server_users',
     'Raw server users to operate on.',
     value_type = list,
+    api_key = 'raw-users',
     cli = False,
     skip_clean = True,
 )
@@ -757,13 +783,15 @@ PARAM_SUBMISSION_FILES = APIParam(
 )
 
 PARAM_SUBMISSION_SPECS = APIParam(
-    'submissions',
+    'submission_specs',
     ('A list of submission specifications to analyze.'
     + ' Submissions may span courses and assignments.'
     + ' Submissions may be specified in three ways:'
     + ' 1) "<course id>::<assignment id>::<user email>::<submission short id> for a specific submission,'
     + ' 2) "<course id>::<assignment id>::<user email> for the given user\'s most recent submission to the given assignment,'
     + ' and 3) "<course id>::<assignment id> for the most recent submission for all students.'),
+    api_key = 'submissions',
+    cli_flag = 'submissions',
     value_type = list,
     cli_add_func = _cli_add_func_submission_specs,
 )
@@ -839,16 +867,18 @@ PARAM_UPSERT_ZIP = APIParam(
 )
 
 PARAM_USER_EMAIL = APIParam(
-    'user',
+    'auth_user',
     'The email of the user making this request.',
     api_key = 'user-email',
+    cli_flag = 'user',
     cli_show_default = False,
 )
 
 PARAM_USER_PASS = APIParam(
-    'pass',
+    'auth_pass',
     'The password of the user making this request.',
     api_key = 'user-pass',
+    cli_flag = 'pass',
     hash_value = True,
     cli_show_default = False,
 )

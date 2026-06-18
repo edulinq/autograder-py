@@ -6,26 +6,31 @@ import autograder.testing.server
 class TestLogsQuery(autograder.testing.server.ServerTest):
     """ Test query server logs. """
 
-    def test_base(self):
+    def test_base(self) -> None:
         """ Test base functionality. """
 
         # [(config (and overrides), kwargs, expected, error substring), ...]
-        test_cases = [
+        test_cases: typing.List[typing.Tuple[
+            autograder.model.config.Config,
+            typing.Dict[str, typing.Any],
+            typing.Any,
+            typing.Union[str, None],
+        ]] = [
             # Base
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
 
-                    autograder.api.config.PARAM_QUERY_USE_TESTING_DATA.config_key: False,
+                    query_use_testing_data = False,
 
-                    autograder.api.config.PARAM_QUERY_LOG_LEVEL.config_key: 'ERROR',
-                    autograder.api.config.PARAM_QUERY_AFTER.config_key: None,
-                    autograder.api.config.PARAM_QUERY_PAST.config_key: None,
-                    autograder.api.config.PARAM_QUERY_TARGET_COURSE.config_key: None,
-                    autograder.api.config.PARAM_QUERY_TARGET_ASSIGNMENT.config_key: None,
-                    autograder.api.config.PARAM_QUERY_TARGET_EMAIL.config_key: None,
-                },
+                    query_level = 'ERROR',
+                    query_after = None,
+                    query_past = None,
+                    query_target_course = None,
+                    query_target_assignment = None,
+                    query_target_email = None,
+                ),
                 {},
                 (
                     None,
@@ -36,19 +41,19 @@ class TestLogsQuery(autograder.testing.server.ServerTest):
 
             # Testing Logs
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
 
-                    autograder.api.config.PARAM_QUERY_USE_TESTING_DATA.config_key: True,
+                    query_use_testing_data = True,
 
-                    autograder.api.config.PARAM_QUERY_LOG_LEVEL.config_key: 'TRACE',
-                    autograder.api.config.PARAM_QUERY_AFTER.config_key: None,
-                    autograder.api.config.PARAM_QUERY_PAST.config_key: None,
-                    autograder.api.config.PARAM_QUERY_TARGET_COURSE.config_key: None,
-                    autograder.api.config.PARAM_QUERY_TARGET_ASSIGNMENT.config_key: None,
-                    autograder.api.config.PARAM_QUERY_TARGET_EMAIL.config_key: None,
-                },
+                    query_level = 'TRACE',
+                    query_after = None,
+                    query_past = None,
+                    query_target_course = None,
+                    query_target_assignment = None,
+                    query_target_email = None,
+                ),
                 {},
                 (
                     None,
@@ -59,19 +64,19 @@ class TestLogsQuery(autograder.testing.server.ServerTest):
 
             # Bad Permissions
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-user@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-user',
+                autograder.model.config.Config(
+                    auth_user = 'server-user@test.edulinq.org',
+                    auth_pass = 'server-user',
 
-                    autograder.api.config.PARAM_QUERY_USE_TESTING_DATA.config_key: False,
+                    query_use_testing_data = False,
 
-                    autograder.api.config.PARAM_QUERY_LOG_LEVEL.config_key: 'ERROR',
-                    autograder.api.config.PARAM_QUERY_AFTER.config_key: None,
-                    autograder.api.config.PARAM_QUERY_PAST.config_key: None,
-                    autograder.api.config.PARAM_QUERY_TARGET_COURSE.config_key: "course101",
-                    autograder.api.config.PARAM_QUERY_TARGET_ASSIGNMENT.config_key: None,
-                    autograder.api.config.PARAM_QUERY_TARGET_EMAIL.config_key: None,
-                },
+                    query_level = 'ERROR',
+                    query_after = None,
+                    query_past = None,
+                    query_target_course = "course101",
+                    query_target_assignment = None,
+                    query_target_email = None,
+                ),
                 {},
                 (
                     "Error: 'You do not have the correct permissions to execute this log query.', Locator: ''.",

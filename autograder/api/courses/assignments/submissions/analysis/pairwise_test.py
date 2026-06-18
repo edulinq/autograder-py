@@ -3,13 +3,14 @@ import typing
 
 import autograder.api.config
 import autograder.api.courses.assignments.submissions.analysis.pairwise
+import autograder.model.config
 import autograder.testing.asserts
 import autograder.testing.server
 
 class TestCoursesAssignmentsSubmissionsAnalysisPairwise(autograder.testing.server.ServerTest):
     """ Test pairwise analysis. """
 
-    def test_base(self):
+    def test_base(self) -> None:
         """ Test base functionality. """
 
         dry_run_analysis = copy.deepcopy(BASE_TEST_ANALYSIS)
@@ -20,22 +21,27 @@ class TestCoursesAssignmentsSubmissionsAnalysisPairwise(autograder.testing.serve
         all_options_analysis['options']['overwrite-records'] = True
 
         # [(config (and overrides), kwargs, expected, error substring), ...]
-        test_cases = [
+        test_cases: typing.List[typing.Tuple[
+            autograder.model.config.Config,
+            typing.Dict[str, typing.Any],
+            typing.Any,
+            typing.Union[str, None],
+        ]] = [
             # Base
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
 
-                    autograder.api.config.PARAM_SUBMISSION_SPECS.config_key: [
+                    submission_specs = [
                         'course101::hw0::course-student@test.edulinq.org::1697406256',
                         'course101::hw0::course-student@test.edulinq.org::1697406265',
                     ],
 
-                    autograder.api.config.PARAM_DRY_RUN.config_key: False,
-                    autograder.api.config.PARAM_OVERWRITE_RECORDS.config_key: False,
-                    autograder.api.config.PARAM_WAIT_FOR_COMPLETION.config_key: False,
-                },
+                    dry_run = False,
+                    overwrite_records = False,
+                    wait_for_completion = False,
+                ),
                 {},
                 BASE_TEST_ANALYSIS,
                 None,
@@ -43,19 +49,19 @@ class TestCoursesAssignmentsSubmissionsAnalysisPairwise(autograder.testing.serve
 
             # Dry Run
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
 
-                    autograder.api.config.PARAM_SUBMISSION_SPECS.config_key: [
+                    submission_specs = [
                         'course101::hw0::course-student@test.edulinq.org::1697406256',
                         'course101::hw0::course-student@test.edulinq.org::1697406265',
                     ],
 
-                    autograder.api.config.PARAM_DRY_RUN.config_key: True,
-                    autograder.api.config.PARAM_OVERWRITE_RECORDS.config_key: False,
-                    autograder.api.config.PARAM_WAIT_FOR_COMPLETION.config_key: False,
-                },
+                    dry_run = True,
+                    overwrite_records = False,
+                    wait_for_completion = False,
+                ),
                 {},
                 dry_run_analysis,
                 None,
@@ -63,19 +69,19 @@ class TestCoursesAssignmentsSubmissionsAnalysisPairwise(autograder.testing.serve
 
             # Wait for Completion
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
 
-                    autograder.api.config.PARAM_SUBMISSION_SPECS.config_key: [
+                    submission_specs = [
                         'course101::hw0::course-student@test.edulinq.org::1697406256',
                         'course101::hw0::course-student@test.edulinq.org::1697406265',
                     ],
 
-                    autograder.api.config.PARAM_DRY_RUN.config_key: False,
-                    autograder.api.config.PARAM_OVERWRITE_RECORDS.config_key: False,
-                    autograder.api.config.PARAM_WAIT_FOR_COMPLETION.config_key: True,
-                },
+                    dry_run = False,
+                    overwrite_records = False,
+                    wait_for_completion = True,
+                ),
                 {},
                 COMPLETE_TEST_ANALYSIS,
                 None,
@@ -83,19 +89,19 @@ class TestCoursesAssignmentsSubmissionsAnalysisPairwise(autograder.testing.serve
 
             # All Options
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'course-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'course-admin',
+                autograder.model.config.Config(
+                    auth_user = 'course-admin@test.edulinq.org',
+                    auth_pass = 'course-admin',
 
-                    autograder.api.config.PARAM_SUBMISSION_SPECS.config_key: [
+                    submission_specs = [
                         'course101::hw0::course-student@test.edulinq.org::1697406256',
                         'course101::hw0::course-student@test.edulinq.org::1697406265',
                     ],
 
-                    autograder.api.config.PARAM_DRY_RUN.config_key: True,
-                    autograder.api.config.PARAM_OVERWRITE_RECORDS.config_key: True,
-                    autograder.api.config.PARAM_WAIT_FOR_COMPLETION.config_key: True,
-                },
+                    dry_run = True,
+                    overwrite_records = True,
+                    wait_for_completion = True,
+                ),
                 {},
                 all_options_analysis,
                 None,

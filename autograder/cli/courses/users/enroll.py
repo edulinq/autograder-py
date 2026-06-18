@@ -13,9 +13,9 @@ import autograder.cli.parser
 def run_cli(args: argparse.Namespace) -> int:
     """ Run the CLI. """
 
-    config = args._config_info.config
+    config = args._config_info.application_config
 
-    config['raw_course_users'] = [
+    config.raw_course_users = [
         {
             'email': config['new_email'],
             'name': config.get('new_name', ''),

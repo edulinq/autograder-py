@@ -1,4 +1,5 @@
-import autograder.api.config
+import typing
+
 import autograder.api.users.get
 import autograder.model.user
 import autograder.testing.model
@@ -7,18 +8,23 @@ import autograder.testing.server
 class TestUsersGet(autograder.testing.server.ServerTest):
     """ Test getting server users. """
 
-    def test_base(self):
+    def test_base(self) -> None:
         """ Test base functionality. """
 
         # [(config (and overrides), kwargs, expected, error substring), ...]
-        test_cases = [
+        test_cases: typing.List[typing.Tuple[
+            autograder.model.config.Config,
+            typing.Dict[str, typing.Any],
+            typing.Any,
+            typing.Union[str, None],
+        ]] = [
             # Base - Other
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
-                    autograder.api.config.PARAM_TARGET_EMAIL_OR_SELF.config_key: 'course-student@test.edulinq.org',
-                },
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
+                    target_email = 'course-student@test.edulinq.org',
+                ),
                 {},
                 autograder.testing.model.SERVER_USERS['course-student'],
                 None,
@@ -26,10 +32,10 @@ class TestUsersGet(autograder.testing.server.ServerTest):
 
             # Base - Self
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
-                },
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
+                ),
                 {},
                 autograder.testing.model.SERVER_USERS['server-admin'],
                 None,
@@ -37,11 +43,11 @@ class TestUsersGet(autograder.testing.server.ServerTest):
 
             # Missing
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
-                    autograder.api.config.PARAM_TARGET_EMAIL_OR_SELF.config_key: 'ZZZ@test.edulinq.org',
-                },
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
+                    target_email = 'ZZZ@test.edulinq.org',
+                ),
                 {},
                 None,
                 None,
@@ -49,11 +55,11 @@ class TestUsersGet(autograder.testing.server.ServerTest):
 
             # Bad Permissions
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'course-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'course-admin',
-                    autograder.api.config.PARAM_TARGET_EMAIL_OR_SELF.config_key: 'course-student@test.edulinq.org',
-                },
+                autograder.model.config.Config(
+                    auth_user = 'course-admin@test.edulinq.org',
+                    auth_pass = 'course-admin',
+                    target_email = 'course-student@test.edulinq.org',
+                ),
                 {
                     'exit_on_error': False,
                 },
@@ -65,10 +71,10 @@ class TestUsersGet(autograder.testing.server.ServerTest):
         # Add a test case for each user, this helps others using the generated test data.
         for user in autograder.testing.model.SERVER_USERS.values():
             test_cases.append((
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: user.email,
-                    autograder.api.config.PARAM_USER_PASS.config_key: user.name,
-                },
+                autograder.model.config.Config(
+                    auth_user = user.email,
+                    auth_pass = user.name,
+                ),
                 {},
                 user,
                 None,

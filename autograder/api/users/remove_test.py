@@ -1,23 +1,29 @@
-import autograder.api.config
+import typing
+
 import autograder.api.users.remove
 import autograder.testing.server
 
 class TestUsersRemove(autograder.testing.server.ServerTest):
     """ Test removing users. """
 
-    def test_base(self):
+    def test_base(self) -> None:
         """ Test base functionality. """
 
         # [(config (and overrides), kwargs, expected, error substring), ...]
-        test_cases = [
+        test_cases: typing.List[typing.Tuple[
+            autograder.model.config.Config,
+            typing.Dict[str, typing.Any],
+            typing.Any,
+            typing.Union[str, None],
+        ]] = [
             # Base
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
 
-                    autograder.api.config.PARAM_TARGET_EMAIL.config_key: 'course-student@test.edulinq.org',
-                },
+                    target_email = 'course-student@test.edulinq.org',
+                ),
                 {},
                 {
                     "found-user": True,
@@ -27,12 +33,12 @@ class TestUsersRemove(autograder.testing.server.ServerTest):
 
             # Unknown User
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
 
-                    autograder.api.config.PARAM_TARGET_EMAIL.config_key: 'ZZZ@test.edulinq.org',
-                },
+                    target_email = 'ZZZ@test.edulinq.org',
+                ),
                 {},
                 {
                     "found-user": False,
@@ -42,12 +48,12 @@ class TestUsersRemove(autograder.testing.server.ServerTest):
 
             # Bad Permissions
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'course-owner@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'course-owner',
+                autograder.model.config.Config(
+                    auth_user = 'course-owner@test.edulinq.org',
+                    auth_pass = 'course-owner',
 
-                    autograder.api.config.PARAM_TARGET_EMAIL_OR_SELF.config_key: 'course-student@test.edulinq.org',
-                },
+                    target_email = 'course-student@test.edulinq.org',
+                ),
                 {
                     'exit_on_error': False,
                 },

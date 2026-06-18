@@ -1,26 +1,34 @@
+import typing
+
 import autograder.api.config
 import autograder.api.courses.assignments.submissions.fetch.course.attempts
 import autograder.api.courses.assignments.submissions.fetch.testing
+import autograder.model.config
 import autograder.testing.server
 
 class TestCourseAssignmentsFetchCourseAttempts(autograder.testing.server.ServerTest):
     """ Test fetching course submission attempts. """
 
-    def test_base(self):
+    def test_base(self) -> None:
         """ Test base functionality. """
 
         submission = autograder.api.courses.assignments.submissions.fetch.testing.SUBMISSIONS['course-student@test.edulinq.org'][2]
 
         # [(config (and overrides), kwargs, expected, error substring), ...]
-        test_cases = [
+        test_cases: typing.List[typing.Tuple[
+            autograder.model.config.Config,
+            typing.Dict[str, typing.Any],
+            typing.Any,
+            typing.Union[str, None],
+        ]] = [
             # Base
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
-                    autograder.api.config.PARAM_COURSE.config_key: 'course101',
-                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'hw0',
-                },
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
+                    course = 'course101',
+                    assignment = 'hw0',
+                ),
                 {},
                 {
                     "course-admin@test.edulinq.org": None,
@@ -34,16 +42,16 @@ class TestCourseAssignmentsFetchCourseAttempts(autograder.testing.server.ServerT
 
             # Reference
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
-                    autograder.api.config.PARAM_COURSE.config_key: 'course101',
-                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'hw0',
-                    autograder.api.config.PARAM_COURSE_USER_REFERENCES.config_key: [
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
+                    course = 'course101',
+                    assignment = 'hw0',
+                    target_users = [
                         'course-admin@test.edulinq.org',
                         'course-student@test.edulinq.org',
                     ],
-                },
+                ),
                 {},
                 {
                     "course-admin@test.edulinq.org": None,

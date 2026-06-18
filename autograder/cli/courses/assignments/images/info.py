@@ -13,7 +13,7 @@ import autograder.cli.parser
 def run_cli(args: argparse.Namespace) -> int:
     """ Run the CLI. """
 
-    config = args._config_info.config
+    config = args._config_info.application_config
 
     result = autograder.api.courses.assignments.images.info.send(config, exit_on_error = True)
     print(edq.util.json.dumps(result['image-info'], indent = 4))

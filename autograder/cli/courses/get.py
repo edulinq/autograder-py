@@ -13,7 +13,7 @@ import autograder.cli.parser
 def run_cli(args: argparse.Namespace) -> int:
     """ Run the CLI. """
 
-    config = args._config_info.config
+    config = args._config_info.application_config
 
     course = autograder.api.courses.get.send(config, exit_on_error = True)
 
@@ -21,7 +21,7 @@ def run_cli(args: argparse.Namespace) -> int:
     if (course is not None):
         courses = [course]
 
-    output = lms.model.base.base_list_to_output_format(courses, args.output_format,
+    output = lms.model.base.base_list_to_output_format(courses, config.output_format,
             skip_headers = args.skip_headers,
             pretty_headers = args.pretty_headers,
             include_extra_fields = args.include_extra_fields,

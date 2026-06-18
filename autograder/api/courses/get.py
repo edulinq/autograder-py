@@ -6,6 +6,7 @@ import typing
 
 import autograder.api.common
 import autograder.api.config
+import autograder.model.config
 import autograder.model.course
 
 API_ENDPOINT: str = 'courses/get'
@@ -17,7 +18,7 @@ API_PARAMS: typing.List[autograder.api.config.APIParam] = [
     autograder.api.config.PARAM_USER_PASS,
 ]
 
-def send(config: typing.Dict[str, typing.Any], **kwargs: typing.Any) -> typing.Union[autograder.model.course.Course, None]:
+def send(config: autograder.model.config.Config, **kwargs: typing.Any) -> typing.Union[autograder.model.course.Course, None]:
     """ Send a request to the autograder. """
 
     response = autograder.api.common.make_api_request(API_ENDPOINT, config, API_PARAMS, write = API_WRITE, **kwargs)

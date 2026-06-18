@@ -12,6 +12,7 @@ import autograder
 import autograder.api.config
 import autograder.api.constants
 import autograder.error
+import autograder.model.config
 
 DEFAULT_SOURCE_NAME: str = 'edq-autograder-py'
 DEFAULT_SOURCE_VERSION: str = autograder.__version__
@@ -33,7 +34,7 @@ def set_testing_source_info() -> None:
 
 def make_api_request(
         endpoint: str,
-        config: typing.Dict[str, typing.Any],
+        config: autograder.model.config.Config,
         api_params: typing.List[autograder.api.config.APIParam],
         write: typing.Union[bool, None] = None,
         exit_on_error: bool = False,
@@ -60,7 +61,7 @@ def make_api_request(
 
 def _make_api_request(
         endpoint: str,
-        config: typing.Dict[str, typing.Any],
+        config: autograder.model.config.Config,
         api_params: typing.List[autograder.api.config.APIParam],
         write: typing.Union[bool, None] = None,
         post_paths: typing.Union[typing.List[str], None] = None,
@@ -69,10 +70,10 @@ def _make_api_request(
 
     payload = _verify_payload(config, api_params)
 
-    return send_api_request(endpoint, payload, config, post_paths = post_paths, write = write)
+    return send_api_request(endpoint, payload, post_paths = post_paths, write = write)
 
 def _verify_payload(
-        raw_payload: typing.Dict[str, typing.Any],
+        config: autograder.model.config.Config,
         api_params: typing.List[autograder.api.config.APIParam],
         ) -> typing.Dict[str, typing.Any]:
     """
@@ -86,7 +87,7 @@ def _verify_payload(
         if (not api_param.api):
             continue
 
-        value = api_param.clean_value(raw_payload.get(api_param.config_key, None))
+        value = api_param.clean_value(getattr(config, api_param.config_key, None))
 
         if (value is None):
             if (api_param.api_required):
@@ -103,7 +104,6 @@ def _verify_payload(
 def send_api_request(
         endpoint: str,
         payload: typing.Dict[str, typing.Any],
-        config: typing.Dict[str, typing.Any],
         write: typing.Union[bool, None] = None,
         post_paths: typing.Union[typing.List[str], None] = None,
         ) -> typing.Dict[str, typing.Any]:

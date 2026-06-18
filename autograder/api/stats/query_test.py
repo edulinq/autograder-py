@@ -1,31 +1,34 @@
+import typing
+
 import autograder.api.config
 import autograder.api.stats.query
+import autograder.model.config
 import autograder.model.stats
 import autograder.testing.server
 
 class TestStatsQuery(autograder.testing.server.ServerTest):
     """ Test query server stats. """
 
-    def test_base(self):
+    def test_base(self) -> None:
         """ Test base functionality. """
 
         # [(config (and overrides), kwargs, expected, error substring), ...]
-        test_cases = [
+        test_cases: typing.List[typing.Tuple[
+            autograder.model.config.Config,
+            typing.Dict[str, typing.Any],
+            typing.Any,
+            typing.Union[str, None],
+        ]] = [
             # Base
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
 
-                    autograder.api.config.PARAM_QUERY_USE_TESTING_DATA.config_key: False,
+                    query_use_testing_data = False,
 
-                    autograder.api.config.PARAM_QUERY_METRIC_TYPE.config_key: 'grading-time',
-                    autograder.api.config.PARAM_QUERY_LIMIT.config_key: None,
-                    autograder.api.config.PARAM_QUERY_AFTER.config_key: None,
-                    autograder.api.config.PARAM_QUERY_BEFORE.config_key: None,
-                    autograder.api.config.PARAM_QUERY_SORT.config_key: None,
-                    autograder.api.config.PARAM_QUERY_WHERE.config_key: None,
-                },
+                    query_metric_type = 'grading-time',
+                ),
                 {},
                 [],
                 None,
@@ -33,19 +36,14 @@ class TestStatsQuery(autograder.testing.server.ServerTest):
 
             # Testing Data - Single
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
 
-                    autograder.api.config.PARAM_QUERY_USE_TESTING_DATA.config_key: True,
+                    query_use_testing_data = True,
 
-                    autograder.api.config.PARAM_QUERY_METRIC_TYPE.config_key: 'grading-time',
-                    autograder.api.config.PARAM_QUERY_LIMIT.config_key: None,
-                    autograder.api.config.PARAM_QUERY_AFTER.config_key: None,
-                    autograder.api.config.PARAM_QUERY_BEFORE.config_key: None,
-                    autograder.api.config.PARAM_QUERY_SORT.config_key: None,
-                    autograder.api.config.PARAM_QUERY_WHERE.config_key: None,
-                },
+                    query_metric_type = 'grading-time',
+                ),
                 {},
                 [
                     autograder.model.stats.Metric.from_api({
@@ -64,19 +62,14 @@ class TestStatsQuery(autograder.testing.server.ServerTest):
 
             # Testing Data - Multiple
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
 
-                    autograder.api.config.PARAM_QUERY_USE_TESTING_DATA.config_key: True,
+                    query_use_testing_data = True,
 
-                    autograder.api.config.PARAM_QUERY_METRIC_TYPE.config_key: 'cpu-usage',
-                    autograder.api.config.PARAM_QUERY_LIMIT.config_key: None,
-                    autograder.api.config.PARAM_QUERY_AFTER.config_key: None,
-                    autograder.api.config.PARAM_QUERY_BEFORE.config_key: None,
-                    autograder.api.config.PARAM_QUERY_SORT.config_key: None,
-                    autograder.api.config.PARAM_QUERY_WHERE.config_key: None,
-                },
+                    query_metric_type = 'cpu-usage',
+                ),
                 {},
                 [
                     autograder.model.stats.Metric.from_api({
@@ -95,19 +88,15 @@ class TestStatsQuery(autograder.testing.server.ServerTest):
 
             # Parse Timestamp - Int
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
 
-                    autograder.api.config.PARAM_QUERY_USE_TESTING_DATA.config_key: False,
+                    query_use_testing_data = False,
 
-                    autograder.api.config.PARAM_QUERY_METRIC_TYPE.config_key: 'grading-time',
-                    autograder.api.config.PARAM_QUERY_LIMIT.config_key: None,
-                    autograder.api.config.PARAM_QUERY_AFTER.config_key: 123,
-                    autograder.api.config.PARAM_QUERY_BEFORE.config_key: None,
-                    autograder.api.config.PARAM_QUERY_SORT.config_key: None,
-                    autograder.api.config.PARAM_QUERY_WHERE.config_key: None,
-                },
+                    query_metric_type = 'grading-time',
+                    query_after = 123,
+                ),
                 {},
                 [],
                 None,
@@ -115,19 +104,15 @@ class TestStatsQuery(autograder.testing.server.ServerTest):
 
             # Parse Timestamp - String Int
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
 
-                    autograder.api.config.PARAM_QUERY_USE_TESTING_DATA.config_key: False,
+                    query_use_testing_data = False,
 
-                    autograder.api.config.PARAM_QUERY_METRIC_TYPE.config_key: 'grading-time',
-                    autograder.api.config.PARAM_QUERY_LIMIT.config_key: None,
-                    autograder.api.config.PARAM_QUERY_AFTER.config_key: '123',
-                    autograder.api.config.PARAM_QUERY_BEFORE.config_key: None,
-                    autograder.api.config.PARAM_QUERY_SORT.config_key: None,
-                    autograder.api.config.PARAM_QUERY_WHERE.config_key: None,
-                },
+                    query_metric_type = 'grading-time',
+                    query_after = '123',
+                ),
                 {},
                 [],
                 None,
@@ -135,19 +120,15 @@ class TestStatsQuery(autograder.testing.server.ServerTest):
 
             # Parse Timestamp - String
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
 
-                    autograder.api.config.PARAM_QUERY_USE_TESTING_DATA.config_key: False,
+                    query_use_testing_data = False,
 
-                    autograder.api.config.PARAM_QUERY_METRIC_TYPE.config_key: 'grading-time',
-                    autograder.api.config.PARAM_QUERY_LIMIT.config_key: None,
-                    autograder.api.config.PARAM_QUERY_AFTER.config_key: '2023-09-28T04:00:20Z',
-                    autograder.api.config.PARAM_QUERY_BEFORE.config_key: None,
-                    autograder.api.config.PARAM_QUERY_SORT.config_key: None,
-                    autograder.api.config.PARAM_QUERY_WHERE.config_key: None,
-                },
+                    query_metric_type = 'grading-time',
+                    query_after = '2023-09-28T04:00:20Z',
+                ),
                 {},
                 [],
                 None,

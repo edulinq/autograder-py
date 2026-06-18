@@ -12,6 +12,7 @@ import autograder.api.constants
 import autograder.api.metadata.heartbeat
 import autograder.cli.parser
 import autograder.error
+import autograder.model.config
 import autograder.util.net
 
 class ServerRunner(edq.testing.serverrunner.ServerRunner):
@@ -97,7 +98,7 @@ class ServerRunner(edq.testing.serverrunner.ServerRunner):
     def identify_server(self) -> bool:
         # Check the server for a heartbeat.
         try:
-            autograder.api.metadata.heartbeat.send({'server': self.server}, exit_on_error = False)
+            autograder.api.metadata.heartbeat.send(autograder.model.config.Config(server = self.server), exit_on_error = False)
         except autograder.error.ConnectionError:
             return False
 

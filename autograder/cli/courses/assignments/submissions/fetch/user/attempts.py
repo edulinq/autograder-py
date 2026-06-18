@@ -13,7 +13,7 @@ import autograder.util.grading
 def run_cli(args: argparse.Namespace) -> int:
     """ Run the CLI. """
 
-    config = args._config_info.config
+    config = args._config_info.application_config
 
     found_user, grading_results = autograder.api.courses.assignments.submissions.fetch.user.attempts.send(config, exit_on_error = True)
 

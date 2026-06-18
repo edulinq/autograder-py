@@ -12,7 +12,7 @@ import autograder.cli.parser
 def run_cli(args: argparse.Namespace) -> int:
     """ Run the CLI. """
 
-    config = args._config_info.config
+    config = args._config_info.application_config
 
     api_response, grading_result = autograder.api.courses.assignments.submissions.submit.send(config, post_paths = args.files, exit_on_error = True)
     return autograder.cli.courses.assignments.submissions.common.display_grading_result(api_response, grading_result)

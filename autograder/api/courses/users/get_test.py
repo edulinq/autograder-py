@@ -1,5 +1,8 @@
+import typing
+
 import autograder.api.config
 import autograder.api.courses.users.get
+import autograder.model.config
 import autograder.model.user
 import autograder.testing.model
 import autograder.testing.server
@@ -7,19 +10,24 @@ import autograder.testing.server
 class TestUsersGet(autograder.testing.server.ServerTest):
     """ Test getting course users. """
 
-    def test_base(self):
+    def test_base(self) -> None:
         """ Test base functionality. """
 
         # [(config (and overrides), kwargs, expected, error substring), ...]
-        test_cases = [
+        test_cases: typing.List[typing.Tuple[
+            autograder.model.config.Config,
+            typing.Dict[str, typing.Any],
+            typing.Any,
+            typing.Union[str, None],
+        ]] = [
             # Base - Other
             (
-                {
-                    autograder.api.config.PARAM_COURSE.config_key: 'course101',
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'course-grader@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'course-grader',
-                    autograder.api.config.PARAM_TARGET_EMAIL_OR_SELF.config_key: 'course-student@test.edulinq.org',
-                },
+                autograder.model.config.Config(
+                    course = 'course101',
+                    auth_user = 'course-grader@test.edulinq.org',
+                    auth_pass = 'course-grader',
+                    target_email = 'course-student@test.edulinq.org',
+                ),
                 {},
                 autograder.testing.model.COURSE_USERS['Course 101']['course-student'],
                 None,
@@ -27,11 +35,11 @@ class TestUsersGet(autograder.testing.server.ServerTest):
 
             # Base - Self (Admin)
             (
-                {
-                    autograder.api.config.PARAM_COURSE.config_key: 'course101',
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'course-grader@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'course-grader',
-                },
+                autograder.model.config.Config(
+                    course = 'course101',
+                    auth_user = 'course-grader@test.edulinq.org',
+                    auth_pass = 'course-grader',
+                ),
                 {},
                 autograder.testing.model.COURSE_USERS['Course 101']['course-grader'],
                 None,
@@ -39,11 +47,11 @@ class TestUsersGet(autograder.testing.server.ServerTest):
 
             # Base - Self (Non-Admin)
             (
-                {
-                    autograder.api.config.PARAM_COURSE.config_key: 'course101',
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'course-student@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'course-student',
-                },
+                autograder.model.config.Config(
+                    course = 'course101',
+                    auth_user = 'course-student@test.edulinq.org',
+                    auth_pass = 'course-student',
+                ),
                 {},
                 autograder.testing.model.COURSE_USERS['Course 101']['course-student'],
                 None,
@@ -51,12 +59,12 @@ class TestUsersGet(autograder.testing.server.ServerTest):
 
             # Missing
             (
-                {
-                    autograder.api.config.PARAM_COURSE.config_key: 'course101',
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'course-grader@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'course-grader',
-                    autograder.api.config.PARAM_TARGET_EMAIL_OR_SELF.config_key: 'server-user@test.edulinq.org',
-                },
+                autograder.model.config.Config(
+                    course = 'course101',
+                    auth_user = 'course-grader@test.edulinq.org',
+                    auth_pass = 'course-grader',
+                    target_email = 'server-user@test.edulinq.org',
+                ),
                 {},
                 None,
                 None,
@@ -64,12 +72,12 @@ class TestUsersGet(autograder.testing.server.ServerTest):
 
             # Bad Permissions
             (
-                {
-                    autograder.api.config.PARAM_COURSE.config_key: 'course101',
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'course-other@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'course-other',
-                    autograder.api.config.PARAM_TARGET_EMAIL_OR_SELF.config_key: 'course-student@test.edulinq.org',
-                },
+                autograder.model.config.Config(
+                    course = 'course101',
+                    auth_user = 'course-other@test.edulinq.org',
+                    auth_pass = 'course-other',
+                    target_email = 'course-student@test.edulinq.org',
+                ),
                 {
                     'exit_on_error': False,
                 },
@@ -79,11 +87,11 @@ class TestUsersGet(autograder.testing.server.ServerTest):
 
             # User Promotion
             (
-                {
-                    autograder.api.config.PARAM_COURSE.config_key: 'course101',
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
-                },
+                autograder.model.config.Config(
+                    course = 'course101',
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
+                ),
                 {},
                 autograder.model.user.promote_server_user(autograder.testing.model.SERVER_USERS['server-admin']),
                 None,

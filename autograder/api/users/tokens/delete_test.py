@@ -6,18 +6,23 @@ import autograder.testing.server
 class TestUsersTokensDelete(autograder.testing.server.ServerTest):
     """ Test deleting tokens. """
 
-    def test_base(self):
+    def test_base(self) -> None:
         """ Test base functionality. """
 
         # [(config (and overrides), kwargs, expected, error substring), ...]
-        test_cases = [
+        test_cases: typing.List[typing.Tuple[
+            autograder.model.config.Config,
+            typing.Dict[str, typing.Any],
+            typing.Any,
+            typing.Union[str, None],
+        ]] = [
             # Self - Base
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'course-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'course-admin',
-                    autograder.api.config.PARAM_TOKEN_ID.config_key: 'df0a1f16-9cd8-4395-8509-10ae314fe6fc',
-                },
+                autograder.model.config.Config(
+                    auth_user = 'course-admin@test.edulinq.org',
+                    auth_pass = 'course-admin',
+                    token_id = 'df0a1f16-9cd8-4395-8509-10ae314fe6fc',
+                ),
                 {},
                 {
                     "found-user": True,
@@ -28,11 +33,11 @@ class TestUsersTokensDelete(autograder.testing.server.ServerTest):
 
             # Self - Bad ID
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'course-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'course-admin',
-                    autograder.api.config.PARAM_TOKEN_ID.config_key: 'ZZZ',
-                },
+                autograder.model.config.Config(
+                    auth_user = 'course-admin@test.edulinq.org',
+                    auth_pass = 'course-admin',
+                    token_id = 'ZZZ',
+                ),
                 {},
                 {
                     "found-user": True,
@@ -43,12 +48,12 @@ class TestUsersTokensDelete(autograder.testing.server.ServerTest):
 
             # Other - Base
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
-                    autograder.api.config.PARAM_TARGET_USER_OR_SELF.config_key: 'course-student@test.edulinq.org',
-                    autograder.api.config.PARAM_TOKEN_ID.config_key: 'dddbc97c-36e4-43fc-b5a0-478aade61c53',
-                },
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
+                    target_user = 'course-student@test.edulinq.org',
+                    token_id = 'dddbc97c-36e4-43fc-b5a0-478aade61c53',
+                ),
                 {},
                 {
                     "found-user": True,
@@ -59,12 +64,12 @@ class TestUsersTokensDelete(autograder.testing.server.ServerTest):
 
             # Other - Bad Permissions
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'course-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'course-admin',
-                    autograder.api.config.PARAM_TARGET_USER_OR_SELF.config_key: 'course-student@test.edulinq.org',
-                    autograder.api.config.PARAM_TOKEN_ID.config_key: 'dddbc97c-36e4-43fc-b5a0-478aade61c53',
-                },
+                autograder.model.config.Config(
+                    auth_user = 'course-admin@test.edulinq.org',
+                    auth_pass = 'course-admin',
+                    target_user = 'course-student@test.edulinq.org',
+                    token_id = 'dddbc97c-36e4-43fc-b5a0-478aade61c53',
+                ),
                 {},
                 None,
                 "You have insufficient permissions for the requested operation",
@@ -72,12 +77,12 @@ class TestUsersTokensDelete(autograder.testing.server.ServerTest):
 
             # Other - Missing User
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
-                    autograder.api.config.PARAM_TARGET_USER_OR_SELF.config_key: 'ZZZ@test.edulinq.org',
-                    autograder.api.config.PARAM_TOKEN_ID.config_key: 'dddbc97c-36e4-43fc-b5a0-478aade61c53',
-                },
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
+                    target_user = 'ZZZ@test.edulinq.org',
+                    token_id = 'dddbc97c-36e4-43fc-b5a0-478aade61c53',
+                ),
                 {},
                 {
                     "found-user": False,
@@ -88,12 +93,12 @@ class TestUsersTokensDelete(autograder.testing.server.ServerTest):
 
             # Other - Missing Token
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
-                    autograder.api.config.PARAM_TARGET_USER_OR_SELF.config_key: 'course-student@test.edulinq.org',
-                    autograder.api.config.PARAM_TOKEN_ID.config_key: 'ZZZ',
-                },
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
+                    target_user = 'course-student@test.edulinq.org',
+                    token_id = 'ZZZ',
+                ),
                 {},
                 {
                     "found-user": True,
@@ -106,11 +111,11 @@ class TestUsersTokensDelete(autograder.testing.server.ServerTest):
         # Add a test case for each user, this helps others using the generated test data.
         for user in autograder.testing.model.RAW_USER_DATA.values():
             test_cases.append((
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: user['email'],
-                    autograder.api.config.PARAM_USER_PASS.config_key: user['name'],
-                    autograder.api.config.PARAM_TOKEN_ID.config_key: user['tokens'][0]['id'],
-                },
+                autograder.model.config.Config(
+                    auth_user = user['email'],
+                    auth_pass = user['name'],
+                    token_id = user['tokens'][0]['id'],
+                ),
                 {},
                 {
                     "found-user": True,

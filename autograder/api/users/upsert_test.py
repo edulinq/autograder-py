@@ -1,33 +1,39 @@
-import autograder.api.config
+import typing
+
 import autograder.api.users.upsert
 import autograder.testing.server
 
 class TestUsersUpsert(autograder.testing.server.ServerTest):
     """ Test upserting server users. """
 
-    def test_base(self):
+    def test_base(self) -> None:
         """ Test base functionality. """
 
         # [(config (and overrides), kwargs, expected, error substring), ...]
-        test_cases = [
+        test_cases: typing.List[typing.Tuple[
+            autograder.model.config.Config,
+            typing.Dict[str, typing.Any],
+            typing.Any,
+            typing.Union[str, None],
+        ]] = [
             # Insert
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
 
-                    autograder.api.config.PARAM_DRY_RUN.config_key: False,
-                    autograder.api.config.PARAM_SKIP_INSERTS.config_key: False,
-                    autograder.api.config.PARAM_SKIP_UPDATES.config_key: False,
-                    autograder.api.config.PARAM_SEND_EMAILS.config_key: False,
+                    dry_run = False,
+                    skip_inserts = False,
+                    skip_updates = False,
+                    send_emails = False,
 
-                    autograder.api.config.PARAM_RAW_SERVER_USERS.config_key: [
+                    raw_server_users = [
                         {
                             'email': 'new-user@test.edulinq.org',
                             'role': 'user',
                         },
                     ],
-                },
+                ),
                 {},
                 {
                     "results": [
@@ -42,22 +48,22 @@ class TestUsersUpsert(autograder.testing.server.ServerTest):
 
             # Update
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
 
-                    autograder.api.config.PARAM_DRY_RUN.config_key: False,
-                    autograder.api.config.PARAM_SKIP_INSERTS.config_key: False,
-                    autograder.api.config.PARAM_SKIP_UPDATES.config_key: False,
-                    autograder.api.config.PARAM_SEND_EMAILS.config_key: False,
+                    dry_run = False,
+                    skip_inserts = False,
+                    skip_updates = False,
+                    send_emails = False,
 
-                    autograder.api.config.PARAM_RAW_SERVER_USERS.config_key: [
+                    raw_server_users = [
                         {
                             'email': 'server-admin@test.edulinq.org',
                             'name': 'New Name',
                         },
                     ],
-                },
+                ),
                 {},
                 {
                     "results": [
@@ -72,23 +78,23 @@ class TestUsersUpsert(autograder.testing.server.ServerTest):
 
             # Enroll
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
 
-                    autograder.api.config.PARAM_DRY_RUN.config_key: False,
-                    autograder.api.config.PARAM_SKIP_INSERTS.config_key: False,
-                    autograder.api.config.PARAM_SKIP_UPDATES.config_key: False,
-                    autograder.api.config.PARAM_SEND_EMAILS.config_key: False,
+                    dry_run = False,
+                    skip_inserts = False,
+                    skip_updates = False,
+                    send_emails = False,
 
-                    autograder.api.config.PARAM_RAW_SERVER_USERS.config_key: [
+                    raw_server_users = [
                         {
                             'email': 'server-user@test.edulinq.org',
                             'course': 'course101',
                             'course-role': 'student',
                         },
                     ],
-                },
+                ),
                 {},
                 {
                     "results": [
@@ -106,16 +112,16 @@ class TestUsersUpsert(autograder.testing.server.ServerTest):
 
             # Mixed
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
 
-                    autograder.api.config.PARAM_DRY_RUN.config_key: False,
-                    autograder.api.config.PARAM_SKIP_INSERTS.config_key: False,
-                    autograder.api.config.PARAM_SKIP_UPDATES.config_key: False,
-                    autograder.api.config.PARAM_SEND_EMAILS.config_key: False,
+                    dry_run = False,
+                    skip_inserts = False,
+                    skip_updates = False,
+                    send_emails = False,
 
-                    autograder.api.config.PARAM_RAW_SERVER_USERS.config_key: [
+                    raw_server_users = [
                         {
                             'email': 'new-user@test.edulinq.org',
                             'pass': 'password123',
@@ -126,7 +132,7 @@ class TestUsersUpsert(autograder.testing.server.ServerTest):
                             'name': 'New Name',
                         },
                     ],
-                },
+                ),
                 {},
                 {
                     "results": [

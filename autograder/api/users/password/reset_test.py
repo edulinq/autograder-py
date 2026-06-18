@@ -5,16 +5,21 @@ import autograder.testing.server
 class TestUsersPasswordReset(autograder.testing.server.ServerTest):
     """ Test resetting passwords. """
 
-    def test_base(self):
+    def test_base(self) -> None:
         """ Test base functionality. """
 
         # [(config (and overrides), kwargs, expected, error substring), ...]
-        test_cases = [
+        test_cases: typing.List[typing.Tuple[
+            autograder.model.config.Config,
+            typing.Dict[str, typing.Any],
+            typing.Any,
+            typing.Union[str, None],
+        ]] = [
             # Base
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-user@test.edulinq.org',
-                },
+                autograder.model.config.Config(
+                    auth_user = 'server-user@test.edulinq.org',
+                ),
                 {},
                 {},
                 None,
@@ -22,9 +27,9 @@ class TestUsersPasswordReset(autograder.testing.server.ServerTest):
 
             # Missing
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'ZZZ',
-                },
+                autograder.model.config.Config(
+                    auth_user = 'ZZZ',
+                ),
                 {},
                 {},
                 None,

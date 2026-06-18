@@ -6,7 +6,7 @@ import typing
 
 import autograder.api.common
 import autograder.api.config
-import autograder.error
+import autograder.model.config
 import autograder.model.stats
 
 API_ENDPOINT: str = 'stats/query'
@@ -26,7 +26,7 @@ API_PARAMS: typing.List[autograder.api.config.APIParam] = [
     autograder.api.config.PARAM_QUERY_WHERE,
 ]
 
-def send(config: typing.Dict[str, typing.Any], **kwargs: typing.Any) -> typing.List[autograder.model.stats.Metric]:
+def send(config: autograder.model.config.Config, **kwargs: typing.Any) -> typing.List[autograder.model.stats.Metric]:
     """ Send a request to the autograder. """
 
     result = autograder.api.common.make_api_request(API_ENDPOINT, config, API_PARAMS, write = API_WRITE, **kwargs)

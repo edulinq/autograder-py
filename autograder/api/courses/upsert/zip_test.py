@@ -1,29 +1,37 @@
+import typing
+
 import autograder.api.config
 import autograder.api.courses.upsert.zip
+import autograder.model.config
 import autograder.testing.constants
 import autograder.testing.server
 
 class TestCoursesUpsertZip(autograder.testing.server.ServerTest):
     """ Test upserting a course with a zip. """
 
-    def test_base(self):
+    def test_base(self) -> None:
         """ Test base functionality. """
 
         # [(config (and overrides), kwargs, expected, error substring), ...]
-        test_cases = [
+        test_cases: typing.List[typing.Tuple[
+            autograder.model.config.Config,
+            typing.Dict[str, typing.Any],
+            typing.Any,
+            typing.Union[str, None],
+        ]] = [
             # Base
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
 
-                    autograder.api.config.PARAM_DRY_RUN.config_key: False,
-                    autograder.api.config.PARAM_SKIP_EMAILS.config_key: False,
-                    autograder.api.config.PARAM_SKIP_SOURCE_SYNC.config_key: False,
-                    autograder.api.config.PARAM_SKIP_LMS_SYNC.config_key: False,
-                    autograder.api.config.PARAM_SKIP_BUILD_IMAGES.config_key: True,
-                    autograder.api.config.PARAM_SKIP_TEMPLATE_FILES.config_key: False,
-                },
+                    dry_run = False,
+                    skip_emails = False,
+                    skip_source_sync = False,
+                    skip_lms_sync = False,
+                    skip_build_images = True,
+                    skip_template_files = False,
+                ),
                 {
                     'post_paths': [
                         autograder.testing.constants.COURSE_101_ZIP_PATH,

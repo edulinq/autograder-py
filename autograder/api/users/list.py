@@ -8,6 +8,7 @@ import lms.model.users
 
 import autograder.api.common
 import autograder.api.config
+import autograder.model.config
 import autograder.model.user
 
 API_ENDPOINT: str = 'users/list'
@@ -20,7 +21,7 @@ API_PARAMS: typing.List[autograder.api.config.APIParam] = [
     autograder.api.config.PARAM_TARGET_USERS,
 ]
 
-def send(config: typing.Dict[str, typing.Any], **kwargs: typing.Any) -> typing.List[lms.model.users.ServerUser]:
+def send(config: autograder.model.config.Config, **kwargs: typing.Any) -> typing.List[lms.model.users.ServerUser]:
     """ Send a request to the autograder. """
 
     response = autograder.api.common.make_api_request(API_ENDPOINT, config, API_PARAMS, write = API_WRITE, **kwargs)

@@ -2,29 +2,35 @@ import typing
 
 import autograder.api.config
 import autograder.api.courses.assignments.submissions.proxy.regrade
+import autograder.model.config
 import autograder.testing.asserts
 import autograder.testing.server
 
 class TestCoursesAssignmentsSubmissionsProxyRegrade(autograder.testing.server.ServerTest):
     """ Test proxy regrades. """
 
-    def test_base(self):
+    def test_base(self) -> None:
         """ Test base functionality. """
 
         # [(config (and overrides), kwargs, expected, error substring), ...]
-        test_cases = [
+        test_cases: typing.List[typing.Tuple[
+            autograder.model.config.Config,
+            typing.Dict[str, typing.Any],
+            typing.Any,
+            typing.Union[str, None],
+        ]] = [
             # Base
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
-                    autograder.api.config.PARAM_COURSE.config_key: 'course-languages',
-                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'bash',
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
+                    course = 'course-languages',
+                    assignment = 'bash',
 
-                    autograder.api.config.PARAM_DRY_RUN.config_key: False,
-                    autograder.api.config.PARAM_OVERWRITE_RECORDS.config_key: False,
-                    autograder.api.config.PARAM_WAIT_FOR_COMPLETION.config_key: False,
-                },
+                    dry_run = False,
+                    overwrite_records = False,
+                    wait_for_completion = False,
+                ),
                 {},
                 {
                     "complete": False,
@@ -52,20 +58,20 @@ class TestCoursesAssignmentsSubmissionsProxyRegrade(autograder.testing.server.Se
 
             # Users
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
-                    autograder.api.config.PARAM_COURSE.config_key: 'course-languages',
-                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'bash',
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
+                    course = 'course-languages',
+                    assignment = 'bash',
 
-                    autograder.api.config.PARAM_COURSE_USER_REFERENCES.config_key: [
+                    target_users = [
                         'student',
                     ],
 
-                    autograder.api.config.PARAM_DRY_RUN.config_key: False,
-                    autograder.api.config.PARAM_OVERWRITE_RECORDS.config_key: False,
-                    autograder.api.config.PARAM_WAIT_FOR_COMPLETION.config_key: False,
-                },
+                    dry_run = False,
+                    overwrite_records = False,
+                    wait_for_completion = False,
+                ),
                 {},
                 {
                     "complete": False,
@@ -87,20 +93,20 @@ class TestCoursesAssignmentsSubmissionsProxyRegrade(autograder.testing.server.Se
                 None,
             ),
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'course-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'course-admin',
-                    autograder.api.config.PARAM_COURSE.config_key: 'course-languages',
-                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'bash',
+                autograder.model.config.Config(
+                    auth_user = 'course-admin@test.edulinq.org',
+                    auth_pass = 'course-admin',
+                    course = 'course-languages',
+                    assignment = 'bash',
 
-                    autograder.api.config.PARAM_COURSE_USER_REFERENCES.config_key: [
+                    target_users = [
                         'student',
                     ],
 
-                    autograder.api.config.PARAM_DRY_RUN.config_key: False,
-                    autograder.api.config.PARAM_OVERWRITE_RECORDS.config_key: False,
-                    autograder.api.config.PARAM_WAIT_FOR_COMPLETION.config_key: False,
-                },
+                    dry_run = False,
+                    overwrite_records = False,
+                    wait_for_completion = False,
+                ),
                 {},
                 {
                     "complete": False,
@@ -124,18 +130,18 @@ class TestCoursesAssignmentsSubmissionsProxyRegrade(autograder.testing.server.Se
 
             # Wait and Cutoff
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
-                    autograder.api.config.PARAM_COURSE.config_key: 'course-languages',
-                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'bash',
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
+                    course = 'course-languages',
+                    assignment = 'bash',
 
-                    autograder.api.config.PARAM_REGRADE_CUTOFF.config_key: autograder.testing.constants.TEST_TIMESTAMP,
+                    regrade_cutoff = autograder.testing.constants.TEST_TIMESTAMP,
 
-                    autograder.api.config.PARAM_DRY_RUN.config_key: False,
-                    autograder.api.config.PARAM_OVERWRITE_RECORDS.config_key: False,
-                    autograder.api.config.PARAM_WAIT_FOR_COMPLETION.config_key: True,
-                },
+                    dry_run = False,
+                    overwrite_records = False,
+                    wait_for_completion = True,
+                ),
                 {},
                 {
                     "complete": True,

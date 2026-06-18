@@ -8,6 +8,7 @@ import autograder.api.common
 import autograder.api.config
 import autograder.assignment
 import autograder.error
+import autograder.model.config
 
 # Params have been split up so others can use these base params.
 BASE_API_PARAMS: typing.List[autograder.api.config.APIParam] = [
@@ -28,7 +29,7 @@ API_PARAMS: typing.List[autograder.api.config.APIParam] = BASE_API_PARAMS + [
     autograder.api.config.PARAM_SUBMISSION_FILES,
 ]
 
-def send(config: typing.Dict[str, typing.Any], post_paths: typing.Union[typing.List[str], None] = None, **kwargs: typing.Any) -> typing.Tuple[
+def send(config: autograder.model.config.Config, post_paths: typing.Union[typing.List[str], None] = None, **kwargs: typing.Any) -> typing.Tuple[
         typing.Dict[str, typing.Any], typing.Union[autograder.assignment.GradedAssignment, None]]:
     """
     Send a request to the autograder.

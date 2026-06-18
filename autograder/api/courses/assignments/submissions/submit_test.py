@@ -7,6 +7,7 @@ import edq.testing.asserts
 
 import autograder.api.config
 import autograder.api.courses.assignments.submissions.submit
+import autograder.model.config
 import autograder.testing.constants
 import autograder.testing.server
 
@@ -14,21 +15,26 @@ class TestCourseAssignmentsSubmit(autograder.testing.server.ServerTest):
     """ Test submitting and assignment. """
 
     @unittest.skipIf(sys.platform.startswith("win"), "Windows file hashes create different HTTP exchange queries")
-    def test_base(self):
+    def test_base(self) -> None:
         """ Test base functionality. """
 
         # pylint: disable=line-too-long
         # [(config (and overrides), kwargs, expected, error substring), ...]
-        test_cases = [
+        test_cases: typing.List[typing.Tuple[
+            autograder.model.config.Config,
+            typing.Dict[str, typing.Any],
+            typing.Any,
+            typing.Union[str, None],
+        ]] = [
             # Base
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
-                    autograder.api.config.PARAM_COURSE.config_key: 'course-languages',
-                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'bash',
-                    autograder.api.config.PARAM_ALLOW_LATE.config_key: False,
-                },
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
+                    course = 'course-languages',
+                    assignment = 'bash',
+                    allow_late = False,
+                ),
                 {
                     'post_paths': [
                         autograder.testing.constants.TEST_SUBMISSIONS_BASH_SOLUTION_PATH,
@@ -44,13 +50,13 @@ class TestCourseAssignmentsSubmit(autograder.testing.server.ServerTest):
                 None,
             ),
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'course-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'course-admin',
-                    autograder.api.config.PARAM_COURSE.config_key: 'course-languages',
-                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'bash',
-                    autograder.api.config.PARAM_ALLOW_LATE.config_key: True,
-                },
+                autograder.model.config.Config(
+                    auth_user = 'course-admin@test.edulinq.org',
+                    auth_pass = 'course-admin',
+                    course = 'course-languages',
+                    assignment = 'bash',
+                    allow_late = True,
+                ),
                 {
                     'post_paths': [
                         autograder.testing.constants.TEST_SUBMISSIONS_BASH_SOLUTION_PATH,
@@ -68,14 +74,14 @@ class TestCourseAssignmentsSubmit(autograder.testing.server.ServerTest):
 
             # Message
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
-                    autograder.api.config.PARAM_COURSE.config_key: 'course-languages',
-                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'bash',
-                    autograder.api.config.PARAM_ALLOW_LATE.config_key: False,
-                    autograder.api.config.PARAM_SUBMISSION_MESSAGE.config_key: 'Test Message.',
-                },
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
+                    course = 'course-languages',
+                    assignment = 'bash',
+                    allow_late = False,
+                    submission_message = 'Test Message.',
+                ),
                 {
                     'post_paths': [
                         autograder.testing.constants.TEST_SUBMISSIONS_BASH_SOLUTION_PATH,
@@ -93,13 +99,13 @@ class TestCourseAssignmentsSubmit(autograder.testing.server.ServerTest):
 
             # Missing Files
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
-                    autograder.api.config.PARAM_COURSE.config_key: 'course-languages',
-                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'bash',
-                    autograder.api.config.PARAM_ALLOW_LATE.config_key: False,
-                },
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
+                    course = 'course-languages',
+                    assignment = 'bash',
+                    allow_late = False,
+                ),
                 {},
                 None,
                 'No files provided for submission',
@@ -107,13 +113,13 @@ class TestCourseAssignmentsSubmit(autograder.testing.server.ServerTest):
 
             # Bad Paths
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
-                    autograder.api.config.PARAM_COURSE.config_key: 'course-languages',
-                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'bash',
-                    autograder.api.config.PARAM_ALLOW_LATE.config_key: False,
-                },
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
+                    course = 'course-languages',
+                    assignment = 'bash',
+                    allow_late = False,
+                ),
                 {
                     'post_paths': [
                         'ZZZ',
@@ -125,13 +131,13 @@ class TestCourseAssignmentsSubmit(autograder.testing.server.ServerTest):
 
             # Grading Fail
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
-                    autograder.api.config.PARAM_COURSE.config_key: 'course-languages',
-                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'bash',
-                    autograder.api.config.PARAM_ALLOW_LATE.config_key: False,
-                },
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
+                    course = 'course-languages',
+                    assignment = 'bash',
+                    allow_late = False,
+                ),
                 {
                     'post_paths': [
                         autograder.testing.constants.TEST_SUBMISSIONS_BASH_BAD_PATH,
@@ -149,13 +155,13 @@ class TestCourseAssignmentsSubmit(autograder.testing.server.ServerTest):
 
             # Crash - Bash
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
-                    autograder.api.config.PARAM_COURSE.config_key: 'course-languages',
-                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'bash',
-                    autograder.api.config.PARAM_ALLOW_LATE.config_key: False,
-                },
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
+                    course = 'course-languages',
+                    assignment = 'bash',
+                    allow_late = False,
+                ),
                 {
                     'post_paths': [
                         autograder.testing.constants.TEST_SUBMISSIONS_BASH_CRASH_PATH,
@@ -173,13 +179,13 @@ class TestCourseAssignmentsSubmit(autograder.testing.server.ServerTest):
 
             # Crash - Python
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
-                    autograder.api.config.PARAM_COURSE.config_key: 'course101',
-                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'hw0',
-                    autograder.api.config.PARAM_ALLOW_LATE.config_key: False,
-                },
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
+                    course = 'course101',
+                    assignment = 'hw0',
+                    allow_late = False,
+                ),
                 {
                     'post_paths': [
                         autograder.testing.constants.NOCOMPILE_PYTHON_PATH,

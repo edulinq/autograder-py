@@ -7,6 +7,7 @@ import typing
 import autograder.api.common
 import autograder.api.config
 import autograder.error
+import autograder.model.config
 import autograder.model.log
 
 API_ENDPOINT: str = 'logs/query'
@@ -28,7 +29,7 @@ API_PARAMS: typing.List[autograder.api.config.APIParam] = [
 ]
 
 def send(
-        config: typing.Dict[str, typing.Any],
+        config: autograder.model.config.Config,
         **kwargs: typing.Any,
         ) -> typing.Tuple[typing.Union[str, None], typing.List[autograder.model.log.LogRecord]]:
     """

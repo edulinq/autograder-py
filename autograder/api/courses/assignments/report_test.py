@@ -1,22 +1,30 @@
+import typing
+
 import autograder.api.config
 import autograder.api.courses.assignments.report
+import autograder.model.config
 import autograder.testing.model
 import autograder.testing.server
 
 class TestCoursesAssignmentsReport(autograder.testing.server.ServerTest):
     """ Test getting assignment reports. """
 
-    def test_base(self):
+    def test_base(self) -> None:
         """ Test base functionality. """
 
         # [(config (and overrides), kwargs, expected, error substring), ...]
-        test_cases = [
+        test_cases: typing.List[typing.Tuple[
+            autograder.model.config.Config,
+            typing.Dict[str, typing.Any],
+            typing.Any,
+            typing.Union[str, None],
+        ]] = [
             (
-                {
-                    autograder.api.config.PARAM_COURSE.config_key: 'course101',
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
-                },
+                autograder.model.config.Config(
+                    course = 'course101',
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
+                ),
                 {},
                 {
                     "course-report": {

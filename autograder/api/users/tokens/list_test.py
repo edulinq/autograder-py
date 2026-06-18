@@ -6,17 +6,22 @@ import autograder.testing.server
 class TestUsersTokensList(autograder.testing.server.ServerTest):
     """ Test creating tokens. """
 
-    def test_base(self):
+    def test_base(self) -> None:
         """ Test base functionality. """
 
         # [(config (and overrides), kwargs, expected, error substring), ...]
-        test_cases = [
+        test_cases: typing.List[typing.Tuple[
+            autograder.model.config.Config,
+            typing.Dict[str, typing.Any],
+            typing.Any,
+            typing.Union[str, None],
+        ]] = [
             # Self
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-user@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-user',
-                },
+                autograder.model.config.Config(
+                    auth_user = 'server-user@test.edulinq.org',
+                    auth_pass = 'server-user',
+                ),
                 {},
                 {
                     "found-user": True,
@@ -35,11 +40,11 @@ class TestUsersTokensList(autograder.testing.server.ServerTest):
 
             # Other
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
-                    autograder.api.config.PARAM_TARGET_USER_OR_SELF.config_key: 'course-student@test.edulinq.org',
-                },
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
+                    target_user = 'course-student@test.edulinq.org',
+                ),
                 {},
                 {
                     "found-user": True,
@@ -58,11 +63,11 @@ class TestUsersTokensList(autograder.testing.server.ServerTest):
 
             # Other - Bad Permissions
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-user@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-user',
-                    autograder.api.config.PARAM_TARGET_USER_OR_SELF.config_key: 'course-student@test.edulinq.org',
-                },
+                autograder.model.config.Config(
+                    auth_user = 'server-user@test.edulinq.org',
+                    auth_pass = 'server-user',
+                    target_user = 'course-student@test.edulinq.org',
+                ),
                 {},
                 None,
                 "You have insufficient permissions for the requested operation",
@@ -70,11 +75,11 @@ class TestUsersTokensList(autograder.testing.server.ServerTest):
 
             # Other - Missing User
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
-                    autograder.api.config.PARAM_TARGET_USER_OR_SELF.config_key: 'ZZZ@test.edulinq.org',
-                },
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
+                    target_user = 'ZZZ@test.edulinq.org',
+                ),
                 {},
                 {
                     "found-user": False,

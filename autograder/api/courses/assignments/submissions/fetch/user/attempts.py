@@ -7,6 +7,7 @@ import typing
 import autograder.api.common
 import autograder.api.config
 import autograder.assignment
+import autograder.model.config
 
 API_ENDPOINT: str = 'courses/assignments/submissions/fetch/user/attempts'
 API_WRITE: bool = False
@@ -23,7 +24,7 @@ API_PARAMS: typing.List[autograder.api.config.APIParam] = [
     autograder.api.config.PARAM_OUT_DIR,
 ]
 
-def send(config: typing.Dict[str, typing.Any], **kwargs: typing.Any) -> typing.Tuple[bool, typing.List[typing.Dict[str, typing.Any]]]:
+def send(config: autograder.model.config.Config, **kwargs: typing.Any) -> typing.Tuple[bool, typing.List[typing.Dict[str, typing.Any]]]:
     """
     Send a request to the autograder.
     Returns: (found user, attempts).

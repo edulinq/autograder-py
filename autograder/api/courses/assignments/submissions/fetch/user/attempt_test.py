@@ -1,4 +1,5 @@
 import sys
+import typing
 import unittest
 
 import edq.util.dirent
@@ -6,26 +7,32 @@ import edq.util.dirent
 import autograder.api.config
 import autograder.api.courses.assignments.submissions.fetch.testing
 import autograder.api.courses.assignments.submissions.fetch.user.attempt
+import autograder.model.config
 import autograder.testing.server
 import autograder.util.grading
 
 class TestCourseAssignmentsFetchUserAttempt(autograder.testing.server.ServerTest):
     """ Test fetching user submission attempt. """
 
-    def test_base(self):
+    def test_base(self) -> None:
         """ Test base functionality. """
 
         # [(config (and overrides), kwargs, expected, error substring), ...]
-        test_cases = [
+        test_cases: typing.List[typing.Tuple[
+            autograder.model.config.Config,
+            typing.Dict[str, typing.Any],
+            typing.Any,
+            typing.Union[str, None],
+        ]] = [
             # Base
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
-                    autograder.api.config.PARAM_COURSE.config_key: 'course101',
-                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'hw0',
-                    autograder.api.config.PARAM_TARGET_EMAIL_OR_SELF.config_key: 'course-student@test.edulinq.org',
-                },
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
+                    course = 'course101',
+                    assignment = 'hw0',
+                    target_email = 'course-student@test.edulinq.org',
+                ),
                 {},
                 (
                     True,
@@ -37,13 +44,13 @@ class TestCourseAssignmentsFetchUserAttempt(autograder.testing.server.ServerTest
 
             # Missing User
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
-                    autograder.api.config.PARAM_COURSE.config_key: 'course101',
-                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'hw0',
-                    autograder.api.config.PARAM_TARGET_EMAIL_OR_SELF.config_key: 'ZZZ@test.edulinq.org',
-                },
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
+                    course = 'course101',
+                    assignment = 'hw0',
+                    target_email = 'ZZZ@test.edulinq.org',
+                ),
                 {},
                 (
                     False,
@@ -55,14 +62,14 @@ class TestCourseAssignmentsFetchUserAttempt(autograder.testing.server.ServerTest
 
             # Missing Submission
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
-                    autograder.api.config.PARAM_COURSE.config_key: 'course101',
-                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'hw0',
-                    autograder.api.config.PARAM_TARGET_EMAIL_OR_SELF.config_key: 'course-student@test.edulinq.org',
-                    autograder.api.config.PARAM_TARGET_SUBMISSION_OR_RECENT.config_key: 'ZZZ',
-                },
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
+                    course = 'course101',
+                    assignment = 'hw0',
+                    target_email = 'course-student@test.edulinq.org',
+                    target_submission = 'ZZZ',
+                ),
                 {},
                 (
                     True,
@@ -74,12 +81,12 @@ class TestCourseAssignmentsFetchUserAttempt(autograder.testing.server.ServerTest
 
             # No Submissions (Self)
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
-                    autograder.api.config.PARAM_COURSE.config_key: 'course101',
-                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'hw0',
-                },
+                autograder.model.config.Config(
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
+                    course = 'course101',
+                    assignment = 'hw0',
+                ),
                 {},
                 (
                     True,
@@ -89,12 +96,12 @@ class TestCourseAssignmentsFetchUserAttempt(autograder.testing.server.ServerTest
                 None,
             ),
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'course-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'course-admin',
-                    autograder.api.config.PARAM_COURSE.config_key: 'course101',
-                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'hw0',
-                },
+                autograder.model.config.Config(
+                    auth_user = 'course-admin@test.edulinq.org',
+                    auth_pass = 'course-admin',
+                    course = 'course101',
+                    assignment = 'hw0',
+                ),
                 {},
                 (
                     True,
@@ -106,14 +113,14 @@ class TestCourseAssignmentsFetchUserAttempt(autograder.testing.server.ServerTest
 
             # Target Submissions
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'course-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'course-admin',
-                    autograder.api.config.PARAM_COURSE.config_key: 'course101',
-                    autograder.api.config.PARAM_ASSIGNMENT.config_key: 'hw0',
-                    autograder.api.config.PARAM_TARGET_EMAIL_OR_SELF.config_key: 'course-student@test.edulinq.org',
-                    autograder.api.config.PARAM_TARGET_SUBMISSION_OR_RECENT.config_key: '1697406265',
-                },
+                autograder.model.config.Config(
+                    auth_user = 'course-admin@test.edulinq.org',
+                    auth_pass = 'course-admin',
+                    course = 'course101',
+                    assignment = 'hw0',
+                    target_email = 'course-student@test.edulinq.org',
+                    target_submission = '1697406265',
+                ),
                 {},
                 (
                     True,

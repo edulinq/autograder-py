@@ -1,34 +1,42 @@
+import typing
+
 import autograder.api.config
 import autograder.api.courses.users.enroll
+import autograder.model.config
 import autograder.testing.server
 
 class TestUsersEnroll(autograder.testing.server.ServerTest):
     """ Test enrolling course users. """
 
-    def test_base(self):
+    def test_base(self) -> None:
         """ Test base functionality. """
 
         # [(config (and overrides), kwargs, expected, error substring), ...]
-        test_cases = [
+        test_cases: typing.List[typing.Tuple[
+            autograder.model.config.Config,
+            typing.Dict[str, typing.Any],
+            typing.Any,
+            typing.Union[str, None],
+        ]] = [
             # Enroll Only
             (
-                {
-                    autograder.api.config.PARAM_COURSE.config_key: 'course101',
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
+                autograder.model.config.Config(
+                    course = 'course101',
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
 
-                    autograder.api.config.PARAM_DRY_RUN.config_key: False,
-                    autograder.api.config.PARAM_SKIP_INSERTS.config_key: False,
-                    autograder.api.config.PARAM_SKIP_UPDATES.config_key: False,
-                    autograder.api.config.PARAM_SEND_EMAILS.config_key: False,
+                    dry_run = False,
+                    skip_inserts = False,
+                    skip_updates = False,
+                    send_emails = False,
 
-                    autograder.api.config.PARAM_RAW_COURSE_USERS.config_key: [
+                    raw_course_users = [
                         {
                             'email': 'server-user@test.edulinq.org',
                             'course-role': 'student',
                         },
                     ],
-                },
+                ),
                 {},
                 {
                     "results": [
@@ -46,23 +54,23 @@ class TestUsersEnroll(autograder.testing.server.ServerTest):
 
             # Add and Enroll
             (
-                {
-                    autograder.api.config.PARAM_COURSE.config_key: 'course101',
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
+                autograder.model.config.Config(
+                    course = 'course101',
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
 
-                    autograder.api.config.PARAM_DRY_RUN.config_key: False,
-                    autograder.api.config.PARAM_SKIP_INSERTS.config_key: False,
-                    autograder.api.config.PARAM_SKIP_UPDATES.config_key: False,
-                    autograder.api.config.PARAM_SEND_EMAILS.config_key: False,
+                    dry_run = False,
+                    skip_inserts = False,
+                    skip_updates = False,
+                    send_emails = False,
 
-                    autograder.api.config.PARAM_RAW_COURSE_USERS.config_key: [
+                    raw_course_users = [
                         {
                             'email': 'ZZZ@test.edulinq.org',
                             'course-role': 'student',
                         },
                     ],
-                },
+                ),
                 {},
                 {
                     "results": [
@@ -80,17 +88,17 @@ class TestUsersEnroll(autograder.testing.server.ServerTest):
 
             # Multiple: Mixed
             (
-                {
-                    autograder.api.config.PARAM_COURSE.config_key: 'course101',
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-admin@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-admin',
+                autograder.model.config.Config(
+                    course = 'course101',
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = 'server-admin',
 
-                    autograder.api.config.PARAM_DRY_RUN.config_key: False,
-                    autograder.api.config.PARAM_SKIP_INSERTS.config_key: False,
-                    autograder.api.config.PARAM_SKIP_UPDATES.config_key: False,
-                    autograder.api.config.PARAM_SEND_EMAILS.config_key: False,
+                    dry_run = False,
+                    skip_inserts = False,
+                    skip_updates = False,
+                    send_emails = False,
 
-                    autograder.api.config.PARAM_RAW_COURSE_USERS.config_key: [
+                    raw_course_users = [
                         {
                             'email': 'server-user@test.edulinq.org',
                             'course-role': 'student',
@@ -100,7 +108,7 @@ class TestUsersEnroll(autograder.testing.server.ServerTest):
                             'course-role': 'student',
                         },
                     ],
-                },
+                ),
                 {},
                 {
                     "results": [

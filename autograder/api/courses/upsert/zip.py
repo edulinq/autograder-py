@@ -7,6 +7,7 @@ import typing
 import autograder.api.common
 import autograder.api.config
 import autograder.error
+import autograder.model.config
 
 API_ENDPOINT: str = 'courses/upsert/zip'
 API_WRITE: bool = True
@@ -26,7 +27,7 @@ API_PARAMS: typing.List[autograder.api.config.APIParam] = [
 ]
 
 def send(
-        config: typing.Dict[str, typing.Any],
+        config: autograder.model.config.Config,
         post_paths: typing.Union[typing.List[str], None] = None,
         **kwargs: typing.Any,
         ) -> typing.Dict[str, typing.Any]:

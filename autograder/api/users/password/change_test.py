@@ -5,19 +5,24 @@ import autograder.testing.server
 class TestUsersPasswordChange(autograder.testing.server.ServerTest):
     """ Test changing passwords. """
 
-    def test_base(self):
+    def test_base(self) -> None:
         """ Test base functionality. """
 
         # [(config (and overrides), kwargs, expected, error substring), ...]
-        test_cases = [
+        test_cases: typing.List[typing.Tuple[
+            autograder.model.config.Config,
+            typing.Dict[str, typing.Any],
+            typing.Any,
+            typing.Union[str, None],
+        ]] = [
             # Base
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-user@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-user',
+                autograder.model.config.Config(
+                    auth_user = 'server-user@test.edulinq.org',
+                    auth_pass = 'server-user',
 
-                    autograder.api.config.PARAM_NEW_PASS.config_key: 'abc123',
-                },
+                    new_pass = 'abc123',
+                ),
                 {},
                 {
                     "duplicate": False,
@@ -28,12 +33,12 @@ class TestUsersPasswordChange(autograder.testing.server.ServerTest):
 
             # Duplicate
             (
-                {
-                    autograder.api.config.PARAM_USER_EMAIL.config_key: 'server-user@test.edulinq.org',
-                    autograder.api.config.PARAM_USER_PASS.config_key: 'server-user',
+                autograder.model.config.Config(
+                    auth_user = 'server-user@test.edulinq.org',
+                    auth_pass = 'server-user',
 
-                    autograder.api.config.PARAM_NEW_PASS.config_key: 'server-user',
-                },
+                    new_pass = 'server-user',
+                ),
                 {},
                 {
                     "duplicate": True,
