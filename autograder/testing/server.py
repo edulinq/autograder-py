@@ -3,6 +3,7 @@ import typing
 
 import edq.net.exchangeserver
 import edq.testing.httpserver
+import edq.util.serial
 import lms.model.base
 
 import autograder.api.common
@@ -56,8 +57,12 @@ class ServerTest(edq.testing.httpserver.HTTPServerTest):
 
     @classmethod
     def setup_server(cls, server: edq.net.exchangeserver.HTTPExchangeServer) -> None:
+        context = edq.util.serial.SerializationContext(json_options = {
+            'strict': True,
+        })
+
         edq.testing.httpserver.HTTPServerTest.setup_server(server)
-        server.load_exchanges_dir(EXCHANGES_DIR)
+        server.load_exchanges_dir(EXCHANGES_DIR, context = context)
 
     def base_api_test(self,
             api_function: typing.Callable,
