@@ -17,7 +17,7 @@ def run_cli(args: argparse.Namespace) -> int:
 
     config = args._config_info.application_config
 
-    config['filespec'] = _build_filespec(config)
+    config.filespec = _build_filespec(config)
 
     result = autograder.api.courses.upsert.filespec.send(config, exit_on_error = True)
     print(edq.util.json.dumps(result, indent = 4))
@@ -26,12 +26,12 @@ def run_cli(args: argparse.Namespace) -> int:
 
 def _build_filespec(config: typing.Dict[str, typing.Any]) -> autograder.filespec.FileSpec:
     data = {
-        'type': config['filespec_type'],
-        'path': config['filespec_path'],
+        'type': config.filespec_type,
+        'path': config.filespec_path,
     }
 
     for base_key in ['reference', 'username', 'token']:
-        value = config.get(f"filespec_{base_key}", None)
+        value = getattr(config, f"filespec_{base_key}", None)
         if (value is None):
             continue
 

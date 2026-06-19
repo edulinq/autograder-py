@@ -4,7 +4,7 @@
         '--user', 'server-admin@test.edulinq.org',
         '--pass', 'server-admin',
         '--metric-type', 'grading-time',
-        '--config', 'use_testing_data=true',
+        '--config', 'query_use_testing_data=true',
     ],
 }
 ---

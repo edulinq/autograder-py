@@ -21,10 +21,10 @@ def run_cli(args: argparse.Namespace) -> int:
         if (grading_result is None):
             continue
 
-        autograder.util.grading.output_grading_result(grading_result, base_dir = config['out_dir'])
+        autograder.util.grading.output_grading_result(grading_result, base_dir = config.out_dir)
         count += 1
 
-    print(f"Wrote {count} attempts to '{config['out_dir']}'.")
+    print(f"Wrote {count} attempts to '{config.out_dir}'.")
 
     return 0
 

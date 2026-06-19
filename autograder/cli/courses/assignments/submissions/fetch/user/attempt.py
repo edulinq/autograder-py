@@ -6,6 +6,7 @@ import argparse
 import sys
 
 import autograder.api.courses.assignments.submissions.fetch.user.attempt
+import autograder.cli.common
 import autograder.cli.parser
 import autograder.util.grading
 
@@ -17,17 +18,17 @@ def run_cli(args: argparse.Namespace) -> int:
     found_user, found_submission, result = autograder.api.courses.assignments.submissions.fetch.user.attempt.send(config, exit_on_error = True)
 
     if (not found_user):
-        print(f"No matching user found: '{config.get('target_email', '')}'.", file = sys.stderr)
+        autograder.cli.common.print_no_match('user', config.target_email)
         return 1
 
     if (not found_submission):
-        print(f"No matching submission found: '{config.get('target_submission', '')}'.", file = sys.stderr)
+        autograder.cli.common.print_no_match('submission', config.target_submission)
         return 2
 
     if (result is None):
         raise ValueError("Existing submission was not provided by API.")
 
-    out_path = autograder.util.grading.output_grading_result(result, base_dir = config['out_dir'])
+    out_path = autograder.util.grading.output_grading_result(result, base_dir = config.out_dir)
     print(f"Submission wrote to '{out_path}'.")
 
     return 0

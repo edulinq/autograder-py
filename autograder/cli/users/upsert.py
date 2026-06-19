@@ -15,15 +15,15 @@ def run_cli(args: argparse.Namespace) -> int:
 
     config = args._config_info.application_config
 
-    config['raw_users'] = [
+    config.raw_server_users = [
         {
-            'email': config['new_email'],
-            'pass': config.get('new_pass', ''),
-            'name': config.get('new_name', ''),
-            'role': config['new_role'],
-            'course': config.get('new_course', ''),
-            'course-role': config['new_course_role'],
-            'course-lms-id': config.get('new_lms_id', ''),
+            'email': config.new_email,
+            'pass': config.new_pass,
+            'name': config.new_name,
+            'role': config.new_role,
+            'course': config.new_course,
+            'course-role': config.new_course_role,
+            'course-lms-id': config.new_lms_id,
         },
     ]
 

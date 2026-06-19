@@ -17,10 +17,10 @@ def run_cli(args: argparse.Namespace) -> int:
 
     config.raw_course_users = [
         {
-            'email': config['new_email'],
-            'name': config.get('new_name', ''),
-            'course-role': config['new_course_role'],
-            'course-lms-id': config.get('new_lms_id', ''),
+            'email': config.new_email,
+            'name': config.new_name,
+            'course-role': config.new_course_role,
+            'course-lms-id': config.new_lms_id,
         },
     ]
 

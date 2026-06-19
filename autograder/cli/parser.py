@@ -5,6 +5,8 @@ Customize an argument parser for the autograder.
 import argparse
 import typing
 
+import edq.config.settings
+import edq.config.source
 import edq.core.argparser
 import edq.net.exchange
 import edq.util.reflection
@@ -12,10 +14,13 @@ import lms.model.constants
 
 import autograder
 import autograder.api.common
+import autograder.model.config
 import autograder.util.net
 
 CONFIG_FILENAME: str = 'autograder.json'
-DEPRECATED_CONFIG_FILENAME: str = 'config.json'
+LOCAL_CONFIG_FILENAME: str = 'config.json'
+ENV_CONFIG_PREFIX: str = 'AG__'
+DEFAULT_ENCRYPTION_KEY: str = 'LynxGrader'
 
 DEFAULT_SKIP_ROWS: int = 0
 
@@ -44,21 +49,24 @@ def get_parser(
     if (api_params is None):
         api_params = []
 
-    config_options: typing.Dict[str, typing.Any] = {
-        'config_filename': CONFIG_FILENAME,
-        'legacy_config_filename': DEPRECATED_CONFIG_FILENAME,
-        'cli_arg_config_map': {},
-    }
-
-    # Ensure that all relevant CLI params are copied over to the config.
-    for api_param in api_params:
-        config_options['cli_arg_config_map'][api_param.config_key] = api_param.config_key
+    # Set config options.
+    edq.config.settings.set_config_filename(CONFIG_FILENAME)
+    edq.config.settings.set_application_config_class(autograder.model.config.Config)
+    edq.config.settings.set_env_prefix(ENV_CONFIG_PREFIX)
+    edq.config.settings.set_default_encryption_key(DEFAULT_ENCRYPTION_KEY)
+    edq.config.settings.set_load_order([
+        edq.config.source.LocalSpec(filename = LOCAL_CONFIG_FILENAME),
+        edq.config.source.GlobalSpec(),
+        edq.config.source.ProjectSpec(),
+        edq.config.source.ENVSpec(),
+        edq.config.source.CLIFileSpec(),
+        edq.config.source.CLISpec(),
+    ])
 
     parser = edq.core.argparser.get_default_parser(
             description,
             version = f"v{autograder.__version__}",
             include_net = include_net,
-            config_options = config_options,
     )
 
     parser.register_callbacks('autograder-py', None, _post_parse)

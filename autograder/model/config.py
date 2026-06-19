@@ -27,11 +27,11 @@ class Config(edq.config.app.BaseApplicationConfig):
             cc: typing.Union[typing.List[str], None] = None,
             course: typing.Union[str, None] = None,
             dry_run: typing.Union[bool, None] = None,
+            filespec: typing.Union[autograder.filespec.FileSpec, None] = None,
             filespec_path: typing.Union[str, None] = None,
             filespec_reference: typing.Union[str, None] = None,
             filespec_token: typing.Union[str, None] = None,
             filespec_type: typing.Union[str, None] = None,
-            filespec: typing.Union[autograder.filespec.FileSpec, None] = None,
             filespec_username: typing.Union[str, None] = None,
             files: typing.Union[typing.List[str], None] = None,
             force_compute: typing.Union[bool, None] = None,
@@ -119,6 +119,9 @@ class Config(edq.config.app.BaseApplicationConfig):
         self.dry_run: typing.Union[bool, None] = dry_run
         """ Do not commit/finalize the operation, just do all the steps and state what the result would look like. """
 
+        self.filespec: typing.Union[autograder.filespec.FileSpec, None] = filespec
+        """ A filespec pointing to a course to upload. """
+
         self.filespec_path: typing.Union[str, None] = filespec_path
         """ The path the filespec points to. """
 
@@ -130,9 +133,6 @@ class Config(edq.config.app.BaseApplicationConfig):
 
         self.filespec_type: typing.Union[str, None] = filespec_type
         """ The type of filespec. """
-
-        self.filespec: typing.Union[autograder.filespec.FileSpec, None] = filespec
-        """ A filespec pointing to a course to upload. """
 
         self.filespec_username: typing.Union[str, None] = filespec_username
         """ The username for filespec authentication. """

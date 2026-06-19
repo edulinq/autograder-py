@@ -7,6 +7,7 @@ import os
 import sys
 
 import autograder.api.courses.assignments.submissions.fetch.user.attempts
+import autograder.cli.common
 import autograder.cli.parser
 import autograder.util.grading
 
@@ -18,7 +19,7 @@ def run_cli(args: argparse.Namespace) -> int:
     found_user, grading_results = autograder.api.courses.assignments.submissions.fetch.user.attempts.send(config, exit_on_error = True)
 
     if (not found_user):
-        print(f"No matching user found: '{config.get('target_email', '')}'.", file = sys.stderr)
+        autograder.cli.common.print_no_match('user', config.target_email)
         return 1
 
     if (grading_results is None):
@@ -30,7 +31,7 @@ def run_cli(args: argparse.Namespace) -> int:
 
     assignment = grading_results[0]['info']['assignment-id']
     user = grading_results[0]['info']['user']
-    out_dir = os.path.join(config['out_dir'], assignment, user)
+    out_dir = os.path.join(config.out_dir, assignment, user)
 
     for grading_result in grading_results:
         autograder.util.grading.output_grading_result(grading_result, base_dir = out_dir, short_id = True)

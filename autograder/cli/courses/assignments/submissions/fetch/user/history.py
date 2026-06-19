@@ -8,6 +8,7 @@ import sys
 import lms.model.base
 
 import autograder.api.courses.assignments.submissions.fetch.user.history
+import autograder.cli.common
 import autograder.cli.parser
 
 def run_cli(args: argparse.Namespace) -> int:
@@ -18,7 +19,7 @@ def run_cli(args: argparse.Namespace) -> int:
     found_user, scores = autograder.api.courses.assignments.submissions.fetch.user.history.send(config, exit_on_error = True)
 
     if (not found_user):
-        print(f"No matching user found: '{config.get('target_email', '')}'.", file = sys.stderr)
+        autograder.cli.common.print_no_match('user', config.target_email)
         return 1
 
     output = lms.model.base.base_list_to_output_format(scores, config.output_format,

@@ -7,6 +7,7 @@ import argparse
 import sys
 
 import autograder.api.courses.assignments.submissions.remove
+import autograder.cli.common
 import autograder.cli.parser
 
 def run_cli(args: argparse.Namespace) -> int:
@@ -17,11 +18,11 @@ def run_cli(args: argparse.Namespace) -> int:
     found_user, found_submission = autograder.api.courses.assignments.submissions.remove.send(config, exit_on_error = True)
 
     if (not found_user):
-        print(f"No matching user found: '{config.get('target_email', '')}'.", file = sys.stderr)
+        autograder.cli.common.print_no_match('user', config.target_email)
         return 1
 
     if (not found_submission):
-        print(f"No matching submission found: '{config.get('target_submission', '')}'.", file = sys.stderr)
+        autograder.cli.common.print_no_match('submission', config.target_submission)
         return 2
 
     print("Submission removed.")

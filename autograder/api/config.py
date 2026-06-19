@@ -277,7 +277,7 @@ def _cli_add_func_submission_files(parser: typing.Union[argparse.ArgumentParser,
         help = param.description)
 
 def _cli_add_func_submission_specs(parser: typing.Union[argparse.ArgumentParser, argparse._ArgumentGroup], param: APIParam) -> None:
-    parser.add_argument('submissions', metavar = 'SUBMISSION',
+    parser.add_argument('submission_specs', metavar = 'SUBMISSION',
         action = 'extend', type = str, nargs = '+',
         help = param.description)
 
@@ -562,6 +562,7 @@ PARAM_PROXY_TIME = APIParam(
     + ' Timestamps are milliseconds from the UNIX epoch'
     + ' (https://en.wikipedia.org/wiki/Unix_time).'),
     value_type = edq.util.time.Timestamp,
+    cli_type = str,
     api_required = False,
 )
 
@@ -659,7 +660,6 @@ PARAM_QUERY_USE_TESTING_DATA = APIParam(
     'query_use_testing_data',
     'Query from hard-coded testing data (instead of real data).',
     api_key = 'use-testing-data',
-    cli_flag = 'use-testing-data',
     value_type = bool,
     api_required = False,
     cli = False,
