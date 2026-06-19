@@ -1,3 +1,7 @@
+import typing
+
+import edq.util.crypto
+
 import autograder.api.config
 import autograder.api.logs.query
 import autograder.testing.model
@@ -20,7 +24,7 @@ class TestLogsQuery(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
 
                     query_use_testing_data = False,
 
@@ -43,7 +47,7 @@ class TestLogsQuery(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
 
                     query_use_testing_data = True,
 
@@ -66,7 +70,7 @@ class TestLogsQuery(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-user@test.edulinq.org',
-                    auth_pass = 'server-user',
+                    auth_pass = edq.util.crypto.Secret('server-user'),
 
                     query_use_testing_data = False,
 

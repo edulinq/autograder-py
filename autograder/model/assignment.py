@@ -3,6 +3,7 @@ import typing
 import edq.util.time
 import lms.model.assignments
 import lms.model.scores
+import lms.model.users
 
 def make_assignment(raw_data: typing.Dict[str, typing.Any]) -> lms.model.assignments.Assignment:
     """
@@ -36,7 +37,7 @@ def make_assignment_score(raw_data: typing.Dict[str, typing.Any]) -> lms.model.s
         'graded_date': edq.util.time.Timestamp(int(raw_data['grading_start_time'])),
         'comment': raw_data['message'],
         'assignment': lms.model.assignments.AssignmentQuery(id = raw_data['assignment-id']),
-        'user': raw_data['user'],
+        'user': lms.model.users.UserQuery(email = raw_data['user']),
     }
 
     return lms.model.scores.AssignmentScore(**data)

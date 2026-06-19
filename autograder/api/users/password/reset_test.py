@@ -1,3 +1,5 @@
+import typing
+
 import autograder.api.config
 import autograder.api.users.password.reset
 import autograder.testing.server

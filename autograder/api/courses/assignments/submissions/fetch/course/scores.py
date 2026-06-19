@@ -6,6 +6,7 @@ import typing
 
 import lms.model.assignments
 import lms.model.scores
+import lms.model.users
 
 import autograder.api.common
 import autograder.api.config
@@ -34,7 +35,8 @@ def send(config: autograder.model.config.Config, **kwargs: typing.Any) -> typing
     for (user_email, raw_score) in response['submission-infos'].items():
         if (raw_score is None):
             assignment = lms.model.assignments.AssignmentQuery(id = config.assignment)
-            scores.append(lms.model.scores.AssignmentScore(assignment = assignment, user = user_email))
+            user = lms.model.users.UserQuery(email = user_email)
+            scores.append(lms.model.scores.AssignmentScore(assignment = assignment, user = user))
         else:
             scores.append(autograder.model.assignment.make_assignment_score(raw_score))
 

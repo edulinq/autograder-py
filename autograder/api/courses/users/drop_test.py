@@ -1,5 +1,7 @@
 import typing
 
+import edq.util.crypto
+
 import autograder.api.config
 import autograder.api.courses.users.drop
 import autograder.model.config
@@ -23,7 +25,7 @@ class TestUsersDrop(autograder.testing.server.ServerTest):
                 autograder.model.config.Config(
                     course = 'course101',
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
 
                     target_email = 'course-student@test.edulinq.org',
                 ),
@@ -39,7 +41,7 @@ class TestUsersDrop(autograder.testing.server.ServerTest):
                 autograder.model.config.Config(
                     course = 'course101',
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
 
                     target_email = 'server-user@test.edulinq.org',
                 ),
@@ -55,7 +57,7 @@ class TestUsersDrop(autograder.testing.server.ServerTest):
                 autograder.model.config.Config(
                     course = 'course101',
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
 
                     target_email = 'ZZZ@test.edulinq.org',
                 ),

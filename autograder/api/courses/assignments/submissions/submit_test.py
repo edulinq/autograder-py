@@ -4,6 +4,7 @@ import typing
 import unittest
 
 import edq.testing.asserts
+import edq.util.crypto
 
 import autograder.api.config
 import autograder.api.courses.assignments.submissions.submit
@@ -30,7 +31,7 @@ class TestCourseAssignmentsSubmit(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     course = 'course-languages',
                     assignment = 'bash',
                     allow_late = False,
@@ -52,7 +53,7 @@ class TestCourseAssignmentsSubmit(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'course-admin@test.edulinq.org',
-                    auth_pass = 'course-admin',
+                    auth_pass = edq.util.crypto.Secret('course-admin'),
                     course = 'course-languages',
                     assignment = 'bash',
                     allow_late = True,
@@ -76,7 +77,7 @@ class TestCourseAssignmentsSubmit(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     course = 'course-languages',
                     assignment = 'bash',
                     allow_late = False,
@@ -101,7 +102,7 @@ class TestCourseAssignmentsSubmit(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     course = 'course-languages',
                     assignment = 'bash',
                     allow_late = False,
@@ -115,7 +116,7 @@ class TestCourseAssignmentsSubmit(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     course = 'course-languages',
                     assignment = 'bash',
                     allow_late = False,
@@ -133,7 +134,7 @@ class TestCourseAssignmentsSubmit(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     course = 'course-languages',
                     assignment = 'bash',
                     allow_late = False,
@@ -157,7 +158,7 @@ class TestCourseAssignmentsSubmit(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     course = 'course-languages',
                     assignment = 'bash',
                     allow_late = False,
@@ -181,7 +182,7 @@ class TestCourseAssignmentsSubmit(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     course = 'course101',
                     assignment = 'hw0',
                     allow_late = False,

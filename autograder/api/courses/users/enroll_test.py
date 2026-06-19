@@ -1,5 +1,7 @@
 import typing
 
+import edq.util.crypto
+
 import autograder.api.config
 import autograder.api.courses.users.enroll
 import autograder.model.config
@@ -23,7 +25,7 @@ class TestUsersEnroll(autograder.testing.server.ServerTest):
                 autograder.model.config.Config(
                     course = 'course101',
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
 
                     dry_run = False,
                     skip_inserts = False,
@@ -57,7 +59,7 @@ class TestUsersEnroll(autograder.testing.server.ServerTest):
                 autograder.model.config.Config(
                     course = 'course101',
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
 
                     dry_run = False,
                     skip_inserts = False,
@@ -91,7 +93,7 @@ class TestUsersEnroll(autograder.testing.server.ServerTest):
                 autograder.model.config.Config(
                     course = 'course101',
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
 
                     dry_run = False,
                     skip_inserts = False,

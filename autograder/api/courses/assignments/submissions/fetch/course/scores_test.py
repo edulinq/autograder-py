@@ -1,7 +1,10 @@
 import typing
 
+import edq.util.crypto
+import edq.util.time
 import lms.model.assignments
 import lms.model.scores
+import lms.model.users
 
 import autograder.api.config
 import autograder.api.courses.assignments.submissions.fetch.course.scores
@@ -26,7 +29,7 @@ class TestCourseAssignmentsFetchCourseScores(autograder.testing.server.ServerTes
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     course = 'course101',
                     assignment = 'hw0',
                 ),
@@ -39,7 +42,7 @@ class TestCourseAssignmentsFetchCourseScores(autograder.testing.server.ServerTes
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     course = 'course101',
                     assignment = 'hw0',
                     target_users = [
@@ -55,7 +58,7 @@ class TestCourseAssignmentsFetchCourseScores(autograder.testing.server.ServerTes
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     course = 'course101',
                     assignment = 'hw0',
                     target_users = [
@@ -71,7 +74,7 @@ class TestCourseAssignmentsFetchCourseScores(autograder.testing.server.ServerTes
             (
                 autograder.model.config.Config(
                     auth_user = 'course-admin@test.edulinq.org',
-                    auth_pass = 'course-admin',
+                    auth_pass = edq.util.crypto.Secret('course-admin'),
                     course = 'course101',
                     assignment = 'hw0',
                     target_users = [
@@ -89,17 +92,25 @@ class TestCourseAssignmentsFetchCourseScores(autograder.testing.server.ServerTes
 STUDENT_SCORE: lms.model.scores.AssignmentScore = lms.model.scores.AssignmentScore(
     assignment = lms.model.assignments.AssignmentQuery(id = 'hw0'),
     comment = '',
-    graded_date = 1697406273000,
+    graded_date = edq.util.time.Timestamp(1697406273000),
     id = 'course101::hw0::course-student@test.edulinq.org::1697406272',
     score = 2,
-    submission_date = 1697406273000,
-    user = 'course-student@test.edulinq.org',
+    submission_date = edq.util.time.Timestamp(1697406273000),
+    user = lms.model.users.UserQuery(email = 'course-student@test.edulinq.org'),
 )
 
 FULL_SCORES: typing.List[lms.model.scores.AssignmentScore] = [
-    lms.model.scores.AssignmentScore(assignment = lms.model.assignments.AssignmentQuery(id = 'hw0'), user = 'course-admin@test.edulinq.org'),
-    lms.model.scores.AssignmentScore(assignment = lms.model.assignments.AssignmentQuery(id = 'hw0'), user = 'course-grader@test.edulinq.org'),
-    lms.model.scores.AssignmentScore(assignment = lms.model.assignments.AssignmentQuery(id = 'hw0'), user = 'course-other@test.edulinq.org'),
-    lms.model.scores.AssignmentScore(assignment = lms.model.assignments.AssignmentQuery(id = 'hw0'), user = 'course-owner@test.edulinq.org'),
+    lms.model.scores.AssignmentScore(
+            assignment = lms.model.assignments.AssignmentQuery(id = 'hw0'),
+            user = lms.model.users.UserQuery(email = 'course-admin@test.edulinq.org')),
+    lms.model.scores.AssignmentScore(
+            assignment = lms.model.assignments.AssignmentQuery(id = 'hw0'),
+            user = lms.model.users.UserQuery(email = 'course-grader@test.edulinq.org')),
+    lms.model.scores.AssignmentScore(
+            assignment = lms.model.assignments.AssignmentQuery(id = 'hw0'),
+            user = lms.model.users.UserQuery(email = 'course-other@test.edulinq.org')),
+    lms.model.scores.AssignmentScore(
+            assignment = lms.model.assignments.AssignmentQuery(id = 'hw0'),
+            user = lms.model.users.UserQuery(email = 'course-owner@test.edulinq.org')),
     STUDENT_SCORE,
 ]

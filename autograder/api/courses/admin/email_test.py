@@ -1,5 +1,7 @@
 import typing
 
+import edq.util.crypto
+
 import autograder.api.config
 import autograder.api.courses.admin.email
 import autograder.model.config
@@ -22,7 +24,7 @@ class TestCoursesAdminEmail(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     course = 'course101',
 
                     dry_run = True,

@@ -1,7 +1,10 @@
 import typing
 
+import edq.util.crypto
+
 import autograder.api.config
 import autograder.api.courses.upsert.filespec
+import autograder.filespec
 import autograder.model.config
 import autograder.testing.server
 
@@ -22,7 +25,7 @@ class TestCoursesUpsertFileSpec(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
 
                     dry_run = False,
                     skip_emails = False,
@@ -32,7 +35,7 @@ class TestCoursesUpsertFileSpec(autograder.testing.server.ServerTest):
                     skip_template_files = False,
 
                     # Note the POSIX-style path (which is required for filespecs).
-                    filespec = 'testdata/course101/course.json',
+                    filespec = autograder.filespec.parse('testdata/course101/course.json'),
                 ),
                 {},
                 {

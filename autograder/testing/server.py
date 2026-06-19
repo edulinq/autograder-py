@@ -69,8 +69,8 @@ class ServerTest(edq.testing.httpserver.HTTPServerTest):
     def base_api_test(self,
             api_function: typing.Callable,
             test_cases: typing.List[typing.Tuple[autograder.model.config.Config, typing.Dict[str, typing.Any], typing.Any, typing.Union[str, None]]],
-            actual_clean_func: typing.Union[CleanFunction, None] = None,
-            expected_clean_func: typing.Union[CleanFunction, None] = None,
+            actual_clean_func: typing.Union[CleanFunction, typing.Callable, None] = None,
+            expected_clean_func: typing.Union[CleanFunction, typing.Callable, None] = None,
             assertion_func: typing.Union[AssertionFunction, None] = None,
             ) -> None:
         """

@@ -1,5 +1,7 @@
 import typing
 
+import edq.util.crypto
+
 import autograder.api.config
 import autograder.api.courses.users.get
 import autograder.model.config
@@ -25,7 +27,7 @@ class TestUsersGet(autograder.testing.server.ServerTest):
                 autograder.model.config.Config(
                     course = 'course101',
                     auth_user = 'course-grader@test.edulinq.org',
-                    auth_pass = 'course-grader',
+                    auth_pass = edq.util.crypto.Secret('course-grader'),
                     target_email = 'course-student@test.edulinq.org',
                 ),
                 {},
@@ -38,7 +40,7 @@ class TestUsersGet(autograder.testing.server.ServerTest):
                 autograder.model.config.Config(
                     course = 'course101',
                     auth_user = 'course-grader@test.edulinq.org',
-                    auth_pass = 'course-grader',
+                    auth_pass = edq.util.crypto.Secret('course-grader'),
                 ),
                 {},
                 autograder.testing.model.COURSE_USERS['Course 101']['course-grader'],
@@ -50,7 +52,7 @@ class TestUsersGet(autograder.testing.server.ServerTest):
                 autograder.model.config.Config(
                     course = 'course101',
                     auth_user = 'course-student@test.edulinq.org',
-                    auth_pass = 'course-student',
+                    auth_pass = edq.util.crypto.Secret('course-student'),
                 ),
                 {},
                 autograder.testing.model.COURSE_USERS['Course 101']['course-student'],
@@ -62,7 +64,7 @@ class TestUsersGet(autograder.testing.server.ServerTest):
                 autograder.model.config.Config(
                     course = 'course101',
                     auth_user = 'course-grader@test.edulinq.org',
-                    auth_pass = 'course-grader',
+                    auth_pass = edq.util.crypto.Secret('course-grader'),
                     target_email = 'server-user@test.edulinq.org',
                 ),
                 {},
@@ -75,7 +77,7 @@ class TestUsersGet(autograder.testing.server.ServerTest):
                 autograder.model.config.Config(
                     course = 'course101',
                     auth_user = 'course-other@test.edulinq.org',
-                    auth_pass = 'course-other',
+                    auth_pass = edq.util.crypto.Secret('course-other'),
                     target_email = 'course-student@test.edulinq.org',
                 ),
                 {
@@ -90,7 +92,7 @@ class TestUsersGet(autograder.testing.server.ServerTest):
                 autograder.model.config.Config(
                     course = 'course101',
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                 ),
                 {},
                 autograder.model.user.promote_server_user(autograder.testing.model.SERVER_USERS['server-admin']),

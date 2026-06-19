@@ -2,6 +2,7 @@ import os
 
 import edq.util.gzip
 import edq.util.encoding
+import edq.util.time
 
 THIS_DIR: str = os.path.abspath(os.path.dirname(os.path.realpath(__file__)))
 ROOT_DIR: str = os.path.join(THIS_DIR, '..', '..')
@@ -28,7 +29,7 @@ TEST_SUBMISSIONS_BASH_CRASH_PATH: str = os.path.join(TEST_SUBMISSIONS_BASH_DIR, 
 
 COURSE_101_ZIP_PATH: str = os.path.join(TESTDATA_DIR, 'data', 'course101.zip')
 
-TEST_TIMESTAMP: int = 123456789
+TEST_TIMESTAMP: edq.util.time.Timestamp = edq.util.time.Timestamp(123456789)
 
 TEST_PAYLOAD_STR: str = "Hello, World!\n"
 TEST_PAYLOAD_BYTES: bytes = TEST_PAYLOAD_STR.encode(edq.util.dirent.DEFAULT_ENCODING)

@@ -1,5 +1,7 @@
 import typing
 
+import edq.util.crypto
+
 import autograder.api.users.get
 import autograder.model.user
 import autograder.testing.model
@@ -22,7 +24,7 @@ class TestUsersGet(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     target_email = 'course-student@test.edulinq.org',
                 ),
                 {},
@@ -34,7 +36,7 @@ class TestUsersGet(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                 ),
                 {},
                 autograder.testing.model.SERVER_USERS['server-admin'],
@@ -45,7 +47,7 @@ class TestUsersGet(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     target_email = 'ZZZ@test.edulinq.org',
                 ),
                 {},
@@ -57,7 +59,7 @@ class TestUsersGet(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'course-admin@test.edulinq.org',
-                    auth_pass = 'course-admin',
+                    auth_pass = edq.util.crypto.Secret('course-admin'),
                     target_email = 'course-student@test.edulinq.org',
                 ),
                 {
@@ -73,7 +75,7 @@ class TestUsersGet(autograder.testing.server.ServerTest):
             test_cases.append((
                 autograder.model.config.Config(
                     auth_user = user.email,
-                    auth_pass = user.name,
+                    auth_pass = edq.util.crypto.Secret(str(user.name)),
                 ),
                 {},
                 user,

@@ -1,6 +1,8 @@
 import copy
 import typing
 
+import edq.util.crypto
+
 import autograder.api.config
 import autograder.api.courses.assignments.submissions.analysis.pairwise
 import autograder.model.config
@@ -31,7 +33,7 @@ class TestCoursesAssignmentsSubmissionsAnalysisPairwise(autograder.testing.serve
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
 
                     submission_specs = [
                         'course101::hw0::course-student@test.edulinq.org::1697406256',
@@ -51,7 +53,7 @@ class TestCoursesAssignmentsSubmissionsAnalysisPairwise(autograder.testing.serve
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
 
                     submission_specs = [
                         'course101::hw0::course-student@test.edulinq.org::1697406256',
@@ -71,7 +73,7 @@ class TestCoursesAssignmentsSubmissionsAnalysisPairwise(autograder.testing.serve
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
 
                     submission_specs = [
                         'course101::hw0::course-student@test.edulinq.org::1697406256',
@@ -91,7 +93,7 @@ class TestCoursesAssignmentsSubmissionsAnalysisPairwise(autograder.testing.serve
             (
                 autograder.model.config.Config(
                     auth_user = 'course-admin@test.edulinq.org',
-                    auth_pass = 'course-admin',
+                    auth_pass = edq.util.crypto.Secret('course-admin'),
 
                     submission_specs = [
                         'course101::hw0::course-student@test.edulinq.org::1697406256',

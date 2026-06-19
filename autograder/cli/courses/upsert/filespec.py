@@ -11,6 +11,7 @@ import edq.util.json
 import autograder.api.courses.upsert.filespec
 import autograder.cli.parser
 import autograder.filespec
+import autograder.model.config
 
 def run_cli(args: argparse.Namespace) -> int:
     """ Run the CLI. """
@@ -24,10 +25,10 @@ def run_cli(args: argparse.Namespace) -> int:
 
     return 0
 
-def _build_filespec(config: typing.Dict[str, typing.Any]) -> autograder.filespec.FileSpec:
-    data = {
-        'type': config.filespec_type,
-        'path': config.filespec_path,
+def _build_filespec(config: autograder.model.config.Config) -> autograder.filespec.FileSpec:
+    data: typing.Dict[str, str] = {
+        'type': str(config.filespec_type),
+        'path': str(config.filespec_path),
     }
 
     for base_key in ['reference', 'username', 'token']:

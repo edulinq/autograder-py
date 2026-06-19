@@ -2,6 +2,9 @@ import sys
 import typing
 import unittest
 
+import edq.util.crypto
+import edq.util.time
+
 import autograder.api.config
 import autograder.api.courses.assignments.submissions.proxy.submit
 import autograder.model.config
@@ -26,7 +29,7 @@ class TestCourseAssignmentsProxySubmit(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     course = 'course-languages',
                     assignment = 'bash',
                     proxy_email = 'course-student@test.edulinq.org',
@@ -48,7 +51,7 @@ class TestCourseAssignmentsProxySubmit(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'course-admin@test.edulinq.org',
-                    auth_pass = 'course-admin',
+                    auth_pass = edq.util.crypto.Secret('course-admin'),
                     course = 'course-languages',
                     assignment = 'bash',
                     proxy_email = 'course-student@test.edulinq.org',
@@ -72,11 +75,11 @@ class TestCourseAssignmentsProxySubmit(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     course = 'course-languages',
                     assignment = 'bash',
                     proxy_email = 'course-student@test.edulinq.org',
-                    proxy_time = 12345,
+                    proxy_time = edq.util.time.Timestamp.guess(12345),
                 ),
                 {
                     'post_paths': [
@@ -97,7 +100,7 @@ class TestCourseAssignmentsProxySubmit(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     course = 'course-languages',
                     assignment = 'bash',
                     proxy_email = 'ZZZ@test.edulinq.org',
@@ -119,7 +122,7 @@ class TestCourseAssignmentsProxySubmit(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'course-admin@test.edulinq.org',
-                    auth_pass = 'course-admin',
+                    auth_pass = edq.util.crypto.Secret('course-admin'),
                     course = 'course-languages',
                     assignment = 'bash',
                     proxy_email = 'ZZZ@test.edulinq.org',
@@ -143,7 +146,7 @@ class TestCourseAssignmentsProxySubmit(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     course = 'course-languages',
                     assignment = 'bash',
                     proxy_email = 'course-student@test.edulinq.org',
@@ -157,7 +160,7 @@ class TestCourseAssignmentsProxySubmit(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     course = 'course-languages',
                     assignment = 'bash',
                     proxy_email = 'course-student@test.edulinq.org',
@@ -175,7 +178,7 @@ class TestCourseAssignmentsProxySubmit(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     course = 'course-languages',
                     assignment = 'bash',
                     proxy_email = 'course-student@test.edulinq.org',

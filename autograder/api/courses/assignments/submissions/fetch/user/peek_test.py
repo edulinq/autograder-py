@@ -1,5 +1,7 @@
 import typing
 
+import edq.util.crypto
+
 import autograder.api.config
 import autograder.api.courses.assignments.submissions.fetch.user.peek
 import autograder.model.config
@@ -22,7 +24,7 @@ class TestCourseAssignmentsFetchUserPeek(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     course = 'course101',
                     assignment = 'hw0',
                     target_email = 'course-student@test.edulinq.org',
@@ -40,7 +42,7 @@ class TestCourseAssignmentsFetchUserPeek(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     course = 'course101',
                     assignment = 'hw0',
                     target_email = 'ZZZ@test.edulinq.org',
@@ -58,7 +60,7 @@ class TestCourseAssignmentsFetchUserPeek(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     course = 'course101',
                     assignment = 'hw0',
                     target_email = 'course-student@test.edulinq.org',
@@ -77,7 +79,7 @@ class TestCourseAssignmentsFetchUserPeek(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     course = 'course101',
                     assignment = 'hw0',
                 ),

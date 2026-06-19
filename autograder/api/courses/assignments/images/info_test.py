@@ -1,5 +1,7 @@
 import typing
 
+import edq.util.crypto
+
 import autograder.api.config
 import autograder.api.courses.assignments.images.info
 import autograder.model.config
@@ -24,7 +26,7 @@ class TestCourseAssignmentsImagesInfo(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     course = 'course101',
                     assignment = 'hw0',
                 ),

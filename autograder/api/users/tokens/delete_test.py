@@ -1,3 +1,7 @@
+import typing
+
+import edq.util.crypto
+
 import autograder.api.config
 import autograder.api.users.tokens.delete
 import autograder.testing.model
@@ -20,7 +24,7 @@ class TestUsersTokensDelete(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'course-admin@test.edulinq.org',
-                    auth_pass = 'course-admin',
+                    auth_pass = edq.util.crypto.Secret('course-admin'),
                     token_id = 'df0a1f16-9cd8-4395-8509-10ae314fe6fc',
                 ),
                 {},
@@ -35,7 +39,7 @@ class TestUsersTokensDelete(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'course-admin@test.edulinq.org',
-                    auth_pass = 'course-admin',
+                    auth_pass = edq.util.crypto.Secret('course-admin'),
                     token_id = 'ZZZ',
                 ),
                 {},
@@ -50,7 +54,7 @@ class TestUsersTokensDelete(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     target_user = 'course-student@test.edulinq.org',
                     token_id = 'dddbc97c-36e4-43fc-b5a0-478aade61c53',
                 ),
@@ -66,7 +70,7 @@ class TestUsersTokensDelete(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'course-admin@test.edulinq.org',
-                    auth_pass = 'course-admin',
+                    auth_pass = edq.util.crypto.Secret('course-admin'),
                     target_user = 'course-student@test.edulinq.org',
                     token_id = 'dddbc97c-36e4-43fc-b5a0-478aade61c53',
                 ),
@@ -79,7 +83,7 @@ class TestUsersTokensDelete(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     target_user = 'ZZZ@test.edulinq.org',
                     token_id = 'dddbc97c-36e4-43fc-b5a0-478aade61c53',
                 ),
@@ -95,7 +99,7 @@ class TestUsersTokensDelete(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     target_user = 'course-student@test.edulinq.org',
                     token_id = 'ZZZ',
                 ),

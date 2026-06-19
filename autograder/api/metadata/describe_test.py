@@ -1,3 +1,5 @@
+import typing
+
 import autograder.api.config
 import autograder.api.metadata.describe
 import autograder.testing.asserts

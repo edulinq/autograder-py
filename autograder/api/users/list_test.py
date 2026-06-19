@@ -1,5 +1,7 @@
 import typing
 
+import edq.util.crypto
+
 import autograder.api.users.list
 import autograder.testing.model
 import autograder.testing.server
@@ -20,7 +22,7 @@ class TestUsersList(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                 ),
                 {},
                 sorted(autograder.testing.model.SERVER_USERS.values()),

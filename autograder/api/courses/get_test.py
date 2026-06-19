@@ -1,5 +1,7 @@
 import typing
 
+import edq.util.crypto
+
 import autograder.api.config
 import autograder.api.courses.get
 import autograder.model.config
@@ -24,7 +26,7 @@ class TestCoursesGet(autograder.testing.server.ServerTest):
                 autograder.model.config.Config(
                     course = 'course101',
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                 ),
                 {},
                 autograder.testing.model.COURSES['Course 101'],
@@ -34,7 +36,7 @@ class TestCoursesGet(autograder.testing.server.ServerTest):
                 autograder.model.config.Config(
                     course = 'course-languages',
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                 ),
                 {},
                 autograder.testing.model.COURSES['Course Using Different Languages'],
@@ -46,7 +48,7 @@ class TestCoursesGet(autograder.testing.server.ServerTest):
                 autograder.model.config.Config(
                     course = 'ZZZ',
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                 ),
                 {},
                 None,
@@ -64,7 +66,7 @@ class TestCoursesGet(autograder.testing.server.ServerTest):
                     autograder.model.config.Config(
                         course = autograder.testing.model.COURSES[course_name].id,
                         auth_user = user.email,
-                        auth_pass = user.name,
+                        auth_pass = edq.util.crypto.Secret(str(user.name)),
                     ),
                     {},
                     autograder.testing.model.COURSES[course_name],

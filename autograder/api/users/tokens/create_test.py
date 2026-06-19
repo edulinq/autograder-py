@@ -1,3 +1,7 @@
+import typing
+
+import edq.util.crypto
+
 import autograder.api.config
 import autograder.api.users.tokens.create
 import autograder.testing.asserts
@@ -21,7 +25,7 @@ class TestUsersTokensCreate(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-user@test.edulinq.org',
-                    auth_pass = 'server-user',
+                    auth_pass = edq.util.crypto.Secret('server-user'),
                 ),
                 {},
                 {
@@ -42,7 +46,7 @@ class TestUsersTokensCreate(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-user@test.edulinq.org',
-                    auth_pass = 'server-user',
+                    auth_pass = edq.util.crypto.Secret('server-user'),
                     name = 'new-token',
                 ),
                 {},
@@ -64,7 +68,7 @@ class TestUsersTokensCreate(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     target_user = 'course-student@test.edulinq.org',
                 ),
                 {},
@@ -86,7 +90,7 @@ class TestUsersTokensCreate(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-user@test.edulinq.org',
-                    auth_pass = 'server-user',
+                    auth_pass = edq.util.crypto.Secret('server-user'),
                     target_user = 'course-student@test.edulinq.org',
                 ),
                 {},
@@ -98,7 +102,7 @@ class TestUsersTokensCreate(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     target_user = 'ZZZ@test.edulinq.org',
                 ),
                 {},
@@ -116,7 +120,7 @@ class TestUsersTokensCreate(autograder.testing.server.ServerTest):
             test_cases.append((
                 autograder.model.config.Config(
                     auth_user = user.email,
-                    auth_pass = user.name,
+                    auth_pass = edq.util.crypto.Secret(str(user.name)),
                 ),
                 {},
                 {

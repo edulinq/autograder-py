@@ -1,5 +1,7 @@
 import typing
 
+import edq.util.crypto
+
 import autograder.api.users.auth
 import autograder.model.config
 import autograder.testing.server
@@ -21,7 +23,7 @@ class TestUsersAuth(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                 ),
                 {},
                 True,
@@ -32,7 +34,7 @@ class TestUsersAuth(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'ZZZ',
+                    auth_pass = edq.util.crypto.Secret('ZZZ'),
                 ),
                 {
                     'exit_on_error': False,
@@ -45,7 +47,7 @@ class TestUsersAuth(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'ZZZ',
-                    auth_pass = 'ZZZ',
+                    auth_pass = edq.util.crypto.Secret('ZZZ'),
                 ),
                 {
                     'exit_on_error': False,

@@ -2,6 +2,7 @@ import sys
 import typing
 import unittest
 
+import edq.util.crypto
 import edq.util.dirent
 
 import autograder.api.config
@@ -28,7 +29,7 @@ class TestCourseAssignmentsFetchUserAttempt(autograder.testing.server.ServerTest
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     course = 'course101',
                     assignment = 'hw0',
                     target_email = 'course-student@test.edulinq.org',
@@ -46,7 +47,7 @@ class TestCourseAssignmentsFetchUserAttempt(autograder.testing.server.ServerTest
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     course = 'course101',
                     assignment = 'hw0',
                     target_email = 'ZZZ@test.edulinq.org',
@@ -64,7 +65,7 @@ class TestCourseAssignmentsFetchUserAttempt(autograder.testing.server.ServerTest
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     course = 'course101',
                     assignment = 'hw0',
                     target_email = 'course-student@test.edulinq.org',
@@ -83,7 +84,7 @@ class TestCourseAssignmentsFetchUserAttempt(autograder.testing.server.ServerTest
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     course = 'course101',
                     assignment = 'hw0',
                 ),
@@ -98,7 +99,7 @@ class TestCourseAssignmentsFetchUserAttempt(autograder.testing.server.ServerTest
             (
                 autograder.model.config.Config(
                     auth_user = 'course-admin@test.edulinq.org',
-                    auth_pass = 'course-admin',
+                    auth_pass = edq.util.crypto.Secret('course-admin'),
                     course = 'course101',
                     assignment = 'hw0',
                 ),
@@ -115,7 +116,7 @@ class TestCourseAssignmentsFetchUserAttempt(autograder.testing.server.ServerTest
             (
                 autograder.model.config.Config(
                     auth_user = 'course-admin@test.edulinq.org',
-                    auth_pass = 'course-admin',
+                    auth_pass = edq.util.crypto.Secret('course-admin'),
                     course = 'course101',
                     assignment = 'hw0',
                     target_email = 'course-student@test.edulinq.org',

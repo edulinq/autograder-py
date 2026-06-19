@@ -1,5 +1,7 @@
 import typing
 
+import edq.util.crypto
+
 import autograder.api.config
 import autograder.api.courses.users.list
 import autograder.model.config
@@ -23,7 +25,7 @@ class TestUsersList(autograder.testing.server.ServerTest):
                 autograder.model.config.Config(
                     course = 'course101',
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                 ),
                 {},
                 sorted(autograder.testing.model.COURSE_USERS['Course 101'].values()),
@@ -33,7 +35,7 @@ class TestUsersList(autograder.testing.server.ServerTest):
                 autograder.model.config.Config(
                     course = 'course101',
                     auth_user = 'course-admin@test.edulinq.org',
-                    auth_pass = 'course-admin',
+                    auth_pass = edq.util.crypto.Secret('course-admin'),
                 ),
                 {},
                 sorted(autograder.testing.model.COURSE_USERS['Course 101'].values()),
@@ -43,7 +45,7 @@ class TestUsersList(autograder.testing.server.ServerTest):
                 autograder.model.config.Config(
                     course = 'course101',
                     auth_user = 'course-grader@test.edulinq.org',
-                    auth_pass = 'course-grader',
+                    auth_pass = edq.util.crypto.Secret('course-grader'),
                 ),
                 {},
                 sorted(autograder.testing.model.COURSE_USERS['Course 101'].values()),

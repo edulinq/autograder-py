@@ -1,5 +1,7 @@
 import typing
 
+import edq.util.crypto
+
 import autograder.api.config
 import autograder.api.courses.assignments.submissions.proxy.regrade
 import autograder.model.config
@@ -23,7 +25,7 @@ class TestCoursesAssignmentsSubmissionsProxyRegrade(autograder.testing.server.Se
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     course = 'course-languages',
                     assignment = 'bash',
 
@@ -60,7 +62,7 @@ class TestCoursesAssignmentsSubmissionsProxyRegrade(autograder.testing.server.Se
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     course = 'course-languages',
                     assignment = 'bash',
 
@@ -95,7 +97,7 @@ class TestCoursesAssignmentsSubmissionsProxyRegrade(autograder.testing.server.Se
             (
                 autograder.model.config.Config(
                     auth_user = 'course-admin@test.edulinq.org',
-                    auth_pass = 'course-admin',
+                    auth_pass = edq.util.crypto.Secret('course-admin'),
                     course = 'course-languages',
                     assignment = 'bash',
 
@@ -132,7 +134,7 @@ class TestCoursesAssignmentsSubmissionsProxyRegrade(autograder.testing.server.Se
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
                     course = 'course-languages',
                     assignment = 'bash',
 

@@ -1,3 +1,7 @@
+import typing
+
+import edq.util.crypto
+
 import autograder.api.config
 import autograder.api.metadata.heartbeat
 import autograder.testing.asserts
@@ -20,7 +24,7 @@ class TestHeartbeat(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'course-owner@test.edulinq.org',
-                    auth_pass = 'course-owner',
+                    auth_pass = edq.util.crypto.Secret('course-owner'),
                 ),
                 {},
                 {

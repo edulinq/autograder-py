@@ -1,5 +1,7 @@
 import typing
 
+import edq.util.crypto
+
 import autograder.api.users.remove
 import autograder.testing.server
 
@@ -20,7 +22,7 @@ class TestUsersRemove(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
 
                     target_email = 'course-student@test.edulinq.org',
                 ),
@@ -35,7 +37,7 @@ class TestUsersRemove(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
 
                     target_email = 'ZZZ@test.edulinq.org',
                 ),
@@ -50,7 +52,7 @@ class TestUsersRemove(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'course-owner@test.edulinq.org',
-                    auth_pass = 'course-owner',
+                    auth_pass = edq.util.crypto.Secret('course-owner'),
 
                     target_email = 'course-student@test.edulinq.org',
                 ),

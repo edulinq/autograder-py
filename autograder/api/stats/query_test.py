@@ -1,5 +1,8 @@
 import typing
 
+import edq.util.crypto
+import edq.util.time
+
 import autograder.api.config
 import autograder.api.stats.query
 import autograder.model.config
@@ -23,7 +26,7 @@ class TestStatsQuery(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
 
                     query_use_testing_data = False,
 
@@ -38,7 +41,7 @@ class TestStatsQuery(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
 
                     query_use_testing_data = True,
 
@@ -64,7 +67,7 @@ class TestStatsQuery(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
 
                     query_use_testing_data = True,
 
@@ -90,12 +93,12 @@ class TestStatsQuery(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
 
                     query_use_testing_data = False,
 
                     query_metric_type = 'grading-time',
-                    query_after = 123,
+                    query_after = edq.util.time.Timestamp.guess(123),
                 ),
                 {},
                 [],
@@ -106,12 +109,12 @@ class TestStatsQuery(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
 
                     query_use_testing_data = False,
 
                     query_metric_type = 'grading-time',
-                    query_after = '123',
+                    query_after = edq.util.time.Timestamp.guess('123'),
                 ),
                 {},
                 [],
@@ -122,12 +125,12 @@ class TestStatsQuery(autograder.testing.server.ServerTest):
             (
                 autograder.model.config.Config(
                     auth_user = 'server-admin@test.edulinq.org',
-                    auth_pass = 'server-admin',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
 
                     query_use_testing_data = False,
 
                     query_metric_type = 'grading-time',
-                    query_after = '2023-09-28T04:00:20Z',
+                    query_after = edq.util.time.Timestamp.guess('2023-09-28T04:00:20Z'),
                 ),
                 {},
                 [],

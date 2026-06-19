@@ -7,16 +7,16 @@ import autograder.util.math
 class TestFileOp(edq.testing.unittest.BaseTest):
     """ Test file operations. """
 
-    def test_number_to_str(self):
+    def test_number_to_str(self) -> None:
         """ Test formatting numbers. """
 
         # [(number, precision, exact precision, expected, error substring), ...]
         test_cases: typing.List[typing.Tuple[
-                typing.Union[int, float],
-                int,
-                bool,
-                str,
-                typing.Union[str, None]
+            typing.Union[int, float],
+            int,
+            bool,
+            str,
+            typing.Union[str, None]
         ]] = [
             # Non-Exact Precision, Base
             (
