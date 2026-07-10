@@ -8,7 +8,7 @@ import typing
 import edq.config.settings
 import edq.config.source
 import edq.core.argparser
-import edq.net.exchange
+import edq.net.settings
 import edq.util.reflection
 import lms.model.constants
 
@@ -24,7 +24,7 @@ DEFAULT_ENCRYPTION_KEY: str = 'LynxGrader'
 
 DEFAULT_SKIP_ROWS: int = 0
 
-_set_exchanges_clean_func: bool = True  # pylint: disable=invalid-name
+_set_exchanges_clean_response_func: bool = True  # pylint: disable=invalid-name
 
 def _post_parse(
         parser: argparse.ArgumentParser,
@@ -60,7 +60,8 @@ def get_parser(
         edq.config.source.ProjectSpec(),
         edq.config.source.ENVSpec(),
         edq.config.source.CLIFileSpec(),
-        edq.config.source.CLISpec(),
+        edq.config.source.CLIImplicitSpec(),
+        edq.config.source.CLIExplicitSpec(),
     ])
 
     parser = edq.core.argparser.get_default_parser(
@@ -83,8 +84,8 @@ def get_parser(
 
     # Ensure that responses are cleaned as API responses.
     if (include_net):
-        if (_set_exchanges_clean_func):
-            edq.net.exchange._exchanges_clean_func = edq.util.reflection.get_qualified_name(autograder.util.net.clean_api_response)
+        if (_set_exchanges_clean_response_func):
+            edq.net.settings.set_exchanges_clean_response_func(edq.util.reflection.get_qualified_name(autograder.util.net.clean_api_response))
 
     if (include_output_format):
         group = parser.add_argument_group('output formatting options')

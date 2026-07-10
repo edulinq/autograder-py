@@ -3,6 +3,7 @@ import typing
 
 import edq.net.exchange
 import edq.net.request
+import edq.net.settings
 import edq.testing.serverrunner
 import edq.util.parse
 import edq.util.reflection
@@ -22,21 +23,21 @@ class ServerRunner(edq.testing.serverrunner.ServerRunner):
             **kwargs: typing.Any) -> None:
         super().__init__(**kwargs)
 
-        self._old_exchanges_clean_func: typing.Union[str, None] = None
+        self._old_exchanges_clean_response_func: typing.Union[str, None] = None
         """
-        The value of edq.net.exchange._exchanges_clean_func when start() is called.
+        The value of edq.net.settings.get_exchanges_clean_response_func() when start() is called.
         The original value may be changed in start(), and will be reset in stop().
         """
 
-        self._old_set_exchanges_clean_func: bool = False
+        self._old_set_exchanges_clean_response_func: bool = False
         """
-        The value of autograder.cli.parser._set_exchanges_clean_func when start() is called.
+        The value of autograder.cli.parser._set_exchanges_clean_response_func when start() is called.
         The original value may be changed in start(), and will be reset in stop().
         """
 
-        self._old_make_request_exchange_complete_func: typing.Union[edq.net.exchange.HTTPExchangeComplete, None] = None
+        self._old_request_complete_callback: typing.Union[edq.net.exchange.HTTPExchangeComplete, None] = None
         """
-        The value of edq.net.request._make_request_exchange_complete_func when start() is called.
+        The value of edq.net.request._request_complete_callback when start() is called.
         The original value may be changed in start(), and will be reset in stop().
         """
 
@@ -54,19 +55,19 @@ class ServerRunner(edq.testing.serverrunner.ServerRunner):
 
         # Set configs.
 
-        self._old_exchanges_clean_func = edq.net.exchange._exchanges_clean_func
-        edq.net.exchange._exchanges_clean_func = edq.util.reflection.get_qualified_name(autograder.util.net.clean_api_response)
+        self._old_exchanges_clean_response_func = edq.net.settings.get_exchanges_clean_response_func()
+        edq.net.settings.set_exchanges_clean_response_func(edq.util.reflection.get_qualified_name(autograder.util.net.clean_api_response))
 
-        self._old_set_exchanges_clean_func = autograder.cli.parser._set_exchanges_clean_func
-        autograder.cli.parser._set_exchanges_clean_func = False
+        self._old_set_exchanges_clean_response_func = autograder.cli.parser._set_exchanges_clean_response_func
+        autograder.cli.parser._set_exchanges_clean_response_func = False
 
-        def _make_request_callback(exchange: edq.net.exchange.HTTPExchange) -> None:
+        def _request_complete_callback(exchange: edq.net.exchange.HTTPExchange) -> None:
             # Restart if the request is a write.
             if (edq.util.parse.boolean(exchange.headers.get(autograder.api.constants.HEADER_KEY_WRITE, False))):
                 self.restart()
 
-        self._old_make_request_exchange_complete_func = edq.net.request._make_request_exchange_complete_func
-        edq.net.request._make_request_exchange_complete_func = typing.cast(edq.net.exchange.HTTPExchangeComplete, _make_request_callback)
+        self._old_request_complete_callback = edq.net.settings.get_request_complete_callback()
+        edq.net.settings.set_request_complete_callback(typing.cast(edq.net.exchange.HTTPExchangeComplete, _request_complete_callback))
 
         # Disable logging from the runner, since it may disrupt CLI tests.
         logger = logging.getLogger('edq.testing.serverrunner')
@@ -84,14 +85,14 @@ class ServerRunner(edq.testing.serverrunner.ServerRunner):
 
         # Restore old configs.
 
-        edq.net.exchange._exchanges_clean_func = self._old_exchanges_clean_func
-        self._old_exchanges_clean_func = None
+        edq.net.settings.set_exchanges_clean_response_func(self._old_exchanges_clean_response_func)
+        self._old_exchanges_clean_response_func = None
 
-        autograder.cli.parser._set_exchanges_clean_func = self._old_set_exchanges_clean_func
-        self._old_set_exchanges_clean_func = False
+        autograder.cli.parser._set_exchanges_clean_response_func = self._old_set_exchanges_clean_response_func
+        self._old_set_exchanges_clean_response_func = False
 
-        edq.net.request._make_request_exchange_complete_func = self._old_make_request_exchange_complete_func
-        self._old_make_request_exchange_complete_func = None
+        edq.net.settings.set_request_complete_callback(self._old_request_complete_callback)
+        self._old_request_complete_callback = None
 
         return True
 
