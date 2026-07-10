@@ -174,18 +174,21 @@ All these options can be set on the command line when invoking on of these tools
 python3 -m autograder.run.submit --user sammy@ucsc.edu --pass pass123 my_file.py
 ```
 However, it will generally be more convenient to hold these common options in a more reusable location.
+There are several files where you can place your options, the three main ones are:
+ 1. Local Config -- A file named `config.json` that lives in the directory you are running the command in.
+    Useful for setting assignment-specific options (like an assignment name/id).
+ 2. Project Config -- A file named `autograder.json` that lives in your project/repo root directory.
+    Useful for course-specific options (like your course name/id).
+ 3. Global Config -- A file named `autograder.json` that lives somewhere in your user's home directory.
+    Useful for options that you share between courses (like your server, username, and password).
 
-There are several other places that config options can be specified,
-with each later location overriding any earlier options.
-Here are the places options can be specified in the order that they are checked:
- 1. `./config.json` -- If a `config.json` exists in the current directory, it is loaded.
- 2. `<platform-specific user config location>/autograder.json` -- A directory which is considered the "proper" place to store user-related config for the platform you are using (according to [platformdirs](https://github.com/platformdirs/platformdirs)). Use `--help` to see the exact place in your specific case. This is a great place to store login credentials.
- 3. Files specified by `--config` -- These files are loaded in the order they appear on the command-line.
- 4. Bare Options -- Options specified directly like `--user` or `--pass`. These will override all previous options.
+To see the exact location of each file, the order that options are loaded,  and details about it,
+run any command with `--help` and see the "CONFIGURATION" section:
+```
+python3 -m autograder.run.auth --help
+```
 
-A base config file (`config.json`) is often distributed with assignments that contains most the settings you need.
-You can modify this config to include your settings and use that for setting all your configuration options.
-A `config.json` file may look something like:
+A config file may look something like:
 ```json
 {
     "course": "my-course",
@@ -194,25 +197,6 @@ A `config.json` file may look something like:
     "user": "user@edulinq.org",
     "pass": "1234567890"
 }
-```
-
-Using the default config file (`config.json`):
-```sh
-# `./config.json` will be looked for and loaded if it exists.
-python3 -m autograder.run.submit my_file.py
-```
-
-Using a custom config file (`my_config.json`):
-```sh
-# `./my_config.json` will be used.
-python3 -m autograder.run.submit --config my_config.json my_file.py
-```
-
-You can also use multiple config files (latter files will override settings from previous ones).
-This is useful if you want to use the config files provided with assignments, but keep your user credentials in a more secure location:
-```sh
-# Use the default config file (config.json), but then override any settings in there with another config file:
-python3 -m autograder.run.submit --config config.json --config ~/.secrets/autograder.json my_file.py
 ```
 
 For brevity, all future commands in this document will assume that all standard config options are in the default
