@@ -10,7 +10,7 @@ TEST_TIMESTAMP: edq.util.time.Timestamp = edq.util.time.Timestamp(123)
 class TestQuestion(edq.testing.unittest.BaseTest):
     """ Test questions. """
 
-    def test_grade_base(self):
+    def test_grade_base(self) -> None:
         """ Test that grading can run successfully. """
 
         # [(action, expected result, message substring), ...]
@@ -167,7 +167,7 @@ class TestQuestion(edq.testing.unittest.BaseTest):
 
             # Code does not run.
             (
-                lambda question: (question.full_credit(), exec('import ZZZ'))[0],  # pylint: disable=exec-used
+                lambda question: (question.full_credit(), exec('import ZZZ'))[0],  # type: ignore[func-returns-value]  # pylint: disable=exec-used
                 autograder.question.GradedQuestion(
                     name = '_TestQustion', max_points = 10,
                     grading_start_time = TEST_TIMESTAMP, grading_end_time = TEST_TIMESTAMP,
@@ -179,7 +179,7 @@ class TestQuestion(edq.testing.unittest.BaseTest):
         ]
 
         class _TestQustion(autograder.question.Question):
-            def __init__(self, action: typing.Callable):
+            def __init__(self, action: typing.Callable) -> None:
                 super().__init__(10)
 
                 self.action = action
@@ -208,7 +208,7 @@ class TestQuestion(edq.testing.unittest.BaseTest):
                 if (message_substring is not None):
                     self.assertIn(message_substring, actual_message, 'Message is not as expected.')
 
-    def test_scoring_report_base(self):
+    def test_scoring_report_base(self) -> None:
         """ Test that output looks correct. """
 
         # [(graded question, expected), ...]

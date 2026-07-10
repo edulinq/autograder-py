@@ -1,6 +1,7 @@
 import os
 import re
 import sys
+import typing
 
 import edq.testing.unittest
 import edq.util.dirent
@@ -14,7 +15,7 @@ TESTDATA_DIR: str = os.path.join(THIS_DIR, 'testdata', 'code')
 class TestStyle(edq.testing.unittest.BaseTest):
     """ Test getting style issues for source code. """
 
-    def test_check_paths_base(self):
+    def test_check_paths_base(self) -> None:
         """ Test the base functionality of checking paths. """
 
         # Create a file with a style violation.
@@ -37,7 +38,13 @@ class TestStyle(edq.testing.unittest.BaseTest):
 
         # pylint: disable=line-too-long
         # [(paths, kwargs, expected count, expected lines, error substring), ...]
-        test_cases = [
+        test_cases: typing.List[typing.Tuple[
+            typing.List[str],
+            typing.Dict[str, typing.Any],
+            int,
+            typing.List[typing.Any],
+            typing.Union[str, None]
+        ]] = [
             # Base
             (
                 [
@@ -206,7 +213,7 @@ class TestStyle(edq.testing.unittest.BaseTest):
                 self.assertEqual(expected_count, actual_count)
                 self.assertJSONListEqual(expected_lines, actual_lines)
 
-    def test_style_override(self):
+    def test_style_override(self) -> None:
         """ Test overriding default functionality. """
 
         temp_dir = edq.util.dirent.get_temp_dir('autograder-test-style-')

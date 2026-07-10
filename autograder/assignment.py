@@ -15,7 +15,7 @@ class GradedAssignment(edq.util.serial.DictConverter):
 
     def __init__(self,
             name: str,
-            questions: typing.List[autograder.question.GradedQuestion],
+            questions: typing.Sequence[autograder.question.GradedQuestion],
             message: typing.Union[str, None] = None,
             prologue: typing.Union[str, None] = None,
             epilogue: typing.Union[str, None] = None,
@@ -27,7 +27,7 @@ class GradedAssignment(edq.util.serial.DictConverter):
         self.name: str = name
         """ The name of the assignment. """
 
-        self.questions: typing.List[autograder.question.GradedQuestion] = questions
+        self.questions: typing.List[autograder.question.GradedQuestion] = list(questions)
         """ The result of grading for each question. """
 
         self.message: typing.Union[str, None] = prologue
@@ -179,7 +179,7 @@ class Assignment:
 
     def __init__(self,
             name: typing.Union[str, None] = None,
-            questions: typing.Union[typing.List[autograder.question.Question], None] = None,
+            questions: typing.Union[typing.Sequence[autograder.question.Question], None] = None,
             input_dir: str = '.',
             output_dir: str = '.',
             work_dir: str = '.',
@@ -198,7 +198,7 @@ class Assignment:
         if (questions is None):
             questions = []
 
-        self.questions = questions
+        self.questions = list(questions)
         """ The questions for this assignment. """
 
         self.input_dir: str = input_dir

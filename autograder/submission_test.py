@@ -1,4 +1,5 @@
 import os
+import typing
 
 import edq.testing.unittest
 
@@ -12,12 +13,12 @@ class TestSubmission(edq.testing.unittest.BaseTest):
     Tests for autograder submissions.
     """
 
-    def test_prepare_simple(self):
+    def test_prepare_simple(self) -> None:
         """ Test preparing a single (single file) submission. """
 
         for ext in ['py', 'ipynb']:
             path = os.path.join(DATA_DIR, 'code', 'simple.' + ext)
-            submission = autograder.util.prepare_submission.prepare(path)
+            submission: typing.Any = autograder.util.prepare_submission.prepare(path)
 
             self.assertIn('__all__', dir(submission))
             self.assertIn('SOME_CONSTANT', dir(submission.__all__))
@@ -27,11 +28,11 @@ class TestSubmission(edq.testing.unittest.BaseTest):
             self.assertIn('SOME_CONSTANT', dir(submission.simple))
             self.assertEqual(submission.simple.SOME_CONSTANT, 1)
 
-    def test_prepare_nested(self):
+    def test_prepare_nested(self) -> None:
         """ Test preparing a nested submission. """
 
         path = os.path.join(DATA_DIR, 'submission', 'nested')
-        submission = autograder.util.prepare_submission.prepare(path)
+        submission: typing.Any = autograder.util.prepare_submission.prepare(path)
 
         self.assertIn('__all__', dir(submission))
         self.assertIn('SOME_CONSTANT', dir(submission.__all__))

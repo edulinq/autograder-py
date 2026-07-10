@@ -1,6 +1,7 @@
 import os
 import unittest
 import sys
+import typing
 
 import edq.testing.unittest
 import edq.util.dirent
@@ -21,10 +22,15 @@ class TestFileOp(edq.testing.unittest.BaseTest):
     """ Test file operations. """
 
     @unittest.skipIf(sys.platform.startswith("win"), "fileops require POSIX")
-    def test_fileop_validation(self):
+    def test_fileop_validation(self) -> None:
         """ Test validating a fileop. """
 
-        test_cases = [
+        # [(input, expected, error substring), ...]
+        test_cases: typing.List[typing.Tuple[
+            typing.Union[typing.List[str], None],
+            typing.Union[typing.List[str], None],
+            typing.Union[str, None],
+        ]] = [
             # Base
             (["copy", "a", "b"], ["copy", "a", "b"], None),
             (["cp", "a", "b"], ["copy", "a", "b"], None),
@@ -105,13 +111,24 @@ class TestFileOp(edq.testing.unittest.BaseTest):
                 if (error_substring is not None):
                     self.fail(f"Did not get expected error: '{error_substring}'.")
 
+                if (operation is None):
+                    self.fail('No operation value provided.')
+
+                if (expected is None):
+                    self.fail('No expected value provided.')
+
                 self.assertListEqual(operation, expected, 'Operation not as expected.')
 
     @unittest.skipIf(sys.platform.startswith("win"), "fileops require POSIX")
-    def test_fileop_exec_copy(self):
+    def test_fileop_exec_copy(self) -> None:
         """ Test executing copy fileops. """
 
-        test_cases = [
+        # [(source, dest, error substring), ...]
+        test_cases: typing.List[typing.Tuple[
+            str,
+            str,
+            typing.Union[str, None],
+        ]] = [
             (ALREADY_EXISTS_FILE_POSIX_RELPATH, "a", None),
             (ALREADY_EXISTS_FILE_POSIX_RELPATH, "a.txt", None),
             (ALREADY_EXISTS_DIRNAME, "a", None),
@@ -130,7 +147,7 @@ class TestFileOp(edq.testing.unittest.BaseTest):
 
                 operation = ["cp", source, dest]
 
-                def post_check(operation, temp_dir):
+                def post_check(operation: typing.List[str], temp_dir: str) -> None:
                     """ Check for after the operation is invoked. """
 
                     expected_source = os.path.normpath(os.path.join(temp_dir, source))
@@ -145,11 +162,17 @@ class TestFileOp(edq.testing.unittest.BaseTest):
                 self._run_fileop_exec_test(operation, error_substring, post_check)
 
     @unittest.skipIf(sys.platform.startswith("win"), "fileops require POSIX")
-    def test_fileop_exec_copy_glob(self):
+    def test_fileop_exec_copy_glob(self) -> None:
         """ Test executing copy fileops with globs. """
 
         # [(source, dest, expected_paths, not_expected_paths, error_substring), ...]
-        test_cases = [
+        test_cases: typing.List[typing.Tuple[
+            str,
+            str,
+            typing.List[str],
+            typing.List[str],
+            typing.Union[str, None],
+        ]] = [
             (
                 ALREADY_EXISTS_DIRNAME + "/*",
                 STARTING_EMPTY_DIRNAME,
@@ -229,7 +252,7 @@ class TestFileOp(edq.testing.unittest.BaseTest):
 
                 operation = ["cp", source, dest]
 
-                def post_check(operation, temp_dir):
+                def post_check(operation: typing.List[str], temp_dir: str) -> None:
                     """ Check for after the operation is invoked. """
 
                     for expected_path in expected_paths:
@@ -245,10 +268,15 @@ class TestFileOp(edq.testing.unittest.BaseTest):
                 self._run_fileop_exec_test(operation, error_substring, post_check)
 
     @unittest.skipIf(sys.platform.startswith("win"), "fileops require POSIX")
-    def test_fileop_exec_move(self):
+    def test_fileop_exec_move(self) -> None:
         """ Test executing move fileops. """
 
-        test_cases = [
+        # [(source, dest, error substring), ...]
+        test_cases: typing.List[typing.Tuple[
+            str,
+            str,
+            typing.Union[str, None],
+        ]] = [
             (ALREADY_EXISTS_FILE_POSIX_RELPATH, "a", None),
             (ALREADY_EXISTS_FILE_POSIX_RELPATH, "a.txt", None),
             (ALREADY_EXISTS_DIRNAME, "a", None),
@@ -265,7 +293,7 @@ class TestFileOp(edq.testing.unittest.BaseTest):
 
                 operation = ["mv", source, dest]
 
-                def post_check(operation, temp_dir):
+                def post_check(operation: typing.List[str], temp_dir: str) -> None:
                     """ Check for after the operation is invoked. """
 
                     expected_source = os.path.normpath(os.path.join(temp_dir, source))
@@ -280,11 +308,17 @@ class TestFileOp(edq.testing.unittest.BaseTest):
                 self._run_fileop_exec_test(operation, error_substring, post_check)
 
     @unittest.skipIf(sys.platform.startswith("win"), "fileops require POSIX")
-    def test_fileop_exec_move_glob(self):
+    def test_fileop_exec_move_glob(self) -> None:
         """ Test executing move fileops with globs. """
 
         # [(source, dest, expected_paths, not_expected_paths, error_substring), ...]
-        test_cases = [
+        test_cases: typing.List[typing.Tuple[
+            str,
+            str,
+            typing.List[str],
+            typing.List[str],
+            typing.Union[str, None],
+        ]] = [
             (
                 "*",
                 "a",
@@ -390,7 +424,7 @@ class TestFileOp(edq.testing.unittest.BaseTest):
 
                 operation = ["mv", source, dest]
 
-                def post_check(operation, temp_dir):
+                def post_check(operation: typing.List[str], temp_dir: str) -> None:
                     """ Check for after the operation is invoked. """
 
                     for expected_path in expected_paths:
@@ -406,10 +440,14 @@ class TestFileOp(edq.testing.unittest.BaseTest):
                 self._run_fileop_exec_test(operation, error_substring, post_check)
 
     @unittest.skipIf(sys.platform.startswith("win"), "fileops require POSIX")
-    def test_fileop_exec_mkdir(self):
+    def test_fileop_exec_mkdir(self) -> None:
         """ Test executing mkdir fileops. """
 
-        test_cases = [
+        # [(path, error_substring), ...]
+        test_cases: typing.List[typing.Tuple[
+            str,
+            typing.Union[str, None],
+        ]] = [
             ("a", None),
             ("a/b", None),
             ("a/../b", None),
@@ -425,7 +463,7 @@ class TestFileOp(edq.testing.unittest.BaseTest):
 
                 operation = ["mkdir", path]
 
-                def post_check(operation, temp_dir):
+                def post_check(operation: typing.List[str], temp_dir: str) -> None:
                     """ Check for after the operation is invoked. """
 
                     expected_path = os.path.normpath(os.path.join(temp_dir, path))
@@ -436,10 +474,15 @@ class TestFileOp(edq.testing.unittest.BaseTest):
                 self._run_fileop_exec_test(operation, error_substring, post_check)
 
     @unittest.skipIf(sys.platform.startswith("win"), "fileops require POSIX")
-    def test_fileop_exec_remove(self):
+    def test_fileop_exec_remove(self) -> None:
         """ Test executing remove fileops. """
 
-        test_cases = [
+        # [(path, expected paths, error_substring), ...]
+        test_cases: typing.List[typing.Tuple[
+            str,
+            typing.Union[typing.List[str], None],
+            typing.Union[str, None],
+        ]] = [
             ("a", None, None),
             ("a/b", None, None),
             ("a/../b", None, None),
@@ -483,7 +526,7 @@ class TestFileOp(edq.testing.unittest.BaseTest):
 
                 operation = ["rm", path]
 
-                def post_check(operation, temp_dir):
+                def post_check(operation: typing.List[str], temp_dir: str) -> None:
                     """ Check for after the operation is invoked. """
 
                     for rel_expected_path in expected_paths:
@@ -494,7 +537,11 @@ class TestFileOp(edq.testing.unittest.BaseTest):
 
                 self._run_fileop_exec_test(operation, error_substring, post_check)
 
-    def _run_fileop_exec_test(self, operation, error_substring, post_exec):
+    def _run_fileop_exec_test(self,
+            operation: typing.List[str],
+            error_substring: typing.Union[str, None],
+            post_exec: typing.Callable,
+            ) -> None:
         """ Run a single fileop test case. """
 
         temp_dir = edq.util.dirent.get_temp_dir(prefix = "ag-py-testing-fileop-execute-")

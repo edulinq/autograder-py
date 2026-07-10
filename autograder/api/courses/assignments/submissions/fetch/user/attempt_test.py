@@ -135,7 +135,7 @@ class TestCourseAssignmentsFetchUserAttempt(autograder.testing.server.ServerTest
         self.base_api_test(autograder.api.courses.assignments.submissions.fetch.user.attempt.send, test_cases)
 
     @unittest.skipIf(sys.platform.startswith("win"), "Windows file hashes create different HTTP exchange queries")
-    def test_write_output(self):
+    def test_write_output(self) -> None:
         """ Ensure that the attempt is properly written to a directory. """
 
         submission = autograder.api.courses.assignments.submissions.fetch.testing.SUBMISSIONS['course-student@test.edulinq.org'][2]
