@@ -45,6 +45,7 @@ class APIParam:
     def __init__(self,
             config_key: str,
             description: str,
+            alt_config_key: typing.Union[str, None] = None,
             api_key: typing.Union[str, None] = None,
             cli_flag: typing.Union[str, None] = None,
             api: bool = True,
@@ -76,6 +77,12 @@ class APIParam:
 
         self.description: str = description
         """ A description used for this parameter. """
+
+        self.alt_config_key: typing.Union[str, None] = alt_config_key
+        """
+        An alternative config key that the value could be found under when reading a config file.
+        A value found under this key will always be stored under self.config_key.
+        """
 
         if (api_key is None):
             api_key = config_key.replace('_', '-')
@@ -867,16 +874,18 @@ PARAM_UPSERT_ZIP = APIParam(
 )
 
 PARAM_USER_EMAIL = APIParam(
-    'auth_user',
+    'user',
     'The email of the user making this request.',
+    alt_config_key = 'auth_user',
     api_key = 'user-email',
     cli_flag = 'user',
     cli_show_default = False,
 )
 
 PARAM_USER_PASS = APIParam(
-    'auth_pass',
+    'pass',
     'The password of the user making this request.',
+    alt_config_key = 'auth_pass',
     api_key = 'user-pass',
     cli_flag = 'pass',
     hash_value = True,

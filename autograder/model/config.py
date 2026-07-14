@@ -98,8 +98,15 @@ class Config(edq.config.app.BaseApplicationConfig):
         self.assignment: typing.Union[str, None] = assignment
         """ The ID of the assignment to make this request to. """
 
+        # Sidestep using the `pass` keyword.
+        if (auth_pass is None):
+            auth_pass = kwargs.get('pass', None)
+
         self.auth_pass: typing.Union[edq.util.crypto.Secret, None] = auth_pass
         """ The password of the user making this request. """
+
+        if (auth_user is None):
+            auth_user = kwargs.get('user', None)
 
         self.auth_user: typing.Union[str, None] = auth_user
         """ The email of the user making this request. """

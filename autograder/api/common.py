@@ -89,10 +89,17 @@ def _verify_payload(
 
         value = api_param.clean_value(getattr(config, api_param.config_key, None))
 
+        # If there is no value, try an alt key.
+        if ((value is None) and (api_param.alt_config_key is not None)):
+            value = api_param.clean_value(getattr(config, api_param.alt_config_key, None))
+
         if (value is None):
             if (api_param.api_required):
+                names = [f"'{name}'" for name in [api_param.config_key, api_param.alt_config_key, api_param.cli_flag] if (name is not None)]
+                names = sorted(set(names))
+
                 raise autograder.error.APIError(None,
-                    f"Required parameter '{api_param.config_key}' not found.")
+                    f"Required parameter {' / '.join(names)} not found.")
 
             if (api_param.omit_empty):
                 continue
