@@ -244,12 +244,22 @@ def run_python_grader(grader_path: str, grading_dir: str) -> typing.Union[autogr
     output_dir = os.path.join(grading_dir, OUTPUT_DIRNAME)
     work_dir = os.path.join(grading_dir, WORK_DIRNAME)
 
-    assignment_class = autograder.assignment.fetch_assignment_class(grader_path)
-    if (assignment_class is None):
-        print("Failed to fetch assignment class from '{grader_path}'.")
-        return None
+    edq.util.dirent.mkdir(work_dir)
+
+    # Ensure that the current directory is in sys.path.
+    sys.path.insert(0, '.')
+
+    # Move into the work dir for grading and back after.
+    start_dir = os.getcwd()
 
     try:
+        os.chdir(work_dir)
+
+        assignment_class = autograder.assignment.fetch_assignment_class(grader_path)
+        if (assignment_class is None):
+            print("Failed to fetch assignment class from '{grader_path}'.")
+            return None
+
         assignment = assignment_class(input_dir = input_dir, output_dir = output_dir,
                 work_dir = work_dir)
         return assignment.grade()
@@ -257,6 +267,11 @@ def run_python_grader(grader_path: str, grading_dir: str) -> typing.Union[autogr
         print("Failed to run assignment ('{assignment_class.__name__}') on submission '{input_dir}': '{ex}'.")
         traceback.print_exc()
         return None
+    finally:
+        os.chdir(start_dir)
+        sys.path.pop(0)
+
+    return None
 
 def run_external_grader(assignment_config_path: str, grading_dir: str) -> autograder.assignment.GradedAssignment:
     """ Run a grader that is not a standard Python-based grader. """
@@ -264,10 +279,19 @@ def run_external_grader(assignment_config_path: str, grading_dir: str) -> autogr
     work_dir = os.path.join(grading_dir, WORK_DIRNAME)
     output_dir = os.path.join(grading_dir, OUTPUT_DIRNAME)
 
+    edq.util.dirent.mkdir(work_dir)
+
+    # Move into the work dir for grading and back after.
+    start_dir = os.getcwd()
+
     try:
+        os.chdir(work_dir)
+
         assignment_config = edq.util.json.load_path(assignment_config_path)
     except Exception as ex:
         raise ValueError("Failed to load assignment config: " + assignment_config_path) from ex
+    finally:
+        os.chdir(start_dir)
 
     invocation = assignment_config.get('invocation', [])
     if (len(invocation) == 0):
