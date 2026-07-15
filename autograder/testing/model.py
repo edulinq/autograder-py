@@ -3,6 +3,7 @@ Data for tests.
 Most model data will be copied over from the LMS toolkit and updated for the autograder.
 """
 
+import os
 import typing
 
 import lms.model.assignments
@@ -52,7 +53,9 @@ SERVER_USERS: typing.Dict[str, lms.model.users.ServerUser] = _clean_server_users
 # {course_name: {user_name: user, ...}, ...}
 COURSE_USERS: typing.Dict[str, typing.Dict[str, lms.model.users.CourseUser]] = _clean_course_users()
 
-RAW_USER_DATA: typing.Dict[str, typing.Any] = edq.util.json.load_path(autograder.testing.constants.SUBMODULE_SERVER_USERS_PATH)
+RAW_USER_DATA: typing.Dict[str, typing.Any] = {}
+if (os.path.exists(autograder.testing.constants.SUBMODULE_SERVER_USERS_PATH)):
+    RAW_USER_DATA = edq.util.json.load_path(autograder.testing.constants.SUBMODULE_SERVER_USERS_PATH)
 
 ASSIGNMENTS: typing.Dict[str, typing.Dict[str, lms.model.assignments.Assignment]] = {
     "Course 101": {
