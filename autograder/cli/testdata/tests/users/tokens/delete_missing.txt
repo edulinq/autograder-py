@@ -1,0 +1,13 @@
+{
+    "cli": "autograder.cli.users.tokens.delete",
+    "arguments": [
+        '--user', 'course-admin@test.edulinq.org',
+        '--pass', 'course-admin',
+        '--token-id', 'ZZZ',
+    ],
+}
+---
+{
+    "found-token": false,
+    "found-user": true
+}

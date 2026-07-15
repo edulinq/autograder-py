@@ -1,28 +1,35 @@
+"""
+Proxy resubmit an assignment submission to the autograder.
+"""
+
+import argparse
 import sys
 
+import autograder.cli.courses.assignments.submissions.common
 import autograder.api.courses.assignments.submissions.proxy.resubmit
-import autograder.cli.common
-import autograder.cli.config
+import autograder.cli.parser
 
-def run(arguments):
-    result = autograder.api.courses.assignments.submissions.proxy.resubmit.send(arguments,
-            exit_on_error = True)
+def run_cli(args: argparse.Namespace) -> int:
+    """ Run the CLI. """
 
-    if (not result['found-user']):
-        print("Proxy user not found.")
-        return 3
+    config = args._config_info.application_config
 
-    if (not result['found-submission']):
-        print("Target submission not found.")
-        return 4
+    api_response, grading_result = autograder.api.courses.assignments.submissions.proxy.resubmit.send(config, exit_on_error = True)
+    return autograder.cli.courses.assignments.submissions.common.display_grading_result(api_response, grading_result,
+            include_found_user = True,
+            include_found_submission = True)
 
-    return autograder.cli.common.display_grading_result(result)
+def main() -> int:
+    """ Get a parser, parse the args, and call run. """
 
-def main():
-    return run(_get_parser().parse_args())
+    return run_cli(_get_parser().parse_args())
 
-def _get_parser():
-    parser = autograder.api.courses.assignments.submissions.proxy.resubmit._get_parser()
+def _get_parser() -> argparse.ArgumentParser:
+    """ Get a parser for this operation. """
+
+    parser = autograder.cli.parser.get_parser(
+        __doc__.strip(),
+        autograder.api.courses.assignments.submissions.proxy.resubmit.API_PARAMS)
 
     return parser
 

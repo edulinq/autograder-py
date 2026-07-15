@@ -1,14 +1,11 @@
-"""
-The `autograder.cli.courses.assignment.submissions.fetch.course` package contains tools to
-query submissions to the autograder at a course level.
-"""
-
 import sys
 
-import autograder.util.cli
+import edq.clilib.list
 
-def main():
-    return autograder.util.cli.main()
+def main() -> int:
+    """ List this CLI dir. """
+
+    return edq.clilib.list.main()
 
 if (__name__ == '__main__'):
     sys.exit(main())

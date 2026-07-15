@@ -1,0 +1,13 @@
+{
+    "cli": "autograder.cli.courses.list",
+    "arguments": [
+        '--user', 'server-admin@test.edulinq.org',
+        '--pass', 'server-admin',
+    ],
+}
+---
+id: course-languages
+name: Course Using Different Languages
+
+id: course101
+name: Course 101

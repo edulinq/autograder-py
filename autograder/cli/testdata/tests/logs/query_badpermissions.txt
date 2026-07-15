@@ -1,0 +1,11 @@
+{
+    "cli": "autograder.cli.logs.query",
+    "arguments": [
+        '--user', 'server-user@test.edulinq.org',
+        '--pass', 'server-user',
+        '--level', 'ERROR',
+        '--target-course', 'course101',
+    ],
+}
+---
+Log Query Error -- Error: 'You do not have the correct permissions to execute this log query.', Locator: ''.

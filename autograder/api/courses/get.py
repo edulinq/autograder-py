@@ -1,23 +1,29 @@
+"""
+Get a course on a server.
+"""
+
+import typing
+
 import autograder.api.common
 import autograder.api.config
+import autograder.model.config
+import autograder.model.course
 
-API_ENDPOINT = 'courses/get'
-
-API_PARAMS = [
+API_ENDPOINT: str = 'courses/get'
+API_WRITE: bool = False
+API_PARAMS: typing.List[autograder.api.config.APIParam] = [
+    autograder.api.config.PARAM_SERVER,
+    autograder.api.config.PARAM_COURSE,
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
-
-    autograder.api.config.PARAM_COURSE_ID,
 ]
 
-DESCRIPTION = 'Get information about a course.'
+def send(config: autograder.model.config.Config, **kwargs: typing.Any) -> typing.Union[autograder.model.course.Course, None]:
+    """ Send a request to the autograder. """
 
-def send(arguments, **kwargs):
-    return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT, **kwargs)
+    response = autograder.api.common.make_api_request(API_ENDPOINT, config, API_PARAMS, write = API_WRITE, **kwargs)
 
-def _get_parser():
-    parser = autograder.api.config.get_argument_parser(
-        description = DESCRIPTION,
-        params = API_PARAMS)
+    if (not response.get('found', False)):
+        return None
 
-    return parser
+    return autograder.model.course.Course.from_api(response['course'])

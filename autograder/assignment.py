@@ -1,175 +1,75 @@
-"""
-What is necessary to grade a single assignment.
-"""
-
 import inspect
-import json
 import traceback
+import typing
 
-import autograder.code
+import edq.util.code
+import edq.util.serial
+
 import autograder.question
-import autograder.util.submission
-import autograder.util.timestamp
+import autograder.util.prepare_submission
 
-class Assignment(object):
-    """
-    A collection of questions to be scored.
-    """
-
-    def __init__(self,
-            name = None,
-            questions = [],
-            input_dir = '.', output_dir = '.', work_dir = '.',
-            prep_submission = True,
-            additional_data = {},
-            **kwargs):
-        """
-        Construct an assignment.
-
-        If prep_submission is True, then the default _prepare_submission()
-        implementation will prepare the input directory.
-        """
-
-        self._name = name
-        if (self._name is None):
-            self._name = type(self).__name__
-
-        self._questions = questions
-
-        self._input_dir = input_dir
-        self._output_dir = output_dir
-        self._work_dir = work_dir
-
-        self._prep_submission = prep_submission
-
-        self._additional_data = additional_data
-
-        # Scoring artifact.
-        self.result = None
-
-    def grade(self, **kwargs):
-        try:
-            return self._grade_submission(self._prepare_submission(), **kwargs)
-        except Exception:
-            now = autograder.util.timestamp.get()
-
-            questions = []
-            for question in self._questions:
-                questions.append(autograder.question.GradedQuestion(
-                    name = question.name,
-                    max_points = question.max_points, score = 0,
-                    message = "Submission could not be graded.",
-                    grading_start_time = now, grading_end_time = now))
-
-            epilogue = ("\nSubmission could not be graded because of the following error:"
-                    + "\n---\n%s---" % (traceback.format_exc()))
-
-            return GradedAssignment(
-                name = self._name,
-                questions = questions,
-                grading_start_time = now, grading_end_time = now,
-                epilogue = epilogue)
-
-    def _grade_submission(self, submission, show_exceptions = False, **kwargs):
-        """
-        Grade an assignment by grading all the questions.
-
-        The submission argument is the result of _prepare_submission().
-        """
-
-        self.result = GradedAssignment(name = self._name, questions = [])
-        self.result.grading_start_time = autograder.util.timestamp.get()
-
-        stop_grading = False
-        for question in self._questions:
-            if (stop_grading):
-                now = autograder.util.timestamp.get()
-
-                self.result.questions.append(autograder.question.GradedQuestion(
-                    name = question.name,
-                    max_points = question.max_points, score = 0,
-                    message = "Grading stopped because of a hard error, skipping question...",
-                    grading_start_time = now, grading_end_time = now,
-                    skipped = True))
-            else:
-                result = question.grade(submission,
-                    additional_data = self._additional_data,
-                    show_exceptions = show_exceptions)
-
-                self.result.questions.append(result)
-
-                stop_grading = result.hard_fail
-
-        self.result.grading_end_time = autograder.util.timestamp.get()
-
-        return self.result
-
-    def _prepare_submission(self):
-        """
-        Prepare the submission in the input directory for grading.
-        The result of this is what will be passed to grade().
-        Child classes may leave this default behavior or override.
-
-        This implementation will check the prep_submission argument passed in the constructor.
-        If true the input directory will be prepared, otherwise None will be returned.
-        """
-
-        if (self._prep_submission):
-            return autograder.util.submission.prepare(self._input_dir)
-
-        return None
-
-class GradedAssignment(object):
+class GradedAssignment(edq.util.serial.DictConverter):
     """
     The result of an assignment being graded with a submission.
     """
 
-    def __init__(self, name = '',
-            questions = [],
-            grading_start_time = None, grading_end_time = None,
-            proxy_start_time = None, proxy_end_time = None,
-            prologue = None, epilogue = None,
-            **kwargs):
-        self.name = name
-        self.questions = questions
+    def __init__(self,
+            name: str,
+            questions: typing.Sequence[autograder.question.GradedQuestion],
+            message: typing.Union[str, None] = None,
+            prologue: typing.Union[str, None] = None,
+            epilogue: typing.Union[str, None] = None,
+            grading_start_time: typing.Union[edq.util.time.Timestamp, int, None] = None,
+            grading_end_time: typing.Union[edq.util.time.Timestamp, int, None] = None,
+            proxy_start_time: typing.Union[edq.util.time.Timestamp, int, None] = None,
+            proxy_end_time: typing.Union[edq.util.time.Timestamp, int, None] = None,
+            **kwargs: typing.Any) -> None:
+        self.name: str = name
+        """ The name of the assignment. """
 
-        self.prologue = prologue
-        self.epilogue = epilogue
+        self.questions: typing.List[autograder.question.GradedQuestion] = list(questions)
+        """ The result of grading for each question. """
 
-        self.grading_start_time = autograder.util.timestamp.MISSING_TIMESTAMP
-        if (grading_start_time is not None):
-            self.grading_start_time = autograder.util.timestamp.get(grading_start_time)
+        self.message: typing.Union[str, None] = prologue
+        """ Text to include with the grading result. """
 
-        self.grading_end_time = autograder.util.timestamp.MISSING_TIMESTAMP
-        if (grading_end_time is not None):
-            self.grading_end_time = autograder.util.timestamp.get(grading_end_time)
+        self.prologue: typing.Union[str, None] = prologue
+        """ Text to include before the grading result. """
 
-        self.proxy_start_time = None
-        if (proxy_start_time is not None):
-            self.proxy_start_time = autograder.util.timestamp.get(proxy_start_time)
+        self.epilogue: typing.Union[str, None] = epilogue
+        """ Text to include after the grading result. """
 
-        self.proxy_end_time = None
-        if (proxy_end_time is not None):
-            self.proxy_end_time = autograder.util.timestamp.get(proxy_end_time)
+        if (grading_start_time is None):
+            grading_start_time = edq.util.time.Timestamp()
 
-    def to_dict(self):
-        """
-        Convert to all simple structures that can be later converted to JSON.
-        """
+        self.grading_start_time: typing.Any = edq.util.time.Timestamp(grading_start_time)
+        """ When grading started. """
 
-        return {
-            'name': self.name,
-            'questions': [question.to_dict() for question in self.questions],
-            'grading_start_time': self.grading_start_time,
-            'grading_end_time': self.grading_end_time,
-            'proxy_start_time': self.proxy_start_time,
-            'proxy_end_time': self.proxy_end_time,
-        }
+        if (grading_end_time is None):
+            grading_end_time = edq.util.time.Timestamp()
 
-    def to_test_submission(self, options = {}):
+        self.grading_end_time: typing.Any = edq.util.time.Timestamp(grading_end_time)
+        """ When grading ended. """
+
+        if (proxy_start_time is None):
+            proxy_start_time = edq.util.time.Timestamp()
+
+        self.proxy_start_time: typing.Any = edq.util.time.Timestamp(proxy_start_time)
+        """ When proxy grading started. """
+
+        if (proxy_end_time is None):
+            proxy_end_time = edq.util.time.Timestamp()
+
+        self.proxy_end_time: typing.Any = edq.util.time.Timestamp(proxy_end_time)
+        """ When proxy grading ended. """
+
+    def to_test_submission(self, options: typing.Union[typing.Dict[str, typing.Any], None] = None) -> typing.Dict[str, typing.Any]:
         """
         Output a dict that can be used as a test submission.
         """
+
+        if (options is None):
+            options = {}
 
         results = self.to_dict()
 
@@ -178,7 +78,9 @@ class GradedAssignment(object):
         del results['proxy_start_time']
         del results['proxy_end_time']
 
-        for question in results['questions']:
+        questions = typing.cast(typing.List[typing.Dict[str, edq.util.serial.PODType]], results.get('questions', []))
+
+        for question in questions:
             del question['grading_start_time']
             del question['grading_end_time']
 
@@ -190,37 +92,21 @@ class GradedAssignment(object):
 
         return test_submission
 
-    @staticmethod
-    def from_dict(data):
-        """
-        Partner to to_dict().
-        """
-
-        data = dict(data)
-
-        if ('questions' in data):
-            data['questions'] = [
-                autograder.question.GradedQuestion(**question)
-                for question in data['questions']
-            ]
-
-        return GradedAssignment(**data)
-
-    def get_score(self):
+    def get_score(self) -> typing.Tuple[float, float]:
         """
         Return (total score, max score).
         """
 
-        total_score = 0
-        max_score = 0
+        total_score: float = 0
+        max_points: float = 0
 
         for question in self.questions:
             total_score += question.score
-            max_score += question.max_points
+            max_points += question.max_points
 
-        return (total_score, max_score)
+        return (total_score, max_points)
 
-    def report(self, prefix = ''):
+    def report(self, prefix: str = '', precision: int = 2) -> str:
         """
         Return a string representation of the grading for this assignment.
         """
@@ -228,68 +114,204 @@ class GradedAssignment(object):
         if ((prefix != '') and (not prefix.endswith(' '))):
             prefix += ' '
 
-        output = []
+        output: typing.List[str] = []
 
         output += self._format_logue(self.prologue, prefix)
 
         output += [
-            prefix + "Autograder transcript for assignment: %s." % (self.name),
-            prefix + "Grading started at %s and ended at %s." % (
-                autograder.util.timestamp.get(self.grading_start_time, pretty = True),
-                autograder.util.timestamp.get(self.grading_end_time, pretty = True))
+            prefix + f"Autograder transcript for assignment: {self.name}",
+            prefix + f"Grading started at {self.grading_start_time.pretty()} and ended at {self.grading_end_time.pretty()}.",
         ]
 
-        total_score = 0
-        max_score = 0
+        if ((self.message is not None) and (len(self.message) > 0)):
+            output.append(f"\n{self.message}\n")
+
+        total_score: float = 0
+        total_max_points: float = 0
 
         for question in self.questions:
             total_score += question.score
-            max_score += question.max_points
+            total_max_points += question.max_points
 
-            output.append(question.scoring_report(prefix = prefix))
+            output.append(question.scoring_report(prefix = prefix, precision = precision))
+
+        total_score_str = autograder.util.math.number_to_str(total_score, precision = precision)
+        total_max_points_str = autograder.util.math.number_to_str(total_max_points, precision = precision)
 
         output.append('')
-        output.append(prefix + "Total: %d / %d" % (total_score, max_score))
+        output.append(f"{prefix}Total: {total_score_str} / {total_max_points_str}")
 
         output += self._format_logue(self.epilogue, prefix)
 
         return "\n".join(output)
 
-    def _format_logue(self, text, prefix):
+    def _format_logue(self, text: typing.Union[str, None], prefix: str) -> typing.List[str]:
+        """ Format the output logue (prologe/epilogue). """
+
         if ((text is None) or (text == '')):
             return []
 
         lines = text.splitlines()
         return [prefix + line.rstrip() for line in lines]
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
         return self.equals(other)
 
-    def string(self, indent = None):
-        return json.dumps(self.to_dict(), indent = indent)
+    def equals(self, other: object, **kwargs: typing.Any) -> bool:
+        """ Check two graded assignments for equality. """
 
-    def __repr__(self):
-        return self.string()
-
-    def equals(self, other, **kwargs):
         if (not isinstance(other, GradedAssignment)):
             return False
 
         if ((self.name != other.name) or (len(self.questions) != len(other.questions))):
             return False
 
-        for i in range(len(self.questions)):
-            if (not self.questions[i].equals(other.questions[i], **kwargs)):
+        for (i, question) in enumerate(self.questions):
+            if (not question.equals(other.questions[i], **kwargs)):
                 return False
 
         return True
 
-def load_assignments(path):
+class Assignment:
     """
-    Recursively load all the assignments in a path (file or dir).
+    A collection of questions to be scored.
     """
 
-    module = autograder.code.sanitize_and_import_path(path)
+    def __init__(self,
+            name: typing.Union[str, None] = None,
+            questions: typing.Union[typing.Sequence[autograder.question.Question], None] = None,
+            input_dir: str = '.',
+            output_dir: str = '.',
+            work_dir: str = '.',
+            prep_submission: bool = True,
+            additional_data: typing.Union[typing.Dict[str, typing.Any], None] = None,
+            **kwargs: typing.Any) -> None:
+        if (name is None):
+            name = type(self).__name__
+
+        self.name: str = name
+        """
+        The display name for this assignment.
+        Defaults to the (unqualified) name of this class.
+        """
+
+        if (questions is None):
+            questions = []
+
+        self.questions = list(questions)
+        """ The questions for this assignment. """
+
+        self.input_dir: str = input_dir
+        """ The base directory that houses student inputs for this assignment. """
+
+        self.output_dir: str = output_dir
+        """
+        The base directory where output will be written for this assignment.
+        A successful grading should result in a `result.json` created in this directory.
+        """
+
+        self.work_dir: str = work_dir
+        """ The base directory that the grader is run in. """
+
+        self.prep_submission: bool = prep_submission
+        """ Whether or not to call self.prepare_submission() to prepare the input directory before grading. """
+
+        if (additional_data is None):
+            additional_data = {}
+
+        self.additional_data: typing.Dict[str, typing.Any] = additional_data
+        """ Additional data that can be passed to the grader. """
+
+        self.result: typing.Union[GradedAssignment, None] = None
+        """ The result of grading. """
+
+    def grade(self, **kwargs: typing.Any) -> GradedAssignment:
+        """ Grade this assignment. """
+
+        try:
+            return self._grade_submission(self._prepare_submission(), **kwargs)
+        except Exception:
+            now = edq.util.time.Timestamp.now()
+
+            questions = []
+            for question in self.questions:
+                questions.append(autograder.question.GradedQuestion(
+                    name = question.name,
+                    max_points = question.max_points,
+                    score = 0,
+                    message = "Submission could not be graded.",
+                    grading_start_time = now,
+                    grading_end_time = now))
+
+            epilogue = (f"\nSubmission could not be graded because of the following error:\n---\n{traceback.format_exc()}---")
+
+            return GradedAssignment(
+                name = self.name,
+                questions = questions,
+                grading_start_time = now,
+                grading_end_time = now,
+                epilogue = epilogue)
+
+    def _grade_submission(self,
+            submission: typing.Union[object, None],
+            show_exceptions: bool = False,
+            **kwargs: typing.Any) -> GradedAssignment:
+        """
+        Grade an assignment by grading all the questions.
+
+        The submission argument is the result of _prepare_submission().
+        """
+
+        self.result = GradedAssignment(name = self.name, questions = [])
+        self.result.grading_start_time = edq.util.time.Timestamp.now()
+
+        stop_grading = False
+        for question in self.questions:
+            if (stop_grading):
+                now = edq.util.time.Timestamp.now()
+
+                self.result.questions.append(autograder.question.GradedQuestion(
+                    name = question.name,
+                    max_points = question.max_points,
+                    score = 0,
+                    message = "Grading stopped because of a hard error, skipping question...",
+                    grading_start_time = now,
+                    grading_end_time = now,
+                    skipped = True))
+            else:
+                result = question.grade(submission,
+                    additional_data = self.additional_data,
+                    show_exceptions = show_exceptions)
+
+                self.result.questions.append(result)
+
+                stop_grading = result.hard_fail
+
+        self.result.grading_end_time = edq.util.time.Timestamp.now()
+
+        return self.result
+
+    def _prepare_submission(self) -> typing.Union[object, None]:
+        """
+        Prepare the submission in the input directory for grading.
+        The result of this is what will be passed to grade().
+        Child classes may leave this default behavior or override.
+
+        This implementation will check the prep_submission argument passed in the constructor.
+        If true the input directory will be prepared, otherwise None will be returned.
+        """
+
+        if (self.prep_submission):
+            return autograder.util.prepare_submission.prepare(self.input_dir)
+
+        return None
+
+def load_assignment_classes(path: str) -> typing.List[typing.Type[Assignment]]:
+    """
+    Recursively load all the assignment classes in a path (file or dir).
+    """
+
+    module = edq.util.code.sanitize_and_import_path(path)
     assignments = []
 
     for name in dir(module):
@@ -301,24 +323,23 @@ def load_assignments(path):
         if (obj == autograder.assignment.Assignment):
             continue
 
-        if (issubclass(obj, (autograder.assignment.Assignment,))):
+        if (issubclass(obj, autograder.assignment.Assignment)):
             assignments.append(obj)
 
     return assignments
 
-def fetch_assignment(path):
+def fetch_assignment_class(path: str) -> typing.Type[Assignment]:
     """
-    Recursively fetch a single assignment from a path.
+    Recursively fetch a single assignment class from a path.
     If exactly one assignment is not found, then raise an error.
     """
 
-    assignments = load_assignments(path)
+    assignments = load_assignment_classes(path)
 
     if (len(assignments) == 0):
-        raise ValueError(("Assignment file (%s) does not contain any instances of"
-            + " autograder.assignment.Assignment.") % (path))
-    elif (len(assignments) > 1):
-        raise ValueError(("Assignment file (%s) contains more than one (%d) instances of"
-            + " autograder.assignment.Assignment.") % (path, len(assignments)))
+        raise ValueError(f"Assignment file ('{path}') does not contain any instances of autograder.assignment.Assignment.")
+
+    if (len(assignments) > 1):
+        raise ValueError(f"Assignment file ('{path}') contains more than one ({len(assignments)}) instances of autograder.assignment.Assignment.")
 
     return assignments[0]

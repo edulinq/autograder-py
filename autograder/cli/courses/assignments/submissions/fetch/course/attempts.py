@@ -1,36 +1,44 @@
+"""
+Get all recent submissions and grading information for this assignment.
+"""
+
+import argparse
 import sys
 
 import autograder.api.courses.assignments.submissions.fetch.course.attempts
-import autograder.cli.courses.assignments.submissions.common
+import autograder.cli.parser
+import autograder.util.grading
 
-def run(arguments):
-    result = autograder.api.courses.assignments.submissions.fetch.course.attempts.send(arguments,
-            exit_on_error = True)
+def run_cli(args: argparse.Namespace) -> int:
+    """ Run the CLI. """
+
+    config = args._config_info.application_config
+
+    grading_results = autograder.api.courses.assignments.submissions.fetch.course.attempts.send(config, exit_on_error = True)
 
     count = 0
-    for (email, grading_result) in result['grading-results'].items():
+    for grading_result in grading_results.values():
         if (grading_result is None):
             continue
 
-        autograder.cli.courses.assignments.submissions.common.output_grading_result(grading_result,
-                arguments.out_dir)
+        autograder.util.grading.output_grading_result(grading_result, base_dir = config.out_dir)
         count += 1
 
-    print("Wrote %d submissions to '%s'." % (count, arguments.out_dir))
+    print(f"Wrote {count} attempts to '{config.out_dir}'.")
 
     return 0
 
-def main():
-    return run(_get_parser().parse_args())
+def main() -> int:
+    """ Get a parser, parse the args, and call run. """
 
-def _get_parser():
-    parser = autograder.api.courses.assignments.submissions.fetch.course.attempts._get_parser()
+    return run_cli(_get_parser().parse_args())
 
-    parser.add_argument('-o', '--out-dir', dest = 'out_dir',
-        action = 'store', type = str, default = '.',
-        help = ('Where to create a new directory that contains the submission information.'
-            + ' Any existing subdirectories will be removed.'
-            + ' Defaults to the current directory.'))
+def _get_parser() -> argparse.ArgumentParser:
+    """ Get a parser for this operation. """
+
+    parser = autograder.cli.parser.get_parser(
+        __doc__.strip(),
+        autograder.api.courses.assignments.submissions.fetch.course.attempts.API_PARAMS)
 
     return parser
 

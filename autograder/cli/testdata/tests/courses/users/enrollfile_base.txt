@@ -1,0 +1,28 @@
+{
+    "cli": "autograder.cli.courses.users.enroll-file",
+    "arguments": [
+        '--course', 'course101',
+        '--user', 'server-admin@test.edulinq.org',
+        '--pass', 'server-admin',
+        '__DATA_DIR__(enrollfile_base.txt)',
+    ],
+}
+---
+{
+    "results": [
+        {
+            "added": true,
+            "email": "ZZZ@test.edulinq.org",
+            "enrolled": [
+                "course101"
+            ]
+        },
+        {
+            "email": "server-user@test.edulinq.org",
+            "enrolled": [
+                "course101"
+            ],
+            "modified": true
+        }
+    ]
+}

@@ -1,31 +1,44 @@
+"""
+List the users on the server.
+"""
+
+import argparse
 import sys
 
-import autograder.api.config
-import autograder.api.users.list
-import autograder.cli.common
-import autograder.cli.config
+import lms.model.base
 
-def run(arguments):
-    result = autograder.api.users.list.send(arguments, exit_on_error = True)
-    autograder.cli.common.list_users(result['users'], False, table = arguments.table,
-        normalize = arguments.normalize)
+import autograder.api.users.list
+import autograder.cli.parser
+
+def run_cli(args: argparse.Namespace) -> int:
+    """ Run the CLI. """
+
+    config = args._config_info.application_config
+
+    users = autograder.api.users.list.send(config, exit_on_error = True)
+
+    output = lms.model.base.base_list_to_output_format(users, config.output_format,
+            skip_headers = args.skip_headers,
+            pretty_headers = args.pretty_headers,
+            include_extra_fields = args.include_extra_fields,
+    )
+    print(output)
+
     return 0
 
-def main():
-    return run(_get_parser().parse_args())
+def main() -> int:
+    """ Get a parser, parse the args, and call run. """
 
-def _get_parser():
-    parser = autograder.api.users.list._get_parser()
+    return run_cli(_get_parser().parse_args())
 
-    autograder.cli.config.add_table_argument(parser)
+def _get_parser() -> argparse.ArgumentParser:
+    """ Get a parser for this operation. """
 
-    parser.add_argument('--normalize', dest = 'normalize',
-        action = 'store_true', default = False,
-        help = 'Normalize the TSV table to include at most one course enrollment per line, users'
-            + ' enrolled in multiple courses will appear multiple times. Each line contains the'
-            + ' following columns: [email, name, role, course-id, course-name, course-role]. If'
-            + ' a user is not enrolled in any courses, they will appear once with empty course'
-            + ' information. Only applies if --table is set (default: %(default)s).')
+    parser = autograder.cli.parser.get_parser(
+        __doc__.strip(),
+        autograder.api.users.list.API_PARAMS,
+        include_output_format = True,
+    )
 
     return parser
 

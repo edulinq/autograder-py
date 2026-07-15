@@ -1,0 +1,8 @@
+{
+    "cli": "autograder.cli.util.extract-code",
+    "arguments": [
+        '__DATA_DIR__(../../../testdata/code/simple.ipynb)',
+    ],
+}
+---
+SOME_CONSTANT = 1

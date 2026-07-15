@@ -1,24 +1,38 @@
+"""
+Get all submission attempts made by a user along with all grading information.
+"""
+
+import typing
+
 import autograder.api.common
 import autograder.api.config
+import autograder.assignment
+import autograder.model.config
 
-API_ENDPOINT = 'courses/assignments/submissions/fetch/user/attempts'
-API_PARAMS = [
-    autograder.api.config.PARAM_COURSE_ID,
+API_ENDPOINT: str = 'courses/assignments/submissions/fetch/user/attempts'
+API_WRITE: bool = False
+API_PARAMS: typing.List[autograder.api.config.APIParam] = [
+    autograder.api.config.PARAM_SERVER,
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
-    autograder.api.config.PARAM_ASSIGNMENT_ID,
+
+    autograder.api.config.PARAM_COURSE,
+    autograder.api.config.PARAM_ASSIGNMENT,
 
     autograder.api.config.PARAM_TARGET_EMAIL_OR_SELF,
+
+    autograder.api.config.PARAM_OUT_DIR,
 ]
 
-DESCRIPTION = 'Get all submission attempts made by a user along with all grading information.'
+def send(config: autograder.model.config.Config, **kwargs: typing.Any) -> typing.Tuple[bool, typing.List[typing.Dict[str, typing.Any]]]:
+    """
+    Send a request to the autograder.
+    Returns: (found user, attempts).
+    """
 
-def send(arguments, **kwargs):
-    return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT, **kwargs)
+    response = autograder.api.common.make_api_request(API_ENDPOINT, config, API_PARAMS, write = API_WRITE, **kwargs)
 
-def _get_parser():
-    parser = autograder.api.config.get_argument_parser(
-        description = DESCRIPTION,
-        params = API_PARAMS)
+    if (not response['found-user']):
+        return False, []
 
-    return parser
+    return True, response['grading-results']

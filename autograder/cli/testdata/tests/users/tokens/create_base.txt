@@ -1,0 +1,13 @@
+{
+    "cli": "autograder.cli.users.tokens.create",
+    "stdout_assertion_func": "autograder.testing.asserts.equals_clean_tokens",
+    "arguments": [
+        '--user', 'server-user@test.edulinq.org',
+        '--pass', 'server-user',
+    ],
+}
+---
+Token ID: test-token-id
+Token Text: test-token-cleartext
+
+Copy down the token text and keep it safe, this will be the only time it is ever shown.

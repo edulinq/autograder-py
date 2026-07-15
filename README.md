@@ -1,10 +1,12 @@
-# Python Interface for Autograder
+# Python Interface for Lynx Grader
 
-The canonical Python interface for the autograding server.
+The canonical Python interface for EduLinq's [Lynx Grader server](https://github.com/edulinq/autograder-server).
 
 ## Quick Links
 
  - [Resources](#resources)
+ - [API Reference](https://edulinq.github.io/autograder-py)
+ - [CLI Reference](https://edulinq.github.io/autograder-py/docs/latest/autograder/cli.html)
  - [Installation / Requirements](#installation--requirements)
  - [Quickstart](#quickstart)
  - [The CLI](#the-cli)
@@ -23,13 +25,15 @@ The canonical Python interface for the autograding server.
 
 ## Resources
 
+ - [API Reference](https://edulinq.github.io/autograder-py)
+ - [CLI Reference](https://edulinq.github.io/autograder-py/docs/latest/autograder/cli.html)
  - [Autograder Server](https://github.com/edulinq/autograder-server)
  - [Autograder Python Interface (this repo)](https://github.com/edulinq/autograder-py)
  - [Autograder Sample Course](https://github.com/edulinq/cse-cracks-course)
 
 ## Installation / Requirements
 
-This project requires [Python](https://www.python.org/) >= 3.8.
+This project requires [Python](https://www.python.org/) >= 3.9.
 
 The project can be installed from PyPi with:
 ```
@@ -40,6 +44,20 @@ Standard Python requirements are listed in `pyproject.toml`.
 The project and Python dependencies can be installed from source with:
 ```
 pip3 install .
+```
+
+### Cloning
+
+This repository includes submodules.
+To fetch these submodules on clone, add the `--recurse-submodules` flag.
+For example:
+```sh
+git clone --recurse-submodules git@github.com:edulinq/autograder-py.git
+```
+
+To fetch the submodules after cloning, you can use:
+```sh
+git submodule update --init --recursive
 ```
 
 ## Quickstart
@@ -156,18 +174,21 @@ All these options can be set on the command line when invoking on of these tools
 python3 -m autograder.run.submit --user sammy@ucsc.edu --pass pass123 my_file.py
 ```
 However, it will generally be more convenient to hold these common options in a more reusable location.
+There are several files where you can place your options, the three main ones are:
+ 1. Local Config -- A file named `config.json` that lives in the directory you are running the command in.
+    Useful for setting assignment-specific options (like an assignment name/id).
+ 2. Project Config -- A file named `autograder.json` that lives in your project/repo root directory.
+    Useful for course-specific options (like your course name/id).
+ 3. Global Config -- A file named `autograder.json` that lives somewhere in your user's home directory.
+    Useful for options that you share between courses (like your server, username, and password).
 
-There are several other places that config options can be specified,
-with each later location overriding any earlier options.
-Here are the places options can be specified in the order that they are checked:
- 1. `./config.json` -- If a `config.json` exists in the current directory, it is loaded.
- 2. `<platform-specific user config location>/autograder.json` -- A directory which is considered the "proper" place to store user-related config for the platform you are using (according to [platformdirs](https://github.com/platformdirs/platformdirs)). Use `--help` to see the exact place in your specific case. This is a great place to store login credentials.
- 3. Files specified by `--config` -- These files are loaded in the order they appear on the command-line.
- 4. Bare Options -- Options specified directly like `--user` or `--pass`. These will override all previous options.
+To see the exact location of each file, the order that options are loaded,  and details about it,
+run any command with `--help` and see the "CONFIGURATION" section:
+```
+python3 -m autograder.run.auth --help
+```
 
-A base config file (`config.json`) is often distributed with assignments that contains most the settings you need.
-You can modify this config to include your settings and use that for setting all your configuration options.
-A `config.json` file may look something like:
+A config file may look something like:
 ```json
 {
     "course": "my-course",
@@ -176,25 +197,6 @@ A `config.json` file may look something like:
     "user": "user@edulinq.org",
     "pass": "1234567890"
 }
-```
-
-Using the default config file (`config.json`):
-```sh
-# `./config.json` will be looked for and loaded if it exists.
-python3 -m autograder.run.submit my_file.py
-```
-
-Using a custom config file (`my_config.json`):
-```sh
-# `./my_config.json` will be used.
-python3 -m autograder.run.submit --config my_config.json my_file.py
-```
-
-You can also use multiple config files (latter files will override settings from previous ones).
-This is useful if you want to use the config files provided with assignments, but keep your user credentials in a more secure location:
-```sh
-# Use the default config file (config.json), but then override any settings in there with another config file:
-python3 -m autograder.run.submit --config config.json --config ~/.secrets/autograder.json my_file.py
 ```
 
 For brevity, all future commands in this document will assume that all standard config options are in the default
@@ -366,11 +368,17 @@ Below is a list of commands you may want to look into.
 The help prompt of each command (accessible using the `--help` option)
 will give a more in-depth description of the command and available options.
 
- - `autograder.lms.upload-scores` -- Upload scores for any LMS assignment straight to your LMS. Very useful for avoiding a clunky LMS interface.
  - `autograder.cli.courses.assignments.submissions.fetch.course.scores` -- Get all the most recent scores for an assignment.
  - `autograder.cli.courses.assignments.submissions.fetch.user.attempt` -- Get a student's submission (code) and grading output.
  - `autograder.cli.courses.assignments.submissions.fetch.course.attempts` -- Get all the most recent submissions (code and grading output) for an assignment.
  - `autograder.cli.courses.users.list` -- List all the users in a course.
+
+#### LMS Commands
+
+To interact directly with your LMS (e.g. Blackboard, Canvas, Moodle),
+we recommend the [LMS Toolkit](https://github.com/edulinq/lms-toolkit).
+This library provides a unified CLI and Python interface for interacting with different LMSs.
+This is what the autograder uses when connecting with LMSs.
 
 #### Proxy Submissions
 

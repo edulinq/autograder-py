@@ -1,9 +1,0 @@
-{
-    "cli": "autograder.run.auth",
-    "arguments": [
-        "--user", "ZZZ"
-    ],
-    "exit-status": 1
-}
----
-Authentication failed.

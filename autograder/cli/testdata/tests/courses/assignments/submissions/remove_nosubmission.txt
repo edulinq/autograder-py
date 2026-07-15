@@ -1,0 +1,11 @@
+{
+    "cli": "autograder.cli.courses.assignments.submissions.remove",
+    "arguments": [
+        '--user', 'server-admin@test.edulinq.org',
+        '--pass', 'server-admin',
+        '--course', 'course101',
+        '--assignment', 'hw0',
+    ],
+}
+---
+No matching submission found.

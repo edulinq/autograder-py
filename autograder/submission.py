@@ -1,37 +1,55 @@
 import glob
-import json
 import os
 import subprocess
 import sys
 import traceback
+import typing
+
+import edq.util.dirent
+import edq.util.json
+import edq.util.serial
+import edq.util.time
 
 import autograder.assignment
 import autograder.fileop
 import autograder.filespec
-import autograder.util.dirent
-import autograder.util.timestamp
 
-TEST_SUBMISSION_FILENAME = 'test-submission.json'
-GRADER_FILENAME = 'grader.py'
-GRADING_RESULT_FILENAME = 'result.json'
+TEST_SUBMISSION_FILENAME: str = 'test-submission.json'
+GRADER_FILENAME: str = 'grader.py'
+GRADING_RESULT_FILENAME: str = 'result.json'
 
-CONFIG_KEY_STATIC_FILES = 'static-files'
-CONFIG_KEY_PRE_STATIC_OPS = 'pre-static-file-ops'
-CONFIG_KEY_POST_STATIC_OPS = 'post-static-file-ops'
-CONFIG_KEY_POST_SUB_OPS = 'post-submission-file-ops'
+CONFIG_KEY_STATIC_FILES: str = 'static-files'
+CONFIG_KEY_PRE_STATIC_OPS: str = 'pre-static-file-ops'
+CONFIG_KEY_POST_STATIC_OPS: str = 'post-static-file-ops'
+CONFIG_KEY_POST_SUB_OPS: str = 'post-submission-file-ops'
 
-INPUT_DIRNAME = 'input'
-OUTPUT_DIRNAME = 'output'
-WORK_DIRNAME = 'work'
+INPUT_DIRNAME: str = 'input'
+OUTPUT_DIRNAME: str = 'output'
+WORK_DIRNAME: str = 'work'
 
-def copy_assignment_files(source_dir, dest_dir, op_dir, files,
-        only_contents = False, pre_ops = [], post_ops = []):
+def copy_assignment_files(
+        source_dir: str,
+        dest_dir: str,
+        op_dir: str,
+        files: typing.List[str],
+        only_contents: bool = False,
+        pre_ops: typing.Union[typing.List[autograder.fileop.FileOp], None] = None,
+        post_ops: typing.Union[typing.List[autograder.fileop.FileOp], None] = None,
+        ) -> None:
     """
-    Copy over assignment files:
+    Copy over assignment files.
+
+    Full procedure::
     1) Do pre-copy operations.
     2) Copy.
     3) Do post-copy operations.
     """
+
+    if (pre_ops is None):
+        pre_ops = []
+
+    if (post_ops is None):
+        post_ops = []
 
     # Do pre operations.
     autograder.fileop.exec_file_operations(pre_ops, op_dir)
@@ -44,14 +62,18 @@ def copy_assignment_files(source_dir, dest_dir, op_dir, files,
     # Do post operations.
     autograder.fileop.exec_file_operations(post_ops, op_dir)
 
-def fetch_test_submissions(path):
+def fetch_test_submissions(path: str) -> typing.List[str]:
+    """
+    Fetch all test submission files (named TEST_SUBMISSION_FILENAME) within the given path,
+    or the path itself if it is already pointing to a test submission.
+    """
+
     path = os.path.abspath(path)
     test_submissions = []
 
     if (os.path.isfile(path)):
         if (os.path.basename(path) != TEST_SUBMISSION_FILENAME):
-            raise ValueError("Passed in submission is not named like a test submission ('%s')." % (
-                TEST_SUBMISSION_FILENAME))
+            raise ValueError(f"Passed in submission is not named like a test submission ('{TEST_SUBMISSION_FILENAME}').")
 
         test_submissions.append(path)
     else:
@@ -60,10 +82,16 @@ def fetch_test_submissions(path):
 
     return test_submissions
 
-def prep_grading_dir(assignment_config_path, submission_dir, grading_dir = None,
-        skip_static = False, debug = False):
+def prep_grading_dir(
+        assignment_config_path: str,
+        submission_dir: str,
+        grading_dir: typing.Union[str, None] = None,
+        skip_static: bool = False,
+        ) -> str:
     """
-    Create a directory for grading a submission.
+    Create and return a directory for grading a submission.
+
+    Procedure:
     1) If the base out dir is None, create a temp dir.
     2) Create the three core directories (input/output/work) in the base dir.
     3) Copy over the static files (includng pre/post operations).
@@ -72,12 +100,11 @@ def prep_grading_dir(assignment_config_path, submission_dir, grading_dir = None,
     """
 
     if (grading_dir is None):
-        grading_dir = autograder.util.dirent.get_temp_path(prefix = 'autograder-submission-',
-                rm = (not debug))
+        grading_dir = edq.util.dirent.get_temp_path(prefix = 'ag-py-submission-')
 
-    os.makedirs(grading_dir, exist_ok = True)
+    edq.util.dirent.mkdir(grading_dir)
 
-    input_dir, output_dir, work_dir = make_core_dirs(grading_dir)
+    input_dir, _, work_dir = make_core_dirs(grading_dir)
 
     # Load the assignment config.
 
@@ -85,8 +112,7 @@ def prep_grading_dir(assignment_config_path, submission_dir, grading_dir = None,
     assignment_base_dir = os.path.dirname(assignment_config_path)
 
     try:
-        with open(assignment_config_path, 'r') as file:
-            assignment_config = json.load(file)
+        assignment_config = edq.util.json.load_path(assignment_config_path)
     except Exception as ex:
         raise ValueError("Failed to load assignment config: " + assignment_config_path) from ex
 
@@ -105,29 +131,30 @@ def prep_grading_dir(assignment_config_path, submission_dir, grading_dir = None,
 
     return grading_dir
 
-def make_core_dirs(base_dir):
+def make_core_dirs(base_dir: str) -> typing.Tuple[str, str, str]:
     """
-    Make the three core directories.
+    Create and return the three core grading directories (input, output, work).
     """
 
     input_dir = os.path.join(base_dir, INPUT_DIRNAME)
-    os.makedirs(input_dir, exist_ok = True)
+    edq.util.dirent.mkdir(input_dir)
 
     output_dir = os.path.join(base_dir, OUTPUT_DIRNAME)
-    os.makedirs(output_dir, exist_ok = True)
+    edq.util.dirent.mkdir(output_dir)
 
     work_dir = os.path.join(base_dir, WORK_DIRNAME)
-    os.makedirs(work_dir, exist_ok = True)
+    edq.util.dirent.mkdir(work_dir)
 
     return input_dir, output_dir, work_dir
 
-def run_test_submission(assignment_config_path, submission_config_path, debug = False):
-    print("Testing assignment '%s' and submission '%s'." % (assignment_config_path,
-        submission_config_path))
+def run_test_submission(assignment_config_path: str, submission_config_path: str) -> bool:
+    """ Run a test submission and return if the output matches the expected submission output. """
 
-    grading_dir = prep_grading_dir(assignment_config_path,
-        os.path.dirname(submission_config_path), debug = debug)
+    print(f"Testing assignment '{assignment_config_path}' and submission '{submission_config_path}'.")
 
+    grading_dir = prep_grading_dir(assignment_config_path, os.path.dirname(submission_config_path))
+
+    old_module_keys = set()
     try:
         # Keep track of new top-level keys in sys.modules (imports) after the submission runs.
         # This is to prevent any import of submission code that gets cached.
@@ -152,9 +179,21 @@ def run_test_submission(assignment_config_path, submission_config_path, debug = 
 
     return compare_test_submission(submission_config_path, actual_result)
 
-def compare_test_submission(test_config_path, actual_result, print_result = True):
-    with open(test_config_path, 'r') as file:
-        test_config = json.load(file)
+def compare_test_submission(
+        test_config_path: str,
+        actual_result: typing.Union[autograder.assignment.GradedAssignment, None],
+        print_result: bool = True,
+        ) -> bool:
+    """
+    Compare a grading result against the expected output of a test submission.
+    Return true if the two match.
+    """
+
+    if (actual_result is None):
+        print(f"Submission is null and cannot match expected output: '{test_config_path}'.")
+        return False
+
+    test_config = edq.util.json.load_path(test_config_path)
 
     expected_result = autograder.assignment.GradedAssignment.from_dict(test_config['result'])
     ignore_messages = test_config.get('ignore_messages', False)
@@ -162,7 +201,7 @@ def compare_test_submission(test_config_path, actual_result, print_result = True
     match = actual_result.equals(expected_result, ignore_messages = ignore_messages)
 
     if ((not match) and print_result):
-        print("Submission does not match expected output: '%s'." % (test_config_path))
+        print(f"Submission does not match expected output: '{test_config_path}'.")
         print('Expected:')
         print(expected_result.report(prefix = '    '))
         print('---')
@@ -172,42 +211,61 @@ def compare_test_submission(test_config_path, actual_result, print_result = True
 
     return match
 
-def run_submission(grading_dir, assignment_config_path = None, grader_path = None):
+def run_submission(
+        grading_dir: str,
+        assignment_config_path: typing.Union[str, None] = None,
+        grader_path: typing.Union[str, None] = None,
+        ) -> typing.Union[autograder.assignment.GradedAssignment, None]:
+    """
+    Run a submission from a pre-populated grading directory and return the result.
+    The grader path (or default grader path) will be checked first for a Python grader (GRADER_FILENAME),
+    which will be run if it exists.
+    Otherwise, the assignment config will be checked for the grader.
+    """
+
     if (grader_path is None):
         grader_path = os.path.join(grading_dir, WORK_DIRNAME, GRADER_FILENAME)
 
     if (os.path.exists(grader_path)):
         return run_python_grader(grader_path, grading_dir)
 
+    if (assignment_config_path is None):
+        raise ValueError("No assignment config path has been supplied for running a grader.")
+
     return run_external_grader(assignment_config_path, grading_dir)
 
-def run_python_grader(grader_path, grading_dir):
+def run_python_grader(grader_path: str, grading_dir: str) -> typing.Union[autograder.assignment.GradedAssignment, None]:
+    """
+    Run a standard Python-based grader.
+    Returns None on grading failure.
+    """
+
     input_dir = os.path.join(grading_dir, INPUT_DIRNAME)
     output_dir = os.path.join(grading_dir, OUTPUT_DIRNAME)
     work_dir = os.path.join(grading_dir, WORK_DIRNAME)
 
-    assignment_class = autograder.assignment.fetch_assignment(grader_path)
+    assignment_class = autograder.assignment.fetch_assignment_class(grader_path)
     if (assignment_class is None):
-        print("Failed to fetch assignment class from '%s'." % (grader_path))
+        print("Failed to fetch assignment class from '{grader_path}'.")
         return None
 
     try:
         assignment = assignment_class(input_dir = input_dir, output_dir = output_dir,
                 work_dir = work_dir)
         return assignment.grade()
-    except Exception as ex:
-        print("Failed to run assignment (%s) on submission '%s': '%s'." % (
-            assignment_class.__name__, input_dir, ex))
+    except Exception:
+        print("Failed to run assignment ('{assignment_class.__name__}') on submission '{input_dir}': '{ex}'.")
         traceback.print_exc()
         return None
 
-def run_external_grader(assignment_config_path, grading_dir):
+def run_external_grader(assignment_config_path: str, grading_dir: str) -> autograder.assignment.GradedAssignment:
+    """ Run a grader that is not a standard Python-based grader. """
+
     work_dir = os.path.join(grading_dir, WORK_DIRNAME)
     output_dir = os.path.join(grading_dir, OUTPUT_DIRNAME)
 
     try:
-        with open(assignment_config_path, 'r') as file:
-            assignment_config = json.load(file)
+        assignment_config = edq.util.json.load_path(assignment_config_path)
     except Exception as ex:
         raise ValueError("Failed to load assignment config: " + assignment_config_path) from ex
 
@@ -220,75 +278,48 @@ def run_external_grader(assignment_config_path, grading_dir):
 
     out_path = os.path.join(output_dir, GRADING_RESULT_FILENAME)
     if (not os.path.isfile(out_path)):
-        raise ValueError("Could not find result after external grader ran: '%s'." % (out_path))
+        raise ValueError(f"Could not find result after external grader ran: '{out_path}'.")
 
-    try:
-        with open(out_path, 'r') as file:
-            result = json.load(file)
-    except Exception as ex:
-        raise ValueError("Failed to grading result: " + out_path) from ex
+    return autograder.assignment.GradedAssignment.from_path(out_path)
 
-    return autograder.assignment.GradedAssignment.from_dict(result)
-
-class SubmissionSummary(object):
+class SubmissionSummary(edq.util.serial.DictConverter):
     """
     A summary of a grading submission.
     """
 
     def __init__(self,
-            id = '',
-            max_points = 0, score = 0,
-            message = '',
-            grading_start_time = None,
-            **kwargs):
-        self.id = id
+            id: str = '',
+            max_points: float = 0,
+            score: float = 0,
+            message: str = '',
+            grading_start_time: typing.Union[edq.util.time.Timestamp, int, None] = None,
+            **kwargs: typing.Any):
+        self.id: str = id
+        """ An identifier for this submission. """
 
-        self.max_points = max_points
-        self.score = score
+        self.max_points: float = max_points
+        """ The maximum number of points possible for this assignment (excluding extra credit). """
 
-        self.message = message
+        self.score: float = score
+        """ The score earned for this submission. """
 
-        self.grading_start_time = autograder.util.timestamp.MISSING_TIMESTAMP
-        if (grading_start_time is not None):
-            self.grading_start_time = autograder.util.timestamp.get(grading_start_time)
+        self.message: str = message
+        """ A message/feedback for the student. """
 
-    def to_dict(self):
-        """
-        Convert to all simple structures that can be later converted to JSON.
-        """
+        if (grading_start_time is None):
+            grading_start_time = edq.util.time.Timestamp()
 
-        return {
-            'id': self.id,
-            'max_points': self.max_points,
-            'score': self.score,
-            'message': self.message,
-            'grading_start_time': self.grading_start_time,
-        }
+        self.grading_start_time: typing.Any = edq.util.time.Timestamp(grading_start_time)
+        """ When grading started. """
 
-    @staticmethod
-    def from_dict(data):
-        """
-        Partner to to_dict().
-        """
+    def short_id(self) -> str:
+        """ Get the short ID for this submission. """
 
-        return SubmissionSummary(**data)
-
-    def short_id(self):
         return self.id.split('::')[-1]
 
-    def pretty_time(self):
-        return autograder.util.timestamp.get(self.grading_start_time, pretty = True)
-
-    def __repr__(self):
-        """
-        Get a string that represents the summary.
-        """
-
+    def __repr__(self) -> str:
         message = '.'
         if ((self.message is not None) and (self.message != '')):
-            message = ", Message: '%s'." % (self.message)
+            message = f", Message: '{self.message}'."
 
-        return "Submission ID: %s, Score: %s / %s, Time: %s%s" % (
-            self.short_id(), self.score, self.max_points,
-            self.pretty_time(),
-            message)
+        return f"Submission ID: {self.short_id()}, Score: {self.score} / {self.max_points}, Time: {self.grading_start_time.pretty()}{message}"

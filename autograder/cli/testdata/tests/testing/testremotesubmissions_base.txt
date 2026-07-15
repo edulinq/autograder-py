@@ -1,0 +1,15 @@
+{
+    "cli": "autograder.cli.testing.test-remote-submissions",
+    "platform_skip": "win",
+    "arguments": [
+        '--user', 'server-admin@test.edulinq.org',
+        '--pass', 'server-admin',
+        '--course', 'course-languages',
+        '--assignment', 'bash',
+        '__DATA_DIR__(../../../../testdata/autograder-testdata/autograder-server/testdata/course-languages/bash/test-submissions)',
+    ],
+}
+---
+Autograder failed to grade the submission.
+Encountered 1 error(s) while testing 3 submissions.
+Faiure

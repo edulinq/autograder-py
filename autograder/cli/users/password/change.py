@@ -1,73 +1,36 @@
-import getpass
+"""
+Change your password to the one provided.
+"""
+
+import argparse
 import sys
 
-import autograder.api.config
+import edq.util.json
+
 import autograder.api.users.password.change
+import autograder.cli.parser
 
-def run(arguments):
-    arguments = vars(arguments)
+def run_cli(args: argparse.Namespace) -> int:
+    """ Run the CLI. """
 
-    if (arguments.get(autograder.api.config.PARAM_NEW_PASS.key, None) is None):
-        arguments[autograder.api.config.PARAM_NEW_PASS.key] = _get_pass(arguments['stdin'])
+    config = args._config_info.application_config
 
-    result = autograder.api.users.password.change.send(arguments, exit_on_error = True)
+    result = autograder.api.users.password.change.send(config, exit_on_error = True)
+    print(edq.util.json.dumps(result, indent = 4))
 
-    if (result['duplicate']):
-        print("Your new password must be different from your previous password.")
-        return 1
-
-    if (not result['success']):
-        print("Your password was not changed.")
-        return 2
-
-    print("You have successfully changed your password.")
     return 0
 
-def _get_pass(stdin):
-    # Get the password from stdout without any prompt or confirmation.
-    if (stdin):
-        new_pass = ''
-        while (len(new_pass) == 0):
-            new_pass = sys.stdin.readline().strip()
-        return new_pass
+def main() -> int:
+    """ Get a parser, parse the args, and call run. """
 
-    # Use a prompt and confirmation.
-    new_pass = ''
-    confirmation = ''
+    return run_cli(_get_parser().parse_args())
 
-    while ((len(new_pass) == 0) or (new_pass != confirmation)):
-        new_pass = ''
-        while (len(new_pass) == 0):
-            new_pass = getpass.getpass('Password: ').strip()
+def _get_parser() -> argparse.ArgumentParser:
+    """ Get a parser for this operation. """
 
-        confirmation = ''
-        while (len(confirmation) == 0):
-            confirmation = getpass.getpass('Repeat Password: ').strip()
-
-        if (new_pass != confirmation):
-            print("Passwords do not match, try again.")
-
-    return new_pass
-
-def main():
-    return run(_get_parser().parse_args())
-
-def _get_parser():
-    parser = autograder.api.users.password.change._get_parser()
-
-    addendum = ('If no password is supplied on the command line,'
-        + ' then you will be prompted for the password and confirmation.'
-        + ' Use `-s`/`--stdin` to suppress the prompt (and confirmation),'
-        + ' and just read the password from stdin.'
-        + ' Space will be stripped off of password read through stdin'
-        + ' (with or without `--stdin`.'
-        + ' Empty passwords are not allowed.')
-
-    parser.description += "\n\n" + addendum
-
-    parser.add_argument('-s', '--stdin', dest = 'stdin',
-        action = 'store_true', default = False,
-        help = 'Suppress normal output and read the password from stdin (default: %(default)s)')
+    parser = autograder.cli.parser.get_parser(
+        __doc__.strip(),
+        autograder.api.users.password.change.API_PARAMS)
 
     return parser
 

@@ -1,0 +1,24 @@
+{
+    "cli": "autograder.cli.logs.query",
+    "arguments": [
+        '--user', 'server-admin@test.edulinq.org',
+        '--pass', 'server-admin',
+        '--level', 'TRACE',
+        '--config', 'query_use_testing_data=true',
+        '--format', 'table',
+    ],
+}
+---
+timestamp	level	message	error	course	assignment	user
+100	TRACE	Trace Course Log		course101	hw0	course-other@test.edulinq.org
+150	TRACE	Trace Server Log				server-user@test.edulinq.org
+200	DEBUG	Debug Course Log		course101	hw0	course-student@test.edulinq.org
+250	DEBUG	Debug Server Log				server-creator@test.edulinq.org
+300	INFO	Info Course Log		course101	hw0	course-grader@test.edulinq.org
+350	INFO	Info Server Log				server-admin@test.edulinq.org
+400	WARN	Warn Course Log	Course Warning	course101	hw0	course-admin@test.edulinq.org
+450	WARN	Warn Server Log	Server Warning			server-owner@test.edulinq.org
+500	ERROR	Error Course Log	Course Error	course101		course-owner@test.edulinq.org
+550	ERROR	Error Server Log	Server Error			
+600	FATAL	Fatal Course Log		course101		
+650	FATAL	Fatal Server Log				

@@ -1,0 +1,14 @@
+{
+    "cli": "autograder.cli.stats.query",
+    "arguments": [
+        '--user', 'server-admin@test.edulinq.org',
+        '--pass', 'server-admin',
+        '--metric-type', 'cpu-usage',
+        '--config', 'query_use_testing_data=true',
+        '--format', 'table',
+    ],
+}
+---
+timestamp	type	value
+1800	cpu-usage	5
+2200	cpu-usage	10

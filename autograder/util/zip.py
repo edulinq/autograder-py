@@ -1,9 +1,10 @@
 import os
 import shutil
+import typing
 
-import autograder.util.dirent
+import edq.util.dirent
 
-def archive_dir(path, **kwargs):
+def archive_dir(path: str, **kwargs: typing.Any) -> str:
     """
     Create an archive of the given dir in a temp directory,
     and return the path to the created archive.
@@ -11,10 +12,9 @@ def archive_dir(path, **kwargs):
     """
 
     if (not os.path.isdir(path)):
-        raise ValueError("Target archive path does not exist or is not a dir: '%s'." % (path))
+        raise ValueError(f"Target archive path does not exist or is not a dir: '{path}'.")
 
-    temp_dir = autograder.util.dirent.get_temp_path(**kwargs)
-    os.makedirs(temp_dir, exist_ok = True)
+    temp_dir = edq.util.dirent.get_temp_dir(**kwargs)
 
     base_name = os.path.basename(path)
     base_path = os.path.join(temp_dir, base_name)

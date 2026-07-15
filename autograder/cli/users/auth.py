@@ -1,19 +1,22 @@
+"""
+Authenticate as a user.
+"""
+
+import argparse
 import http
 import sys
 
-import autograder.error
 import autograder.api.users.auth
+import autograder.cli.parser
+import autograder.error
 
-def run(arguments):
-    try:
-        return _auth(arguments)
-    except autograder.error.AutograderError as ex:
-        print("ERROR: " + ex.args[0], file = sys.stderr)
-        return 2
+def run_cli(args: argparse.Namespace) -> int:
+    """ Run the CLI. """
 
-def _auth(arguments):
+    config = args._config_info.application_config
+
     try:
-        autograder.api.users.auth.send(arguments, exit_on_error = False)
+        autograder.api.users.auth.send(config, exit_on_error = False)
     except autograder.error.APIError as ex:
         if (ex.code != http.HTTPStatus.UNAUTHORIZED):
             raise ex
@@ -24,11 +27,19 @@ def _auth(arguments):
     print("Authentication successful.")
     return 0
 
-def main():
-    return run(_get_parser().parse_args())
+def main() -> int:
+    """ Get a parser, parse the args, and call run. """
 
-def _get_parser():
-    parser = autograder.api.users.auth._get_parser()
+    return run_cli(_get_parser().parse_args())
+
+def _get_parser() -> argparse.ArgumentParser:
+    """ Get a parser for this operation. """
+
+    parser = autograder.cli.parser.get_parser(
+        __doc__.strip(),
+        autograder.api.users.auth.API_PARAMS,
+        include_output_format = True)
+
     return parser
 
 if (__name__ == '__main__'):

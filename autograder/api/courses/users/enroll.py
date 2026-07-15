@@ -1,11 +1,20 @@
+"""
+Enroll one or more users in a course.
+"""
+
+import typing
+
 import autograder.api.common
 import autograder.api.config
+import autograder.model.config
 
-API_ENDPOINT = 'courses/users/enroll'
-API_PARAMS = [
+API_ENDPOINT: str = 'courses/users/enroll'
+API_WRITE: bool = True
+API_PARAMS: typing.List[autograder.api.config.APIParam] = [
+    autograder.api.config.PARAM_SERVER,
+    autograder.api.config.PARAM_COURSE,
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
-    autograder.api.config.PARAM_COURSE_ID,
 
     autograder.api.config.PARAM_DRY_RUN,
     autograder.api.config.PARAM_SKIP_INSERTS,
@@ -13,19 +22,15 @@ API_PARAMS = [
 
     autograder.api.config.PARAM_SEND_EMAILS,
 
-    autograder.api.config.APIParam('raw-course-users',
-        'A list of users to enroll.',
-        required = True, cli_param = False),
+    autograder.api.config.PARAM_RAW_COURSE_USERS,
+
+    autograder.api.config.PARAM_NEW_USER_EMAIL,
+    autograder.api.config.PARAM_NEW_USER_NAME,
+    autograder.api.config.PARAM_NEW_USER_COURSE_ROLE,
+    autograder.api.config.PARAM_NEW_USER_LMS_ID,
 ]
 
-DESCRIPTION = 'Enroll one or more users to the course.'
+def send(config: autograder.model.config.Config, **kwargs: typing.Any) -> typing.Dict[str, typing.Any]:
+    """ Send a request to the autograder. """
 
-def send(arguments, **kwargs):
-    return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT, **kwargs)
-
-def _get_parser():
-    parser = autograder.api.config.get_argument_parser(
-        description = DESCRIPTION,
-        params = API_PARAMS)
-
-    return parser
+    return autograder.api.common.make_api_request(API_ENDPOINT, config, API_PARAMS, write = API_WRITE, **kwargs)

@@ -1,26 +1,47 @@
+"""
+Get information about a course user.
+"""
+
+import argparse
 import sys
 
+import lms.model.base
+
 import autograder.api.courses.users.get
-import autograder.cli.common
-import autograder.cli.config
+import autograder.cli.parser
 
-def run(arguments):
-    result = autograder.api.courses.users.get.send(arguments, exit_on_error = True)
+def run_cli(args: argparse.Namespace) -> int:
+    """ Run the CLI. """
 
-    if (not result['found']):
-        print("User not found.")
-        return 1
+    config = args._config_info.application_config
 
-    autograder.cli.common.list_users([result['user']], True, table = arguments.table)
+    user = autograder.api.courses.users.get.send(config, exit_on_error = True)
+
+    users = []
+    if (user is not None):
+        users = [user]
+
+    output = lms.model.base.base_list_to_output_format(users, config.output_format,
+            skip_headers = args.skip_headers,
+            pretty_headers = args.pretty_headers,
+            include_extra_fields = args.include_extra_fields,
+    )
+    print(output)
+
     return 0
 
-def main():
-    return run(_get_parser().parse_args())
+def main() -> int:
+    """ Get a parser, parse the args, and call run. """
 
-def _get_parser():
-    parser = autograder.api.courses.users.get._get_parser()
+    return run_cli(_get_parser().parse_args())
 
-    autograder.cli.config.add_table_argument(parser)
+def _get_parser() -> argparse.ArgumentParser:
+    """ Get a parser for this operation. """
+
+    parser = autograder.cli.parser.get_parser(
+        __doc__.strip(),
+        autograder.api.courses.users.get.API_PARAMS,
+        include_output_format = True)
 
     return parser
 

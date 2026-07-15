@@ -1,44 +1,56 @@
+"""
+Get all submission attempts made by a user along with all grading information.
+"""
+
+import argparse
 import os
 import sys
 
 import autograder.api.courses.assignments.submissions.fetch.user.attempts
-import autograder.cli.courses.assignments.submissions.common
+import autograder.cli.common
+import autograder.cli.parser
+import autograder.util.grading
 
-def run(arguments):
-    result = autograder.api.courses.assignments.submissions.fetch.user.attempts.send(arguments,
-            exit_on_error = True)
+def run_cli(args: argparse.Namespace) -> int:
+    """ Run the CLI. """
 
-    if (not result['found-user']):
-        print("No matching user found.")
+    config = args._config_info.application_config
+
+    found_user, grading_results = autograder.api.courses.assignments.submissions.fetch.user.attempts.send(config, exit_on_error = True)
+
+    if (not found_user):
+        autograder.cli.common.print_no_match('user', config.target_email)
         return 1
 
-    if (len(result['grading-results']) == 0):
+    if (grading_results is None):
+        raise ValueError("Existing submissions were not provided by API.")
+
+    if (len(grading_results) == 0):
         print("No attempts found.")
-        return 2
+        return 0
 
-    assignment = result['grading-results'][0]['info']['assignment-id']
-    user = result['grading-results'][0]['info']['user']
-    out_dir = os.path.join(arguments.out_dir, assignment, user)
+    assignment = grading_results[0]['info']['assignment-id']
+    user = grading_results[0]['info']['user']
+    out_dir = os.path.join(config.out_dir, assignment, user)
 
-    for grading_result in result['grading-results']:
-        autograder.cli.courses.assignments.submissions.common.output_grading_result(grading_result,
-                out_dir, True)
+    for grading_result in grading_results:
+        autograder.util.grading.output_grading_result(grading_result, base_dir = out_dir, short_id = True)
 
-    print("Wrote %d attempts to '%s'." % (len(result['grading-results']), arguments.out_dir))
+    print(f"Wrote {len(grading_results)} attempts to '{out_dir}'.")
 
     return 0
 
-def main():
-    return run(_get_parser().parse_args())
+def main() -> int:
+    """ Get a parser, parse the args, and call run. """
 
-def _get_parser():
-    parser = autograder.api.courses.assignments.submissions.fetch.user.attempts._get_parser()
+    return run_cli(_get_parser().parse_args())
 
-    parser.add_argument('-o', '--out-dir', dest = 'out_dir',
-        action = 'store', type = str, default = '.',
-        help = ('Where to create a new directory that will contain submission attempts.'
-            + ' An existing subdirectory will be removed.'
-            + ' Defaults to the current directory.'))
+def _get_parser() -> argparse.ArgumentParser:
+    """ Get a parser for this operation. """
+
+    parser = autograder.cli.parser.get_parser(
+        __doc__.strip(),
+        autograder.api.courses.assignments.submissions.fetch.user.attempts.API_PARAMS)
 
     return parser
 

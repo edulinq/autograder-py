@@ -1,7 +1,0 @@
-{
-    "course": "course101",
-    "assignment": "hw0",
-    "server": "http://127.0.0.1:8080",
-    "user": "server-admin@test.edulinq.org",
-    "pass": "server-admin"
-}

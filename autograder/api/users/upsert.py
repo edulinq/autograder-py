@@ -1,8 +1,17 @@
+"""
+Upsert one or more server users.
+"""
+
+import typing
+
 import autograder.api.common
 import autograder.api.config
+import autograder.model.config
 
-API_ENDPOINT = 'users/upsert'
-API_PARAMS = [
+API_ENDPOINT: str = 'users/upsert'
+API_WRITE: bool = True
+API_PARAMS: typing.List[autograder.api.config.APIParam] = [
+    autograder.api.config.PARAM_SERVER,
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
 
@@ -12,19 +21,18 @@ API_PARAMS = [
 
     autograder.api.config.PARAM_SEND_EMAILS,
 
-    autograder.api.config.APIParam('raw-users',
-        'A list of users to upsert.',
-        required = True, cli_param = False),
+    autograder.api.config.PARAM_RAW_SERVER_USERS,
+
+    autograder.api.config.PARAM_NEW_USER_EMAIL,
+    autograder.api.config.PARAM_NEW_USER_NAME,
+    autograder.api.config.PARAM_NEW_USER_PASS,
+    autograder.api.config.PARAM_NEW_USER_SERVER_ROLE,
+    autograder.api.config.PARAM_NEW_USER_COURSE,
+    autograder.api.config.PARAM_NEW_USER_COURSE_ROLE,
+    autograder.api.config.PARAM_NEW_USER_LMS_ID,
 ]
 
-DESCRIPTION = 'Upsert one or more users to the server (update if exists, insert otherwise).'
+def send(config: autograder.model.config.Config, **kwargs: typing.Any) -> typing.Dict[str, typing.Any]:
+    """ Send a request to the autograder. """
 
-def send(arguments, **kwargs):
-    return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT, **kwargs)
-
-def _get_parser():
-    parser = autograder.api.config.get_argument_parser(
-        description = DESCRIPTION,
-        params = API_PARAMS)
-
-    return parser
+    return autograder.api.common.make_api_request(API_ENDPOINT, config, API_PARAMS, write = API_WRITE, **kwargs)

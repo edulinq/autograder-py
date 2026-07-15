@@ -1,11 +1,22 @@
+# pylint: disable=invalid-name
+
+"""
+Grade a submission given an already prepared grading directory (see autograder.cli.testing.setup-grading-dir) and a grader file.
+Use autograder.cli.grading.grade if you have not already prepared your grading directory.
+"""
+
 import argparse
-import json
 import os
 import sys
 
+import edq.util.dirent
+import edq.util.json
+
 import autograder.submission
 
-def run(args):
+def run_cli(args: argparse.Namespace) -> int:
+    """ Run the CLI. """
+
     grader_path = os.path.abspath(args.grader)
     grading_dir = os.path.abspath(args.dir)
 
@@ -17,19 +28,21 @@ def run(args):
 
     if (args.outpath is not None):
         out_path = os.path.abspath(args.outpath)
-        os.makedirs(os.path.dirname(os.path.abspath(out_path)), exist_ok = True)
-        with open(out_path, 'w') as file:
-            json.dump(result.to_dict(), file, indent = 4)
+        edq.util.dirent.mkdir(os.path.dirname(os.path.abspath(out_path)))
+        edq.util.json.dump_path(result.to_dict(), out_path, indent = 4)
 
     return 0
 
-def _get_parser():
-    parser = argparse.ArgumentParser(description =
-        'Grade a submission given an already prepared grading directory'
-        + ' (see autograder.cli.testing.setup-grading-dir)'
-        + ' and a grader file.'
-        + ' Use autograder.cli.grading.grade if you have not already prepared'
-        + ' your grading directory.')
+def main() -> int:
+    """ Get a parser, parse the args, and call run. """
+
+    args, _ = _get_parser().parse_known_args()
+    return run_cli(args)
+
+def _get_parser() -> argparse.ArgumentParser:
+    """ Get a parser for this operation. """
+
+    parser = argparse.ArgumentParser(description = __doc__.strip())
 
     parser.add_argument('-g', '--grader',
         action = 'store', type = str, required = True,
@@ -44,9 +57,6 @@ def _get_parser():
         help = 'The path to a output the JSON result.')
 
     return parser
-
-def main():
-    return run(_get_parser().parse_args())
 
 if (__name__ == '__main__'):
     sys.exit(main())

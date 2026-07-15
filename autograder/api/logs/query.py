@@ -1,37 +1,48 @@
+"""
+Query log entries from the autograder server.
+"""
+
+import typing
+
 import autograder.api.common
 import autograder.api.config
+import autograder.error
+import autograder.model.config
+import autograder.model.log
 
-API_ENDPOINT = 'logs/query'
-API_PARAMS = [
+API_ENDPOINT: str = 'logs/query'
+API_WRITE: bool = False
+API_PARAMS: typing.List[autograder.api.config.APIParam] = [
+    autograder.api.config.PARAM_SERVER,
     autograder.api.config.PARAM_USER_EMAIL,
     autograder.api.config.PARAM_USER_PASS,
 
-    autograder.api.config.APIParam('level',
-            'The minimum level of log records to return (defaults to INFO).',
-            required = False, parser_options = {'action': 'store', 'default': 'INFO'}),
+    autograder.api.config.PARAM_QUERY_USE_TESTING_DATA,
 
-    autograder.api.config.APIParam('after',
-            'If supplied, only return log records after this datetime (as an RFC3339 string).',
-            required = False),
-
-    autograder.api.config.APIParam('past',
-            ('If supplied, only return log records in this duration'
-                + ' (using "h", "m", or "s" suffixes) (e.g., "24h", "10m", or "1h10m10s").'),
-            required = False),
+    autograder.api.config.PARAM_QUERY_LOG_LEVEL,
+    autograder.api.config.PARAM_QUERY_AFTER,
+    autograder.api.config.PARAM_QUERY_PAST,
 
     autograder.api.config.PARAM_QUERY_TARGET_COURSE,
     autograder.api.config.PARAM_QUERY_TARGET_ASSIGNMENT,
     autograder.api.config.PARAM_QUERY_TARGET_EMAIL,
 ]
 
-DESCRIPTION = 'Query log entries from the autograder server.'
+def send(
+        config: autograder.model.config.Config,
+        **kwargs: typing.Any,
+        ) -> typing.Tuple[typing.Union[str, None], typing.List[autograder.model.log.LogRecord]]:
+    """
+    Send a request to the autograder.
+    Returns: (error, log records).
+    """
 
-def send(arguments, **kwargs):
-    return autograder.api.common.handle_api_request(arguments, API_PARAMS, API_ENDPOINT, **kwargs)
+    result = autograder.api.common.make_api_request(API_ENDPOINT, config, API_PARAMS, write = API_WRITE, **kwargs)
 
-def _get_parser():
-    parser = autograder.api.config.get_argument_parser(
-        description = DESCRIPTION,
-        params = API_PARAMS)
+    error = result.get('error', None)
+    if (error is not None):
+        return f"Error: '{error['message']}', Locator: '{error['locator']}'.", []
 
-    return parser
+    records = [autograder.model.log.LogRecord.from_api(data) for data in result['results']]
+
+    return None, records

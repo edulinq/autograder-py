@@ -1,0 +1,9 @@
+{
+    "cli": "autograder.cli.users.auth",
+    "arguments": [
+        '--user', 'server-admin@test.edulinq.org',
+        '--pass', 'ZZZ',
+    ],
+}
+---
+Authentication failed.

@@ -1,0 +1,105 @@
+{
+    "cli": "autograder.cli.logs.query",
+    "arguments": [
+        '--user', 'server-admin@test.edulinq.org',
+        '--pass', 'server-admin',
+        '--level', 'TRACE',
+        '--config', 'query_use_testing_data=true',
+    ],
+}
+---
+timestamp: 1970-01-01 00:00
+level: TRACE
+message: Trace Course Log
+error: 
+course: course101
+assignment: hw0
+user: course-other@test.edulinq.org
+
+timestamp: 1970-01-01 00:00
+level: TRACE
+message: Trace Server Log
+error: 
+course: 
+assignment: 
+user: server-user@test.edulinq.org
+
+timestamp: 1970-01-01 00:00
+level: DEBUG
+message: Debug Course Log
+error: 
+course: course101
+assignment: hw0
+user: course-student@test.edulinq.org
+
+timestamp: 1970-01-01 00:00
+level: DEBUG
+message: Debug Server Log
+error: 
+course: 
+assignment: 
+user: server-creator@test.edulinq.org
+
+timestamp: 1970-01-01 00:00
+level: INFO
+message: Info Course Log
+error: 
+course: course101
+assignment: hw0
+user: course-grader@test.edulinq.org
+
+timestamp: 1970-01-01 00:00
+level: INFO
+message: Info Server Log
+error: 
+course: 
+assignment: 
+user: server-admin@test.edulinq.org
+
+timestamp: 1970-01-01 00:00
+level: WARN
+message: Warn Course Log
+error: Course Warning
+course: course101
+assignment: hw0
+user: course-admin@test.edulinq.org
+
+timestamp: 1970-01-01 00:00
+level: WARN
+message: Warn Server Log
+error: Server Warning
+course: 
+assignment: 
+user: server-owner@test.edulinq.org
+
+timestamp: 1970-01-01 00:00
+level: ERROR
+message: Error Course Log
+error: Course Error
+course: course101
+assignment: 
+user: course-owner@test.edulinq.org
+
+timestamp: 1970-01-01 00:00
+level: ERROR
+message: Error Server Log
+error: Server Error
+course: 
+assignment: 
+user: 
+
+timestamp: 1970-01-01 00:00
+level: FATAL
+message: Fatal Course Log
+error: 
+course: course101
+assignment: 
+user: 
+
+timestamp: 1970-01-01 00:00
+level: FATAL
+message: Fatal Server Log
+error: 
+course: 
+assignment: 
+user: 

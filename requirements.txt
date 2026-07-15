@@ -1,5 +1,5 @@
 argon2-cffi>=23.1.0
+edq-lms-toolkit>=2.0.2,==2.*
+edq-utils>=1.0.1,==1.*
 flake8>=6.0.0
-GitPython>=3.1.31
-platformdirs>=3.10.0
 requests>=2.31.0

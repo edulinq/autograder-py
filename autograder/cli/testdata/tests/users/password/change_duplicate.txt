@@ -1,0 +1,13 @@
+{
+    "cli": "autograder.cli.users.password.change",
+    "arguments": [
+        '--user', 'server-admin@test.edulinq.org',
+        '--pass', 'server-admin',
+        '--new-pass', 'server-admin',
+    ],
+}
+---
+{
+    "duplicate": true,
+    "success": true
+}

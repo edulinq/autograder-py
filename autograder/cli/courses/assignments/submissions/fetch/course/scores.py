@@ -1,34 +1,44 @@
+"""
+Get the most recent scores for this assignment.
+"""
+
+import argparse
 import sys
 
+import lms.model.base
+
 import autograder.api.courses.assignments.submissions.fetch.course.scores
+import autograder.cli.parser
 
-HEADER = [
-    'email', 'has_submission', 'short-id', 'score', 'grading_start_time', 'message',
-]
+def run_cli(args: argparse.Namespace) -> int:
+    """ Run the CLI. """
 
-def run(arguments):
-    result = autograder.api.courses.assignments.submissions.fetch.course.scores.send(arguments,
-            exit_on_error = True)
+    config = args._config_info.application_config
 
-    print("\t".join(HEADER))
+    scores = autograder.api.courses.assignments.submissions.fetch.course.scores.send(config, exit_on_error = True)
 
-    for (email, submission) in sorted(result['submission-infos'].items()):
-        row = [email, (submission is not None)]
-
-        if (submission is None):
-            row += ([''] * 4)
-        else:
-            row += [submission[key] for key in HEADER[2:]]
-
-        print("\t".join(map(str, row)))
+    output = lms.model.base.base_list_to_output_format(scores, config.output_format,
+            skip_headers = args.skip_headers,
+            pretty_headers = args.pretty_headers,
+            include_extra_fields = args.include_extra_fields,
+    )
+    print(output)
 
     return 0
 
-def main():
-    return run(_get_parser().parse_args())
+def main() -> int:
+    """ Get a parser, parse the args, and call run. """
 
-def _get_parser():
-    parser = autograder.api.courses.assignments.submissions.fetch.course.scores._get_parser()
+    return run_cli(_get_parser().parse_args())
+
+def _get_parser() -> argparse.ArgumentParser:
+    """ Get a parser for this operation. """
+
+    parser = autograder.cli.parser.get_parser(
+        __doc__.strip(),
+        autograder.api.courses.assignments.submissions.fetch.course.scores.API_PARAMS,
+        include_output_format = True)
+
     return parser
 
 if (__name__ == '__main__'):

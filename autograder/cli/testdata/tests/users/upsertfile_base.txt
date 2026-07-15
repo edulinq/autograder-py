@@ -1,0 +1,21 @@
+{
+    "cli": "autograder.cli.users.upsert-file",
+    "arguments": [
+        '--user', 'server-admin@test.edulinq.org',
+        '--pass', 'server-admin',
+        '__DATA_DIR__(upsertfile_base.txt)',
+    ],
+}
+---
+{
+    "results": [
+        {
+            "added": true,
+            "email": "new-user@test.edulinq.org"
+        },
+        {
+            "email": "server-admin@test.edulinq.org",
+            "modified": true
+        }
+    ]
+}

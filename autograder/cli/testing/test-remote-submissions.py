@@ -1,41 +1,54 @@
+# pylint: disable=invalid-name
+
+"""
+Submit multiple assignments to an autograder and ensure the output is as expected.
+"""
+
+import argparse
 import os
 import sys
 import traceback
+import typing
 
+import autograder.cli.courses.assignments.submissions.common
 import autograder.api.courses.assignments.submissions.submit
+import autograder.cli.parser
 import autograder.submission
 
-def run(arguments):
+def run_cli(args: argparse.Namespace) -> int:
+    """ Run the CLI. """
+
+    config = args._config_info.application_config
+
     try:
-        test_submissions = autograder.submission.fetch_test_submissions(arguments.submissions)
+        test_submission_paths = autograder.submission.fetch_test_submissions(args.submissions)
     except Exception as ex:
-        print("Failed to load submission(s) from '%s': '%s'." % (arguments.submissions, ex))
+        print(f"Failed to load submission(s) from '{args.submissions}': '{ex}'.")
         traceback.print_exc()
         return 101
 
     errors = 0
-    for test_submission in test_submissions:
-        paths = _get_files(test_submission)
+    for test_submission_path in sorted(test_submission_paths):
+        paths = _get_files(test_submission_path)
 
         try:
-            result = autograder.api.courses.assignments.submissions.submit.send(arguments,
-                    files = paths)
+            api_response, grading_result = autograder.api.courses.assignments.submissions.submit.send(config,
+                    post_paths = paths, exit_on_error = True)
         except Exception as ex:
-            print("Failed to run submission '%s': '%s'." % (test_submission, ex))
+            print(f"Failed to run submission '{test_submission_path}': '{ex}'.")
             traceback.print_exc()
             errors += 1
             continue
 
-        if (not result['grading-success']):
+        if (not api_response['grading-success']):
             print("Autograder failed to grade the submission.")
             errors += 1
             continue
 
-        result = autograder.assignment.GradedAssignment.from_dict(result['result'])
-        if (not autograder.submission.compare_test_submission(test_submission, result)):
+        if (not autograder.submission.compare_test_submission(test_submission_path, grading_result)):
             errors += 1
 
-    print("Encountered %d error(s) while testing %d submissions." % (errors, len(test_submissions)))
+    print(f"Encountered {errors} error(s) while testing {len(test_submission_paths)} submissions.")
 
     if (errors > 0):
         print("Faiure")
@@ -44,33 +57,38 @@ def run(arguments):
 
     return errors
 
-def _get_files(test_submission):
+def _get_files(test_submission_path: str) -> typing.List[str]:
+    """ Collect the submission file paths. """
+
     paths = []
 
-    test_submission = os.path.abspath(test_submission)
+    test_submission_path = os.path.abspath(test_submission_path)
 
-    submission_dir = os.path.dirname(test_submission)
+    submission_dir = os.path.dirname(test_submission_path)
     for dirent in os.listdir(submission_dir):
         path = os.path.join(submission_dir, dirent)
-        if (not os.path.samefile(test_submission, path)):
+        if (not os.path.samefile(test_submission_path, path)):
             paths.append(path)
 
     return paths
 
-def _get_parser():
-    parser = autograder.api.courses.assignments.submissions.submit._get_parser()
+def main() -> int:
+    """ Get a parser, parse the args, and call run. """
 
-    parser.description = ('Submit multiple assignments to an autograder'
-        + ' and ensure the output is as expected.')
+    return run_cli(_get_parser().parse_args())
+
+def _get_parser() -> argparse.ArgumentParser:
+    """ Get a parser for this operation. """
+
+    parser = autograder.cli.parser.get_parser(
+        __doc__.strip(),
+        autograder.api.courses.assignments.submissions.submit.BASE_API_PARAMS)
 
     parser.add_argument('submissions', metavar = 'SUBMISSIONS_DIR',
         action = 'store', type = str,
         help = 'The path to a dir containing one or more test submissions.')
 
     return parser
-
-def main():
-    return run(_get_parser().parse_args())
 
 if (__name__ == '__main__'):
     sys.exit(main())

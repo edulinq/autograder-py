@@ -1,0 +1,14 @@
+{
+    "cli": "autograder.cli.courses.assignments.submissions.submit",
+    "platform_skip": "win",
+    "stdout_assertion_func": "autograder.testing.asserts.contains",
+    "arguments": [
+        '--user', 'server-admin@test.edulinq.org',
+        '--pass', 'server-admin',
+        '--course', 'course101',
+        '--assignment', 'hw0',
+        '__DATA_DIR__(../../../testdata/submission/nocompile/submission.py)',
+    ],
+}
+---
+ModuleNotFoundError: No module named 'ZZZ'

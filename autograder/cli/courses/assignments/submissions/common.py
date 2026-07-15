@@ -1,49 +1,46 @@
-import json
-import os
+import typing
 
-import autograder.util.dirent
-import autograder.util.file
-import autograder.util.gzip
+import edq.util.time
 
-def output_grading_result(result, base_dir = '.', short_id = False):
-    if short_id:
-        out_dir = os.path.join(base_dir, result['info']['short-id'])
-    else:
-        long_id = result['info']['id']
+import autograder.assignment
 
-        # Windows doesn't like colons in filenames.
-        if (os.name == 'nt'):
-            long_id = long_id.replace(':', '_')
+def display_grading_result(
+        api_response: typing.Dict[str, typing.Any],
+        grading_result: typing.Union[autograder.assignment.GradedAssignment, None],
+        include_found_user: bool = False,
+        include_found_submission: bool = False,
+        ) -> int:
+    """
+    Display the result of a grading endpoint, e.g., a grading report.
+    Return the recommended exit status.
+    """
 
-        out_dir = os.path.join(base_dir, long_id)
+    message = api_response.get('message', '')
+    if ((message is not None) and (message != '')):
+        # Replace any timestamps in the message.
+        message = edq.util.time.Timestamp.convert_embedded(message, pretty = True)
 
-    if (os.path.exists(out_dir)):
-        autograder.util.dirent.remove(out_dir)
+        print("--- Message from Autograder ---")
+        print(message)
+        print("-------------------------------")
 
-    os.makedirs(out_dir, exist_ok = True)
+    if (include_found_user and (not api_response['found-user'])):
+        print("Proxy user not found.")
+        return 10
 
-    stdout_path = os.path.join(out_dir, 'stdout.txt')
-    autograder.util.file.write(stdout_path, result['stdout'])
+    if (include_found_submission and (not api_response['found-submission'])):
+        print("Target submission not found.")
+        return 11
 
-    stderr_path = os.path.join(out_dir, 'stderr.txt')
-    autograder.util.file.write(stderr_path, result['stderr'])
+    if (api_response['rejected']):
+        print("Submission was rejected by the autograder.")
+        return 12
 
-    result_path = os.path.join(out_dir, 'info.json')
-    autograder.util.file.write(result_path, json.dumps(result['info'], indent = 4))
+    if (not api_response['grading-success']):
+        print("Grading failed.")
+        return 13
 
-    grading_input_dir = os.path.join(out_dir, 'input')
-    _output_grading_result_dir(grading_input_dir, result['input-files-gzip'])
+    if (grading_result is not None):
+        print(grading_result.report())
 
-    grading_output_dir = os.path.join(out_dir, 'output')
-    _output_grading_result_dir(grading_output_dir, result['output-files-gzip'])
-
-def _output_grading_result_dir(out_dir, files):
-    os.makedirs(out_dir, exist_ok = True)
-
-    for (relpath, gzip_contents) in files.items():
-        path = os.path.join(out_dir, *relpath.split('/'))
-        os.makedirs(os.path.dirname(path), exist_ok = True)
-
-        contents = autograder.util.gzip.from_base64(gzip_contents)
-        with open(path, 'wb') as file:
-            file.write(contents)
+    return 0

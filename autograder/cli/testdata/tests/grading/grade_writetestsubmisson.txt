@@ -1,0 +1,16 @@
+{
+    "cli": "autograder.cli.grading.grade",
+    "platform_skip": "win",
+    "stdout_assertion_func": "autograder.testing.asserts.equals_clean_pretty_time",
+    "arguments": [
+        '--assignment', '__DATA_DIR__(../../../../testdata/autograder-testdata/autograder-server/testdata/course-languages/bash/assignment.json)',
+        '--submission', '__DATA_DIR__(../../../../testdata/autograder-testdata/autograder-server/testdata/course-languages/bash/test-submissions/solution/assignment.sh)',
+        '--test-submission-path', '__TEMP_DIR__()',
+    ],
+}
+---
+Autograder transcript for assignment: bash
+Grading started at <PRETTY TIME> and ended at <PRETTY TIME>.
+Task 1: add(): 10 / 10
+
+Total: 10 / 10
