@@ -33,6 +33,10 @@ function main() {
     "${THIS_DIR}/check_style.sh"
     ((error_count += $?))
 
+    echo -e "\nChecking Server Version"
+    "${THIS_DIR}/check_server_version.sh"
+    ((error_count += $?))
+
     echo -e "\nRunning Tests"
     "${THIS_DIR}/run_tests.sh"
     ((error_count += $?))
