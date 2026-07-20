@@ -803,6 +803,17 @@ PARAM_SUBMISSION_SPECS = APIParam(
     cli_add_func = _cli_add_func_submission_specs,
 )
 
+PARAM_TARGET_ASSIGNMENTS = APIParam(
+    'target_assignments',
+    ('A list of assignment IDs to target.'
+    + ' Default: All assignments in the course.'),
+    api_required = False,
+    value_type = list,
+    cli_action = 'extend',
+    cli_type = _csv_to_list,
+    cli_show_default = False,
+)
+
 PARAM_TARGET_EMAIL = APIParam(
     'target_email',
     'The email of the user that is the target of this request.',
