@@ -29,7 +29,27 @@ class TestCoursesGradebookFetch(autograder.testing.server.ServerTest):
 
                 ),
                 {},
-                {},
+                {
+                    "gradebook": {
+                        "hw0": {
+                            "course-admin@test.edulinq.org": None,
+                            "course-grader@test.edulinq.org": None,
+                            "course-other@test.edulinq.org": None,
+                            "course-owner@test.edulinq.org": None,
+                            "course-student@test.edulinq.org": {
+                                "assignment-id": "hw0",
+                                "course-id": "course101",
+                                "grading_start_time": 1697406273000,
+                                "id": "course101::hw0::course-student@test.edulinq.org::1697406272",
+                                "max_points": 2,
+                                "message": "",
+                                "score": 2,
+                                "short-id": "1697406272",
+                                "user": "course-student@test.edulinq.org"
+                            }
+                        }
+                    }
+                },
                 None,
             ),
         ]
