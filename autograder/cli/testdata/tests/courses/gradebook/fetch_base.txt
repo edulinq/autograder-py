@@ -7,38 +7,27 @@
     ],
 }
 ---
-{
-    "gradebook": {
-        "bash": {
-            "course-admin@test.edulinq.org": null,
-            "course-grader@test.edulinq.org": null,
-            "course-other@test.edulinq.org": null,
-            "course-owner@test.edulinq.org": null,
-            "course-student@test.edulinq.org": {
-                "assignment-id": "bash",
-                "course-id": "course-languages",
-                "grading_start_time": 1768603685040,
-                "id": "course-languages::bash::course-student@test.edulinq.org::1768603685",
-                "max_points": 10,
-                "message": "",
-                "score": 10,
-                "short-id": "1768603685",
-                "user": "course-student@test.edulinq.org"
-            }
-        },
-        "cpp": {
-            "course-admin@test.edulinq.org": null,
-            "course-grader@test.edulinq.org": null,
-            "course-other@test.edulinq.org": null,
-            "course-owner@test.edulinq.org": null,
-            "course-student@test.edulinq.org": null
-        },
-        "java": {
-            "course-admin@test.edulinq.org": null,
-            "course-grader@test.edulinq.org": null,
-            "course-other@test.edulinq.org": null,
-            "course-owner@test.edulinq.org": null,
-            "course-student@test.edulinq.org": null
-        }
-    }
-}
+User: course-admin@test.edulinq.org
+bash: 
+cpp: 
+java: 
+
+User: course-grader@test.edulinq.org
+bash: 
+cpp: 
+java: 
+
+User: course-other@test.edulinq.org
+bash: 
+cpp: 
+java: 
+
+User: course-owner@test.edulinq.org
+bash: 
+cpp: 
+java: 
+
+User: course-student@test.edulinq.org
+bash: 10
+cpp: 
+java: 

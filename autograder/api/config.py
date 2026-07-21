@@ -333,7 +333,7 @@ PARAM_COURSE = APIParam(
 
 PARAM_COURSE_USER_REFERENCES = APIParam(
     'target_users',
-    ('A list of course user references.'
+    ('A CSV list of course user references.'
     + ' Course user references may be specified in four ways:'
     + ' 1) Email address of the requested user,'
     + ' 2) "*" to request all users in the course,'
@@ -364,7 +364,7 @@ PARAM_EMAIL_BODY = APIParam(
 
 PARAM_EMAIL_COURSE_BCC = APIParam(
     'bcc',
-    'A list of email addresses. Accepts course user references.',
+    'A CSV list of email addresses. Accepts course user references.',
     api_required = False,
     value_type = list,
     cli_action = 'extend',
@@ -374,7 +374,7 @@ PARAM_EMAIL_COURSE_BCC = APIParam(
 
 PARAM_EMAIL_COURSE_CC = APIParam(
     'cc',
-    'A list of email addresses. Accepts course user references.',
+    'A CSV list of email addresses. Accepts course user references.',
     api_required = False,
     value_type = list,
     cli_action = 'extend',
@@ -384,7 +384,7 @@ PARAM_EMAIL_COURSE_CC = APIParam(
 
 PARAM_EMAIL_COURSE_TO = APIParam(
     'to',
-    ('A list of email addresses.'
+    ('A CSV list of email addresses.'
     + ' Accepts course user references.'
     + ' Course user references may be specified in four ways:'
     + ' 1) Email address of the requested user,'
@@ -805,7 +805,7 @@ PARAM_SUBMISSION_SPECS = APIParam(
 
 PARAM_TARGET_ASSIGNMENTS = APIParam(
     'target_assignments',
-    ('A list of assignment IDs to target.'
+    ('A CSV list of assignment IDs to target.'
     + ' Default: All assignments in the course.'),
     api_required = False,
     value_type = list,
@@ -833,7 +833,7 @@ PARAM_TARGET_USER_OR_SELF = APIParam(
 
 PARAM_TARGET_USERS = APIParam(
     'target_users',
-    ('A list of server user references.'
+    ('A CSV list of server user references.'
     + ' Server user references may be specified in eight ways:'
     + ' 1) Email address of the requested user,'
     + ' 2) "*" to request all users in the server,'
