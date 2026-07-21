@@ -25,28 +25,41 @@ class TestCoursesGradebookFetch(autograder.testing.server.ServerTest):
                     auth_user = 'course-grader@test.edulinq.org',
                     auth_pass = edq.util.crypto.Secret('course-grader'),
 
-                    course = 'course101',
-
+                    course = 'course-languages',
                 ),
                 {},
                 {
                     "gradebook": {
-                        "hw0": {
+                        "bash": {
                             "course-admin@test.edulinq.org": None,
                             "course-grader@test.edulinq.org": None,
                             "course-other@test.edulinq.org": None,
                             "course-owner@test.edulinq.org": None,
                             "course-student@test.edulinq.org": {
-                                "assignment-id": "hw0",
-                                "course-id": "course101",
-                                "grading_start_time": 1697406273000,
-                                "id": "course101::hw0::course-student@test.edulinq.org::1697406272",
-                                "max_points": 2,
+                                "assignment-id": "bash",
+                                "course-id": "course-languages",
+                                "grading_start_time": 1768603685040,
+                                "id": "course-languages::bash::course-student@test.edulinq.org::1768603685",
+                                "max_points": 10,
                                 "message": "",
-                                "score": 2,
-                                "short-id": "1697406272",
+                                "score": 10,
+                                "short-id": "1768603685",
                                 "user": "course-student@test.edulinq.org"
                             }
+                        },
+                        "cpp": {
+                            "course-admin@test.edulinq.org": None,
+                            "course-grader@test.edulinq.org": None,
+                            "course-other@test.edulinq.org": None,
+                            "course-owner@test.edulinq.org": None,
+                            "course-student@test.edulinq.org": None
+                        },
+                        "java": {
+                            "course-admin@test.edulinq.org": None,
+                            "course-grader@test.edulinq.org": None,
+                            "course-other@test.edulinq.org": None,
+                            "course-owner@test.edulinq.org": None,
+                            "course-student@test.edulinq.org": None
                         }
                     }
                 },
