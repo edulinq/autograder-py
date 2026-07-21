@@ -1,0 +1,31 @@
+{
+    "cli": "autograder.cli.courses.gradebook.fetch",
+    "arguments": [
+        '--course', 'course-languages',
+        '--user', 'course-grader@test.edulinq.org',
+        '--pass', 'course-grader',
+        '--target-users', 'student',
+        '--target-assignments', 'bash,cpp'
+    ],
+}
+---
+{
+    "gradebook": {
+        "bash": {
+            "course-student@test.edulinq.org": {
+                "assignment-id": "bash",
+                "course-id": "course-languages",
+                "grading_start_time": 1768603685040,
+                "id": "course-languages::bash::course-student@test.edulinq.org::1768603685",
+                "max_points": 10,
+                "message": "",
+                "score": 10,
+                "short-id": "1768603685",
+                "user": "course-student@test.edulinq.org"
+            }
+        },
+        "cpp": {
+            "course-student@test.edulinq.org": null
+        }
+    }
+}

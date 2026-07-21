@@ -81,6 +81,7 @@ class Config(edq.config.app.BaseApplicationConfig):
             skip_updates: typing.Union[bool, None] = None,
             subject: typing.Union[str, None] = None,
             submission_specs: typing.Union[typing.List[str], None] = None,
+            target_assignments: typing.Union[typing.List[str], None] = None,
             target_email: typing.Union[str, None] = None,
             target_submission: typing.Union[str, None] = None,
             target_users: typing.Union[typing.List[str], None] = None,
@@ -287,6 +288,9 @@ class Config(edq.config.app.BaseApplicationConfig):
 
         self.submission_specs: typing.Union[typing.List[str], None] = submission_specs
         """ A list of submission specifications. """
+
+        self.target_assignments: typing.Union[typing.List[str], None] = target_assignments
+        """ A list of assignment IDs. """
 
         self.target_email: typing.Union[str, None] = target_email
         """ The email of the user that is the target of this request. """

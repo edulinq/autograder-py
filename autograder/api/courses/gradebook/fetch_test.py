@@ -65,6 +65,40 @@ class TestCoursesGradebookFetch(autograder.testing.server.ServerTest):
                 },
                 None,
             ),
+            (
+                autograder.model.config.Config(
+                    auth_user = 'course-grader@test.edulinq.org',
+                    auth_pass = edq.util.crypto.Secret('course-grader'),
+
+                    course = 'course-languages',
+
+                    target_users = ['student'],
+                    target_assignments = ['bash', 'cpp'],
+
+                ),
+                {},
+                {
+                    "gradebook": {
+                        "bash": {
+                            "course-student@test.edulinq.org": {
+                                "assignment-id": "bash",
+                                "course-id": "course-languages",
+                                "grading_start_time": 1768603685040,
+                                "id": "course-languages::bash::course-student@test.edulinq.org::1768603685",
+                                "max_points": 10,
+                                "message": "",
+                                "score": 10,
+                                "short-id": "1768603685",
+                                "user": "course-student@test.edulinq.org"
+                            }
+                        },
+                        "cpp": {
+                            "course-student@test.edulinq.org": None
+                        }
+                    }
+                },
+                None,
+            ),
         ]
 
         self.base_api_test(autograder.api.courses.gradebook.fetch.send, test_cases)
