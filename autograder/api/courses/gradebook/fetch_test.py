@@ -20,11 +20,11 @@ class TestCoursesGradebookFetch(autograder.testing.server.ServerTest):
             typing.Any,
             typing.Union[str, None],
         ]] = [
+            # Full Gradebook
             (
                 autograder.model.config.Config(
                     auth_user = 'course-grader@test.edulinq.org',
                     auth_pass = edq.util.crypto.Secret('course-grader'),
-
                     course = 'course-languages',
                 ),
                 {},
@@ -65,16 +65,15 @@ class TestCoursesGradebookFetch(autograder.testing.server.ServerTest):
                 },
                 None,
             ),
+
+            # Filtered Gradebook
             (
                 autograder.model.config.Config(
                     auth_user = 'course-grader@test.edulinq.org',
                     auth_pass = edq.util.crypto.Secret('course-grader'),
-
                     course = 'course-languages',
-
                     target_users = ['student'],
                     target_assignments = ['bash', 'cpp'],
-
                 ),
                 {},
                 {
