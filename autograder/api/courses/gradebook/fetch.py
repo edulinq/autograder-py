@@ -34,10 +34,10 @@ def send(config: autograder.model.config.Config, **kwargs: typing.Any) -> lms.mo
     assignment_queries: typing.List[lms.model.assignments.AssignmentQuery] = []
     user_queries: typing.List[lms.model.users.UserQuery] = []
 
-    for assignment_id in response['gradebook']:
+    for (assignment_id, user_scores) in response['gradebook'].items():
         assignment_queries.append(lms.model.assignments.AssignmentQuery(id = assignment_id))
-        if (not user_queries):
-            for user_email in response['gradebook'][assignment_id]:
+        if (len(user_queries) == 0):
+            for user_email in user_scores:
                 user_queries.append(lms.model.users.UserQuery(id = user_email))
 
     gradebook = lms.model.scores.Gradebook(assignment_queries, user_queries)

@@ -67,6 +67,7 @@ BASE_GRADEBOOK: lms.model.scores.Gradebook = lms.model.scores.Gradebook(
         lms.model.users.UserQuery(id = 'course-student@test.edulinq.org'),
     ],
 )
+
 BASE_GRADEBOOK.add(lms.model.scores.AssignmentScore(
     assignment = lms.model.assignments.AssignmentQuery(id = 'bash'),
     user = lms.model.users.UserQuery(id = 'course-student@test.edulinq.org'),
