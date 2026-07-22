@@ -1,0 +1,16 @@
+{
+    "cli": "autograder.cli.courses.gradebook.fetch",
+    "arguments": [
+        '--course', 'course-languages',
+        '--user', 'course-grader@test.edulinq.org',
+        '--pass', 'course-grader',
+        '--format', 'table',
+    ],
+}
+---
+User	bash	cpp	java
+course-admin@test.edulinq.org			
+course-grader@test.edulinq.org			
+course-other@test.edulinq.org			
+course-owner@test.edulinq.org			
+course-student@test.edulinq.org	10		
