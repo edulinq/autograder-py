@@ -1,4 +1,4 @@
-# Python Interface for Lynx Grader
+# Lynx Grader - Python Interface
 
 The canonical Python interface for EduLinq's [Lynx Grader server](https://github.com/edulinq/autograder-server).
 
