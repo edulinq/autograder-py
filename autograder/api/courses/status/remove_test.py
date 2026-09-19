@@ -32,6 +32,20 @@ class TestCoursesStatusRemove(autograder.testing.server.ServerTest):
                 },
                 None,
             ),
+
+            # Bad Permissions
+            (
+                autograder.model.config.Config(
+                    auth_user = 'course-grader@test.edulinq.org',
+                    auth_pass = edq.util.crypto.Secret('course-grader'),
+                    course = 'course101',
+                ),
+                {
+                    'exit_on_error': False,
+                },
+                None,
+                'You have insufficient permissions',
+            ),
         ]
 
         self.base_api_test(autograder.api.courses.status.remove.send, test_cases)

@@ -20,7 +20,7 @@ API_PARAMS: typing.List[autograder.api.config.APIParam] = [
     autograder.api.config.PARAM_COURSE,
     autograder.api.config.PARAM_ASSIGNMENT,
 
-    autograder.api.config.PARAM_SUBMISSION_MESSAGE,
+    autograder.api.config.PARAM_MESSAGE,
 
     autograder.api.config.PARAM_PROXY_EMAIL,
     autograder.api.config.PARAM_PROXY_TIME,

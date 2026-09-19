@@ -472,6 +472,12 @@ PARAM_FORCE_COMPUTE = APIParam(
     cli_default_value = False,
 )
 
+PARAM_MESSAGE = APIParam(
+    'message',
+    'An optional message to include with this operation.',
+    api_required = False,
+)
+
 PARAM_NAME = APIParam(
     'name',
     'An optional name to use.',
@@ -793,22 +799,10 @@ PARAM_STATUS_CLEAR = APIParam(
 
 PARAM_STATUS_FORCE = APIParam(
     'force',
-    'If the status already exists for the caller, allows an overwrite.',
+    'If the status already exists for the caller, overwrite it.',
     api_required = False,
     value_type = bool,
     cli_default_value = False,
-)
-
-PARAM_STATUS_MESSAGE = APIParam(
-    'message',
-    'An optional message to attach to the course status change.',
-    api_required = False,
-)
-
-PARAM_SUBMISSION_MESSAGE = APIParam(
-    'message',
-    'An optional message to attach to the submission.',
-    api_required = False,
 )
 
 PARAM_SUBMISSION_FILES = APIParam(

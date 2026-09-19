@@ -17,9 +17,9 @@ API_PARAMS: typing.List[autograder.api.config.APIParam] = [
 
     autograder.api.config.PARAM_COURSE,
 
+    autograder.api.config.PARAM_MESSAGE,
     autograder.api.config.PARAM_TARGET_OWNER,
     autograder.api.config.PARAM_STATUS_CLEAR,
-    autograder.api.config.PARAM_STATUS_MESSAGE,
 ]
 
 def send(config: autograder.model.config.Config, **kwargs: typing.Any) -> typing.Dict[str, typing.Any]:

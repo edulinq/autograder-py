@@ -17,8 +17,8 @@ API_PARAMS: typing.List[autograder.api.config.APIParam] = [
 
     autograder.api.config.PARAM_COURSE,
 
+    autograder.api.config.PARAM_MESSAGE,
     autograder.api.config.PARAM_STATUS_ACTIVE,
-    autograder.api.config.PARAM_STATUS_MESSAGE,
     autograder.api.config.PARAM_STATUS_FORCE,
 ]
 
