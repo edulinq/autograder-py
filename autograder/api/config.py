@@ -775,6 +775,36 @@ PARAM_SKIP_UPDATES = APIParam(
     cli_default_value = False,
 )
 
+PARAM_STATUS_ACTIVE = APIParam(
+    'active',
+    'Mark the course as active. Omit to mark it as inactive.',
+    api_required = False,
+    value_type = bool,
+    cli_default_value = False,
+)
+
+PARAM_STATUS_CLEAR = APIParam(
+    'clear',
+    'Ignore the target owner and remove all statuses the caller has permission to remove.',
+    api_required = False,
+    value_type = bool,
+    cli_default_value = False,
+)
+
+PARAM_STATUS_FORCE = APIParam(
+    'force',
+    'If the status already exists for the caller, allows an overwrite.',
+    api_required = False,
+    value_type = bool,
+    cli_default_value = False,
+)
+
+PARAM_STATUS_MESSAGE = APIParam(
+    'message',
+    'An optional message to attach to the course status change.',
+    api_required = False,
+)
+
 PARAM_SUBMISSION_MESSAGE = APIParam(
     'message',
     'An optional message to attach to the submission.',
@@ -822,6 +852,12 @@ PARAM_TARGET_EMAIL = APIParam(
 PARAM_TARGET_EMAIL_OR_SELF = APIParam(
     'target_email',
     'The email of the user that is the target of this request (defaults to you).',
+    api_required = False,
+)
+
+PARAM_TARGET_OWNER = APIParam(
+    'target_owner',
+    'The email of the course status owner that is the target of this request (defaults to you).',
     api_required = False,
 )
 

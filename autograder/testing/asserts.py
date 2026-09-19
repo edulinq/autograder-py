@@ -24,6 +24,7 @@ NORMALIZE_TIMESTAMP_KEYS: typing.Set[str] = {
     'analysis-timestamp',
     'first-timestamp',
     'last-timestamp',
+    'set-time',
 }
 """ Keys for timestamp values to normalize. """
 
