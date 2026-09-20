@@ -472,6 +472,12 @@ PARAM_FORCE_COMPUTE = APIParam(
     cli_default_value = False,
 )
 
+PARAM_MESSAGE = APIParam(
+    'message',
+    'An optional message to include with this operation.',
+    api_required = False,
+)
+
 PARAM_NAME = APIParam(
     'name',
     'An optional name to use.',
@@ -775,10 +781,28 @@ PARAM_SKIP_UPDATES = APIParam(
     cli_default_value = False,
 )
 
-PARAM_SUBMISSION_MESSAGE = APIParam(
-    'message',
-    'An optional message to attach to the submission.',
+PARAM_STATUS_ACTIVE = APIParam(
+    'active',
+    'Mark the course as active. Omit to mark it as inactive.',
     api_required = False,
+    value_type = bool,
+    cli_default_value = False,
+)
+
+PARAM_STATUS_CLEAR = APIParam(
+    'clear',
+    'Ignore the target owner and remove all statuses the caller has permission to remove.',
+    api_required = False,
+    value_type = bool,
+    cli_default_value = False,
+)
+
+PARAM_STATUS_FORCE = APIParam(
+    'force',
+    'If the status already exists for the caller, overwrite it.',
+    api_required = False,
+    value_type = bool,
+    cli_default_value = False,
 )
 
 PARAM_SUBMISSION_FILES = APIParam(
@@ -822,6 +846,12 @@ PARAM_TARGET_EMAIL = APIParam(
 PARAM_TARGET_EMAIL_OR_SELF = APIParam(
     'target_email',
     'The email of the user that is the target of this request (defaults to you).',
+    api_required = False,
+)
+
+PARAM_TARGET_OWNER = APIParam(
+    'target_owner',
+    'The email of the course status owner that is the target of this request (defaults to you).',
     api_required = False,
 )
 

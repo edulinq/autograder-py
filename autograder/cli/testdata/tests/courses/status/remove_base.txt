@@ -1,0 +1,12 @@
+{
+    "cli": "autograder.cli.courses.status.remove",
+    "arguments": [
+        '--course', 'course101',
+        '--user', 'course-admin@test.edulinq.org',
+        '--pass', 'course-admin',
+    ],
+}
+---
+{
+    "removed": {}
+}

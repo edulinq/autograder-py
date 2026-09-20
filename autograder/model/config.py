@@ -18,6 +18,7 @@ class Config(edq.config.app.BaseApplicationConfig):
     """
 
     def __init__(self,
+            active: typing.Union[bool, None] = None,
             allow_late: typing.Union[bool, None] = None,
             assignment: typing.Union[str, None] = None,
             auth_pass: typing.Union[edq.util.crypto.Secret, None] = None,
@@ -25,6 +26,7 @@ class Config(edq.config.app.BaseApplicationConfig):
             bcc: typing.Union[typing.List[str], None] = None,
             body: typing.Union[str, None] = None,
             cc: typing.Union[typing.List[str], None] = None,
+            clear: typing.Union[bool, None] = None,
             course: typing.Union[str, None] = None,
             dry_run: typing.Union[bool, None] = None,
             filespec: typing.Union[autograder.filespec.FileSpec, None] = None,
@@ -34,6 +36,7 @@ class Config(edq.config.app.BaseApplicationConfig):
             filespec_type: typing.Union[str, None] = None,
             filespec_username: typing.Union[str, None] = None,
             files: typing.Union[typing.List[str], None] = None,
+            force: typing.Union[bool, None] = None,
             force_compute: typing.Union[bool, None] = None,
             email_html: typing.Union[bool, None] = None,
             include_extra_fields: typing.Union[bool, None] = None,
@@ -83,6 +86,7 @@ class Config(edq.config.app.BaseApplicationConfig):
             submission_specs: typing.Union[typing.List[str], None] = None,
             target_assignments: typing.Union[typing.List[str], None] = None,
             target_email: typing.Union[str, None] = None,
+            target_owner: typing.Union[str, None] = None,
             target_submission: typing.Union[str, None] = None,
             target_users: typing.Union[typing.List[str], None] = None,
             target_user: typing.Union[str, None] = None,
@@ -92,6 +96,9 @@ class Config(edq.config.app.BaseApplicationConfig):
             wait_for_completion: typing.Union[bool, None] = None,
             **kwargs: typing.Any) -> None:
         super().__init__(**kwargs)
+
+        self.active: typing.Union[bool, None] = active
+        """ Mark the course as active. """
 
         self.allow_late: typing.Union[bool, None] = allow_late
         """ Allow this submission to be graded, even if it is late. """
@@ -121,6 +128,9 @@ class Config(edq.config.app.BaseApplicationConfig):
         self.cc: typing.Union[typing.List[str], None] = cc
         """ A list of email addresses. Accepts course user references. """
 
+        self.clear: typing.Union[bool, None] = clear
+        """ Remove all course statuses the caller has permission to remove. """
+
         self.course: typing.Union[str, None] = course
         """ The ID of the course to make this request to. """
 
@@ -148,6 +158,9 @@ class Config(edq.config.app.BaseApplicationConfig):
         self.files: typing.Union[typing.List[str], None] = files
         """ The path to your submission file(s). """
 
+        self.force: typing.Union[bool, None] = force
+        """ Overwrite an existing course status set by the caller. """
+
         self.force_compute: typing.Union[bool, None] = force_compute
         """ Force the server to compute the result, ignoring any existing cache. """
 
@@ -158,7 +171,7 @@ class Config(edq.config.app.BaseApplicationConfig):
         """ Include non-common (usually LMS-specific) fields in results. """
 
         self.message: typing.Union[str, None] = message
-        """ An optional message to attach to the submission. """
+        """ An optional message to attach to the request. """
 
         self.name: typing.Union[str, None] = name
         """ An optional name to use. """
@@ -294,6 +307,9 @@ class Config(edq.config.app.BaseApplicationConfig):
 
         self.target_email: typing.Union[str, None] = target_email
         """ The email of the user that is the target of this request. """
+
+        self.target_owner: typing.Union[str, None] = target_owner
+        """ The email of the course status owner that is the target of this request. """
 
         self.target_submission: typing.Union[str, None] = target_submission
         """ The ID of the submission (default to the most recent submission). """

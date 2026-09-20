@@ -1,0 +1,18 @@
+{
+    "cli": "autograder.cli.courses.status.set",
+    "arguments": [
+        '--course', 'course101',
+        '--user', 'course-admin@test.edulinq.org',
+        '--pass', 'course-admin',
+        '--active',
+    ],
+}
+---
+{
+    "status": {
+        "active": true,
+        "owner": "course-admin@test.edulinq.org",
+        "set-time": 123456789,
+        "source": "course"
+    }
+}
