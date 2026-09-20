@@ -5,6 +5,7 @@ import edq.util.crypto
 import autograder.api.courses.status.set
 import autograder.model.config
 import autograder.testing.constants
+import autograder.testing.asserts
 import autograder.testing.server
 
 class TestCoursesStatusSet(autograder.testing.server.ServerTest):
@@ -56,4 +57,4 @@ class TestCoursesStatusSet(autograder.testing.server.ServerTest):
             ),
         ]
 
-        self.base_api_test(autograder.api.courses.status.set.send, test_cases)
+        self.base_api_test(autograder.api.courses.status.set.send, test_cases, actual_clean_func = autograder.testing.asserts.normalize_dict)

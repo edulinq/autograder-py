@@ -1,5 +1,6 @@
 {
     "cli": "autograder.cli.courses.status.set",
+    "stdout_assertion_func": "autograder.testing.asserts.content_equals_noramlize_json",
     "arguments": [
         '--course', 'course101',
         '--user', 'course-admin@test.edulinq.org',

@@ -94,6 +94,7 @@ def normalize_dict(data: typing.Dict[str, typing.Any]) -> typing.Dict[str, typin
 
     data = _noramlize_version(data)
     data = _noramlize_tokens(data)
+    data = _normalize_timestamps(data)
 
     return data
 
