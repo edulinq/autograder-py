@@ -9,3 +9,8 @@
 ---
 id: hw0
 name: Homework 0
+description: 
+open_date: 
+close_date: 
+due_date: 
+points_possible: 
