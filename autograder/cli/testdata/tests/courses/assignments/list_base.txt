@@ -1,0 +1,11 @@
+{
+    "cli": "autograder.cli.courses.assignments.list",
+    "arguments": [
+        '--course', 'course101',
+        '--user', 'server-admin@test.edulinq.org',
+        '--pass', 'server-admin',
+    ],
+}
+---
+id: hw0
+name: Homework 0
