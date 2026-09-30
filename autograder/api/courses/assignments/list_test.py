@@ -51,6 +51,16 @@ class TestAssignmentsList(autograder.testing.server.ServerTest):
                 sorted(autograder.testing.model.ASSIGNMENTS['Course 101'].values()),
                 None,
             ),
+            (
+                autograder.model.config.Config(
+                    course = 'course-languages',
+                    auth_user = 'server-admin@test.edulinq.org',
+                    auth_pass = edq.util.crypto.Secret('server-admin'),
+                ),
+                {},
+                sorted(autograder.testing.model.ASSIGNMENTS['Course Using Different Languages'].values()),
+                None,
+            ),
         ]
 
         self.base_api_test(autograder.api.courses.assignments.list.send, test_cases)
