@@ -24,8 +24,8 @@ class TestCoursesStatusSet(autograder.testing.server.ServerTest):
             # Base
             (
                 autograder.model.config.Config(
-                    auth_user = 'course-admin@test.edulinq.org',
-                    auth_pass = edq.util.crypto.Secret('course-admin'),
+                    auth_user = 'course-owner@test.edulinq.org',
+                    auth_pass = edq.util.crypto.Secret('course-owner'),
                     course = 'course101',
                     active = True,
                 ),
@@ -33,12 +33,48 @@ class TestCoursesStatusSet(autograder.testing.server.ServerTest):
                 {
                     "status": {
                         "active": True,
-                        "owner": "course-admin@test.edulinq.org",
+                        "owner": "course-owner@test.edulinq.org",
                         "set-time": autograder.testing.constants.TEST_TIMESTAMP,
                         "source": "course",
                     },
                 },
                 None,
+            ),
+
+            # Valid Overwrite
+            (
+                autograder.model.config.Config(
+                    auth_user = 'course-admin@test.edulinq.org',
+                    auth_pass = edq.util.crypto.Secret('course-admin'),
+                    course = 'course101',
+                    active = False,
+                    force = True,
+                ),
+                {},
+                {
+                    "status": {
+                        "active": False,
+                        "owner": "course-admin@test.edulinq.org",
+                        "set-time": autograder.testing.constants.TEST_TIMESTAMP,
+                        "source": "course",
+                    }
+                },
+                None,
+            ),
+
+            # Invalid Overwrite
+            (
+                autograder.model.config.Config(
+                    auth_user = 'course-admin@test.edulinq.org',
+                    auth_pass = edq.util.crypto.Secret('course-admin'),
+                    course = 'course101',
+                    active = True,
+                ),
+                {
+                    'exit_on_error': False,
+                },
+                None,
+                'Course active/inactive status already exists for this user',
             ),
 
             # Bad Permissions

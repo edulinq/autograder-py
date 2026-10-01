@@ -3,16 +3,16 @@
     "stdout_assertion_func": "autograder.testing.asserts.content_equals_noramlize_json",
     "arguments": [
         '--course', 'course101',
-        '--user', 'course-owner@test.edulinq.org',
-        '--pass', 'course-owner',
-        '--active',
+        '--user', 'course-admin@test.edulinq.org',
+        '--pass', 'course-admin',
+        '--force'
     ],
 }
 ---
 {
     "status": {
-        "active": true,
-        "owner": "course-owner@test.edulinq.org",
+        "active": false,
+        "owner": "course-admin@test.edulinq.org",
         "set-time": 123456789,
         "source": "course"
     }
