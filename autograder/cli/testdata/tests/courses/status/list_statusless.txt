@@ -1,0 +1,12 @@
+{
+    "cli": "autograder.cli.courses.status.list",
+    "arguments": [
+        '--course', 'course-languages',
+        '--user', 'course-other@test.edulinq.org',
+        '--pass', 'course-other',
+    ],
+}
+---
+{
+    "statuses": {}
+}

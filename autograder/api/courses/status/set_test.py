@@ -4,8 +4,8 @@ import edq.util.crypto
 
 import autograder.api.courses.status.set
 import autograder.model.config
-import autograder.testing.constants
 import autograder.testing.asserts
+import autograder.testing.constants
 import autograder.testing.server
 
 class TestCoursesStatusSet(autograder.testing.server.ServerTest):

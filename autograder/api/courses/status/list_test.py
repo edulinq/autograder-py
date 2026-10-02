@@ -4,8 +4,8 @@ import edq.util.crypto
 
 import autograder.api.courses.status.list
 import autograder.model.config
-import autograder.testing.constants
 import autograder.testing.asserts
+import autograder.testing.constants
 import autograder.testing.server
 
 class TestCoursesStatusList(autograder.testing.server.ServerTest):
@@ -41,6 +41,20 @@ class TestCoursesStatusList(autograder.testing.server.ServerTest):
                 },
                 None,
             ),
+
+            # Course Without Statuses
+            (
+                autograder.model.config.Config(
+                    auth_user = 'course-other@test.edulinq.org',
+                    auth_pass = edq.util.crypto.Secret('course-other'),
+                    course = 'course-languages',
+                ),
+                {},
+                {
+                    "statuses": {}
+                },
+                None,
+            )
         ]
 
         self.base_api_test(autograder.api.courses.status.list.send, test_cases, actual_clean_func = autograder.testing.asserts.normalize_dict)

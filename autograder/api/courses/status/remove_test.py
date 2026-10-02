@@ -4,8 +4,8 @@ import edq.util.crypto
 
 import autograder.api.courses.status.remove
 import autograder.model.config
-import autograder.testing.constants
 import autograder.testing.asserts
+import autograder.testing.constants
 import autograder.testing.server
 
 class TestCoursesStatusRemove(autograder.testing.server.ServerTest):
