@@ -4,6 +4,8 @@ import edq.util.crypto
 
 import autograder.api.courses.status.remove
 import autograder.model.config
+import autograder.testing.asserts
+import autograder.testing.constants
 import autograder.testing.server
 
 class TestCoursesStatusRemove(autograder.testing.server.ServerTest):
@@ -28,6 +30,27 @@ class TestCoursesStatusRemove(autograder.testing.server.ServerTest):
                 ),
                 {},
                 {
+                    "removed": {
+                        "course-admin@test.edulinq.org": {
+                            "active": True,
+                            "source": "course",
+                            "owner": "course-admin@test.edulinq.org",
+                            "set-time": autograder.testing.constants.TEST_TIMESTAMP,
+                        }
+                    },
+                },
+                None,
+            ),
+
+            # Removing Nonexistent Status
+            (
+                autograder.model.config.Config(
+                    auth_user = 'course-owner@test.edulinq.org',
+                    auth_pass = edq.util.crypto.Secret('course-owner'),
+                    course = 'course101',
+                ),
+                {},
+                {
                     "removed": {},
                 },
                 None,
@@ -48,4 +71,4 @@ class TestCoursesStatusRemove(autograder.testing.server.ServerTest):
             ),
         ]
 
-        self.base_api_test(autograder.api.courses.status.remove.send, test_cases)
+        self.base_api_test(autograder.api.courses.status.remove.send, test_cases, actual_clean_func = autograder.testing.asserts.normalize_dict)
